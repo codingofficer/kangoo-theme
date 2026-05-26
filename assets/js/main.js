@@ -1183,7 +1183,7 @@ document.addEventListener('DOMContentLoaded', function () {
       nudge.classList.remove('is-unlocked');
       nudge.innerHTML = [
         '<div class="kangoo-free-shipping-nudge__copy">',
-        '<strong>Add ', formatCheckoutMoney(remaining), ' more for free delivery</strong>',
+        '<strong>', formatCheckoutMoney(remaining), ' away from free delivery</strong>',
         '<span>Free UK delivery unlocks at ', formatCheckoutMoney(threshold), '.</span>',
         '</div>',
         '<div class="kangoo-free-shipping-nudge__track" aria-hidden="true">',

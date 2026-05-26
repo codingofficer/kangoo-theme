@@ -668,9 +668,9 @@
   gap: 0.75rem;
   margin: 0.75rem 0 1rem;
   padding: 0.9rem 1rem;
-  border: 1px solid rgba(255, 122, 0, 0.35);
+  border: 1px solid rgba(77, 163, 255, 0.35);
   border-radius: 14px;
-  background: rgba(255, 122, 0, 0.08);
+  background: rgba(77, 163, 255, 0.08);
   color: #f8fafc;
 }
 
@@ -702,7 +702,7 @@
   display: block;
   height: 100%;
   border-radius: inherit;
-  background: #ff7a00;
+  background: #1688ff;
 }
 
 .kangoo-free-shipping-nudge.is-unlocked {
@@ -1058,8 +1058,8 @@
   width: fit-content;
   border: 0;
   background: transparent;
-  color: rgba(255,255,255,0.48);
-  font-size: clamp(0.92rem, 1.9vw, 1.04rem);
+  color: rgba(255,255,255,0.42);
+  font-size: clamp(0.82rem, 1.8vw, 0.96rem);
   font-weight: 700;
   cursor: pointer;
   padding: 0;
@@ -1126,7 +1126,7 @@
   justify-content: center;
   width: clamp(34px, 9vw, 44px);
   height: clamp(34px, 9vw, 44px);
-  color: #ff8a00;
+  color: #72b8ff;
 }
 
 .cart-drawer-summary__truck svg {
@@ -1149,7 +1149,7 @@
 }
 
 .cart-drawer-summary__shipping p strong {
-  color: #ff8a00;
+  color: #f3b24f;
   font-weight: 950;
 }
 
@@ -1169,7 +1169,7 @@
   display: block;
   height: 100%;
   border-radius: inherit;
-  background: linear-gradient(90deg, #ff8a00, #ffb23f);
+  background: linear-gradient(90deg, #1688ff, #65bcff);
 }
 
 .cart-drawer-summary__shipping.is-unlocked .cart-drawer-summary__progress span {
@@ -1181,7 +1181,7 @@
   top: -9px;
   width: 1px;
   height: 24px;
-  border-left: 2px dotted rgba(255, 138, 0, 0.85);
+  border-left: 2px dotted rgba(243, 178, 79, 0.82);
   transform: translateX(-50%);
 }
 
@@ -1190,7 +1190,7 @@
 }
 
 .cart-drawer-summary__threshold {
-  color: #ff9d1a;
+  color: rgba(255,255,255,0.72);
   font-size: clamp(1rem, 3.4vw, 1.35rem);
   font-weight: 900;
   white-space: nowrap;
@@ -1214,7 +1214,7 @@
 
 .cart-drawer-summary__reward strong,
 .cart-drawer-summary__reward .amount {
-  color: #ff9d1a;
+  color: #f7cf64;
 }
 
 .cart-drawer-summary__badge {
@@ -1222,12 +1222,12 @@
   align-items: center;
   justify-content: center;
   flex: 0 0 auto;
-  width: 34px;
-  height: 34px;
-  border: 2px solid #f8c847;
+  width: 30px;
+  height: 30px;
+  border: 1.5px solid #f7cf64;
   border-radius: 999px;
-  color: #f8c847;
-  font-size: 0.8rem;
+  color: #f7cf64;
+  font-size: 0.72rem;
 }
 
 .cart-drawer-summary__checkout,
@@ -1924,6 +1924,16 @@
   line-height: 1.35;
 }
 
+.cart-drawer .mini-cart-line-total {
+  display: block;
+  width: fit-content;
+  margin: -2px 0 2px;
+  color: rgba(255,255,255,0.68);
+  font-size: 0.82rem;
+  font-weight: 850;
+  line-height: 1.2;
+}
+
 .cart-drawer .cart-drawer__content .woocommerce-mini-cart-item a img,
 .woocommerce .cart-drawer .cart-drawer__content ul.cart_list li img,
 .woocommerce .cart-drawer .cart-drawer__content ul.product_list_widget li img,
@@ -2099,6 +2109,11 @@
     font-size: clamp(0.58rem, 2.55vw, 0.76rem);
     font-weight: 850;
     min-width: 0;
+  }
+
+  .kangoo-mobile-cart-sticky.has-items:not(.is-unlocked) .kangoo-mobile-cart-sticky__delivery,
+  .kangoo-mobile-cart-sticky.has-items:not(.is-unlocked) .kangoo-mobile-cart-sticky__truck {
+    color: #72b8ff;
   }
 
   .kangoo-mobile-cart-sticky__delivery span:last-child,

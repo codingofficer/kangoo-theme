@@ -4640,7 +4640,7 @@ function kangoo_get_free_shipping_nudge_html($context = 'cart-drawer') {
     <div class="<?php echo esc_attr(implode(' ', $classes)); ?>" data-kangoo-free-shipping-nudge>
         <div class="kangoo-free-shipping-nudge__copy">
             <?php if ($remaining > 0) : ?>
-                <strong><?php echo esc_html(sprintf(__('Add %s more for free delivery', 'kangoo'), kangoo_plain_wc_price($remaining))); ?></strong>
+                <strong><?php echo esc_html(sprintf(__('%s away from free delivery', 'kangoo'), kangoo_plain_wc_price($remaining))); ?></strong>
                 <span><?php echo esc_html(sprintf(__('Free UK delivery unlocks at %s.', 'kangoo'), kangoo_plain_wc_price($threshold))); ?></span>
             <?php else : ?>
                 <strong><?php esc_html_e('Free delivery unlocked', 'kangoo'); ?></strong>
@@ -4744,7 +4744,7 @@ function kangoo_get_mobile_cart_sticky_html() {
                             <circle cx="18" cy="18" r="2" fill="currentColor"/>
                         </svg>
                     </span>
-                    <span><?php echo esc_html(sprintf(__('Add %s more for free delivery', 'kangoo'), kangoo_plain_wc_price($remaining))); ?></span>
+                    <span><?php echo esc_html(sprintf(__('%s away from free delivery', 'kangoo'), kangoo_plain_wc_price($remaining))); ?></span>
                 <?php else : ?>
                     <span class="kangoo-mobile-cart-sticky__truck" aria-hidden="true">
                         <svg viewBox="0 0 24 24" focusable="false">
@@ -4816,7 +4816,7 @@ function kangoo_get_cart_drawer_footer_html() {
                     <span><?php echo wp_kses_post(wc_price($subtotal)); ?></span>
                 </strong>
                 <button type="button" class="cart-drawer__clear" data-cart-clear>
-                    <?php esc_html_e('Clear cart', 'kangoo'); ?>
+                    <?php esc_html_e('Clear', 'kangoo'); ?>
                 </button>
             </div>
 
@@ -4834,7 +4834,7 @@ function kangoo_get_cart_drawer_footer_html() {
                             <?php if ($remaining > 0) : ?>
                                 <?php
                                 echo wp_kses_post(sprintf(
-                                    __('Add <strong>%s</strong> more for <strong>free delivery</strong>', 'kangoo'),
+                                    __('<strong>%s</strong> away from free delivery', 'kangoo'),
                                     wc_price($remaining)
                                 ));
                                 ?>

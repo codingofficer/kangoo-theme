@@ -881,7 +881,7 @@
 }
 
 .home-seo-proof {
-  padding: 18px 0 8px;
+  padding: 8px 0 4px;
   max-width: 100%;
   overflow-x: clip;
 }
@@ -889,7 +889,7 @@
 .home-seo-proof__grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 10px;
+  gap: 8px;
   min-width: 0;
 }
 
@@ -906,10 +906,10 @@
 
 .home-seo-proof__grid a {
   display: grid;
-  gap: 4px;
+  gap: 3px;
   min-width: 0;
-  min-height: 82px;
-  padding: 14px;
+  min-height: 72px;
+  padding: 12px;
 }
 
 .home-seo-proof__grid span,
@@ -918,13 +918,13 @@
 .seo-methodology,
 .seo-nicotine-warning {
   color: var(--color-text-soft);
-  font-size: 0.78rem;
+  font-size: 0.74rem;
   line-height: 1.45;
 }
 
 .home-seo-proof__grid strong {
   color: var(--color-text);
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   line-height: 1.25;
   letter-spacing: 0;
   overflow-wrap: anywhere;
@@ -1297,7 +1297,7 @@
 
 @media (max-width: 640px) {
   .home-seo-proof {
-    padding-top: 12px;
+    padding-top: 4px;
   }
 
   .home-seo-proof,
@@ -1306,7 +1306,10 @@
     overflow-x: hidden;
   }
 
-  .home-seo-proof__grid,
+  .home-seo-proof__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .seo-proof-grid,
   .seo-guide-grid {
     grid-template-columns: 1fr;
@@ -1334,6 +1337,18 @@
   .home-seo-proof__grid a,
   .seo-proof-grid article {
     min-height: 0;
+  }
+
+  .home-seo-proof__grid a {
+    padding: 0.68rem;
+  }
+
+  .home-seo-proof__grid span {
+    font-size: 0.68rem;
+  }
+
+  .home-seo-proof__grid strong {
+    font-size: 0.78rem;
   }
 
   .seo-module,

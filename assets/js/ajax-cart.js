@@ -560,7 +560,7 @@ jQuery(function ($) {
     }
 
     if (!$button.length) {
-      $button = $('<button type="button" class="cart-drawer__clear" data-cart-clear>Clear cart</button>');
+      $button = $('<button type="button" class="cart-drawer__clear" data-cart-clear>Clear</button>');
     }
 
     $total.append($button);
@@ -737,6 +737,37 @@ jQuery(function ($) {
     return Number.isFinite(maxAttr) && maxAttr > 0 ? maxAttr : null;
   }
 
+  function parseMiniCartMoney(text) {
+    const matches = String(text || '').match(/-?\d[\d,.]*/g);
+
+    if (!matches || !matches.length) {
+      return null;
+    }
+
+    let value = matches[matches.length - 1];
+
+    if (value.indexOf(',') > -1 && value.indexOf('.') > -1) {
+      value = value.replace(/,/g, '');
+    } else {
+      value = value.replace(/,/g, '.');
+    }
+
+    const parsed = parseFloat(value);
+
+    return Number.isFinite(parsed) ? parsed : null;
+  }
+
+  function formatMiniCartMoney(amount) {
+    try {
+      return new Intl.NumberFormat('en-GB', {
+        style: 'currency',
+        currency: 'GBP'
+      }).format(amount);
+    } catch (error) {
+      return 'GBP ' + amount.toFixed(2);
+    }
+  }
+
   function enhanceMiniCartQty() {
     if (isCheckoutPage()) {
       return;
@@ -755,9 +786,22 @@ jQuery(function ($) {
       const value = match ? parseInt(match[1], 10) : 1;
       const max = getMiniCartMax($qty);
       const clampedValue = max === null ? value : Math.min(value, max);
+      const unitPrice = parseMiniCartMoney(text);
+      const $title = $item.find('a:not(.remove):not(.mini-cart-remove)').first();
 
       const $remove = $item.find('.remove').first();
       const removeUrl = $remove.attr('href') || '';
+
+      if ($title.length && unitPrice !== null) {
+        let $lineTotal = $item.find('.mini-cart-line-total').first();
+
+        if (!$lineTotal.length) {
+          $lineTotal = $('<span class="mini-cart-line-total"></span>');
+          $title.after($lineTotal);
+        }
+
+        $lineTotal.text(formatMiniCartMoney(unitPrice * clampedValue));
+      }
 
       $qty.html(`
         <button type="button" class="qty-btn qty-btn--minus" aria-label="Decrease quantity">-</button>
