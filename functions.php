@@ -2351,6 +2351,10 @@ function kangoo_render_pack_pricing_selector() {
         return;
     }
 
+    if (function_exists('kangoo_is_99p_product') && kangoo_is_99p_product($product->get_id())) {
+        return;
+    }
+
     $tiers = kangoo_get_pack_pricing_tiers($product->get_id());
 
     if (empty($tiers)) {

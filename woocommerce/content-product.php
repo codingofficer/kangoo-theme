@@ -20,6 +20,19 @@ $card_is_99p = function_exists('kangoo_is_99p_product') && kangoo_is_99p_product
 $card_purchase_limit = $card_is_99p ? 1 : $card_stock_limit;
 $card_default_pack_tier = !empty($card_pack_tiers) ? $card_pack_tiers[0] : null;
 $card_has_available_pack_tier = false;
+$card_price = (float) $product->get_price();
+$card_regular_price = (float) $product->get_regular_price();
+$card_saving_per_can = max(0, $card_regular_price - $card_price);
+$card_strength_label = '';
+$card_strength_mg = function_exists('get_field') ? get_field('strength_mg') : '';
+
+if ($card_strength_mg) {
+    $card_strength_label = strtoupper((string) $card_strength_mg);
+
+    if (strpos($card_strength_label, 'MG') === false) {
+        $card_strength_label .= 'MG';
+    }
+}
 
 if (!empty($card_pack_tiers)) {
     foreach ($card_pack_tiers as $card_pack_tier) {
@@ -38,6 +51,11 @@ if (!empty($card_pack_tiers)) {
             $card_default_pack_tier = $card_pack_tier;
         }
     }
+}
+
+if ($card_is_99p) {
+    $card_default_pack_tier = null;
+    $card_has_available_pack_tier = false;
 }
 
 $available_variations = array();
@@ -78,35 +96,30 @@ if ($is_quick_add_card && $is_variable) {
     </a>
 
     <div class="product-card__content">
-        <h3 class="product-card__title">
-            <a href="<?php the_permalink(); ?>">
-                <?php the_title(); ?>
-            </a>
-        </h3>
+        <div class="product-card__heading">
+            <h3 class="product-card__title">
+                <a href="<?php the_permalink(); ?>">
+                    <?php the_title(); ?>
+                </a>
+            </h3>
 
-		<?php
-		$strength_mg = get_field('strength_mg');
-
-		if ($strength_mg) :
-			$strength_label = strtoupper((string) $strength_mg);
-
-			if (strpos($strength_label, 'MG') === false) {
-				$strength_label .= 'MG';
-			}
-		?>
-			<div class="product-card__strength-badges">
-				<span class="product-card__strength-badge">
-					<?php echo esc_html($strength_label); ?>
-				</span>
-			</div>
-		<?php endif; ?>
+            <?php if ($card_strength_label) : ?>
+                <div class="product-card__strength-badges">
+                    <span class="product-card__strength-badge">
+                        <?php echo esc_html($card_strength_label); ?>
+                    </span>
+                </div>
+            <?php endif; ?>
+        </div>
 
         <div class="product-card__price">
             <?php echo wp_kses_post(function_exists('kangoo_get_product_price_html') ? kangoo_get_product_price_html($product) : $product->get_price_html()); ?>
         </div>
 
-        <?php if (function_exists('kangoo_get_product_delivery_note_html')) : ?>
-            <?php echo kangoo_get_product_delivery_note_html(); ?>
+        <?php if (!$is_variable && $card_saving_per_can > 0) : ?>
+            <div class="product-card__saving" data-card-saving>
+                You save <?php echo wp_kses_post(wc_price($card_saving_per_can)); ?>
+            </div>
         <?php endif; ?>
 
         <?php if ($card_low_stock_message) : ?>
@@ -140,25 +153,25 @@ if ($is_quick_add_card && $is_variable) {
 				<?php else : ?>
 				<?php
 				$product_id     = $product->get_id();
-				$price          = (float) $product->get_price();
-				$regular_price  = (float) $product->get_regular_price();
-				$saving_per_can = max(0, $regular_price - $price);
-                $pack_tiers     = $card_pack_tiers;
+				$price          = $card_price;
+				$regular_price  = $card_regular_price;
+                $pack_tiers     = $card_is_99p ? array() : $card_pack_tiers;
                 $default_pack   = $card_default_pack_tier;
                 $default_qty    = $default_pack ? (int) $default_pack['quantity'] : 1;
                 $default_unit   = $default_pack ? (float) $default_pack['unit_price'] : $price;
 
-                if (!empty($pack_tiers) && !$card_has_available_pack_tier) {
+                if ($card_is_99p || (!empty($pack_tiers) && !$card_has_available_pack_tier)) {
                     $default_pack = null;
                     $default_qty = 1;
                     $default_unit = $price;
                 }
 
                 $default_total  = $default_unit * $default_qty;
+                $has_visible_pack_options = !$card_is_99p && !empty($pack_tiers) && $default_pack && $card_has_available_pack_tier;
 				?>
 
 				<div
-					class="product-card__qty<?php echo !empty($pack_tiers) && $card_has_available_pack_tier ? ' product-card__qty--pack' : ''; ?>"
+					class="product-card__qty<?php echo $has_visible_pack_options ? ' product-card__qty--pack' : ''; ?><?php echo $card_is_99p ? ' product-card__qty--hidden' : ''; ?>"
 					data-card-qty
 					data-price="<?php echo esc_attr($price); ?>"
 					data-regular-price="<?php echo esc_attr($regular_price); ?>"
@@ -166,7 +179,16 @@ if ($is_quick_add_card && $is_variable) {
 					data-is-99p="<?php echo $card_is_99p ? '1' : '0'; ?>"
 					data-pack-tiers="<?php echo esc_attr(wp_json_encode($pack_tiers)); ?>"
 				>
-                    <?php if (!empty($pack_tiers) && $default_pack && $card_has_available_pack_tier) : ?>
+                    <?php if ($card_is_99p) : ?>
+                        <input
+                            type="hidden"
+                            class="product-card__qty-input"
+                            value="1"
+                            min="1"
+                            max="1"
+                            data-card-qty-input
+                        >
+                    <?php elseif ($has_visible_pack_options) : ?>
                         <input
                             type="hidden"
                             class="product-card__qty-input"
@@ -209,12 +231,6 @@ if ($is_quick_add_card && $is_variable) {
                     <?php endif; ?>
 				</div>
 
-				<?php if ($saving_per_can > 0) : ?>
-					<div class="product-card__saving" data-card-saving>
-						You save <?php echo wp_kses_post(wc_price($saving_per_can)); ?>
-					</div>
-				<?php endif; ?>
-
 				<a
 					href="#"
 					data-quantity="<?php echo esc_attr($default_qty); ?>"
@@ -233,7 +249,7 @@ if ($is_quick_add_card && $is_variable) {
     </div>
 </article>
 
-<?php if (!$is_variable && !empty($card_pack_tiers) && $card_default_pack_tier && $card_has_available_pack_tier) : ?>
+<?php if (!$is_variable && !$card_is_99p && !empty($card_pack_tiers) && $card_default_pack_tier && $card_has_available_pack_tier) : ?>
     <div
         class="pack-add-modal"
         id="<?php echo esc_attr($pack_modal_id); ?>"

@@ -11,6 +11,7 @@ $gallery_image_ids = $product->get_gallery_image_ids();
 
 $main_image_url = $main_image_id ? wp_get_attachment_image_url($main_image_id, 'large') : wc_placeholder_img_src('large');
 $main_image_alt = $main_image_id ? get_post_meta($main_image_id, '_wp_attachment_image_alt', true) : get_the_title();
+$is_99p_product = function_exists('kangoo_is_99p_product') && kangoo_is_99p_product($product->get_id());
 
 $strength_attribute_name  = '';
 $strength_attribute_label = '';
@@ -196,7 +197,8 @@ foreach ($product_faq_rows as $product_faq_row) {
 
                     <?php
                     $low_stock_message = function_exists('kangoo_get_low_stock_message') ? kangoo_get_low_stock_message($product) : '';
-                    $suppress_stock_note = function_exists('kangoo_is_99p_product') && kangoo_is_99p_product($product->get_id());
+                    $suppress_stock_note = $is_99p_product;
+                    $product_cart_class = 'product-cart' . ($is_99p_product ? ' product-cart--99p' : '');
                     ?>
 
                     <div class="product-stock-note<?php echo $low_stock_message ? ' product-stock-note--low' : ''; ?>" data-product-stock-note data-suppress-stock-note="<?php echo $suppress_stock_note ? '1' : '0'; ?>"<?php echo $low_stock_message ? '' : ' hidden'; ?>>
@@ -235,19 +237,18 @@ foreach ($product_faq_rows as $product_faq_row) {
                     <?php endif; ?>
 
 					<?php if (!$product->is_in_stock()) : ?>
-						<div class="product-cart">
+						<div class="<?php echo esc_attr($product_cart_class); ?>">
 							<button class="single_add_to_cart_button button alt is-disabled" disabled>
 								<span class="button-text">SOLD OUT</span>
 							</button>
 						</div>
 					<?php else : ?>
-						<div class="product-cart">
+						<div class="<?php echo esc_attr($product_cart_class); ?>">
 							<?php woocommerce_template_single_add_to_cart(); ?>
 						</div>
 					<?php endif; ?>
 
                     <ul class="product-trust">
-                        <li>Free UK Delivery over &pound;14.95</li>
                         <li>Discreet Packaging</li>
                         <li>18+ Only</li>
                         <li>Earn Kangoo Rewards</li>
@@ -374,7 +375,7 @@ foreach ($product_faq_rows as $product_faq_row) {
         <?php endif; ?>
     </div>
 
-    <div class="sticky-add" data-sticky-add>
+    <div class="sticky-add<?php echo $is_99p_product ? ' sticky-add--single-pack' : ''; ?>" data-sticky-add>
         <div class="container">
             <div class="sticky-add__bar">
                 <label class="sticky-add__pack">
