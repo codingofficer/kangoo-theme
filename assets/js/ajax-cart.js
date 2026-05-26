@@ -2073,6 +2073,19 @@ jQuery(function ($) {
     return Number.isFinite(maxAttr) && maxAttr > 0 ? maxAttr : null;
   }
 
+  function syncSingleQuantityVisibility($form) {
+    const stockLimit = getSingleStockLimit($form);
+    const shouldHideQuantity = stockLimit !== null && stockLimit <= 1;
+    const $cart = $form.closest('.product-cart');
+    const $qty = $form.find('input.qty').first();
+
+    $cart.toggleClass('product-cart--single-quantity', shouldHideQuantity);
+
+    if (shouldHideQuantity && $qty.length && parseInt($qty.val(), 10) !== 1) {
+      $qty.val(1);
+    }
+  }
+
   function syncSingleLowStockNote($form) {
     const stockLimit = getSingleStockLimit($form);
     const $note = $('[data-product-stock-note]').first();
@@ -2137,18 +2150,13 @@ jQuery(function ($) {
   }
 
   function syncPackPricing($form) {
-    const $selector = $form.find('[data-pack-pricing]');
-
-    if (!$selector.length) {
-      return;
-    }
-
     const $qty = $form.find('input.qty').first();
 
     if (!$qty.length) {
       return;
     }
 
+    const $selector = $form.find('[data-pack-pricing]');
     const stockLimit = getSingleStockLimit($form);
     const quantity = stockLimit === null
       ? Math.max(1, parseInt($qty.val(), 10) || 1)
@@ -2158,7 +2166,13 @@ jQuery(function ($) {
       $qty.val(quantity);
     }
 
+    syncSingleQuantityVisibility($form);
     syncSingleLowStockNote($form);
+
+    if (!$selector.length) {
+      return;
+    }
+
     syncPackOptionAvailability($form);
 
     const tier = getPackTierForQty($form, quantity);

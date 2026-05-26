@@ -198,7 +198,18 @@ foreach ($product_faq_rows as $product_faq_row) {
                     <?php
                     $low_stock_message = function_exists('kangoo_get_low_stock_message') ? kangoo_get_low_stock_message($product) : '';
                     $suppress_stock_note = $is_99p_product;
-                    $product_cart_class = 'product-cart' . ($is_99p_product ? ' product-cart--99p' : '');
+                    $stock_limit = function_exists('kangoo_get_product_stock_limit') ? kangoo_get_product_stock_limit($product) : null;
+                    $product_cart_classes = array('product-cart');
+
+                    if ($is_99p_product) {
+                        $product_cart_classes[] = 'product-cart--99p';
+                    }
+
+                    if ($stock_limit !== null && $stock_limit <= 1) {
+                        $product_cart_classes[] = 'product-cart--single-quantity';
+                    }
+
+                    $product_cart_class = implode(' ', $product_cart_classes);
                     ?>
 
                     <div class="product-stock-note<?php echo $low_stock_message ? ' product-stock-note--low' : ''; ?>" data-product-stock-note data-suppress-stock-note="<?php echo $suppress_stock_note ? '1' : '0'; ?>"<?php echo $low_stock_message ? '' : ' hidden'; ?>>

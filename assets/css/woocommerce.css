@@ -98,7 +98,8 @@
   -moz-appearance: textfield;
 }
 
-.woocommerce .product-cart--99p .quantity {
+.woocommerce .product-cart--99p .quantity,
+.woocommerce .product-cart--single-quantity .quantity {
   display: none !important;
 }
 
