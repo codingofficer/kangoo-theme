@@ -1,0 +1,369 @@
+/* ========================================================================
+FILE: assets/css/account-drawer.css
+========================================================================= */
+html, body {
+  overflow-x: hidden;
+}
+
+.account-drawer {
+  position: fixed;
+  inset: 0;
+  z-index: 10060;
+  pointer-events: none;
+}
+
+.account-drawer.is-open {
+  pointer-events: auto;
+}
+
+.account-drawer__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.58);
+  backdrop-filter: blur(8px);
+  opacity: 0;
+  transition: opacity 0.28s ease;
+}
+
+.account-drawer.is-open .account-drawer__overlay {
+  opacity: 1;
+}
+
+.account-drawer__panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+
+  width: 100vw;          /* force exact viewport width */
+  max-width: 100vw;      /* prevent overflow */
+  
+  height: 100%;
+  background: #0d0d0f;
+  border-left: 1px solid rgba(255,255,255,0.06);
+
+  transform: translateX(100%);
+  transition: transform 0.32s ease;
+
+  display: flex;
+  flex-direction: column;
+
+  overflow-x: hidden;
+}
+
+.account-drawer.is-open .account-drawer__panel {
+  transform: translateX(0);
+}
+
+.account-drawer__close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  font-size: 1.8rem;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 3;
+}
+
+.account-drawer__inner {
+  padding: 2rem 1.5rem;
+  overflow-y: auto;
+  height: 100%;
+}
+
+.account-drawer__title {
+  margin: 0 0 1.5rem;
+  padding-right: 3rem;
+  font-size: 2rem;
+  line-height: 1.05;
+}
+
+.account-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.account-tabs__button {
+  border: 0;
+  border-bottom: 3px solid rgba(255, 255, 255, 0.12);
+  background: transparent;
+  color: #fff;
+  text-align: center;
+  padding: 0 0 0.9rem;
+  cursor: pointer;
+}
+
+.account-tabs__button.is-active {
+  border-bottom-color: var(--color-accent);
+}
+
+.account-tabs__label {
+  display: block;
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.account-tabs__sub {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 0.95rem;
+  color: var(--color-text-soft);
+}
+
+.account-drawer__message {
+  min-height: 24px;
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+}
+
+.account-drawer__message.is-error {
+  color: #ff8c8c;
+}
+
+.account-drawer__message.is-success {
+  color: #8fe3a6;
+}
+
+.account-pane {
+  display: none;
+}
+
+.account-pane.is-active {
+  display: block;
+}
+
+.account-form {
+  display: grid;
+  gap: 1rem;
+}
+
+.account-field {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.account-field__label {
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.account-field input {
+  width: 100%;
+  height: 56px;
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  padding: 0 1rem;
+  box-shadow: none;
+}
+
+
+.account-field input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 1px rgba(77, 163, 255, 0.18);
+}
+
+.account-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--color-text-soft);
+}
+
+.account-submit {
+  width: 100%;
+  min-height: 54px;
+  justify-content: center;
+}
+
+.account-link {
+  color: #fff;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.account-divider {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 0.9rem;
+  color: var(--color-text-soft);
+  font-size: 0.92rem;
+}
+
+.account-divider::before,
+.account-divider::after {
+  content: "";
+  height: 1px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.account-social {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.account-social__button {
+  min-height: 52px;
+  border-radius: 999px;
+  border: 1px solid var(--color-border);
+  background: rgba(255, 255, 255, 0.03);
+  color: #fff;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  padding: 0.75rem 1rem;
+  text-align: center;
+}
+
+.account-social__button small {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 0.75rem;
+  color: var(--color-text-soft);
+}
+
+.account-social__button.is-disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.account-drawer__logged-in.is-hidden,
+.account-drawer__auth.is-hidden {
+  display: none;
+}
+
+.account-summary {
+  display: grid;
+  gap: 0.35rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.account-summary__name {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.account-summary__email,
+.account-summary__link a {
+  color: var(--color-text-soft);
+}
+
+.account-summary__rewards {
+  display: grid;
+  gap: 0.2rem;
+  margin-top: 0.5rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.account-summary__rewards strong {
+  color: #fff;
+}
+
+.account-summary__rewards a {
+  color: var(--color-accent);
+  font-weight: 700;
+}
+
+.account-actions {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.account-drawer [data-account-logout].btn {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.18);
+  color: #fff;
+}
+
+.account-drawer [data-account-logout].btn:hover {
+  background: rgba(255,255,255,0.14);
+  border-color: var(--color-accent);
+  color: #fff;
+}
+
+@media (max-width: 640px) {
+  .account-drawer__panel {
+    width: 100%;
+  }
+
+  .account-drawer__title {
+    font-size: 1.7rem;
+  }
+
+  .account-tabs__label {
+    font-size: 1.35rem;
+  }
+
+  .account-drawer__inner {
+    padding: 1.25rem 1rem;
+  }
+}
+
+/* =========================
+   MOBILE OVERFLOW FIX
+========================= */
+
+@media (max-width: 640px) {
+
+  /* Ensure panel never exceeds viewport */
+  .account-drawer__panel {
+    width: 100%;
+    max-width: 100vw;
+    right: 0;
+  }
+
+  /* Prevent any child from pushing width */
+  .account-drawer__inner {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  /* Fix grid overflow (common culprit) */
+  .account-tabs {
+    grid-template-columns: 1fr 1fr;
+    min-width: 0;
+  }
+
+  /* Inputs can overflow due to padding */
+  .account-field input {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* Safety: force all children to behave */
+  .account-drawer * {
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+}
+
+/* Account drawer width fix */
+.account-drawer__panel {
+  width: 520px;
+  max-width: 92vw;
+  right: 0;
+  left: auto;
+}
+
+/* Only full width on mobile */
+@media (max-width: 640px) {
+  .account-drawer__panel {
+    width: 100vw;
+    max-width: 100vw;
+  }
+}

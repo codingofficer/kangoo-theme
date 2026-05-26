@@ -1,0 +1,325 @@
+.pouch-finder {
+  background:
+    radial-gradient(circle at 15% 10%, rgba(77, 163, 255, 0.14), transparent 26rem),
+    linear-gradient(180deg, #0d0d0f 0%, #12141a 44%, #0d0d0f 100%);
+}
+
+.pouch-finder__hero {
+  padding-top: calc(var(--space-10) + 1rem);
+  padding-bottom: var(--space-8);
+}
+
+.pouch-finder__hero-grid {
+  display: grid;
+  gap: var(--space-6);
+  align-items: stretch;
+}
+
+.pouch-finder__hero-copy {
+  max-width: 760px;
+}
+
+.pouch-finder__hero-copy h1 {
+  max-width: 11ch;
+  margin-top: var(--space-3);
+  letter-spacing: 0;
+}
+
+.pouch-finder__hero-copy p {
+  max-width: 660px;
+  font-size: 1.08rem;
+}
+
+.pouch-finder__hero-actions,
+.pouch-finder__actions,
+.pouch-finder__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.pouch-finder__summary {
+  display: grid;
+  gap: var(--space-3);
+  align-content: end;
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: rgba(255,255,255,0.035);
+}
+
+.pouch-finder__summary div {
+  padding: var(--space-4);
+  border-radius: 8px;
+  background: rgba(255,255,255,0.04);
+}
+
+.pouch-finder__summary span,
+.pouch-finder-card__body > span {
+  display: block;
+  margin-bottom: 0.3rem;
+  color: var(--color-text-soft);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.pouch-finder__summary strong {
+  display: block;
+  color: #fff;
+  line-height: 1.25;
+}
+
+.pouch-finder__tool {
+  padding-top: 0;
+}
+
+.pouch-finder__shell {
+  display: grid;
+  gap: var(--space-5);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: rgba(255,255,255,0.035);
+  overflow: hidden;
+}
+
+.pouch-finder__progress,
+.pouch-finder__form {
+  padding: clamp(1.25rem, 4vw, 2rem);
+}
+
+.pouch-finder__progress {
+  background: linear-gradient(180deg, rgba(77, 163, 255, 0.16), rgba(255,255,255,0.02));
+}
+
+.pouch-finder__step-count {
+  color: var(--color-accent);
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.pouch-finder__bar {
+  height: 8px;
+  margin: var(--space-4) 0 var(--space-5);
+  border-radius: 999px;
+  background: rgba(255,255,255,0.09);
+  overflow: hidden;
+}
+
+.pouch-finder__bar span {
+  display: block;
+  width: 20%;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--color-accent);
+  transition: width 0.2s ease;
+}
+
+.pouch-finder__progress h2 {
+  margin-bottom: var(--space-3);
+  font-size: clamp(1.7rem, 4vw, 2.6rem);
+  letter-spacing: 0;
+}
+
+.pouch-finder__progress p {
+  max-width: 34rem;
+  margin-bottom: 0;
+}
+
+.pouch-finder__form {
+  display: grid;
+  align-content: space-between;
+  gap: var(--space-5);
+  min-height: 430px;
+}
+
+.pouch-finder__step {
+  display: none;
+  grid-template-columns: 1fr;
+  gap: var(--space-3);
+}
+
+.pouch-finder__step.is-active {
+  display: grid;
+}
+
+.finder-option {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.85rem;
+  align-items: center;
+  min-height: 86px;
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: rgba(255,255,255,0.03);
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+}
+
+.finder-option:hover,
+.finder-option:has(input:checked) {
+  border-color: rgba(77, 163, 255, 0.75);
+  background: rgba(77, 163, 255, 0.1);
+  transform: translateY(-1px);
+}
+
+.finder-option input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--color-accent);
+}
+
+.finder-option span,
+.finder-option small {
+  grid-column: 2;
+}
+
+.finder-option span {
+  color: #fff;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.finder-option small {
+  color: var(--color-text-soft);
+  line-height: 1.45;
+}
+
+.finder-option--compact {
+  min-height: 68px;
+}
+
+.pouch-finder__actions {
+  justify-content: space-between;
+}
+
+.pouch-finder__actions .btn {
+  min-width: 130px;
+}
+
+.pouch-finder__actions .is-disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.pouch-finder__result {
+  margin-top: var(--space-6);
+  padding: clamp(1.25rem, 4vw, 2rem);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: rgba(255,255,255,0.035);
+}
+
+.pouch-finder__result[hidden] {
+  display: none;
+}
+
+.pouch-finder__result-head {
+  max-width: 760px;
+  margin-bottom: var(--space-5);
+}
+
+.pouch-finder__result h2 {
+  margin-top: var(--space-3);
+  letter-spacing: 0;
+}
+
+.pouch-finder__chips {
+  margin-top: var(--space-4);
+}
+
+.pouch-finder__chips span {
+  padding: 0.55rem 0.8rem;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: rgba(255,255,255,0.04);
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.pouch-finder__products {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-4);
+}
+
+.pouch-finder-card {
+  display: grid;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: rgba(255,255,255,0.03);
+  overflow: hidden;
+}
+
+.pouch-finder-card__image {
+  display: block;
+  background: rgba(255,255,255,0.04);
+}
+
+.pouch-finder-card__image img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+}
+
+.pouch-finder-card__body {
+  display: grid;
+  gap: 0.75rem;
+  padding: var(--space-4);
+}
+
+.pouch-finder-card__body h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  letter-spacing: 0;
+}
+
+.pouch-finder-card__body p {
+  margin: 0;
+}
+
+.pouch-finder-card__price {
+  color: #fff;
+  font-weight: 800;
+}
+
+.pouch-finder__notice,
+.pouch-finder__empty {
+  margin: var(--space-5) 0;
+  color: var(--color-text-soft);
+  font-size: 0.92rem;
+}
+
+@media (max-width: 640px) {
+  .pouch-finder__hero-actions .btn,
+  .pouch-finder__actions .btn,
+  .pouch-finder__result > .btn {
+    width: 100%;
+  }
+}
+
+@media (min-width: 768px) {
+  .pouch-finder__step {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .pouch-finder__products {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .pouch-finder__hero-grid,
+  .pouch-finder__shell {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  }
+
+  .pouch-finder__summary {
+    min-height: 420px;
+  }
+}

@@ -1,0 +1,213 @@
+.strength-ladder {
+  background:
+    radial-gradient(circle at 88% 8%, rgba(77, 163, 255, 0.14), transparent 24rem),
+    linear-gradient(180deg, #0d0d0f 0%, #12141a 46%, #0d0d0f 100%);
+}
+
+.strength-ladder__hero {
+  padding-top: calc(var(--space-10) + 1rem);
+  padding-bottom: var(--space-6);
+}
+
+.strength-ladder__hero-grid {
+  display: grid;
+  gap: var(--space-6);
+  align-items: end;
+}
+
+.strength-ladder__hero h1 {
+  max-width: 12ch;
+  margin-top: var(--space-3);
+  letter-spacing: 0;
+}
+
+.strength-ladder__hero p {
+  max-width: 680px;
+  font-size: 1.08rem;
+}
+
+.strength-ladder__scale {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.strength-ladder__scale a {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: rgba(255,255,255,0.04);
+}
+
+.strength-ladder__scale span {
+  color: var(--color-text-soft);
+  font-size: 0.9rem;
+}
+
+.strength-ladder__scale strong {
+  color: #fff;
+}
+
+.strength-ladder__levels {
+  padding-top: 0;
+}
+
+.strength-ladder__stack {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.strength-level {
+  display: grid;
+  gap: var(--space-5);
+  padding: clamp(1.25rem, 4vw, 2rem);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: rgba(255,255,255,0.035);
+}
+
+.strength-level__copy > span {
+  color: var(--color-accent);
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.strength-level__copy h2 {
+  margin-top: var(--space-3);
+  letter-spacing: 0;
+}
+
+.strength-level__copy p {
+  max-width: 620px;
+}
+
+.strength-level__best {
+  margin-top: var(--space-4);
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: rgba(255,255,255,0.03);
+}
+
+.strength-level__best strong {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: #fff;
+}
+
+.strength-level__best p {
+  margin: 0;
+}
+
+.strength-level__products {
+  display: grid;
+  gap: var(--space-3);
+  align-items: start;
+}
+
+.strength-product {
+  display: grid;
+  grid-template-columns: 82px minmax(0, 1fr);
+  gap: var(--space-3);
+  align-self: start;
+  padding: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: rgba(255,255,255,0.03);
+}
+
+.strength-product__image {
+  align-self: start;
+  width: 82px;
+  aspect-ratio: 1 / 1;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.04);
+  overflow: hidden;
+}
+
+.strength-product__image img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+}
+
+.strength-product__body {
+  display: grid;
+  gap: 0.35rem;
+  align-content: start;
+  padding-top: 0.35rem;
+}
+
+.strength-product__body strong,
+.strength-product__price .amount {
+  color: #fff;
+}
+
+.strength-product__body > span {
+  color: var(--color-text-soft);
+  font-size: 0.92rem;
+}
+
+.strength-product__price del {
+  color: var(--color-text-soft);
+  font-size: 0.9em;
+}
+
+.strength-product__price ins {
+  color: #fff;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.strength-level__empty {
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  color: var(--color-text-soft);
+}
+
+.strength-ladder__cta {
+  display: grid;
+  gap: var(--space-4);
+  margin-top: var(--space-5);
+  padding: clamp(1.25rem, 4vw, 2rem);
+  border: 1px solid rgba(77, 163, 255, 0.24);
+  border-radius: 8px;
+  background: rgba(77, 163, 255, 0.08);
+}
+
+.strength-ladder__cta h2 {
+  margin-top: var(--space-3);
+  letter-spacing: 0;
+}
+
+@media (max-width: 640px) {
+  .strength-ladder__cta .btn {
+    width: 100%;
+  }
+}
+
+@media (min-width: 768px) {
+  .strength-level {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  }
+
+  .strength-level__products {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .strength-ladder__cta {
+    grid-template-columns: 1fr auto;
+    align-items: center;
+  }
+}
+
+@media (min-width: 1024px) {
+  .strength-ladder__hero-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(320px, 420px);
+  }
+}

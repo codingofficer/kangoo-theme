@@ -1,0 +1,12 @@
+/****************************************************************
+***************************MAIN**********************************
+****************************************************************/
+/* Fallback aggregator. For production, enqueue split files directly. */
+
+@import url('base.css');
+@import url('components.css');
+@import url('header-footer.css');
+@import url('home.css');
+@import url('shop.css');
+@import url('product.css');
+@import url('woocommerce.css');

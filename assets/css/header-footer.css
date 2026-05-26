@@ -1,0 +1,1968 @@
+/* FILE: assets/css/header-footer.css */
+/****************************************************************
+*********************** HEADER / FOOTER **************************
+****************************************************************/
+
+body {
+  padding-top: 76px;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  overflow: visible;
+  backdrop-filter: blur(18px);
+  background: rgba(13, 13, 15, 0.72);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.site-header__inner {
+  width: 100%;
+  min-height: 76px;
+  display: flex;
+  align-items: center;
+}
+
+.site-header__inner > .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.site-logo {
+  flex-shrink: 0;
+}
+
+.custom-logo-link {
+  display: inline-flex;
+  align-items: center;
+}
+
+.custom-logo {
+  max-height: 45px !important;
+  width: auto !important;
+  height: auto !important;
+}
+
+.site-nav {
+  display: none;
+  min-width: 0;
+}
+
+.site-header__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  flex-shrink: 0;
+}
+
+.site-header__search,
+.site-header__account,
+.site-header__menu-toggle,
+.site-header__cart {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
+  color: #fff;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease, color 0.2s ease;
+}
+
+.site-header__search,
+.site-header__account,
+.site-header__menu-toggle {
+  border: 1px solid var(--color-border);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.site-header__search:hover,
+.site-header__account:hover,
+.site-header__menu-toggle:hover,
+.site-header__cart:hover {
+  transform: translateY(-1px);
+}
+
+.site-header__search:hover,
+.site-header__account:hover,
+.site-header__menu-toggle:hover {
+  border-color: var(--color-accent);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.site-header__search {
+  width: 44px;
+  padding: 0;
+  border-radius: 12px;
+}
+
+.site-header__search svg {
+  width: 20px;
+  height: 20px;
+}
+
+.site-header__account {
+  gap: 0.55rem;
+  padding: 0 0.95rem;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.site-header__account-icon {
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.site-header__account-icon svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+.site-header__account-text {
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.site-header__menu-toggle {
+  color: #fff;
+  width: 44px;
+  padding: 0;
+  border-radius: 12px;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.site-header__menu-toggle {
+  display: inline-flex;
+}
+
+.site-header__menu-toggle span {
+  display: block;
+  width: 18px;
+  height: 2px;
+  border-radius: 999px;
+  background: currentColor;
+}
+
+.site-header__cart {
+  position: relative;
+  width: 44px;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+}
+
+.kangoo-search {
+  position: fixed;
+  inset: 0;
+  z-index: 10020;
+  background: #101216;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.kangoo-search.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.kangoo-search__backdrop {
+  position: absolute;
+  inset: 0;
+  background: #101216;
+  backdrop-filter: blur(12px);
+}
+
+.kangoo-search__panel {
+  position: relative;
+  width: min(760px, calc(100vw - 32px));
+  max-height: min(760px, calc(100vh - 32px));
+  margin: 24px auto;
+  padding: 1.15rem;
+  display: grid;
+  gap: 0.95rem;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 24px;
+  background: #101216;
+  box-shadow: 0 28px 90px rgba(0,0,0,0.5);
+  overflow: auto;
+}
+
+.kangoo-search__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.kangoo-search__eyebrow {
+  color: var(--color-text-soft);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.kangoo-search__header h2 {
+  margin: 0.2rem 0 0;
+  color: #fff;
+  font-size: clamp(1.9rem, 3vw, 2.55rem);
+  line-height: 1.05;
+}
+
+.kangoo-search__close {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 999px;
+  background: rgba(255,255,255,0.04);
+  color: #fff;
+  font-size: 1.7rem;
+  cursor: pointer;
+}
+
+.kangoo-search__form {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.75rem;
+}
+
+.kangoo-search__form input {
+  min-height: 52px;
+  width: 100%;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 16px;
+  background: rgba(255,255,255,0.06);
+  color: #fff;
+  padding: 0 1rem;
+  font-size: 1rem;
+}
+
+.kangoo-search__form input::placeholder {
+  color: rgba(255,255,255,0.5);
+}
+
+.kangoo-search__form button {
+  min-height: 52px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--color-accent);
+  color: #fff;
+  padding: 0 1.4rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.kangoo-search__popular {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.kangoo-search__popular span {
+  color: var(--color-text-soft);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.kangoo-search__popular button {
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 999px;
+  background: rgba(255,255,255,0.045);
+  color: #fff;
+  padding: 0.55rem 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.kangoo-search__results {
+  min-height: 0;
+}
+
+.kangoo-search__empty {
+  margin: 0;
+  padding: 1.2rem;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 16px;
+  background: rgba(255,255,255,0.035);
+  color: var(--color-text-soft);
+}
+
+.kangoo-search__section {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.kangoo-search__section + .kangoo-search__section {
+  margin-top: 1rem;
+}
+
+.kangoo-search__section h3 {
+  margin: 0;
+  color: #fff;
+  font-size: 1rem;
+}
+
+.kangoo-search__list,
+.kangoo-search__guide-list {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.kangoo-search__product,
+.kangoo-search__guide {
+  display: grid;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 16px;
+  background: rgba(255,255,255,0.04);
+  color: #fff;
+  text-decoration: none;
+}
+
+.kangoo-search__product {
+  grid-template-columns: 64px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.75rem;
+}
+
+.kangoo-search__product img {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.05);
+}
+
+.kangoo-search__product-body {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.kangoo-search__product-body strong {
+  color: #fff;
+  font-size: 0.95rem;
+  line-height: 1.3;
+}
+
+.kangoo-search__product-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.kangoo-search__product-meta em {
+  padding: 0.2rem 0.45rem;
+  border: 1px solid rgba(77,163,255,0.8);
+  border-radius: 999px;
+  color: var(--color-accent);
+  font-size: 0.72rem;
+  font-style: normal;
+  font-weight: 800;
+}
+
+.kangoo-search__product-meta .is-muted {
+  border-color: rgba(255,255,255,0.2);
+  color: var(--color-text-soft);
+}
+
+.kangoo-search__price {
+  color: #fff;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.kangoo-search__price del {
+  color: var(--color-text-soft);
+  font-size: 0.85em;
+}
+
+.kangoo-search__price ins {
+  color: #fff;
+  text-decoration: none;
+}
+
+.kangoo-search__guide {
+  gap: 0.25rem;
+  padding: 0.9rem 1rem;
+}
+
+.kangoo-search__guide strong {
+  color: #fff;
+  font-size: 0.96rem;
+  line-height: 1.35;
+}
+
+.kangoo-search__guide span {
+  color: var(--color-text-soft);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.site-header {
+  transition: transform 0.25s ease;
+}
+
+.site-header--hidden {
+  transform: translateY(-100%);
+}
+
+.cart-icon {
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+
+.cart-icon svg {
+  width: 22px;
+  height: 22px;
+  display: block;
+}
+
+.cart-badge {
+  position: absolute;
+  top: 6px;
+  right: -6px;
+  background: var(--color-accent);
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 3px 6px;
+  min-width: 18px;
+  text-align: center;
+  line-height: 1;
+  box-shadow: none;
+  text-shadow: none;
+}
+
+/* =========================
+   DESKTOP MEGA MENU
+========================= */
+
+.kangoo-mega-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  width: 100%;
+  display: block;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(10px);
+  transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s ease;
+  z-index: 6000;
+}
+
+.kangoo-mega-menu.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.kangoo-mega-menu > .container {
+  position: relative;
+  z-index: 6001;
+  width: min(100vw - 2rem, var(--container));
+  max-width: 100vw;
+  margin-inline: auto;
+}
+
+.kangoo-mega-menu__grid {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  gap: 1.25rem;
+  margin-top: 10px;
+  padding: 1.25rem;
+  border: 1px solid var(--color-border);
+  border-radius: 24px;
+  background: linear-gradient(180deg, rgba(18, 19, 25, 0.98), rgba(21, 24, 34, 0.98));
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
+}
+
+.kangoo-mega-menu__sidebar {
+  width: 260px;
+  min-width: 260px;
+  display: grid;
+  gap: 0.75rem;
+  align-content: start;
+  padding: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.kangoo-mega-menu__sidebar-link {
+  color: #fff !important;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 58px;
+  padding: 0 0.95rem;
+  border: 1px solid transparent;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.02);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.kangoo-mega-menu__sidebar-link.is-active,
+.kangoo-mega-menu__sidebar-link:hover {
+  border-color: var(--color-accent);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.kangoo-mega-menu__sidebar-link {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 54px;
+  padding: 0 1rem;
+  border: 1px solid transparent;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.02);
+  color: #fff;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.kangoo-mega-menu__sidebar-link.is-active,
+.kangoo-mega-menu__sidebar-link:hover {
+  border-color: var(--color-accent);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.kangoo-mega-menu__sidebar-link--99p {
+  margin-top: 0.25rem;
+}
+
+.kangoo-mega-menu__panels {
+  min-width: 0;
+}
+
+.kangoo-mega-menu__panel {
+  display: none;
+}
+
+.kangoo-mega-menu__panel.is-active {
+  display: block;
+}
+
+.kangoo-mega-menu__brand-grid,
+.kangoo-mega-menu__strength-grid,
+.kangoo-mega-menu__flavour-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.kangoo-mega-menu__brand-card,
+.kangoo-mega-menu__flavour-card {
+  max-width: 150px;
+  width: 100%;
+  flex: 0 0 150px;
+}
+
+.kangoo-mega-menu__flavour-card {
+  align-content: end;
+  justify-items: center;
+  text-align: center;
+}
+
+.kangoo-mega-menu__strength-card {
+  max-width: 300px;
+  width: 100%;
+  flex: 0 0 300px;
+}
+
+.kangoo-mega-menu__brand-card,
+.kangoo-mega-menu__strength-card,
+.kangoo-mega-menu__flavour-card {
+  position: relative;
+  display: grid;
+  gap: 0.6rem;
+  min-height: 140px;
+  padding: 1rem;
+  border-radius: 18px;
+  border: 1px solid var(--color-border);
+  background: rgba(255, 255, 255, 0.03);
+  color: #fff;
+  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.kangoo-mega-menu__brand-card:hover,
+.kangoo-mega-menu__strength-card:hover,
+.kangoo-mega-menu__flavour-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-accent);
+}
+
+.kangoo-mega-menu__brand-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 0.28rem 0.55rem;
+  border-radius: 999px;
+  background: #ff5e5e;
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.kangoo-mega-menu__brand-card img,
+.kangoo-mega-menu__flavour-card img {
+  max-width: 72px;
+  max-height: 72px;
+  object-fit: contain;
+}
+
+.kangoo-mega-menu__flavour-card img {
+  margin-bottom: auto;
+}
+
+@media (min-width: 1024px) {
+  .kangoo-mega-menu__flavour-card img {
+    width: 84px;
+    height: 84px;
+    max-width: 84px;
+    max-height: 84px;
+  }
+}
+
+.kangoo-mega-menu__dots {
+  display: flex;
+  gap: 0.35rem;
+  margin-top: auto;
+}
+
+.kangoo-mega-menu__dots span {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+}
+
+.kangoo-mega-menu__type-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.kangoo-mega-menu__type-card {
+  display: grid;
+  align-content: space-between;
+  justify-items: start;
+  gap: 1rem;
+  min-height: 156px;
+  padding: 1.1rem;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  color: #fff;
+  text-decoration: none;
+  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.kangoo-mega-menu__type-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-accent);
+}
+
+.kangoo-mega-menu__type-card img {
+  width: 76px;
+  height: 76px;
+  max-width: 76px;
+  max-height: 76px;
+  object-fit: contain;
+}
+
+.kangoo-mega-menu__type-card span {
+  font-weight: 800;
+}
+
+.kangoo-mega-menu__type-card span {
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.kangoo-mega-menu__view-all {
+  display: inline-flex;
+  margin-top: 1rem;
+  color: var(--color-text-soft);
+}
+
+.kangoo-mega-drawer__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.62);
+}
+
+.kangoo-mega-drawer__panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: min(92vw, 420px);
+  height: 100%;
+  background: #111318;
+  border-left: 1px solid var(--color-border);
+  transform: translateX(100%);
+  transition: transform 0.25s ease;
+  overflow-y: auto;
+  padding: 1.2rem;
+  z-index: 7001;
+}
+
+.kangoo-mega-drawer.is-open .kangoo-mega-drawer__panel {
+  transform: translateX(0);
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+.site-footer {
+  padding: var(--space-8) 0 var(--space-6);
+  border-top: 1px solid var(--color-border);
+}
+
+.site-footer__grid {
+  display: grid;
+  gap: var(--space-8);
+  grid-template-columns: 1fr;
+  align-items: start;
+}
+
+.site-footer__brand,
+.site-footer__group {
+  max-width: none;
+}
+
+.site-footer__title {
+  margin-bottom: var(--space-3);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-text);
+}
+
+.site-footer__text,
+.site-footer__menu li a,
+.site-footer__bottom p,
+.site-footer__note {
+  color: var(--color-text-soft);
+}
+
+.site-footer__note {
+  margin-top: var(--space-4);
+  max-width: 32rem;
+  line-height: 1.7;
+}
+
+.site-footer__menu {
+  display: grid;
+  gap: 0.75rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.site-footer__menu li a {
+  color: var(--color-text-soft);
+  transition: color 0.2s ease;
+}
+
+.site-footer__menu li a:hover {
+  color: var(--color-text);
+}
+
+.site-footer__bottom {
+  margin-top: var(--space-6);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-border);
+}
+
+.kangoo-age-gate {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  isolation: isolate;
+  font-family: inherit;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(77, 163, 255, 0.18), transparent 28rem),
+    radial-gradient(circle at 82% 20%, rgba(255, 122, 0, 0.12), transparent 24rem),
+    linear-gradient(135deg, rgba(5, 6, 10, 0.96), rgba(13, 13, 15, 0.98));
+  backdrop-filter: blur(18px);
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1rem, 4vw, 3rem);
+  overflow-y: auto;
+}
+
+.kangoo-age-gate.is-visible {
+  display: flex;
+}
+
+.kangoo-age-gate [hidden] {
+  display: none !important;
+}
+
+.kangoo-age-gate__ambient {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.36;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.045) 1px, transparent 1px);
+  background-size: 58px 58px;
+  mask-image: radial-gradient(circle at center, #000, transparent 72%);
+}
+
+.kangoo-age-gate__panel {
+  position: relative;
+  width: min(100%, 560px);
+  padding: clamp(1.1rem, 3vw, 1.55rem);
+  border: 1px solid rgba(77, 163, 255, 0.28);
+  border-radius: 12px;
+  background:
+    linear-gradient(145deg, rgba(18, 25, 35, 0.94), rgba(13, 13, 15, 0.98)),
+    rgba(13, 13, 15, 0.96);
+  box-shadow: 0 28px 120px rgba(0, 0, 0, 0.54), 0 0 0 1px rgba(255, 255, 255, 0.035) inset;
+  overflow: hidden;
+}
+
+.kangoo-age-gate__panel::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-accent), #ff7a00);
+}
+
+.kangoo-age-gate__brand {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: clamp(1.3rem, 4vw, 2.15rem);
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  overflow: hidden;
+}
+
+.kangoo-age-gate__brand-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.55rem;
+  height: 2.55rem;
+  border: 1px solid rgba(77, 163, 255, 0.55);
+  border-radius: 50%;
+  color: #fff;
+  background: rgba(77, 163, 255, 0.14);
+  box-shadow: 0 0 0 6px rgba(77, 163, 255, 0.08);
+  font-size: 0.95rem;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.kangoo-age-gate__logo {
+  width: min(72%, 240px);
+  height: auto;
+  max-height: 54px;
+  object-fit: contain;
+  object-position: right center;
+}
+
+.kangoo-age-gate__screen {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.kangoo-age-gate__eyebrow {
+  display: inline-flex;
+  justify-self: start;
+  width: fit-content;
+  padding: 0.55rem 0.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.72rem;
+  font-weight: 900;
+  color: var(--color-accent);
+  background: rgba(77, 163, 255, 0.08);
+}
+
+.kangoo-age-gate__title {
+  max-width: 13ch;
+  margin: 0;
+  font-size: clamp(2.15rem, 5vw, 3.25rem);
+  line-height: 1;
+  letter-spacing: 0;
+  color: var(--color-text);
+}
+
+.kangoo-age-gate__copy {
+  max-width: 34rem;
+  margin: 0;
+  color: var(--color-text-soft);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.kangoo-age-gate__actions {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+  gap: 0.8rem;
+  margin-top: 0.4rem;
+}
+
+.kangoo-age-gate__button {
+  font-family: inherit;
+  min-height: 3.65rem;
+  padding: 0.8rem 1.15rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-weight: 900;
+  color: #fff;
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.kangoo-age-gate__button:hover {
+  transform: translateY(-1px);
+}
+
+.kangoo-age-gate__button:focus-visible {
+  outline: 3px solid rgba(77, 163, 255, 0.7);
+  outline-offset: 3px;
+}
+
+.kangoo-age-gate__button--primary {
+  background: var(--color-accent);
+  box-shadow: 0 16px 46px rgba(77, 163, 255, 0.24);
+}
+
+.kangoo-age-gate__button--secondary {
+  background: rgba(255, 255, 255, 0.035);
+  color: var(--color-text);
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+.kangoo-age-gate__smallprint {
+  max-width: 42rem;
+  margin: 0.25rem 0 0;
+  color: rgba(203, 213, 225, 0.72);
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+
+.kangoo-age-gate__screen--blocked .kangoo-age-gate__title {
+  max-width: none;
+  font-size: clamp(2.15rem, 4vw, 3rem);
+  white-space: nowrap;
+}
+
+.kangoo-age-gate__leave {
+  min-height: 3.45rem;
+  width: min(100%, 22rem);
+  border-radius: 18px;
+  margin-top: 0.35rem;
+}
+
+@media (max-width: 640px) {
+  .kangoo-age-gate {
+    align-items: stretch;
+    padding: 0.75rem;
+  }
+
+  .kangoo-age-gate__panel {
+    min-height: auto;
+    display: grid;
+    align-content: center;
+    padding: 1.1rem;
+  }
+
+  .kangoo-age-gate__brand {
+    margin-bottom: 2rem;
+    font-size: 0.78rem;
+  }
+
+  .kangoo-age-gate__brand-mark {
+    width: 2.6rem;
+    height: 2.6rem;
+  }
+
+  .kangoo-age-gate__logo {
+    width: min(70%, 190px);
+    max-height: 42px;
+  }
+
+  .kangoo-age-gate__title {
+    max-width: none;
+    font-size: clamp(2rem, 10vw, 2.75rem);
+    white-space: nowrap;
+  }
+
+  .kangoo-age-gate__screen--blocked .kangoo-age-gate__title {
+    max-width: 12ch;
+    white-space: normal;
+  }
+
+  .kangoo-age-gate__copy {
+    font-size: 0.98rem;
+  }
+
+  .kangoo-age-gate__actions {
+    grid-template-columns: 1fr;
+  }
+
+  .kangoo-age-gate__button {
+    min-height: 3.75rem;
+  }
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 767px) {
+  .kangoo-search__panel {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    min-height: 100dvh;
+    max-height: none;
+    margin: 0;
+    padding: 1.1rem 1.1rem 2rem;
+    gap: 0.65rem;
+    border-radius: 0;
+    border-left: 0;
+    border-right: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .kangoo-search__header h2 {
+    max-width: 270px;
+    font-size: clamp(1.9rem, 8vw, 2.35rem);
+    line-height: 1.05;
+  }
+
+  .kangoo-search__close {
+    width: 40px;
+    height: 40px;
+    flex-basis: 40px;
+    font-size: 1.55rem;
+  }
+
+  .kangoo-search__form {
+    grid-template-columns: 1fr;
+    gap: 0.45rem;
+    margin-top: 0.35rem;
+  }
+
+  .kangoo-search__form input {
+    height: 52px;
+    min-height: 0;
+    border-radius: 14px;
+    font-size: 0.95rem;
+  }
+
+  .kangoo-search__form button {
+    height: 44px !important;
+    min-height: 0 !important;
+    width: fit-content;
+    min-width: 250px;
+    padding: 0 1rem !important;
+    border-radius: 999px;
+    justify-self: center;
+    font-size: 0.9rem;
+    line-height: 1 !important;
+    margin: 0 auto;
+  }
+
+  .kangoo-search__popular {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center;
+    justify-content: start;
+    gap: 0.5rem;
+    margin-top: 0.15rem;
+    overflow: visible;
+    padding-bottom: 0.15rem;
+  }
+
+  .kangoo-search__popular button {
+    flex: 0 0 auto;
+    padding: 0.48rem 0.75rem;
+    font-size: 0.88rem;
+  }
+
+  .kangoo-search__popular button {
+    min-width: 0;
+  }
+
+  .kangoo-search__empty {
+    padding: 0.95rem;
+    font-size: 0.95rem;
+  }
+
+  .kangoo-search__product {
+    grid-template-columns: 56px minmax(0, 1fr);
+  }
+
+  .kangoo-search__product img {
+    width: 56px;
+    height: 56px;
+  }
+
+  .kangoo-search__price {
+    grid-column: 2;
+    justify-self: start;
+  }
+
+  .site-header__account-text {
+    display: none;
+  }
+
+  .site-header__search,
+  .site-header__account {
+    width: 44px;
+    padding: 0;
+    border-radius: 12px;
+  }
+
+  .kangoo-mega-drawer__panel {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 1023px) {
+  .site-nav {
+    display: none !important;
+  }
+
+  .kangoo-mega-menu {
+    display: none !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .site-footer__grid {
+    grid-template-columns: 1.4fr 1fr;
+    gap: var(--space-10);
+  }
+}
+
+@media (min-width: 1024px) {
+  .site-footer__grid {
+    grid-template-columns: 1.4fr 1fr 1fr 1fr;
+  }
+
+  .site-nav {
+    display: block;
+    flex: 1 1 auto;
+  }
+
+  .site-nav__menu {
+    display: flex;
+    gap: 1.4rem;
+    align-items: center;
+  }
+
+  .site-nav__menu li {
+    position: relative;
+  }
+
+  .site-nav__menu li a {
+    color: var(--color-text-soft);
+    font-size: 0.96rem;
+  }
+
+  .kangoo-mega-menu {
+    display: block;
+  }
+}
+
+/* =========================
+   FINAL HEADER / MEGA FIXES
+========================= */
+
+.kangoo-mega-menu {
+  z-index: 10031;
+}
+
+.cart-drawer {
+  z-index: 10040;
+}
+
+.account-drawer {
+  z-index: 10050;
+}
+
+.site-header__actions {
+  gap: 0.75rem;
+}
+
+.site-header__account {
+  min-width: auto;
+  flex: 0 0 auto;
+}
+
+.site-header__menu-toggle {
+  flex: 0 0 auto;
+}
+
+.site-header__cart {
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+}
+
+.cart-icon,
+.cart-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.cart-badge {
+  top: -4px;
+  right: -6px;
+}
+
+@media (min-width: 1024px) {
+  .kangoo-mega-menu {
+    display: block !important;
+  }
+}
+
+@media (max-width: 1023px) {
+  .site-nav {
+    display: none !important;
+  }
+
+  .site-header__menu-toggle {
+    display: inline-flex !important;
+  }
+
+  .kangoo-mega-menu {
+    display: none !important;
+  }
+}
+
+.site-header__menu-toggle {
+  display: inline-flex !important;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: rgba(255,255,255,0.03);
+  color: #fff;
+}
+
+.site-header__menu-toggle span {
+  display: block !important;
+  width: 18px;
+  height: 2px;
+  background: currentColor;
+  border-radius: 999px;
+}
+
+@media (min-width: 1024px) {
+  .site-header__menu-toggle {
+    display: inline-flex !important;
+  }
+}
+
+/* =========================
+   MOBILE MEGA DRAWER (FINAL DARK FIX)
+========================= */
+
+.kangoo-mega-drawer {
+  position: fixed;
+  inset: 0;
+  z-index: 10060;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+/* overlay (darken background properly) */
+.kangoo-mega-drawer__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.75); /* stronger = fixes “see-through” issue */
+  backdrop-filter: blur(4px);
+}
+
+/* PANEL */
+.kangoo-mega-drawer__panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+
+  width: 100vw;
+  height: 100%;
+
+  background: #0d0d0f; /* MATCH YOUR SITE */
+  color: #fff;
+
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+
+  overflow-y: auto;
+  padding: 1.25rem;
+
+  z-index: 10061;
+}
+
+/* OPEN */
+.kangoo-mega-drawer.is-open .kangoo-mega-drawer__panel {
+  transform: translateX(0);
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.kangoo-mega-drawer__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.kangoo-mega-drawer__close {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: 1px solid var(--color-border);
+  background: rgba(255,255,255,0.05);
+  color: #fff;
+}
+
+/* =========================
+   SECTIONS
+========================= */
+
+.kangoo-mega-drawer__section {
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+.kangoo-mega-drawer__section summary {
+  padding: 1rem 0;
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;
+  position: relative;
+}
+
+.kangoo-mega-drawer__section summary::after {
+  content: "›";
+  position: absolute;
+  right: 0;
+  transform: rotate(90deg);
+}
+
+.kangoo-mega-drawer__section[open] summary::after {
+  transform: rotate(-90deg);
+}
+
+.kangoo-mega-drawer__section-body {
+  padding-bottom: 1rem;
+}
+
+/* =========================
+   BRAND GRID (DARK)
+/* =========================
+   BRAND GRID (DARK)
+========================= */
+
+.kangoo-mega-drawer__brand-list {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 0.75rem;
+}
+
+.kangoo-mega-drawer__brand-list a {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  padding: 0.75rem;
+  text-align: center;
+  font-size: 0.85rem;
+  color: #fff;
+}
+
+/* =========================
+   STRENGTH CARDS
+========================= */
+
+.kangoo-mega-drawer__strength-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+}
+
+.kangoo-mega-drawer__strength-item {
+  display: grid;
+  gap: 0.75rem;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 18px;
+  padding: 1rem;
+  color: #fff;
+  text-decoration: none;
+  min-height: auto;
+}
+
+.kangoo-mega-drawer__strength-item:hover {
+  transform: translateY(-1px);
+}
+
+.kangoo-mega-drawer__strength-header {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.75rem !important;
+}
+
+.kangoo-mega-drawer__strength-badge {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+.kangoo-mega-drawer__strength-item strong {
+  font-size: 0.95rem;
+  font-weight: 700;
+  display: block;
+}
+
+.kangoo-mega-drawer__strength-mg {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--color-accent);
+}
+
+.kangoo-mega-drawer__dots {
+  display: flex;
+  gap: 0.35rem;
+  margin-top: 0.5rem;
+}
+
+.kangoo-mega-drawer__dots span {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.55);
+}
+
+.kangoo-mega-drawer__strength-copy {
+  margin: 0;
+  color: var(--color-text-soft);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+/* =========================
+   FLAVOURS GRID
+========================= */
+
+.kangoo-mega-drawer__flavour-list {
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+  gap: 0.75rem;
+}
+
+.kangoo-mega-drawer__flavour-list a {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  padding: 1rem;
+  text-align: center;
+  color: #fff;
+}
+
+/* =========================
+   LINKS
+========================= */
+
+.kangoo-mega-drawer__custom-links a {
+  display: block;
+  padding: 1rem 0;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  color: #fff;
+}
+
+.kangoo-mega-drawer__sections {
+  display: block;
+  width: 100%;
+}
+
+.kangoo-mega-drawer__section[open] .kangoo-mega-drawer__section-body {
+  display: block;
+}
+
+/* =========================
+   MOBILE MEGA DRAWER FIX
+========================= */
+
+.kangoo-mega-drawer {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 10060 !important;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.kangoo-mega-drawer__overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  background: rgba(0, 0, 0, 0.75) !important;
+  z-index: 10060 !important;
+}
+
+.kangoo-mega-drawer__panel {
+  position: fixed !important;
+  top: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+
+  width: 100vw !important;
+  max-width: 100vw !important;
+  height: 100dvh !important;
+
+  background: #0d0d0f !important;
+  color: #fff !important;
+
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+
+  overflow-y: auto !important;
+  padding: 1.25rem !important;
+
+  z-index: 10061 !important;
+}
+
+.kangoo-mega-drawer.is-open .kangoo-mega-drawer__panel {
+  transform: translateX(0) !important;
+}
+
+.kangoo-mega-drawer__sections {
+  display: grid !important;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  position: relative;
+  z-index: 2;
+}
+
+.kangoo-mega-drawer__section {
+  display: block !important;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  background: rgba(255,255,255,0.03);
+  overflow: hidden;
+}
+
+.kangoo-mega-drawer__section summary {
+  display: block !important;
+  padding: 1rem;
+  color: #fff !important;
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;
+}
+
+.kangoo-mega-drawer__section summary::-webkit-details-marker {
+  display: none;
+}
+
+.kangoo-mega-drawer__section-body {
+  padding: 0 1rem 1rem;
+}
+
+.kangoo-mega-drawer__brand-list {
+  display: grid !important;
+  gap: 0.6rem;
+}
+
+.kangoo-mega-drawer__type-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.kangoo-mega-drawer__brand-list a,
+.kangoo-mega-drawer__custom-links a,
+.kangoo-mega-drawer__flavour-list a,
+.kangoo-mega-drawer__type-item,
+.kangoo-mega-drawer__strength-item {
+  display: block !important;
+  padding: 0.85rem 0.95rem;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  background: rgba(255,255,255,0.04);
+  color: #fff !important;
+}
+
+.kangoo-mega-drawer__section summary::after {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid rgba(255,255,255,0.85);
+  border-bottom: 2px solid rgba(255,255,255,0.85);
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-60%) rotate(45deg);
+  transition: transform 0.2s ease;
+}
+
+.kangoo-mega-drawer__section[open] summary::after {
+  transform: translateY(-40%) rotate(-135deg);
+}
+
+.kangoo-mega-drawer__brand-list {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.kangoo-mega-drawer__brand-list a {
+  min-height: 52px;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* =========================
+   MOBILE MEGA DRAWER - CLEAN FINAL
+========================= */
+
+.kangoo-mega-drawer {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 10060 !important;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.kangoo-mega-drawer.is-open {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+.kangoo-mega-drawer__overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  background: rgba(0,0,0,0.78) !important;
+  backdrop-filter: blur(4px);
+  z-index: 10060 !important;
+}
+
+.kangoo-mega-drawer__panel {
+  position: fixed !important;
+  top: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  max-width: 100vw !important;
+  height: 100dvh !important;
+  background: #0d0d0f !important;
+  color: #fff !important;
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+  overflow-y: auto !important;
+  padding: 1.25rem !important;
+  z-index: 10061 !important;
+}
+
+.kangoo-mega-drawer.is-open .kangoo-mega-drawer__panel {
+  transform: translateX(0) !important;
+}
+
+.kangoo-mega-drawer__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.kangoo-mega-drawer__close {
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 12px;
+  background: rgba(255,255,255,0.05);
+  color: #fff;
+}
+
+.kangoo-mega-drawer__top-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+
+.kangoo-mega-drawer__top-links a {
+  padding: 0.7rem 0.9rem;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 999px;
+  background: rgba(255,255,255,0.04);
+  color: #fff;
+}
+
+.kangoo-mega-drawer__sections {
+  display: grid !important;
+  gap: 0.75rem;
+}
+
+.kangoo-mega-drawer__section {
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 16px;
+  background: rgba(255,255,255,0.03);
+  overflow: hidden;
+}
+
+.kangoo-mega-drawer__section summary {
+  position: relative;
+  display: block;
+  padding: 1rem 3rem 1rem 1rem;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;
+}
+
+.kangoo-mega-drawer__section summary::-webkit-details-marker {
+  display: none;
+}
+
+.kangoo-mega-drawer__section summary::after {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid rgba(255,255,255,0.85);
+  border-bottom: 2px solid rgba(255,255,255,0.85);
+  position: absolute;
+  right: 1.15rem;
+  top: 50%;
+  transform: translateY(-60%) rotate(45deg);
+  transition: transform 0.2s ease;
+}
+
+.kangoo-mega-drawer__section[open] summary::after {
+  transform: translateY(-40%) rotate(-135deg);
+}
+
+.kangoo-mega-drawer__direct-link {
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 58px;
+  padding: 1rem;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 16px;
+  background: rgba(255,255,255,0.04);
+  color: #fff !important;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.kangoo-mega-drawer__direct-link::after {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(-45deg);
+}
+
+.kangoo-mega-drawer__section-body {
+  padding: 0 1rem 1rem;
+}
+
+.kangoo-mega-drawer__brand-list {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+
+.kangoo-mega-drawer__brand-list a,
+.kangoo-mega-drawer__flavour-list a,
+.kangoo-mega-drawer__custom-links a {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  min-height: 52px;
+  padding: 0.85rem 0.95rem;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  background: rgba(255,255,255,0.045);
+  color: #fff !important;
+  text-align: center;
+}
+
+.kangoo-mega-drawer__strength-item {
+  display: grid !important;
+  gap: 0.75rem;
+  background: rgba(255,255,255,0.05) !important;
+  border: 1px solid rgba(255,255,255,0.12) !important;
+  border-radius: 18px !important;
+  padding: 1rem !important;
+  color: #fff !important;
+  text-decoration: none !important;
+  min-height: 140px;
+}
+
+.kangoo-mega-drawer__strength-header {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.75rem !important;
+}
+
+.kangoo-mega-drawer__strength-badge {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+.kangoo-mega-drawer__strength-item strong {
+  font-size: 0.95rem;
+  font-weight: 700;
+  display: block;
+}
+
+.kangoo-mega-drawer__strength-mg {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--color-accent);
+}
+
+.kangoo-mega-drawer__dots {
+  display: flex;
+  gap: 0.35rem;
+  margin-top: 0.5rem;
+}
+
+.kangoo-mega-drawer__dots span {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.55);
+}
+
+.kangoo-mega-drawer__strength-copy {
+  margin: 0;
+  color: var(--color-text-soft);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.kangoo-mega-drawer__flavour-list,
+.kangoo-mega-drawer__strength-list,
+.kangoo-mega-drawer__custom-links {
+  display: grid !important;
+  gap: 0.6rem;
+}
+
+.kangoo-mega-drawer__flavour-list {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.kangoo-mega-drawer__flavour-list a {
+  display: grid !important;
+  align-content: end;
+  justify-items: center;
+  gap: 0.75rem;
+  min-height: 120px;
+  color: inherit !important;
+  text-align: center;
+}
+
+.kangoo-mega-drawer__flavour-list img {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+}
+
+.kangoo-mega-drawer__brand-list a {
+  flex-direction: column;
+}
+
+.kangoo-mega-drawer__brand-list img {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  margin-bottom: 0.35rem;
+}
+
+@media (max-width: 420px) {
+  .custom-logo {
+    max-width: 155px !important;
+    max-height: 42px !important;
+    object-fit: contain;
+  }
+
+  .site-header__inner > .container {
+    gap: 0.45rem;
+  }
+
+  .site-header__actions {
+    gap: 0.45rem;
+  }
+
+  .site-header__search,
+  .site-header__account,
+  .site-header__menu-toggle,
+  .site-header__cart {
+    width: 40px;
+    height: 40px;
+    flex: 0 0 40px;
+  }
+}

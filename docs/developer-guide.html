@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kangoo Pouches Developer Guide</title>
+  <link rel="stylesheet" href="developer-guide.css">
+</head>
+<body>
+  <header class="guide-hero">
+    <nav class="guide-topbar" aria-label="Documentation navigation">
+      <a class="guide-brand" href="#top" aria-label="Kangoo Pouches developer guide home">
+        <span class="guide-brand__mark">K</span>
+        <span>
+          <strong>Kangoo Pouches</strong>
+          <small>Developer Guide</small>
+        </span>
+      </a>
+      <div class="guide-topbar__actions">
+        <a href="DEVELOPER_DOCUMENTATION.md">Source Markdown</a>
+        <a href="#release">Release Checklist</a>
+      </div>
+    </nav>
+
+    <section id="top" class="guide-hero__content">
+      <div>
+        <p class="eyebrow">Engineering handover</p>
+        <h1>Everything a future developer needs to understand Kangoo Pouches.</h1>
+        <p class="hero-copy">A practical map of the WordPress theme, WooCommerce logic, rewards, coupons, cart drawer, mascot plugin, Android app, and APK update flow.</p>
+        <div class="hero-actions">
+          <a class="button button--primary" href="#quick-start">Start Reading</a>
+          <a class="button button--ghost" href="#function-map">Function Map</a>
+        </div>
+      </div>
+      <aside class="hero-panel" aria-label="Project summary">
+        <dl>
+          <div>
+            <dt>Website</dt>
+            <dd>WordPress + WooCommerce</dd>
+          </div>
+          <div>
+            <dt>Theme Logic</dt>
+            <dd><code>functions.php</code></dd>
+          </div>
+          <div>
+            <dt>Native App</dt>
+            <dd>Android Java APK</dd>
+          </div>
+          <div>
+            <dt>Current App</dt>
+            <dd>v0.6.0, code 19</dd>
+          </div>
+        </dl>
+      </aside>
+    </section>
+  </header>
+
+  <div class="guide-shell">
+    <aside class="sidebar" aria-label="Table of contents">
+      <label class="search-label" for="doc-search">Search guide</label>
+      <input id="doc-search" class="doc-search" type="search" placeholder="Search rewards, cart, APK...">
+      <nav class="toc">
+        <a href="#quick-start">Quick Start</a>
+        <a href="#systems">Systems</a>
+        <a href="#business-rules">Business Rules</a>
+        <a href="#theme">Theme Files</a>
+        <a href="#woocommerce">WooCommerce</a>
+        <a href="#frontend">Frontend JS</a>
+        <a href="#mascot">Mascot Plugin</a>
+        <a href="#app-api">App API</a>
+        <a href="#android">Android App</a>
+        <a href="#function-map">Function Map</a>
+        <a href="#release">Release Checklist</a>
+      </nav>
+    </aside>
+
+    <main class="content">
+      <section id="quick-start" class="doc-section" data-search="quick start overview workspace folder source of truth">
+        <p class="eyebrow">Quick start</p>
+        <h2>Where Things Live</h2>
+        <div class="card-grid card-grid--three">
+          <article class="info-card">
+            <span>Theme</span>
+            <h3><code>C:\Users\sheri\Documents\GitHub\kp</code></h3>
+            <p>The WordPress theme root. Most behaviour lives in <code>functions.php</code>, template parts, WooCommerce overrides, and frontend assets.</p>
+          </article>
+          <article class="info-card">
+            <span>Android App</span>
+            <h3><code>android-app/</code></h3>
+            <p>Native Java APK. Product data is fetched live from WooCommerce, while checkout transfers to the secure website checkout.</p>
+          </article>
+          <article class="info-card">
+            <span>Plugins</span>
+            <h3><code>kangoo-app-api/</code> and <code>kangoo-helper-mascot/</code></h3>
+            <p>Standalone plugin code for the app REST bridge and animated pouch finder mascot.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="systems" class="doc-section" data-search="architecture systems website wordpress woocommerce app api mascot rewards cart">
+        <p class="eyebrow">Architecture</p>
+        <h2>Main Systems</h2>
+        <div class="system-list">
+          <article>
+            <strong>WooCommerce Storefront</strong>
+            <p>Products, stock, cart, orders, checkout, coupons, shipping, customer accounts, and product prices remain controlled by WooCommerce.</p>
+          </article>
+          <article>
+            <strong>Theme Enhancements</strong>
+            <p>The custom theme adds pack pricing, AJAX cart, low stock handling, rewards, account drawer, free delivery nudges, search, age checks, schema, and modern templates.</p>
+          </article>
+          <article>
+            <strong>Android App</strong>
+            <p>The app is native Android and uses live website data. It does not store WooCommerce product data internally.</p>
+          </article>
+          <article>
+            <strong>App API Plugin</strong>
+            <p>A private REST bridge handles login, rewards, orders, addresses, checkout transfer, app update checks, and app event tracking.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="business-rules" class="doc-section" data-search="business rules free shipping coupon rewards stock low stock pack pricing age gate">
+        <p class="eyebrow">Business rules</p>
+        <h2>Rules That Must Stay Consistent</h2>
+        <div class="rule-grid">
+          <article class="rule-card">
+            <h3>Free Delivery</h3>
+            <p>Free UK delivery unlocks at <strong>14.95 GBP</strong>. Rewards should not reduce qualification.</p>
+            <code>kangoo_free_shipping_threshold()</code>
+          </article>
+          <article class="rule-card">
+            <h3>Kangoo Rewards</h3>
+            <p>1 point per 1 GBP earned. 100 points = 1 GBP. Minimum redemption is 100 points.</p>
+            <code>kangoo_rewards_points_per_pound_value()</code>
+          </article>
+          <article class="rule-card">
+            <h3>Coupons</h3>
+            <p>URL coupons use <code>?coupon=CODE</code>. The reserved rewards code is <code>kangoo-rewards</code>.</p>
+            <code>kangoo_apply_url_coupon()</code>
+          </article>
+          <article class="rule-card">
+            <h3>Low Stock</h3>
+            <p>Show low stock messaging from 1 to 9 remaining and prevent selecting pack sizes above available stock.</p>
+            <code>kangoo_get_low_stock_message()</code>
+          </article>
+          <article class="rule-card">
+            <h3>Pack Pricing</h3>
+            <p>Pack tiers are ACF-driven. Cart pricing is applied by setting the unit price based on quantity tier.</p>
+            <code>kangoo_apply_pack_pricing_to_cart()</code>
+          </article>
+          <article class="rule-card">
+            <h3>18+ Checks</h3>
+            <p>The site has an age gate and checkout age verification. Order metadata stores the submitted verification.</p>
+            <code>kangoo_validate_checkout_age_verification()</code>
+          </article>
+        </div>
+      </section>
+
+      <section id="theme" class="doc-section" data-search="theme files header footer front page templates css page templates">
+        <p class="eyebrow">Theme</p>
+        <h2>Theme File Map</h2>
+        <div class="file-table">
+          <div><code>functions.php</code><span>Main theme logic: rewards, cart, stock, pricing, API helpers, assets, schema, age checks.</span></div>
+          <div><code>header.php</code><span>Age gate, mega menu, logo, search, account trigger, cart trigger, navigation.</span></div>
+          <div><code>front-page.php</code><span>ACF flexible homepage. Injects app CTA and pouch finder CTA after hero.</span></div>
+          <div><code>template-parts/home/</code><span>Homepage sections: hero, product rows, app CTA, brand grid, finder CTA, FAQs.</span></div>
+          <div><code>page-templates/</code><span>Tool and landing pages: app, pouch finder, comparison, strength ladder, flavour explorer, build-a-box.</span></div>
+          <div><code>assets/css/</code><span>Feature and page-specific styling split into focused files.</span></div>
+        </div>
+      </section>
+
+      <section id="woocommerce" class="doc-section" data-search="woocommerce product card cart checkout drawer free shipping rewards pricing stock">
+        <p class="eyebrow">WooCommerce</p>
+        <h2>Storefront Behaviour</h2>
+        <div class="timeline">
+          <div>
+            <span>1</span>
+            <h3>Product Card</h3>
+            <p><code>woocommerce/content-product.php</code> renders stock badges, strength, price, low-stock text, quick add, pack modal, and AJAX add controls.</p>
+          </div>
+          <div>
+            <span>2</span>
+            <h3>Single Product</h3>
+            <p><code>woocommerce/single-product.php</code> renders the custom product page, gallery, stock note, strength pills, pack selector, and trust bullets.</p>
+          </div>
+          <div>
+            <span>3</span>
+            <h3>Cart Drawer</h3>
+            <p><code>assets/js/ajax-cart.js</code> and Woo fragments keep the sidebar cart, badge, subtotal, clear cart, and delivery nudge synchronized.</p>
+          </div>
+          <div>
+            <span>4</span>
+            <h3>Checkout</h3>
+            <p>WooCommerce remains the secure payment layer. Age verification and rewards metadata are added by the theme.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="frontend" class="doc-section" data-search="javascript ajax cart account drawer search mega menu pouch finder comparison">
+        <p class="eyebrow">Frontend</p>
+        <h2>JavaScript Responsibilities</h2>
+        <div class="accordion" data-accordion>
+          <details open>
+            <summary><code>assets/js/main.js</code></summary>
+            <p>Global UI: mega menu, mobile drawer, search overlay, rewards forms, age gate, checkout age fields, terms links, and free shipping nudges.</p>
+          </details>
+          <details>
+            <summary><code>assets/js/ajax-cart.js</code></summary>
+            <p>AJAX cart, add-to-cart states, product card quantity logic, pack modals, quick add, mini-cart controls, clear cart, and stock-limited messages.</p>
+          </details>
+          <details>
+            <summary><code>assets/js/account-drawer.js</code></summary>
+            <p>Account drawer tabs, login, registration, logout, drawer messages, and redirects.</p>
+          </details>
+          <details>
+            <summary><code>assets/js/pouch-finder.js</code></summary>
+            <p>Multi-step guided questionnaire scoring products by experience, strength, flavour, and use case.</p>
+          </details>
+          <details>
+            <summary><code>assets/js/pouch-comparison.js</code> and <code>build-a-box.js</code></summary>
+            <p>Interactive comparison table and pick-n-mix bundle builder.</p>
+          </details>
+        </div>
+      </section>
+
+      <section id="mascot" class="doc-section" data-search="mascot kangoo helper plugin sprite pouch finder localstorage">
+        <p class="eyebrow">Standalone plugin</p>
+        <h2>Kangoo Helper Mascot</h2>
+        <div class="feature-split">
+          <div>
+            <p>The mascot plugin is separate from the theme so it can be updated or disabled without changing storefront code. It appears as an animated pouch finder prompt, skips the Pouch Finder page, and remembers dismissal in localStorage.</p>
+            <ul class="check-list">
+              <li>Plugin: <code>kangoo-helper-mascot/</code></li>
+              <li>Main file: <code>kangoo-helper-mascot.php</code></li>
+              <li>Sprite: <code>assets/kangoo-mascot-sprite.png</code></li>
+              <li>Storage key: <code>kangoo_helper_mascot_dismissed</code></li>
+            </ul>
+          </div>
+          <div class="mini-code">
+            <strong>Core functions</strong>
+            <code>kangoo_helper_mascot_enqueue_assets()</code>
+            <code>kangoo_helper_mascot_is_pouch_finder()</code>
+            <code>kangoo_helper_mascot_render()</code>
+          </div>
+        </div>
+      </section>
+
+      <section id="app-api" class="doc-section" data-search="app api rest endpoints login rewards orders checkout transfer apk update tracking">
+        <p class="eyebrow">Standalone plugin</p>
+        <h2>Kangoo App API</h2>
+        <p class="section-intro">The API plugin is the bridge between the native app and WooCommerce. It keeps sensitive logic on WordPress and lets the app remain lightweight.</p>
+        <div class="endpoint-grid">
+          <span>GET <code>/config</code></span>
+          <span>POST <code>/event</code></span>
+          <span>POST <code>/login</code></span>
+          <span>POST <code>/register</code></span>
+          <span>GET <code>/me</code></span>
+          <span>GET <code>/rewards</code></span>
+          <span>GET <code>/orders</code></span>
+          <span>POST <code>/reorder</code></span>
+          <span>GET/POST <code>/addresses</code></span>
+          <span>POST <code>/checkout</code></span>
+          <span>GET/POST <code>/alerts</code></span>
+          <span>POST <code>/push-token</code></span>
+        </div>
+        <div class="callout">
+          <strong>Checkout flow</strong>
+          <p>The app posts cart items to the API. The API creates a short-lived transfer URL. The website rebuilds the WooCommerce cart and redirects to secure checkout.</p>
+        </div>
+      </section>
+
+      <section id="android" class="doc-section" data-search="android app apk java mainactivity build gradle version code">
+        <p class="eyebrow">Android</p>
+        <h2>Native App</h2>
+        <div class="command-card">
+          <p>Build command:</p>
+          <pre><code>$env:JAVA_HOME="C:\Program Files\Android\Android Studio\jbr"
+$env:ANDROID_HOME="C:\Users\sheri\AppData\Local\Android\Sdk"
+$env:ANDROID_SDK_ROOT="C:\Users\sheri\AppData\Local\Android\Sdk"
+.\gradlew.bat assembleDebug --no-daemon</code></pre>
+        </div>
+        <div class="file-table">
+          <div><code>MainActivity.java</code><span>Single native activity with splash, home, shop, cart, rewards, account, filters, update checks, and checkout handoff.</span></div>
+          <div><code>app/build.gradle</code><span>App namespace, SDK versions, <code>versionCode</code>, and <code>versionName</code>.</span></div>
+          <div><code>res/drawable</code><span>Bottom nav, search, mic, trash, cart, account, diamond, and shop icons.</span></div>
+          <div><code>res/mipmap-*</code><span>Installed app icon assets.</span></div>
+        </div>
+      </section>
+
+      <section id="function-map" class="doc-section" data-search="function map php index rewards cart api android javascript">
+        <p class="eyebrow">Function map</p>
+        <h2>Where To Look First</h2>
+        <div class="function-grid">
+          <article>
+            <h3>Rewards</h3>
+            <p><code>kangoo_rewards_*()</code></p>
+            <small>Points balance, history, redemption, account endpoint, order earning/refunds.</small>
+          </article>
+          <article>
+            <h3>Cart Drawer</h3>
+            <p><code>kangoo_ajax_*cart*()</code></p>
+            <small>Mini-cart fragments, quantity updates, remove item, clear cart, add-to-cart.</small>
+          </article>
+          <article>
+            <h3>Pack Pricing</h3>
+            <p><code>kangoo_get_pack_pricing_*()</code></p>
+            <small>ACF tiers, selected quantity, unit price, stock-aware disabling.</small>
+          </article>
+          <article>
+            <h3>App API</h3>
+            <p><code>kangoo_app_api_*()</code></p>
+            <small>REST routes, tokens, checkout transfer, rewards payload, app tracking.</small>
+          </article>
+          <article>
+            <h3>Android</h3>
+            <p><code>MainActivity.java</code></p>
+            <small>Native screens, cart, search, filters, update card, checkout handoff.</small>
+          </article>
+          <article>
+            <h3>Search</h3>
+            <p><code>kangoo_ajax_search()</code></p>
+            <small>Website AJAX search results for products and guides.</small>
+          </article>
+        </div>
+        <p class="source-note">The exhaustive function-by-function list is in <a href="DEVELOPER_DOCUMENTATION.md">DEVELOPER_DOCUMENTATION.md</a>.</p>
+      </section>
+
+      <section id="release" class="doc-section" data-search="release checklist build apk plugin upload wordpress">
+        <p class="eyebrow">Release</p>
+        <h2>Safe Release Checklist</h2>
+        <ol class="release-list">
+          <li><strong>Theme changes:</strong> upload changed PHP/CSS/JS files, clear cache, test homepage, shop, cart, checkout, account, and product pages.</li>
+          <li><strong>API plugin:</strong> package with forward slashes so WordPress sees <code>kangoo-app-api/kangoo-app-api.php</code>.</li>
+          <li><strong>APK:</strong> bump <code>versionCode</code> and <code>versionName</code>, build, rename to <code>kangoo-pouches-vX.Y.Z.apk</code>, upload to <code>/app/android/</code>.</li>
+          <li><strong>Updates:</strong> leave WooCommerce > Kangoo App APK URL blank to auto-detect the newest APK.</li>
+          <li><strong>Final checks:</strong> app update notice, app checkout transfer, app order source meta, free shipping nudge, rewards, coupons, and low-stock limits.</li>
+        </ol>
+      </section>
+    </main>
+  </div>
+
+  <button class="back-to-top" type="button" aria-label="Back to top">Top</button>
+  <script src="developer-guide.js"></script>
+</body>
+</html>
