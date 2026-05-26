@@ -59,6 +59,10 @@ if ($is_quick_add_card && $is_variable) {
 ?>
 
 <article <?php wc_product_class('product-card', $product); ?> data-product-card-id="<?php echo esc_attr($product->get_id()); ?>">
+    <?php if (function_exists('kangoo_render_product_card_event_decoration')) : ?>
+        <?php kangoo_render_product_card_event_decoration(); ?>
+    <?php endif; ?>
+
     <?php if (!$product->is_in_stock()) : ?>
         <div class="product-badge product-badge--out-of-stock">
             <?php esc_html_e('Sold Out', 'kangoo'); ?>

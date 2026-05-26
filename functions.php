@@ -480,6 +480,9 @@ function kangoo_enqueue_assets() {
     wp_enqueue_style('kangoo-product', $css_uri . 'product.css', array('kangoo-shop'), $theme_version);
     wp_enqueue_style('kangoo-woocommerce', $css_uri . 'woocommerce.css', array('kangoo-product'), $theme_version);
     wp_enqueue_style('kangoo-account-drawer', $css_uri . 'account-drawer.css', array('kangoo-woocommerce'), $theme_version);
+    if (function_exists('kangoo_is_event_theme_active') && kangoo_is_event_theme_active()) {
+        wp_enqueue_style('kangoo-event-themes', $css_uri . 'event-themes.css', array('kangoo-woocommerce'), $theme_version);
+    }
 	wp_enqueue_style('kangoo-info-page', $css_uri . 'info-page.css', array('kangoo-header-footer'), $theme_version);
     wp_enqueue_style('kangoo-blog', $css_uri . 'blog.css', array('kangoo-header-footer'), $theme_version);
 
@@ -6199,6 +6202,7 @@ add_action('admin_menu', 'kangoo_theme_options_menu');
 require_once get_template_directory() . '/inc/pack-pricing-admin.php';
 require_once get_template_directory() . '/inc/product-url-brand-audit.php';
 require_once get_template_directory() . '/inc/shipping-operations.php';
+require_once get_template_directory() . '/inc/event-themes.php';
 
 function kangoo_acf_add_types_panel_choice($field) {
     if (!empty($field['choices']) && !array_key_exists('types', $field['choices'])) {
@@ -6509,4 +6513,3 @@ function kangoo_product_archive_stock_order_clauses($clauses, $query) {
     return $clauses;
 }
 add_filter('posts_clauses', 'kangoo_product_archive_stock_order_clauses', 999, 2);
-
