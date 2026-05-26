@@ -115,6 +115,10 @@
   transform: none;
 }
 
+.pack-pricing__option[hidden] {
+  display: none !important;
+}
+
 .pack-pricing__name,
 .pack-pricing__price {
   font-weight: 800;
@@ -153,6 +157,10 @@
 
 .product-stock-note--low {
   color: #ffb020;
+}
+
+.product-cart .stock {
+  display: none !important;
 }
 
 .pack-pricing-price {
@@ -289,6 +297,25 @@
 
 .product-accordion__content {
   padding: 0 1.25rem 1.25rem;
+}
+
+.single-product .product-accordion__content h1,
+.single-product .product-accordion__content h2 {
+  margin: 0 0 0.85rem;
+  font-size: clamp(1.55rem, 3vw, 2.15rem);
+  line-height: 1.12;
+  letter-spacing: 0;
+}
+
+.single-product .product-accordion__content h3 {
+  font-size: clamp(1.12rem, 2vw, 1.4rem);
+  line-height: 1.2;
+  letter-spacing: 0;
+}
+
+.single-product .product-accordion__content p {
+  font-size: clamp(0.95rem, 1.2vw, 1.05rem);
+  line-height: 1.65;
 }
 
 .product-accordion__content p:last-child { margin-bottom: 0; }
@@ -488,6 +515,68 @@
   body.single-product .kangoo-mobile-cart-sticky {
     display: none !important;
   }
+
+  .product-page__grid {
+    gap: var(--space-4);
+  }
+
+  .product-page__info {
+    gap: 0.85rem;
+  }
+
+  .product-media {
+    gap: var(--space-2);
+  }
+
+  .product-image {
+    min-height: clamp(260px, 72vw, 360px);
+    padding: 1.1rem;
+    border-radius: 20px;
+  }
+
+  .product-image img {
+    max-height: min(300px, 64vw);
+  }
+
+  .product-thumb {
+    width: 64px;
+    height: 64px;
+  }
+
+  .product-title {
+    margin-bottom: 0;
+    font-size: clamp(1.8rem, 8vw, 2.15rem);
+    gap: 0.35rem;
+  }
+
+  .product-subtitle {
+    margin-bottom: 0;
+  }
+
+  .product-highlights {
+    margin-top: 0;
+    gap: 0.25rem;
+  }
+
+  .product-price {
+    margin-top: 0.35rem;
+  }
+
+  .product-trust {
+    margin-top: var(--space-2);
+  }
+
+  .product-accordion {
+    margin-top: var(--space-5);
+  }
+
+  .product-accordion__item summary {
+    padding: 0.95rem 1rem;
+  }
+
+  .product-accordion__content {
+    padding: 0 1rem 1rem;
+  }
 }
 
 @media (min-width: 768px) {
@@ -538,7 +627,7 @@
     grid-template-columns: minmax(340px, 520px) minmax(420px, 620px);
     align-items: start;
     justify-content: space-between;
-    gap: clamp(2.5rem, 6vw, 6rem);
+    gap: clamp(2rem, 4.5vw, 4rem);
   }
 
   .product-media {
@@ -557,6 +646,28 @@
 
   .product-page__info {
     max-width: 620px;
+    gap: 0.9rem;
+  }
+
+  .product-price {
+    margin-top: 0.35rem;
+  }
+
+  .pack-pricing {
+    gap: 0.65rem;
+    margin: 0.75rem 0 1rem;
+  }
+
+  .pack-pricing__option {
+    padding: 0.75rem 0.9rem;
+  }
+
+  .product-trust {
+    margin-top: 0.75rem;
+  }
+
+  .product-accordion {
+    margin-top: var(--space-6);
   }
 
   .product-highlights--mobile {
@@ -565,8 +676,8 @@
 
   .product-highlights-panel {
     display: grid;
-    gap: 0.65rem;
-    padding: 1rem;
+    gap: 0.5rem;
+    padding: 0.85rem;
     border: 1px solid var(--color-border);
     border-radius: 8px;
     background: rgba(255,255,255,0.03);

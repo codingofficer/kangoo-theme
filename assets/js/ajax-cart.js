@@ -2107,7 +2107,10 @@ jQuery(function ($) {
       const packQty = Math.max(1, parseInt($option.data('pack-qty'), 10) || 1);
       const isUnavailable = stockLimit !== null && packQty > stockLimit;
 
-      $option.prop('disabled', isUnavailable).toggleClass('is-disabled', isUnavailable);
+      $option
+        .prop('disabled', isUnavailable)
+        .prop('hidden', isUnavailable)
+        .toggleClass('is-disabled', isUnavailable);
 
       const $badge = $option.find('.pack-pricing__badge');
 
@@ -2116,17 +2119,10 @@ jQuery(function ($) {
       }
 
       if (isUnavailable) {
-        const threshold = window.kangooLowStockPublicThreshold || 3;
-        const stockMessage = stockLimit !== null && stockLimit > 0 && stockLimit < threshold
-          ? (stockLimit === 1 ? 'Only 1 left' : 'Only ' + stockLimit + ' left')
-          : 'Not enough stock';
+        return;
+      }
 
-        if ($badge.length) {
-          $badge.addClass('pack-pricing__badge--muted').text(stockMessage);
-        } else {
-          $option.append('<span class="pack-pricing__badge pack-pricing__badge--muted">' + stockMessage + '</span>');
-        }
-      } else if ($badge.length) {
+      if ($badge.length) {
         const originalBadge = $badge.attr('data-original-badge') || '';
 
         $badge.removeClass('pack-pricing__badge--muted');
@@ -2388,6 +2384,8 @@ jQuery(function ($) {
     const signature = values.map(function (tier) {
       return tier.qty + ':' + tier.unitPrice;
     }).join('|');
+
+    $sticky.toggleClass('sticky-add--single-pack', values.length <= 1);
 
     if ($select.attr('data-options-signature') !== signature) {
       $select.empty();

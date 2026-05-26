@@ -2362,18 +2362,46 @@ function kangoo_render_pack_pricing_selector() {
     }
 
     $stock_limit = kangoo_get_product_stock_limit($product);
+    $available_tiers = array();
+
+    foreach ($tiers as $tier) {
+        $quantity = isset($tier['quantity']) ? (int) $tier['quantity'] : 0;
+
+        if ($quantity < 1) {
+            continue;
+        }
+
+        if ($stock_limit !== null && $quantity > $stock_limit) {
+            continue;
+        }
+
+        $available_tiers[] = $tier;
+    }
+
+    if (empty($available_tiers)) {
+        return;
+    }
+
+    $active_quantity = (int) $available_tiers[0]['quantity'];
+
+    foreach ($available_tiers as $tier) {
+        if (!empty($tier['default_selected'])) {
+            $active_quantity = (int) $tier['quantity'];
+            break;
+        }
+    }
+
     $active_set = false;
     ?>
     <div class="pack-pricing" data-pack-pricing>
         <span class="pack-pricing__label"><?php esc_html_e('Choose pack size', 'kangoo'); ?></span>
         <div class="pack-pricing__options">
-            <?php foreach ($tiers as $tier) : ?>
+            <?php foreach ($available_tiers as $tier) : ?>
                 <?php
                 $quantity = (int) $tier['quantity'];
                 $pack_price = (float) $tier['pack_price'];
                 $unit_price = (float) $tier['unit_price'];
-                $is_unavailable = $stock_limit !== null && $quantity > $stock_limit;
-                $is_active = !$active_set && !$is_unavailable && (!empty($tier['default_selected']) || $stock_limit !== null);
+                $is_active = !$active_set && $quantity === $active_quantity;
 
                 if ($is_active) {
                     $active_set = true;
@@ -2381,12 +2409,11 @@ function kangoo_render_pack_pricing_selector() {
                 ?>
                 <button
                     type="button"
-                    class="pack-pricing__option<?php echo $is_active ? ' is-active' : ''; ?><?php echo $is_unavailable ? ' is-disabled' : ''; ?>"
+                    class="pack-pricing__option<?php echo $is_active ? ' is-active' : ''; ?>"
                     data-pack-qty="<?php echo esc_attr($quantity); ?>"
                     data-pack-price="<?php echo esc_attr($pack_price); ?>"
                     data-unit-price="<?php echo esc_attr($unit_price); ?>"
                     aria-pressed="<?php echo $is_active ? 'true' : 'false'; ?>"
-                    <?php disabled($is_unavailable); ?>
                 >
                     <span class="pack-pricing__name">
                         <?php
@@ -2398,20 +2425,7 @@ function kangoo_render_pack_pricing_selector() {
                     </span>
                     <span class="pack-pricing__price"><?php echo wp_kses_post(wc_price($pack_price)); ?></span>
                     <span class="pack-pricing__unit"><?php echo wp_kses_post(wc_price($unit_price)); ?><?php esc_html_e('/unit', 'kangoo'); ?></span>
-                    <?php if ($is_unavailable) : ?>
-                        <span class="pack-pricing__badge pack-pricing__badge--muted">
-                            <?php
-                            if ($stock_limit !== null && $stock_limit > 0 && $stock_limit < kangoo_low_stock_public_threshold()) {
-                                printf(
-                                    esc_html(_n('Only %d left', 'Only %d left', (int) $stock_limit, 'kangoo')),
-                                    (int) $stock_limit
-                                );
-                            } else {
-                                esc_html_e('Not enough stock', 'kangoo');
-                            }
-                            ?>
-                        </span>
-                    <?php elseif (!empty($tier['badge'])) : ?>
+                    <?php if (!empty($tier['badge'])) : ?>
                         <span class="pack-pricing__badge"><?php echo esc_html($tier['badge']); ?></span>
                     <?php endif; ?>
                 </button>
