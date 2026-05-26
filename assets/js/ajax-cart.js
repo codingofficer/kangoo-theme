@@ -2229,7 +2229,9 @@ jQuery(function ($) {
   }
 
   function parseStickyPrice(input) {
-    const text = $('<div>').html(input || '').text();
+    const $html = $('<div>').html(input || '');
+    const saleText = $html.find('ins').last().text();
+    const text = saleText || $html.text();
     const match = text.match(/-?\d[\d,.]*/);
 
     if (!match) {
