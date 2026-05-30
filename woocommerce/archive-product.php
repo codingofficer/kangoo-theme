@@ -159,6 +159,7 @@ if ($term_taxonomy === 'product_cat') {
     <section class="section category-page__products">
         <div class="container">
 			<?php
+			$current_brand    = isset($_GET['filter_brand']) ? sanitize_title(wp_unslash($_GET['filter_brand'])) : '';
 			$current_flavour  = isset($_GET['filter_flavour']) ? sanitize_title(wp_unslash($_GET['filter_flavour'])) : '';
 			$current_strength = isset($_GET['filter_strength']) ? sanitize_title(wp_unslash($_GET['filter_strength'])) : '';
 			$current_orderby  = isset($_GET['orderby']) ? sanitize_text_field(wp_unslash($_GET['orderby'])) : '';
@@ -197,6 +198,19 @@ if ($term_taxonomy === 'product_cat') {
 				</div>
 
 				<div class="category-filter__fields">
+					<select name="filter_brand">
+						<option value="">Brand</option>
+						<?php
+						$brands = function_exists('kangoo_product_filter_options') ? kangoo_product_filter_options('brand') : array();
+
+						foreach ($brands as $brand_slug => $brand) :
+							?>
+							<option value="<?php echo esc_attr($brand_slug); ?>" <?php selected($current_brand, $brand_slug); ?>>
+								<?php echo esc_html($brand); ?>
+							</option>
+						<?php endforeach; ?>
+					</select>
+
 					<select name="filter_flavour">
 						<option value="">Flavour</option>
 						<?php

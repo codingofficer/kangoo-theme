@@ -2998,7 +2998,7 @@ function kangoo_get_archive_seo_context() {
 }
 
 function kangoo_archive_has_filter_query() {
-    $filter_keys = array('filter_flavour', 'filter_strength', 'orderby', 'min_price', 'max_price', 's');
+    $filter_keys = array('filter_brand', 'filter_flavour', 'filter_strength', 'orderby', 'min_price', 'max_price', 's');
 
     foreach ($filter_keys as $key) {
         if (isset($_GET[$key]) && trim((string) wp_unslash($_GET[$key])) !== '') {
@@ -6257,12 +6257,30 @@ function kangoo_sold_out_availability_text($availability, $product) {
 add_filter('woocommerce_get_availability_text', 'kangoo_sold_out_availability_text', 10, 2);
 
 function kangoo_product_filter_taxonomy($filter) {
-    $taxonomy = $filter === 'flavour' ? 'pa_flavour' : 'pa_strength';
+    $taxonomies = array(
+        'brand'    => 'pa_brand',
+        'flavour'  => 'pa_flavour',
+        'strength' => 'pa_strength',
+    );
+
+    $taxonomy = isset($taxonomies[$filter]) ? $taxonomies[$filter] : '';
 
     return taxonomy_exists($taxonomy) ? $taxonomy : '';
 }
 
 function kangoo_product_filter_fallback_options($filter) {
+    if ($filter === 'brand') {
+        return array(
+            'zyn'           => __('ZYN', 'kangoo'),
+            'velo'          => __('VELO', 'kangoo'),
+            'killa'         => __('KILLA', 'kangoo'),
+            'pablo'         => __('PABLO', 'kangoo'),
+            'fumi'          => __('FUMi', 'kangoo'),
+            'nordic-spirit' => __('Nordic Spirit', 'kangoo'),
+            'xqs'           => __('XQS', 'kangoo'),
+        );
+    }
+
     if ($filter === 'flavour') {
         return array(
             'mint'         => __('Mint', 'kangoo'),
@@ -6289,6 +6307,41 @@ function kangoo_product_filter_fallback_options($filter) {
 }
 
 function kangoo_product_filter_options($filter) {
+    if ($filter === 'brand') {
+        $options = array();
+        $taxonomy = kangoo_product_filter_taxonomy($filter);
+
+        if ($taxonomy) {
+            $terms = get_terms(array(
+                'taxonomy'   => $taxonomy,
+                'hide_empty' => true,
+            ));
+
+            if (!is_wp_error($terms) && !empty($terms)) {
+                foreach ($terms as $term) {
+                    $options[$term->slug] = $term->name;
+                }
+            }
+        }
+
+        $fallback_options = kangoo_product_filter_fallback_options($filter);
+
+        foreach ($fallback_options as $brand_slug => $brand_label) {
+            if (isset($options[$brand_slug])) {
+                continue;
+            }
+
+            $has_category = taxonomy_exists('product_cat') && get_term_by('slug', $brand_slug, 'product_cat');
+            $has_tag = taxonomy_exists('product_tag') && get_term_by('slug', $brand_slug, 'product_tag');
+
+            if ($has_category || $has_tag) {
+                $options[$brand_slug] = $brand_label;
+            }
+        }
+
+        return !empty($options) ? $options : $fallback_options;
+    }
+
     $taxonomy = kangoo_product_filter_taxonomy($filter);
 
     if ($taxonomy) {
@@ -6329,6 +6382,25 @@ function kangoo_add_product_filter_query($query, $filter, $value) {
         );
 
         $query->set('tax_query', $tax_query);
+        return;
+    }
+
+    if ($filter === 'brand') {
+        foreach (array('product_cat', 'product_tag') as $fallback_taxonomy) {
+            if (!taxonomy_exists($fallback_taxonomy) || !get_term_by('slug', $value, $fallback_taxonomy)) {
+                continue;
+            }
+
+            $tax_query = (array) $query->get('tax_query');
+            $tax_query[] = array(
+                'taxonomy' => $fallback_taxonomy,
+                'field'    => 'slug',
+                'terms'    => $value,
+            );
+
+            $query->set('tax_query', $tax_query);
+            return;
+        }
     }
 }
 
@@ -6467,6 +6539,10 @@ function kangoo_filter_product_category_query($query) {
     $query->set('posts_per_page', 10);
 
     $meta_query = (array) $query->get('meta_query');
+
+    if (!empty($_GET['filter_brand'])) {
+        kangoo_add_product_filter_query($query, 'brand', wp_unslash($_GET['filter_brand']));
+    }
 
     if (!empty($_GET['filter_flavour'])) {
         kangoo_add_product_filter_query($query, 'flavour', wp_unslash($_GET['filter_flavour']));
