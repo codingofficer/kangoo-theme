@@ -1684,6 +1684,24 @@ document.addEventListener('DOMContentLoaded', function () {
     const readMoreToggle = document.querySelector('[data-category-readmore-toggle]');
     const productGrid = document.querySelector('.category-page__products .woo-grid');
 
+    if (filter) {
+      filter.addEventListener('submit', function () {
+        const emptyFields = filter.querySelectorAll('select[name], input[name]');
+
+        emptyFields.forEach(function (field) {
+          if (field.value === '') {
+            field.disabled = true;
+          }
+        });
+
+        window.setTimeout(function () {
+          emptyFields.forEach(function (field) {
+            field.disabled = false;
+          });
+        }, 0);
+      });
+    }
+
     document.querySelectorAll('[data-category-filter-open]').forEach(function (button) {
       button.addEventListener('click', function () {
         document.body.classList.add('category-filter-open');
