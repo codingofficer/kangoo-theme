@@ -163,14 +163,27 @@ if ($term_taxonomy === 'product_cat') {
 			$current_flavour  = isset($_GET['filter_flavour']) ? sanitize_title(wp_unslash($_GET['filter_flavour'])) : '';
 			$current_strength = isset($_GET['filter_strength']) ? sanitize_title(wp_unslash($_GET['filter_strength'])) : '';
 			$current_orderby  = isset($_GET['orderby']) ? sanitize_text_field(wp_unslash($_GET['orderby'])) : '';
+            $is_brand_category_filter_context = $term instanceof WP_Term && $term_taxonomy === 'product_cat' && function_exists('kangoo_is_product_brand_category_slug') && kangoo_is_product_brand_category_slug($term->slug);
 
-            if ($current_brand === '' && $term instanceof WP_Term && $term_taxonomy === 'product_cat' && function_exists('kangoo_is_product_brand_category_slug') && kangoo_is_product_brand_category_slug($term->slug)) {
+            if ($current_brand === '' && $is_brand_category_filter_context) {
                 $current_brand = $term->slug;
             }
 
 			$base_url = $term instanceof WP_Term ? get_term_link($term) : get_permalink(wc_get_page_id('shop'));
             if (is_wp_error($base_url) || !$base_url) {
                 $base_url = home_url('/');
+            }
+
+            $filter_action_url = $base_url;
+            $filter_reset_url = $base_url;
+
+            if ($is_brand_category_filter_context) {
+                $nicotine_pouches_url = function_exists('kangoo_get_term_url_by_slug')
+                    ? kangoo_get_term_url_by_slug('product_cat', 'nicotine-pouches', '/product-category/nicotine-pouches/')
+                    : home_url('/product-category/nicotine-pouches/');
+
+                $filter_action_url = $nicotine_pouches_url;
+                $filter_reset_url = $nicotine_pouches_url;
             }
 
             $product_count = isset($GLOBALS['wp_query']->found_posts) ? (int) $GLOBALS['wp_query']->found_posts : (int) wp_count_posts('product')->publish;
@@ -185,14 +198,14 @@ if ($term_taxonomy === 'product_cat') {
 
             <div class="category-filter-backdrop" data-category-filter-close></div>
 
-			<form class="category-filter" method="get" data-category-filter>
+			<form class="category-filter" method="get" action="<?php echo esc_url($filter_action_url); ?>" data-category-filter>
 				<div class="category-filter__top">
 					<div>
 						<h2>Filter by</h2>
 						<span><?php echo esc_html($product_count); ?> products</span>
 					</div>
 
-					<a class="category-filter__reset" href="<?php echo esc_url($base_url); ?>">
+					<a class="category-filter__reset" href="<?php echo esc_url($filter_reset_url); ?>">
 						Reset
 					</a>
 

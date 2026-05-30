@@ -1685,14 +1685,24 @@ document.addEventListener('DOMContentLoaded', function () {
     const productGrid = document.querySelector('.category-page__products .woo-grid');
 
     if (filter) {
-      filter.addEventListener('submit', function () {
+      filter.addEventListener('submit', function (event) {
         const emptyFields = filter.querySelectorAll('select[name], input[name]');
+        let hasValue = false;
 
         emptyFields.forEach(function (field) {
           if (field.value === '') {
             field.disabled = true;
+            return;
           }
+
+          hasValue = true;
         });
+
+        if (!hasValue && filter.action) {
+          event.preventDefault();
+          window.location.assign(filter.action);
+          return;
+        }
 
         window.setTimeout(function () {
           emptyFields.forEach(function (field) {
