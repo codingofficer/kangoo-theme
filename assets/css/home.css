@@ -305,14 +305,21 @@
     width: 100%;
   }
 
-  .hero__tools {
-    gap: 0.55rem;
+  .hero__tools,
+  .hero__trust {
+    display: none;
   }
 
-  .hero__tools a {
-    min-height: 40px;
-    padding-inline: 0.62rem;
-    font-size: 0.8rem;
+  .hero.section + .home-auto-products {
+    padding-top: 0;
+  }
+
+  .hero.section + .home-auto-products .section-header {
+    display: none;
+  }
+
+  .hero.section + .home-auto-products .grid--products {
+    margin-top: 0;
   }
 
   .home-finder-cta {
