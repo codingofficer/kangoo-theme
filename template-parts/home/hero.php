@@ -6,7 +6,8 @@ $cta_primary_text = get_sub_field('cta_primary_text');
 $cta_secondary_link = get_sub_field('cta_secondary_link');
 $cta_secondary_text = get_sub_field('cta_secondary_text');
 $finder_url = function_exists('kangoo_get_page_url_by_template') ? kangoo_get_page_url_by_template('page-templates/template-pouch-finder.php', '/pouch-finder/') : home_url('/pouch-finder/');
-$compare_url = function_exists('kangoo_get_page_url_by_template') ? kangoo_get_page_url_by_template('page-templates/template-pouch-comparison.php', '/compare-pouches/') : home_url('/compare-pouches/');
+$cta_secondary_link = $finder_url;
+$cta_secondary_text = __('Nicotine Pouch Finder', 'kangoo');
 ?>
 
 <section class="hero section section--hero">
@@ -32,11 +33,6 @@ $compare_url = function_exists('kangoo_get_page_url_by_template') ? kangoo_get_p
                             <?php echo esc_html($cta_secondary_text); ?>
                         </a>
                     <?php endif; ?>
-                </div>
-
-                <div class="hero__tools" aria-label="<?php esc_attr_e('Popular buying tools', 'kangoo'); ?>">
-                    <a href="<?php echo esc_url($finder_url); ?>"><?php esc_html_e('Use pouch finder', 'kangoo'); ?></a>
-                    <a href="<?php echo esc_url($compare_url); ?>"><?php esc_html_e('Compare pouches', 'kangoo'); ?></a>
                 </div>
 
                 <?php if (have_rows('trust_items')): ?>
