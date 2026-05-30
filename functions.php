@@ -6371,6 +6371,39 @@ function kangoo_add_product_filter_query($query, $filter, $value) {
         return;
     }
 
+    if ($filter === 'brand') {
+        $brand_clauses = array();
+        $brand_taxonomies = array_filter(array(
+            kangoo_product_filter_taxonomy('brand'),
+            taxonomy_exists('product_cat') ? 'product_cat' : '',
+            taxonomy_exists('product_tag') ? 'product_tag' : '',
+        ));
+
+        foreach ($brand_taxonomies as $brand_taxonomy) {
+            if (!get_term_by('slug', $value, $brand_taxonomy)) {
+                continue;
+            }
+
+            $brand_clauses[] = array(
+                'taxonomy' => $brand_taxonomy,
+                'field'    => 'slug',
+                'terms'    => $value,
+            );
+        }
+
+        if (empty($brand_clauses)) {
+            return;
+        }
+
+        $tax_query = (array) $query->get('tax_query');
+        $tax_query[] = count($brand_clauses) === 1
+            ? $brand_clauses[0]
+            : array_merge(array('relation' => 'OR'), $brand_clauses);
+
+        $query->set('tax_query', $tax_query);
+        return;
+    }
+
     $taxonomy = kangoo_product_filter_taxonomy($filter);
 
     if ($taxonomy && get_term_by('slug', $value, $taxonomy)) {
@@ -6382,25 +6415,6 @@ function kangoo_add_product_filter_query($query, $filter, $value) {
         );
 
         $query->set('tax_query', $tax_query);
-        return;
-    }
-
-    if ($filter === 'brand') {
-        foreach (array('product_cat', 'product_tag') as $fallback_taxonomy) {
-            if (!taxonomy_exists($fallback_taxonomy) || !get_term_by('slug', $value, $fallback_taxonomy)) {
-                continue;
-            }
-
-            $tax_query = (array) $query->get('tax_query');
-            $tax_query[] = array(
-                'taxonomy' => $fallback_taxonomy,
-                'field'    => 'slug',
-                'terms'    => $value,
-            );
-
-            $query->set('tax_query', $tax_query);
-            return;
-        }
     }
 }
 
