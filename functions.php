@@ -6499,10 +6499,6 @@ function kangoo_nicotine_brand_filter_redirect() {
         return;
     }
 
-    if ($current_term->slug === $brand_slug) {
-        return;
-    }
-
     if ($current_term->slug !== 'nicotine-pouches' && !kangoo_is_product_brand_category_slug($current_term->slug)) {
         return;
     }
@@ -6515,7 +6511,7 @@ function kangoo_nicotine_brand_filter_redirect() {
 
     $query_args = array();
 
-    foreach (array('filter_brand', 'filter_flavour', 'filter_strength', 'orderby', 'min_price', 'max_price', 's') as $key) {
+    foreach (array('filter_flavour', 'filter_strength', 'orderby', 'min_price', 'max_price', 's') as $key) {
         if (!isset($_GET[$key])) {
             continue;
         }
@@ -6526,7 +6522,7 @@ function kangoo_nicotine_brand_filter_redirect() {
             continue;
         }
 
-        $query_args[$key] = in_array($key, array('filter_brand', 'filter_flavour', 'filter_strength'), true)
+        $query_args[$key] = in_array($key, array('filter_flavour', 'filter_strength'), true)
             ? sanitize_title($value)
             : sanitize_text_field($value);
     }

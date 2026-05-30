@@ -164,6 +164,10 @@ if ($term_taxonomy === 'product_cat') {
 			$current_strength = isset($_GET['filter_strength']) ? sanitize_title(wp_unslash($_GET['filter_strength'])) : '';
 			$current_orderby  = isset($_GET['orderby']) ? sanitize_text_field(wp_unslash($_GET['orderby'])) : '';
 
+            if ($current_brand === '' && $term instanceof WP_Term && $term_taxonomy === 'product_cat' && function_exists('kangoo_is_product_brand_category_slug') && kangoo_is_product_brand_category_slug($term->slug)) {
+                $current_brand = $term->slug;
+            }
+
 			$base_url = $term instanceof WP_Term ? get_term_link($term) : get_permalink(wc_get_page_id('shop'));
             if (is_wp_error($base_url) || !$base_url) {
                 $base_url = home_url('/');
