@@ -2,8 +2,6 @@
 
 <main id="site-main">
 
-<?php $kangoo_home_proof_rendered = false; ?>
-
 <?php if (have_rows('homepage_sections')): ?>
     <?php while (have_rows('homepage_sections')): the_row(); ?>
 
@@ -31,10 +29,6 @@
 
         <?php if ($layout == 'hero'): ?>
             <?php get_template_part('template-parts/home/hero'); ?>
-            <?php if (!$kangoo_home_proof_rendered) : ?>
-                <?php get_template_part('template-parts/home/seo-proof-strip'); ?>
-                <?php $kangoo_home_proof_rendered = true; ?>
-            <?php endif; ?>
 
         <?php elseif ($layout == 'quick_links'): ?>
             <?php get_template_part('template-parts/home/quick-links'); ?>
@@ -72,10 +66,6 @@
         <?php endif; ?>
 
     <?php endwhile; ?>
-<?php endif; ?>
-
-<?php if (!$kangoo_home_proof_rendered) : ?>
-    <?php get_template_part('template-parts/home/seo-proof-strip'); ?>
 <?php endif; ?>
 
 </main>
