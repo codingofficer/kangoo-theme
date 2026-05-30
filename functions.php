@@ -6554,8 +6554,33 @@ function kangoo_filter_product_category_query($query) {
 
     $meta_query = (array) $query->get('meta_query');
 
+    $brand_filter_handled = false;
+
     if (!empty($_GET['filter_brand'])) {
-        kangoo_add_product_filter_query($query, 'brand', wp_unslash($_GET['filter_brand']));
+        $brand_filter = sanitize_title(wp_unslash($_GET['filter_brand']));
+        $archive_product_cat = sanitize_title((string) $query->get('product_cat'));
+        $queried_object = get_queried_object();
+
+        if (
+            $archive_product_cat === ''
+            && $queried_object instanceof WP_Term
+            && $queried_object->taxonomy === 'product_cat'
+        ) {
+            $archive_product_cat = $queried_object->slug;
+        }
+
+        if (
+            $archive_product_cat === 'nicotine-pouches'
+            && taxonomy_exists('product_cat')
+            && get_term_by('slug', $brand_filter, 'product_cat')
+        ) {
+            $query->set('product_cat', $brand_filter);
+            $brand_filter_handled = true;
+        }
+
+        if (!$brand_filter_handled) {
+            kangoo_add_product_filter_query($query, 'brand', $brand_filter);
+        }
     }
 
     if (!empty($_GET['filter_flavour'])) {
