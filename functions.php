@@ -6418,6 +6418,51 @@ function kangoo_add_product_filter_query($query, $filter, $value) {
     }
 }
 
+function kangoo_remove_product_cat_tax_query_clauses($tax_query) {
+    if (!is_array($tax_query)) {
+        return array();
+    }
+
+    $cleaned = array();
+
+    foreach ($tax_query as $key => $clause) {
+        if ($key === 'relation') {
+            $cleaned[$key] = $clause;
+            continue;
+        }
+
+        if (!is_array($clause)) {
+            continue;
+        }
+
+        if (isset($clause['taxonomy']) && $clause['taxonomy'] === 'product_cat') {
+            continue;
+        }
+
+        if (!isset($clause['taxonomy'])) {
+            $nested = kangoo_remove_product_cat_tax_query_clauses($clause);
+            $has_nested_clause = false;
+
+            foreach ($nested as $nested_key => $nested_clause) {
+                if ($nested_key !== 'relation') {
+                    $has_nested_clause = true;
+                    break;
+                }
+            }
+
+            if ($has_nested_clause) {
+                $cleaned[] = $nested;
+            }
+
+            continue;
+        }
+
+        $cleaned[] = $clause;
+    }
+
+    return $cleaned;
+}
+
 function kangoo_add_attribute_landing_rewrites() {
     add_rewrite_rule(
         '^([a-z0-9-]+)-strength-nicotine-pouches/?$',
@@ -6555,6 +6600,7 @@ function kangoo_filter_product_category_query($query) {
     $meta_query = (array) $query->get('meta_query');
 
     $brand_filter_handled = false;
+    $should_rebuild_tax_query = false;
 
     if (!empty($_GET['filter_brand'])) {
         $brand_filter = sanitize_title(wp_unslash($_GET['filter_brand']));
@@ -6569,26 +6615,43 @@ function kangoo_filter_product_category_query($query) {
             $archive_product_cat = $queried_object->slug;
         }
 
-        if (
-            $archive_product_cat === 'nicotine-pouches'
-            && taxonomy_exists('product_cat')
-            && get_term_by('slug', $brand_filter, 'product_cat')
-        ) {
-            $query->set('product_cat', $brand_filter);
+        $brand_category = taxonomy_exists('product_cat') ? get_term_by('slug', $brand_filter, 'product_cat') : false;
+
+        if ($archive_product_cat === 'nicotine-pouches' && $brand_category instanceof WP_Term) {
+            $tax_query = kangoo_remove_product_cat_tax_query_clauses((array) $query->get('tax_query'));
+            $tax_query[] = array(
+                'taxonomy'         => 'product_cat',
+                'field'            => 'term_id',
+                'terms'            => array((int) $brand_category->term_id),
+                'include_children' => true,
+            );
+
+            $query->set('tax_query', $tax_query);
+            $query->set('product_cat', '');
+            $query->set('taxonomy', '');
+            $query->set('term', '');
             $brand_filter_handled = true;
+            $should_rebuild_tax_query = true;
         }
 
         if (!$brand_filter_handled) {
             kangoo_add_product_filter_query($query, 'brand', $brand_filter);
+            $should_rebuild_tax_query = true;
         }
     }
 
     if (!empty($_GET['filter_flavour'])) {
         kangoo_add_product_filter_query($query, 'flavour', wp_unslash($_GET['filter_flavour']));
+        $should_rebuild_tax_query = true;
     }
 
     if (!empty($_GET['filter_strength'])) {
         kangoo_add_product_filter_query($query, 'strength', wp_unslash($_GET['filter_strength']));
+        $should_rebuild_tax_query = true;
+    }
+
+    if ($should_rebuild_tax_query && class_exists('WP_Tax_Query')) {
+        $query->tax_query = new WP_Tax_Query((array) $query->get('tax_query'));
     }
 
     if (!empty($_GET['orderby'])) {
