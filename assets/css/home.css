@@ -282,14 +282,6 @@
     padding-top: 0;
   }
 
-  .hero.section + .home-auto-products .section-header {
-    display: none;
-  }
-
-  .hero.section + .home-auto-products .grid--products {
-    margin-top: 0;
-  }
-
   .hero.section + .home-auto-products .container {
     padding-top: 0.65rem;
   }
@@ -740,12 +732,13 @@
 .section-actions {
   margin-top: 24px;
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
 }
 
 .section-actions .btn {
   margin-top: 0;
   width: auto;
+  max-width: min(100%, 420px);
   min-width: 0;
 }
 
