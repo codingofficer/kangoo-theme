@@ -1166,6 +1166,7 @@ body.kangoo-theme--light.woocommerce-checkout .kangoo-block-age__confirm label {
   body.kangoo-theme--light .kangoo-mobile-cart-sticky__icon {
     background: #eaf4ff !important;
     color: #1677e8 !important;
+    box-shadow: none !important;
   }
 
   body.kangoo-theme--light .kangoo-mobile-cart-sticky__count {
@@ -1205,7 +1206,7 @@ body.kangoo-theme--light.woocommerce-checkout .kangoo-block-age__confirm label {
   body.kangoo-theme--light .kangoo-mobile-cart-sticky__cta {
     background: linear-gradient(135deg, #3f91ff, #1677e8) !important;
     color: #ffffff !important;
-    box-shadow: 0 10px 24px rgba(22, 119, 232, 0.22);
+    box-shadow: none !important;
   }
 }
 
