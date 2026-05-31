@@ -1153,3 +1153,88 @@ body.kangoo-theme--light.woocommerce-checkout .kangoo-block-age__head p,
 body.kangoo-theme--light.woocommerce-checkout .kangoo-block-age__confirm label {
   color: #111827 !important;
 }
+
+/* Light theme sticky cart bars */
+@media (max-width: 1024px) {
+  body.kangoo-theme--light .kangoo-mobile-cart-sticky.has-items {
+    border-color: rgba(17, 24, 39, 0.1) !important;
+    background: rgba(255, 255, 255, 0.98) !important;
+    color: #111827 !important;
+    box-shadow: 0 18px 46px rgba(17, 24, 39, 0.16) !important;
+  }
+
+  body.kangoo-theme--light .kangoo-mobile-cart-sticky__icon {
+    background: linear-gradient(135deg, #eaf4ff, #f5f9ff) !important;
+    color: #1677e8 !important;
+  }
+
+  body.kangoo-theme--light .kangoo-mobile-cart-sticky__count {
+    border-color: #ffffff !important;
+    background: linear-gradient(135deg, #4da3ff, #1677e8) !important;
+    color: #ffffff !important;
+  }
+
+  body.kangoo-theme--light .kangoo-mobile-cart-sticky__total strong {
+    color: #111827 !important;
+  }
+
+  body.kangoo-theme--light .kangoo-mobile-cart-sticky__saving {
+    background: #dcfce7 !important;
+    color: #159735 !important;
+  }
+
+  body.kangoo-theme--light .kangoo-mobile-cart-sticky__delivery,
+  body.kangoo-theme--light .kangoo-mobile-cart-sticky__truck {
+    color: #16a34a !important;
+  }
+
+  body.kangoo-theme--light .kangoo-mobile-cart-sticky.has-items:not(.is-unlocked) .kangoo-mobile-cart-sticky__delivery,
+  body.kangoo-theme--light .kangoo-mobile-cart-sticky.has-items:not(.is-unlocked) .kangoo-mobile-cart-sticky__truck {
+    color: #1677e8 !important;
+  }
+
+  body.kangoo-theme--light .kangoo-mobile-cart-sticky__rewards {
+    border-left-color: rgba(17, 24, 39, 0.12) !important;
+    color: #f59e0b !important;
+  }
+
+  body.kangoo-theme--light .kangoo-mobile-cart-sticky__cta {
+    background: linear-gradient(135deg, #3f91ff, #1677e8) !important;
+    color: #ffffff !important;
+  }
+}
+
+@media (max-width: 767px) {
+  body.kangoo-theme--light .sticky-add__bar,
+  body.kangoo-theme--light .sticky-add--single-pack .sticky-add__bar {
+    border-color: rgba(17, 24, 39, 0.1) !important;
+    background: rgba(255, 255, 255, 0.98) !important;
+    color: #111827 !important;
+    box-shadow: 0 18px 46px rgba(17, 24, 39, 0.16) !important;
+  }
+
+  body.kangoo-theme--light .sticky-add__pack select {
+    border-color: rgba(17, 24, 39, 0.12) !important;
+    background: #ffffff !important;
+    color: #111827 !important;
+  }
+
+  body.kangoo-theme--light .sticky-add__unit,
+  body.kangoo-theme--light .sticky-add__unit strong {
+    color: #111827 !important;
+  }
+
+  body.kangoo-theme--light .sticky-add__unit span {
+    color: #6b7280 !important;
+  }
+
+  body.kangoo-theme--light .sticky-add__saving {
+    background: #dcfce7 !important;
+    color: #159735 !important;
+  }
+
+  body.kangoo-theme--light .sticky-add__button {
+    background: linear-gradient(135deg, #3f91ff, #1677e8) !important;
+    color: #ffffff !important;
+  }
+}

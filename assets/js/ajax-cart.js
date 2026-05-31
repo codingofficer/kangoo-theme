@@ -2460,7 +2460,10 @@ jQuery(function ($) {
     syncStickyPackSelect($sticky, $form, quantity);
 
     $sticky.find('[data-sticky-price]').text(totalLabel);
-    $sticky.find('[data-sticky-unit-price]').text(formatStickyCurrency(unitPrice) + ' per pack');
+    $sticky.find('[data-sticky-unit-price]')
+      .empty()
+      .append($('<strong>').text(formatStickyCurrency(unitPrice)))
+      .append($('<span>').text('per pack'));
     $sticky.find('[data-sticky-meta]').text(metaLabel);
     $sticky.find('[data-sticky-saving]')
       .toggle(saving > 0)

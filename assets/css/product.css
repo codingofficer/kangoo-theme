@@ -762,3 +762,144 @@
     color: #ffffff;
     background: #ef4444;
 }
+
+/* Mobile product add-to-cart sticky redesign */
+@media (max-width: 767px) {
+  body.single-product .site-main {
+    padding-bottom: 8.5rem;
+  }
+
+  .sticky-add {
+    bottom: calc(12px + env(safe-area-inset-bottom));
+    left: 50%;
+    right: auto;
+    width: min(924px, calc(100vw - 24px));
+    transform: translate(-50%, 100%);
+  }
+
+  .sticky-add.is-visible,
+  body.has-scrolled .sticky-add {
+    transform: translate(-50%, 0);
+  }
+
+  .sticky-add__bar,
+  .sticky-add--single-pack .sticky-add__bar {
+    grid-template-columns: minmax(132px, 1.05fr) minmax(92px, 0.82fr) minmax(132px, 1.1fr);
+    gap: clamp(0.75rem, 2.4vw, 2.4rem);
+    min-height: clamp(82px, 16vw, 130px);
+    align-items: center;
+    padding: clamp(0.8rem, 2.3vw, 1.85rem);
+    border: 1px solid rgba(77, 163, 255, 0.25);
+    border-radius: clamp(20px, 3.5vw, 34px);
+    background: linear-gradient(135deg, rgba(15, 20, 30, 0.98), rgba(9, 12, 18, 0.97));
+    color: #ffffff;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.42), 0 10px 26px rgba(77, 163, 255, 0.1);
+    backdrop-filter: blur(18px);
+  }
+
+  .sticky-add__pack,
+  .sticky-add--single-pack .sticky-add__pack {
+    display: block;
+  }
+
+  .sticky-add__pack select {
+    width: 100%;
+    min-height: clamp(56px, 11vw, 88px);
+    padding: 0 clamp(2rem, 5vw, 3.2rem) 0 clamp(0.9rem, 2.6vw, 1.8rem);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: clamp(14px, 2.6vw, 22px);
+    background: #11151c;
+    color: #ffffff;
+    font-size: clamp(1rem, 3.3vw, 2rem);
+    font-weight: 900;
+    box-shadow: none;
+  }
+
+  .sticky-add__summary {
+    display: grid;
+    gap: 0.28rem;
+    align-content: center;
+    justify-content: start;
+    min-width: 0;
+  }
+
+  .sticky-add__unit {
+    display: inline-flex;
+    align-items: baseline;
+    gap: clamp(0.35rem, 1.2vw, 0.85rem);
+    min-width: 0;
+    color: #ffffff;
+    white-space: nowrap;
+  }
+
+  .sticky-add__unit strong {
+    color: #ffffff;
+    font-size: clamp(1.25rem, 4.4vw, 2.65rem);
+    font-weight: 950;
+    line-height: 1;
+  }
+
+  .sticky-add__unit span {
+    color: rgba(248, 250, 252, 0.7);
+    font-size: clamp(0.72rem, 2.35vw, 1.18rem);
+    font-weight: 800;
+    line-height: 1.1;
+  }
+
+  .sticky-add__saving {
+    width: fit-content;
+    min-height: 26px;
+    padding: 0.22rem 0.58rem;
+    border-radius: 8px;
+    background: rgba(34, 197, 94, 0.16);
+    color: #5ff08a;
+    font-size: clamp(0.72rem, 2.1vw, 1rem);
+    font-weight: 900;
+  }
+
+  .sticky-add__button {
+    min-height: clamp(58px, 11vw, 96px);
+    gap: clamp(0.4rem, 1.35vw, 0.85rem);
+    border-radius: clamp(18px, 3.2vw, 32px);
+    background: linear-gradient(135deg, #3f91ff, #1677e8) !important;
+    color: #ffffff !important;
+    font-size: clamp(1rem, 3.2vw, 1.82rem);
+    font-weight: 900;
+    box-shadow: inset 0 -16px 28px rgba(0, 0, 0, 0.13), 0 14px 34px rgba(22, 119, 232, 0.28);
+  }
+
+  .sticky-add__button-icon svg {
+    width: clamp(24px, 4.4vw, 38px);
+    height: clamp(24px, 4.4vw, 38px);
+  }
+
+  .sticky-add__message {
+    grid-column: 1 / -1;
+    font-size: 0.78rem;
+  }
+
+  @media (max-width: 430px) {
+    .sticky-add__bar,
+    .sticky-add--single-pack .sticky-add__bar {
+      grid-template-columns: minmax(112px, 1fr) minmax(74px, 0.64fr) minmax(112px, 1fr);
+      gap: 0.55rem;
+      padding: 0.72rem;
+      border-radius: 22px;
+    }
+
+    .sticky-add__pack select {
+      padding-left: 0.72rem;
+      padding-right: 1.8rem;
+    }
+
+    .sticky-add__button {
+      padding-inline: 0.7rem;
+    }
+  }
+
+  @media (max-width: 360px) {
+    .sticky-add__button-icon {
+      display: none;
+    }
+  }
+}
