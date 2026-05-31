@@ -33,7 +33,7 @@
   display: inline-flex !important;
   align-items: center;
   justify-content: center;
-  border-radius: 999px !important;
+  border-radius: 14px !important;
   background: var(--color-accent) !important;
   color: #fff !important;
   border: 0 !important;

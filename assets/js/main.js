@@ -1193,13 +1193,18 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     let nudge = container.querySelector('[data-kangoo-free-shipping-nudge]:not(.kangoo-free-shipping-nudge--cart-drawer)');
+    const isCartPage = container.classList.contains('woocommerce-cart');
+    const cartBlock = isCartPage ? anchor.closest('.wp-block-woocommerce-cart, .wc-block-cart, .woocommerce-cart-form, .woocommerce') : null;
+    const nudgeAnchor = cartBlock || anchor;
 
     if (!nudge) {
       nudge = document.createElement('div');
-      nudge.className = 'kangoo-free-shipping-nudge ' + (container.classList.contains('woocommerce-cart') ? 'kangoo-free-shipping-nudge--cart' : 'kangoo-free-shipping-nudge--checkout');
+      nudge.className = 'kangoo-free-shipping-nudge ' + (isCartPage ? 'kangoo-free-shipping-nudge--cart' : 'kangoo-free-shipping-nudge--checkout');
       nudge.setAttribute('data-kangoo-free-shipping-nudge', '');
-      anchor.insertAdjacentElement(container.classList.contains('woocommerce-cart') ? 'beforebegin' : 'afterend', nudge);
-    } else if (!container.classList.contains('woocommerce-cart') && nudge.previousElementSibling !== anchor) {
+      nudgeAnchor.insertAdjacentElement(isCartPage ? 'beforebegin' : 'afterend', nudge);
+    } else if (isCartPage && nudge.nextElementSibling !== nudgeAnchor) {
+      nudgeAnchor.insertAdjacentElement('beforebegin', nudge);
+    } else if (!isCartPage && nudge.previousElementSibling !== anchor) {
       anchor.insertAdjacentElement('afterend', nudge);
     }
 
@@ -1399,21 +1404,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function syncCartCheckoutButton(button, isEnabled) {
-    if (!button) {
-      return;
-    }
-
-    button.classList.toggle('kangoo-checkout-disabled', !isEnabled);
-    button.setAttribute('aria-disabled', isEnabled ? 'false' : 'true');
-
-    const label = button.querySelector('.wc-block-components-button__text, span');
-    const checkoutLabel = 'Proceed to secure checkout';
-
-    if (label && /checkout/i.test(label.textContent || '') && label.textContent.trim() !== checkoutLabel) {
-      label.textContent = checkoutLabel;
-    } else if (!button.children.length && /checkout/i.test(button.textContent || '') && button.textContent.trim() !== checkoutLabel) {
-      button.textContent = checkoutLabel;
-    }
+    return Boolean(button) && Boolean(isEnabled);
   }
 
   function setupCartEmailCapture() {
@@ -1425,6 +1416,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let panel = cartPage.querySelector('[data-kangoo-cart-email-capture]');
     const checkoutAnchor = cartPage.querySelector('.wc-proceed-to-checkout, .wp-block-woocommerce-proceed-to-checkout-block, .wc-block-cart__submit-container');
+    const cartBlock = checkoutAnchor
+      ? checkoutAnchor.closest('.wp-block-woocommerce-cart, .wc-block-cart, .woocommerce-cart-form, .woocommerce')
+      : null;
 
     if (!panel && checkoutAnchor) {
       const storedEmail = getStoredCheckoutEmail();
@@ -1463,7 +1457,12 @@ document.addEventListener('DOMContentLoaded', function () {
         isValidEmail(storedEmail) && isValidCheckoutDob(storedDob) ? 'Checkout details saved.' : 'Enter your email and date of birth to unlock checkout.',
         '</p>'
       ].join('');
-      checkoutAnchor.insertAdjacentElement('beforebegin', panel);
+
+      if (cartBlock && cartBlock.parentElement) {
+        cartBlock.insertAdjacentElement('beforebegin', panel);
+      } else {
+        checkoutAnchor.insertAdjacentElement('beforebegin', panel);
+      }
     }
 
     if (!panel) {
