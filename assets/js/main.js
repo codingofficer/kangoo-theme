@@ -573,7 +573,7 @@ document.addEventListener('DOMContentLoaded', function () {
   if (sticky && mainBtn) {
     const observer = new IntersectionObserver(
       function ([entry]) {
-        sticky.style.transform = entry.isIntersecting ? 'translate(-50%, 100%)' : 'translate(-50%, 0)';
+        sticky.style.transform = entry.isIntersecting ? 'translateY(100%)' : 'translateY(0)';
       },
       { threshold: 0 }
     );
