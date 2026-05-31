@@ -1143,6 +1143,37 @@ document.addEventListener('DOMContentLoaded', function () {
     return null;
   }
 
+  function getConfiguredFreeShippingThreshold(key, fallback) {
+    const value = window.kangooRewards && Number(window.kangooRewards[key]) ? Number(window.kangooRewards[key]) : fallback;
+    return value > 0 ? value : fallback;
+  }
+
+  function getFirstOrderShippingCouponCode() {
+    return window.kangooRewards && window.kangooRewards.first_order_shipping_coupon_code
+      ? String(window.kangooRewards.first_order_shipping_coupon_code).trim().toLowerCase()
+      : 'firstfree';
+  }
+
+  function hasFirstOrderShippingCoupon(container) {
+    const couponCode = getFirstOrderShippingCouponCode();
+
+    if (!couponCode || !container) {
+      return false;
+    }
+
+    const couponText = container.textContent ? container.textContent.toLowerCase() : '';
+
+    if (couponText.includes(couponCode)) {
+      return true;
+    }
+
+    return Boolean(
+      window.kangooRewards
+      && window.kangooRewards.first_order_free_shipping_active
+      && !couponText.includes('coupon')
+    );
+  }
+
   function setupFreeShippingNudge() {
     const container = document.querySelector('.woocommerce-checkout, .woocommerce-cart');
 
@@ -1150,7 +1181,10 @@ document.addEventListener('DOMContentLoaded', function () {
       return;
     }
 
-    const threshold = window.kangooRewards && Number(window.kangooRewards.free_shipping_threshold) ? Number(window.kangooRewards.free_shipping_threshold) : 14.95;
+    const firstOrderOfferActive = hasFirstOrderShippingCoupon(container);
+    const threshold = firstOrderOfferActive
+      ? getConfiguredFreeShippingThreshold('first_order_free_shipping_threshold', 9.99)
+      : getConfiguredFreeShippingThreshold('standard_free_shipping_threshold', 14.95);
     const subtotal = getCartOrCheckoutSubtotal();
     const anchor = getFreeShippingNudgeAnchor(container);
 
@@ -1171,7 +1205,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const remaining = threshold - subtotal;
     const progress = Math.max(0, Math.min(100, (subtotal / threshold) * 100));
-    const stateKey = [threshold.toFixed(2), subtotal.toFixed(2), remaining > 0 ? 'locked' : 'unlocked'].join('|');
+    const stateKey = [firstOrderOfferActive ? 'first-order' : 'standard', threshold.toFixed(2), subtotal.toFixed(2), remaining > 0 ? 'locked' : 'unlocked'].join('|');
 
     if (nudge.dataset.kangooNudgeState === stateKey) {
       return;
@@ -1183,8 +1217,8 @@ document.addEventListener('DOMContentLoaded', function () {
       nudge.classList.remove('is-unlocked');
       nudge.innerHTML = [
         '<div class="kangoo-free-shipping-nudge__copy">',
-        '<strong>', formatCheckoutMoney(remaining), ' away from free delivery</strong>',
-        '<span>Free UK delivery unlocks at ', formatCheckoutMoney(threshold), '.</span>',
+        '<strong>', firstOrderOfferActive ? 'New customer: ' : '', formatCheckoutMoney(remaining), ' away from free delivery</strong>',
+        '<span>', firstOrderOfferActive ? 'First-order free UK delivery' : 'Free UK delivery', ' unlocks at ', formatCheckoutMoney(threshold), '.</span>',
         '</div>',
         '<div class="kangoo-free-shipping-nudge__track" aria-hidden="true">',
         '<span style="width: ', progress.toFixed(2), '%"></span>',
@@ -1196,8 +1230,8 @@ document.addEventListener('DOMContentLoaded', function () {
     nudge.classList.add('is-unlocked');
     nudge.innerHTML = [
       '<div class="kangoo-free-shipping-nudge__copy">',
-      '<strong>Free delivery unlocked</strong>',
-      '<span>Your order qualifies for free UK delivery.</span>',
+      '<strong>', firstOrderOfferActive ? 'First-order free delivery unlocked' : 'Free delivery unlocked', '</strong>',
+      '<span>', firstOrderOfferActive ? 'Your first order qualifies for free UK delivery.' : 'Your order qualifies for free UK delivery.', '</span>',
       '</div>',
       '<div class="kangoo-free-shipping-nudge__track" aria-hidden="true"><span style="width: 100%"></span></div>'
     ].join('');

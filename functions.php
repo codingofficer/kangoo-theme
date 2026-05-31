@@ -528,7 +528,11 @@ function kangoo_enqueue_assets() {
         'active_points'   => function_exists('kangoo_rewards_get_session_points') ? kangoo_rewards_get_session_points() : 0,
         'active_discount' => function_exists('kangoo_rewards_get_session_points') ? kangoo_rewards_points_to_money(kangoo_rewards_get_session_points()) : 0,
         'active_discount_html' => function_exists('kangoo_rewards_get_session_points') ? kangoo_plain_wc_price(kangoo_rewards_points_to_money(kangoo_rewards_get_session_points())) : '',
-        'free_shipping_threshold' => kangoo_free_shipping_threshold(),
+        'free_shipping_threshold' => kangoo_get_active_free_shipping_threshold(),
+        'standard_free_shipping_threshold' => kangoo_free_shipping_threshold(),
+        'first_order_free_shipping_threshold' => kangoo_first_order_free_shipping_threshold(),
+        'first_order_shipping_coupon_code' => kangoo_first_order_shipping_coupon_code(),
+        'first_order_free_shipping_active' => kangoo_is_first_order_free_shipping_offer_active(),
         'checkout_email'  => function_exists('kangoo_get_saved_checkout_email') ? kangoo_get_saved_checkout_email() : '',
         'checkout_dob'    => function_exists('kangoo_get_saved_checkout_dob') ? kangoo_get_saved_checkout_dob() : '',
     ));
@@ -4615,6 +4619,42 @@ function kangoo_free_shipping_threshold() {
     return 14.95;
 }
 
+function kangoo_first_order_free_shipping_threshold() {
+    return 9.99;
+}
+
+function kangoo_first_order_shipping_coupon_code() {
+    return apply_filters('kangoo_first_order_shipping_coupon_code', 'firstfree');
+}
+
+function kangoo_cart_has_first_order_shipping_coupon() {
+    if (!function_exists('WC') || !WC()->cart) {
+        return false;
+    }
+
+    $coupon_code = kangoo_first_order_shipping_coupon_code();
+
+    if (!$coupon_code) {
+        return false;
+    }
+
+    $coupon_code = function_exists('wc_format_coupon_code') ? wc_format_coupon_code($coupon_code) : strtolower($coupon_code);
+
+    return WC()->cart->has_discount($coupon_code);
+}
+
+function kangoo_is_first_order_free_shipping_offer_active() {
+    return kangoo_cart_has_first_order_shipping_coupon();
+}
+
+function kangoo_get_active_free_shipping_threshold() {
+    if (kangoo_is_first_order_free_shipping_offer_active()) {
+        return kangoo_first_order_free_shipping_threshold();
+    }
+
+    return kangoo_free_shipping_threshold();
+}
+
 function kangoo_get_product_delivery_note_html() {
     $threshold = (float) kangoo_free_shipping_threshold();
 
@@ -4634,8 +4674,9 @@ function kangoo_get_free_shipping_nudge_html($context = 'cart-drawer') {
         return '';
     }
 
-    $threshold = (float) kangoo_free_shipping_threshold();
+    $threshold = (float) kangoo_get_active_free_shipping_threshold();
     $subtotal = (float) WC()->cart->get_subtotal();
+    $is_first_order_offer = kangoo_is_first_order_free_shipping_offer_active();
 
     if ($threshold <= 0) {
         return '';
@@ -4654,11 +4695,11 @@ function kangoo_get_free_shipping_nudge_html($context = 'cart-drawer') {
     <div class="<?php echo esc_attr(implode(' ', $classes)); ?>" data-kangoo-free-shipping-nudge>
         <div class="kangoo-free-shipping-nudge__copy">
             <?php if ($remaining > 0) : ?>
-                <strong><?php echo esc_html(sprintf(__('%s away from free delivery', 'kangoo'), kangoo_plain_wc_price($remaining))); ?></strong>
-                <span><?php echo esc_html(sprintf(__('Free UK delivery unlocks at %s.', 'kangoo'), kangoo_plain_wc_price($threshold))); ?></span>
+                <strong><?php echo esc_html(sprintf($is_first_order_offer ? __('New customer: %s away from free delivery', 'kangoo') : __('%s away from free delivery', 'kangoo'), kangoo_plain_wc_price($remaining))); ?></strong>
+                <span><?php echo esc_html(sprintf($is_first_order_offer ? __('First-order free UK delivery unlocks at %s.', 'kangoo') : __('Free UK delivery unlocks at %s.', 'kangoo'), kangoo_plain_wc_price($threshold))); ?></span>
             <?php else : ?>
-                <strong><?php esc_html_e('Free delivery unlocked', 'kangoo'); ?></strong>
-                <span><?php esc_html_e('Your order qualifies for free UK delivery.', 'kangoo'); ?></span>
+                <strong><?php echo esc_html($is_first_order_offer ? __('First-order free delivery unlocked', 'kangoo') : __('Free delivery unlocked', 'kangoo')); ?></strong>
+                <span><?php echo esc_html($is_first_order_offer ? __('Your first order qualifies for free UK delivery.', 'kangoo') : __('Your order qualifies for free UK delivery.', 'kangoo')); ?></span>
             <?php endif; ?>
         </div>
         <div class="kangoo-free-shipping-nudge__track" aria-hidden="true">
@@ -4709,8 +4750,9 @@ function kangoo_get_mobile_cart_sticky_html() {
     $subtotal = $has_cart ? (float) WC()->cart->get_subtotal() : 0;
     $savings = $has_cart ? kangoo_get_cart_product_savings_total() : 0;
     $reward_points = function_exists('kangoo_rewards_points_per_pound') ? (int) floor($subtotal * kangoo_rewards_points_per_pound()) : 0;
-    $threshold = (float) kangoo_free_shipping_threshold();
+    $threshold = (float) kangoo_get_active_free_shipping_threshold();
     $remaining = max(0, $threshold - $subtotal);
+    $is_first_order_offer = kangoo_is_first_order_free_shipping_offer_active();
     $classes = array('kangoo-mobile-cart-sticky');
 
     if ($has_cart) {
@@ -4758,7 +4800,7 @@ function kangoo_get_mobile_cart_sticky_html() {
                             <circle cx="18" cy="18" r="2" fill="currentColor"/>
                         </svg>
                     </span>
-                    <span><?php echo esc_html(sprintf(__('%s away from free delivery', 'kangoo'), kangoo_plain_wc_price($remaining))); ?></span>
+                    <span><?php echo esc_html(sprintf($is_first_order_offer ? __('New customer: %s away from free delivery', 'kangoo') : __('%s away from free delivery', 'kangoo'), kangoo_plain_wc_price($remaining))); ?></span>
                 <?php else : ?>
                     <span class="kangoo-mobile-cart-sticky__truck" aria-hidden="true">
                         <svg viewBox="0 0 24 24" focusable="false">
@@ -4767,7 +4809,7 @@ function kangoo_get_mobile_cart_sticky_html() {
                             <circle cx="18" cy="18" r="2" fill="currentColor"/>
                         </svg>
                     </span>
-                    <span><?php esc_html_e('Free delivery unlocked', 'kangoo'); ?></span>
+                    <span><?php echo esc_html($is_first_order_offer ? __('First-order free delivery unlocked', 'kangoo') : __('Free delivery unlocked', 'kangoo')); ?></span>
                 <?php endif; ?>
             </span>
 
@@ -4809,9 +4851,10 @@ function kangoo_get_mini_cart_html() {
 function kangoo_get_cart_drawer_footer_html() {
     $has_cart = function_exists('WC') && WC()->cart && !WC()->cart->is_empty();
     $subtotal = $has_cart ? (float) WC()->cart->get_subtotal() : 0;
-    $threshold = (float) kangoo_free_shipping_threshold();
+    $threshold = (float) kangoo_get_active_free_shipping_threshold();
     $remaining = $threshold > 0 ? max(0, $threshold - $subtotal) : 0;
     $progress = $threshold > 0 ? max(0, min(100, ($subtotal / $threshold) * 100)) : 0;
+    $is_first_order_offer = kangoo_is_first_order_free_shipping_offer_active();
     $reward_points = ($has_cart && function_exists('kangoo_rewards_points_per_pound')) ? (int) floor($subtotal * kangoo_rewards_points_per_pound()) : 0;
     $cart_url = function_exists('wc_get_cart_url') ? wc_get_cart_url() : home_url('/cart/');
     $classes = array('cart-drawer__footer');
@@ -4848,12 +4891,12 @@ function kangoo_get_cart_drawer_footer_html() {
                             <?php if ($remaining > 0) : ?>
                                 <?php
                                 echo wp_kses_post(sprintf(
-                                    __('<strong>%s</strong> away from free delivery', 'kangoo'),
+                                    $is_first_order_offer ? __('New customer: <strong>%s</strong> away from free delivery', 'kangoo') : __('<strong>%s</strong> away from free delivery', 'kangoo'),
                                     wc_price($remaining)
                                 ));
                                 ?>
                             <?php else : ?>
-                                <strong><?php esc_html_e('Free UK delivery unlocked', 'kangoo'); ?></strong>
+                                <strong><?php echo esc_html($is_first_order_offer ? __('First-order free delivery unlocked', 'kangoo') : __('Free UK delivery unlocked', 'kangoo')); ?></strong>
                             <?php endif; ?>
                         </p>
                         <div class="cart-drawer-summary__progress" aria-hidden="true">
