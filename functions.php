@@ -510,6 +510,10 @@ function kangoo_enqueue_assets() {
         wp_enqueue_style('kangoo-app-page', $css_uri . 'kangoo-app.css', array('kangoo-header-footer'), $theme_version);
     }
 
+    if (function_exists('kangoo_is_light_theme_active') && kangoo_is_light_theme_active()) {
+        wp_enqueue_style('kangoo-theme-light', $css_uri . 'theme-light.css', array('kangoo-account-drawer'), $theme_version);
+    }
+
     wp_enqueue_script(
         'kangoo-main',
         $js_uri . 'main.js',
@@ -6340,6 +6344,7 @@ function kangoo_theme_options_menu() {
 }
 add_action('admin_menu', 'kangoo_theme_options_menu');
 
+require_once get_template_directory() . '/inc/theme-appearance.php';
 require_once get_template_directory() . '/inc/pack-pricing-admin.php';
 require_once get_template_directory() . '/inc/product-url-brand-audit.php';
 require_once get_template_directory() . '/inc/shipping-operations.php';
