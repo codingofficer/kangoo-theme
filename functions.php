@@ -5014,6 +5014,19 @@ function kangoo_get_saved_checkout_dob_parts() {
     );
 }
 
+function kangoo_format_checkout_dob_display($dob_parts) {
+    if (empty($dob_parts['day']) || empty($dob_parts['month']) || empty($dob_parts['year'])) {
+        return '';
+    }
+
+    return sprintf(
+        '%s / %s / %s',
+        str_pad((string) $dob_parts['day'], 2, '0', STR_PAD_LEFT),
+        str_pad((string) $dob_parts['month'], 2, '0', STR_PAD_LEFT),
+        (string) $dob_parts['year']
+    );
+}
+
 function kangoo_ajax_store_checkout_email() {
     check_ajax_referer('kangoo_rewards_ajax', 'nonce');
 
@@ -5134,25 +5147,74 @@ function kangoo_render_cart_email_capture() {
     $email = kangoo_get_saved_checkout_email();
     $dob_parts = kangoo_get_saved_checkout_dob_parts();
     $has_identity = $email && $dob_parts['day'] && $dob_parts['month'] && $dob_parts['year'];
+    $dob_display = kangoo_format_checkout_dob_display($dob_parts);
     ?>
-    <div class="kangoo-cart-email-capture<?php echo $has_identity ? ' has-email' : ''; ?>" data-kangoo-cart-email-capture>
-        <div class="kangoo-cart-email-capture__copy">
-            <span><?php esc_html_e('Checkout email', 'kangoo'); ?></span>
-            <strong><?php esc_html_e('Get checkout ready', 'kangoo'); ?></strong>
-            <p><?php esc_html_e('Add your email and date of birth once. We will prefill secure checkout and confirm you are 18+.', 'kangoo'); ?></p>
+    <div class="kangoo-cart-email-capture<?php echo $has_identity ? ' has-email' : ' is-editing'; ?>" data-kangoo-cart-email-capture>
+        <div class="kangoo-cart-email-capture__header">
+            <span class="kangoo-cart-email-capture__status" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false">
+                    <path d="M5 12.5l4.2 4.2L19 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </span>
+            <strong><?php esc_html_e('Checkout Details', 'kangoo'); ?></strong>
+            <button type="button" class="kangoo-cart-email-capture__edit" data-kangoo-cart-edit>
+                <span><?php esc_html_e('Edit', 'kangoo'); ?></span>
+                <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                    <path d="M4 20h4l10.5-10.5a2.1 2.1 0 0 0-3-3L5 17v3z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                    <path d="M14 8l2 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </button>
         </div>
+
+        <div class="kangoo-cart-email-capture__summary">
+            <div class="kangoo-cart-email-capture__row">
+                <span class="kangoo-cart-email-capture__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false">
+                        <path d="M4 7h16v11H4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                        <path d="M5 8l7 5 7-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </span>
+                <span class="kangoo-cart-email-capture__row-copy">
+                    <span><?php esc_html_e('Email', 'kangoo'); ?></span>
+                    <strong data-kangoo-cart-email-summary><?php echo $email ? esc_html($email) : esc_html__('Email needed', 'kangoo'); ?></strong>
+                </span>
+            </div>
+
+            <div class="kangoo-cart-email-capture__row">
+                <span class="kangoo-cart-email-capture__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false">
+                        <path d="M5 6h14v14H5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                        <path d="M8 4v4M16 4v4M5 10h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M8 14h.01M12 14h.01M16 14h.01M8 17h.01M12 17h.01" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/>
+                    </svg>
+                </span>
+                <span class="kangoo-cart-email-capture__row-copy">
+                    <span><?php esc_html_e('Date of Birth', 'kangoo'); ?></span>
+                    <strong data-kangoo-cart-dob-summary><?php echo $dob_display ? esc_html($dob_display) : esc_html__('Date needed', 'kangoo'); ?></strong>
+                </span>
+                <span class="kangoo-cart-email-capture__verified">
+                    <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                        <path d="M7 12.5l3 3L17 8" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <?php esc_html_e('Verified', 'kangoo'); ?>
+                </span>
+            </div>
+        </div>
+
         <div class="kangoo-cart-email-capture__form">
-            <label class="screen-reader-text" for="kangoo-cart-email"><?php esc_html_e('Email address', 'kangoo'); ?></label>
-            <input
-                id="kangoo-cart-email"
-                type="email"
-                value="<?php echo esc_attr($email); ?>"
-                placeholder="<?php esc_attr_e('Email address', 'kangoo'); ?>"
-                autocomplete="email"
-                data-kangoo-cart-email
-            >
+            <label class="kangoo-cart-email-capture__field" for="kangoo-cart-email">
+                <span><?php esc_html_e('Email address', 'kangoo'); ?></span>
+                <input
+                    id="kangoo-cart-email"
+                    type="email"
+                    value="<?php echo esc_attr($email); ?>"
+                    placeholder="<?php esc_attr_e('Email address', 'kangoo'); ?>"
+                    autocomplete="email"
+                    data-kangoo-cart-email
+                >
+            </label>
             <div class="kangoo-cart-email-capture__dob" data-kangoo-cart-dob>
-                <span class="kangoo-cart-email-capture__dob-title"><?php esc_html_e('Age verification', 'kangoo'); ?></span>
+                <span class="kangoo-cart-email-capture__dob-title"><?php esc_html_e('Date of birth', 'kangoo'); ?></span>
                 <label>
                     <span><?php esc_html_e('DD', 'kangoo'); ?></span>
                     <input type="text" inputmode="numeric" maxlength="2" value="<?php echo esc_attr($dob_parts['day']); ?>" autocomplete="bday-day" data-kangoo-cart-dob-day>
@@ -5174,6 +5236,20 @@ function kangoo_render_cart_email_capture() {
     <?php
 }
 add_action('woocommerce_before_cart_collaterals', 'kangoo_render_cart_email_capture', 8);
+
+function kangoo_render_cart_secure_checkout_banner() {
+    if (!function_exists('is_cart') || !is_cart()) {
+        return;
+    }
+
+    $image_url = get_theme_file_uri('/assets/images/secure-checkout-stripe.png');
+    ?>
+    <aside class="kangoo-cart-secure-checkout" aria-label="<?php esc_attr_e('Secure checkout powered by Stripe', 'kangoo'); ?>">
+        <img src="<?php echo esc_url($image_url); ?>" width="808" height="264" alt="<?php esc_attr_e('Guaranteed safe and secure checkout powered by Stripe', 'kangoo'); ?>">
+    </aside>
+    <?php
+}
+add_action('wp_footer', 'kangoo_render_cart_secure_checkout_banner', 20);
 
 function kangoo_guard_checkout_identity() {
     if (

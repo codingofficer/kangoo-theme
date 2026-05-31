@@ -1318,6 +1318,18 @@ document.addEventListener('DOMContentLoaded', function () {
     ].join('-');
   }
 
+  function formatCheckoutDobDisplay(dob) {
+    if (!dob || !dob.day || !dob.month || !dob.year) {
+      return '';
+    }
+
+    return [
+      String(dob.day || '').padStart(2, '0'),
+      String(dob.month || '').padStart(2, '0'),
+      String(dob.year || '')
+    ].join(' / ');
+  }
+
   function saveCheckoutEmail(email, dob) {
     const cleanEmail = String(email || '').trim();
 
@@ -1386,6 +1398,24 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  function syncCartCheckoutButton(button, isEnabled) {
+    if (!button) {
+      return;
+    }
+
+    button.classList.toggle('kangoo-checkout-disabled', !isEnabled);
+    button.setAttribute('aria-disabled', isEnabled ? 'false' : 'true');
+    button.removeAttribute('disabled');
+
+    const label = button.querySelector('.wc-block-components-button__text, span');
+
+    if (label && /checkout/i.test(label.textContent || '')) {
+      label.textContent = 'Proceed to secure checkout';
+    } else if (!button.children.length && /checkout/i.test(button.textContent || '')) {
+      button.textContent = 'Proceed to secure checkout';
+    }
+  }
+
   function setupCartEmailCapture() {
     const cartPage = document.querySelector('.woocommerce-cart');
 
@@ -1400,19 +1430,30 @@ document.addEventListener('DOMContentLoaded', function () {
       const storedEmail = getStoredCheckoutEmail();
       const storedDob = getStoredCheckoutDob() || { day: '', month: '', year: '' };
       panel = document.createElement('div');
-      panel.className = 'kangoo-cart-email-capture' + (isValidEmail(storedEmail) && isValidCheckoutDob(storedDob) ? ' has-email' : '');
+      panel.className = 'kangoo-cart-email-capture' + (isValidEmail(storedEmail) && isValidCheckoutDob(storedDob) ? ' has-email' : ' is-editing');
       panel.setAttribute('data-kangoo-cart-email-capture', '');
       panel.innerHTML = [
-        '<div class="kangoo-cart-email-capture__copy">',
-        '<span>Checkout email</span>',
-        '<strong>Get checkout ready</strong>',
-        '<p>Add your email and date of birth once. We will prefill secure checkout and confirm you are 18+.</p>',
+        '<div class="kangoo-cart-email-capture__header">',
+        '<span class="kangoo-cart-email-capture__status" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M5 12.5l4.2 4.2L19 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>',
+        '<strong>Checkout Details</strong>',
+        '<button type="button" class="kangoo-cart-email-capture__edit" data-kangoo-cart-edit><span>Edit</span><svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path d="M4 20h4l10.5-10.5a2.1 2.1 0 0 0-3-3L5 17v3z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M14 8l2 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>',
+        '</div>',
+        '<div class="kangoo-cart-email-capture__summary">',
+        '<div class="kangoo-cart-email-capture__row">',
+        '<span class="kangoo-cart-email-capture__icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M4 7h16v11H4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M5 8l7 5 7-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>',
+        '<span class="kangoo-cart-email-capture__row-copy"><span>Email</span><strong data-kangoo-cart-email-summary>', escapeHtml(storedEmail || 'Email needed'), '</strong></span>',
+        '</div>',
+        '<div class="kangoo-cart-email-capture__row">',
+        '<span class="kangoo-cart-email-capture__icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M5 6h14v14H5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8 4v4M16 4v4M5 10h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 17h.01M12 17h.01" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></span>',
+        '<span class="kangoo-cart-email-capture__row-copy"><span>Date of Birth</span><strong data-kangoo-cart-dob-summary>', escapeHtml(formatCheckoutDobDisplay(storedDob) || 'Date needed'), '</strong></span>',
+        '<span class="kangoo-cart-email-capture__verified"><svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path d="M7 12.5l3 3L17 8" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Verified</span>',
+        '</div>',
         '</div>',
         '<div class="kangoo-cart-email-capture__form">',
-        '<label class="screen-reader-text" for="kangoo-cart-email-js">Email address</label>',
-        '<input id="kangoo-cart-email-js" type="email" value="', escapeHtml(storedEmail), '" placeholder="Email address" autocomplete="email" data-kangoo-cart-email>',
+        '<label class="kangoo-cart-email-capture__field" for="kangoo-cart-email-js"><span>Email address</span>',
+        '<input id="kangoo-cart-email-js" type="email" value="', escapeHtml(storedEmail), '" placeholder="Email address" autocomplete="email" data-kangoo-cart-email></label>',
         '<div class="kangoo-cart-email-capture__dob" data-kangoo-cart-dob>',
-        '<span class="kangoo-cart-email-capture__dob-title">Age verification</span>',
+        '<span class="kangoo-cart-email-capture__dob-title">Date of birth</span>',
         '<label><span>DD</span><input type="text" inputmode="numeric" maxlength="2" value="', escapeHtml(storedDob.day), '" autocomplete="bday-day" data-kangoo-cart-dob-day></label>',
         '<label><span>MM</span><input type="text" inputmode="numeric" maxlength="2" value="', escapeHtml(storedDob.month), '" autocomplete="bday-month" data-kangoo-cart-dob-month></label>',
         '<label><span>YYYY</span><input type="text" inputmode="numeric" maxlength="4" value="', escapeHtml(storedDob.year), '" autocomplete="bday-year" data-kangoo-cart-dob-year></label>',
@@ -1429,6 +1470,20 @@ document.addEventListener('DOMContentLoaded', function () {
       return;
     }
 
+    const editButton = panel.querySelector('[data-kangoo-cart-edit]');
+
+    if (editButton && editButton.dataset.kangooEditReady !== '1') {
+      editButton.dataset.kangooEditReady = '1';
+      editButton.addEventListener('click', function () {
+        const activeInput = panel.querySelector('[data-kangoo-cart-email]');
+        panel.classList.add('is-editing');
+
+        if (activeInput) {
+          activeInput.focus();
+        }
+      });
+    }
+
     if (panel.dataset.kangooEmailReady === '1') {
       const existingInput = panel.querySelector('[data-kangoo-cart-email]');
       const existingDob = normalizeCheckoutDob(
@@ -1440,8 +1495,7 @@ document.addEventListener('DOMContentLoaded', function () {
       const existingCheckoutSelector = '.wc-proceed-to-checkout a.checkout-button, a.checkout-button, .wp-block-woocommerce-proceed-to-checkout-block a, .wp-block-woocommerce-proceed-to-checkout-block button, .wc-block-cart__submit-button, .wc-block-cart__submit-container .wc-block-components-button';
 
       cartPage.querySelectorAll(existingCheckoutSelector).forEach(function (button) {
-        button.classList.toggle('kangoo-checkout-disabled', !existingValid);
-        button.setAttribute('aria-disabled', existingValid ? 'false' : 'true');
+        syncCartCheckoutButton(button, existingValid);
       });
       return;
     }
@@ -1453,6 +1507,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const dobMonth = panel.querySelector('[data-kangoo-cart-dob-month]');
     const dobYear = panel.querySelector('[data-kangoo-cart-dob-year]');
     const message = panel.querySelector('[data-kangoo-cart-email-message]');
+    const emailSummary = panel.querySelector('[data-kangoo-cart-email-summary]');
+    const dobSummary = panel.querySelector('[data-kangoo-cart-dob-summary]');
     const checkoutSelector = '.wc-proceed-to-checkout a.checkout-button, a.checkout-button, .wp-block-woocommerce-proceed-to-checkout-block a, .wp-block-woocommerce-proceed-to-checkout-block button, .wc-block-cart__submit-button, .wc-block-cart__submit-container .wc-block-components-button';
 
     if (!input) {
@@ -1488,6 +1544,16 @@ document.addEventListener('DOMContentLoaded', function () {
       message.classList.toggle('is-error', !!isError);
     }
 
+    function updateSummaryDisplay(email, dob) {
+      if (emailSummary) {
+        emailSummary.textContent = isValidEmail(email) ? email : 'Email needed';
+      }
+
+      if (dobSummary) {
+        dobSummary.textContent = isValidCheckoutDob(dob) ? formatCheckoutDobDisplay(dob) : 'Date needed';
+      }
+    }
+
     function getDobFromPanel() {
       return normalizeCheckoutDob(
         dobDay ? dobDay.value : '',
@@ -1502,7 +1568,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
       panel.classList.add('has-email');
       panel.classList.remove('needs-email');
+      panel.classList.remove('is-editing');
       setMessage('Checkout details saved.', false);
+      updateSummaryDisplay(email, getDobFromPanel());
 
       if (window.kangooRewards) {
         window.kangooRewards.checkout_email = email;
@@ -1528,19 +1596,21 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function setCheckoutEnabled(isEnabled) {
       cartPage.querySelectorAll(checkoutSelector).forEach(function (button) {
-        button.classList.toggle('kangoo-checkout-disabled', !isEnabled);
-        button.setAttribute('aria-disabled', isEnabled ? 'false' : 'true');
+        syncCartCheckoutButton(button, isEnabled);
       });
     }
 
     function refreshCheckoutState() {
-      const valid = isValidEmail(input.value) && isValidCheckoutDob(getDobFromPanel());
+      const activeDob = getDobFromPanel();
+      const valid = isValidEmail(input.value) && isValidCheckoutDob(activeDob);
+      updateSummaryDisplay(input.value, activeDob);
       setCheckoutEnabled(valid);
 
       if (valid) {
-        saveCheckoutEmail(input.value, getDobFromPanel()).then(markSaved).catch(function () {});
+        saveCheckoutEmail(input.value, activeDob).then(markSaved).catch(function () {});
       } else {
         panel.classList.remove('has-email');
+        panel.classList.add('is-editing');
         setMessage('Enter your email and date of birth to unlock checkout.', false);
       }
 
@@ -1592,6 +1662,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
           }
           activePanel.classList.add('needs-email');
+          activePanel.classList.add('is-editing');
           if (activeMessage) {
             activeMessage.textContent = 'Add your email and date of birth first so checkout is ready for you.';
             activeMessage.classList.add('is-error');
