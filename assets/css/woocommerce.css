@@ -1498,13 +1498,34 @@
   display: none !important;
 }
 
+body.woocommerce-cart .kangoo-theme-preference,
+body.woocommerce-checkout .kangoo-theme-preference,
+body.woocommerce-cart .home-finder-cta,
+body.woocommerce-checkout .home-finder-cta,
+body.woocommerce-cart .pouch-finder-mascot,
+body.woocommerce-checkout .pouch-finder-mascot,
+body.woocommerce-cart .kangoo-pouch-finder-mascot,
+body.woocommerce-checkout .kangoo-pouch-finder-mascot,
+body.woocommerce-cart .kangoo-finder-mascot,
+body.woocommerce-checkout .kangoo-finder-mascot,
+body.woocommerce-cart .finder-mascot,
+body.woocommerce-checkout .finder-mascot,
+body.woocommerce-cart [class*="finder-mascot"],
+body.woocommerce-checkout [class*="finder-mascot"],
+body.woocommerce-cart [class*="pouch-finder"][class*="mascot"],
+body.woocommerce-checkout [class*="pouch-finder"][class*="mascot"],
+body.woocommerce-cart [data-kangoo-pouch-finder-mascot],
+body.woocommerce-checkout [data-kangoo-pouch-finder-mascot] {
+  display: none !important;
+}
+
 .kangoo-cart-email-capture {
   display: grid;
   gap: 0;
-  margin: 0 0 0.9rem;
-  padding: clamp(0.88rem, 2.2vw, 1.05rem);
+  margin: 0 0 0.75rem;
+  padding: clamp(0.72rem, 2vw, 0.88rem);
   border: 1px solid rgba(255, 255, 255, 0.13);
-  border-radius: 16px;
+  border-radius: 14px;
   background:
     radial-gradient(circle at 8% 4%, rgba(74, 163, 255, 0.08), transparent 34%),
     linear-gradient(135deg, rgba(12, 16, 22, 0.98), rgba(9, 10, 13, 0.98));
@@ -1522,26 +1543,26 @@
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.6rem;
   min-width: 0;
-  padding: 0 0 0.8rem;
+  padding: 0 0 0.62rem;
 }
 
 .kangoo-cart-email-capture__status {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 42px;
-  height: 42px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
   background: linear-gradient(135deg, #5fb0ff, #287eff);
   color: #fff;
-  box-shadow: 0 10px 22px rgba(74, 163, 255, 0.22);
+  box-shadow: none;
 }
 
 .kangoo-cart-email-capture__status svg {
-  width: 23px;
-  height: 23px;
+  width: 19px;
+  height: 19px;
 }
 
 .kangoo-cart-email-capture__header > strong {
@@ -1582,9 +1603,9 @@
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  gap: clamp(0.72rem, 2.5vw, 1rem);
+  gap: clamp(0.6rem, 2.2vw, 0.82rem);
   min-width: 0;
-  padding: clamp(0.78rem, 2.4vw, 0.98rem) 0;
+  padding: clamp(0.58rem, 2vw, 0.76rem) 0;
 }
 
 .kangoo-cart-email-capture__row + .kangoo-cart-email-capture__row {
@@ -1595,8 +1616,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 34px;
+  height: 34px;
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 50%;
   background: rgba(255,255,255,0.045);
@@ -1604,8 +1625,8 @@
 }
 
 .kangoo-cart-email-capture__icon svg {
-  width: 21px;
-  height: 21px;
+  width: 18px;
+  height: 18px;
 }
 
 .kangoo-cart-email-capture__row-copy {
@@ -1616,7 +1637,7 @@
 
 .kangoo-cart-email-capture__row-copy > span {
   color: rgba(255,255,255,0.6);
-  font-size: clamp(0.88rem, 2.2vw, 1rem);
+  font-size: clamp(0.78rem, 2vw, 0.9rem);
   line-height: 1.2;
 }
 
@@ -1624,7 +1645,7 @@
   min-width: 0;
   overflow-wrap: anywhere;
   color: #fff;
-  font-size: clamp(1rem, 2.7vw, 1.18rem);
+  font-size: clamp(0.92rem, 2.45vw, 1.06rem);
   font-weight: 650;
   line-height: 1.25;
 }
@@ -1654,7 +1675,7 @@
 }
 
 .kangoo-cart-email-capture__message {
-  margin: 0.72rem 0 0;
+  margin: 0.56rem 0 0;
   color: rgba(255, 255, 255, 0.72);
   font-size: 0.86rem;
   line-height: 1.35;
@@ -1663,9 +1684,9 @@
 .kangoo-cart-email-capture__form {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 0.72rem;
+  gap: 0.58rem;
   align-items: stretch;
-  padding-top: 0.78rem;
+  padding-top: 0.62rem;
   border-top: 1px solid rgba(255,255,255,0.08);
 }
 
@@ -1685,7 +1706,7 @@
 
 .kangoo-cart-email-capture__form input {
   width: 100%;
-  min-height: 42px;
+  min-height: 40px;
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 12px;
   background: rgba(13, 13, 15, 0.78);
@@ -1719,7 +1740,7 @@
 .kangoo-cart-email-capture__dob {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.52rem;
+  gap: 0.45rem;
 }
 
 .kangoo-cart-email-capture__dob-title {
@@ -1751,8 +1772,8 @@
 
 @media (max-width: 640px) {
   .kangoo-cart-email-capture {
-    border-radius: 14px;
-    padding: 0.82rem;
+    border-radius: 13px;
+    padding: 0.72rem;
   }
 
   .kangoo-cart-email-capture__header {
@@ -1760,8 +1781,8 @@
   }
 
   .kangoo-cart-email-capture__status {
-    width: 36px;
-    height: 36px;
+    width: 32px;
+    height: 32px;
   }
 
   .kangoo-cart-email-capture__edit span {
@@ -3874,8 +3895,9 @@ body.woocommerce-checkout .kangoo-rewards-cart__info {
   height: 18px;
   align-items: center;
   justify-content: center;
-  border: 1px solid #b8bec8;
+  border: 1px solid #7b8493;
   border-radius: 999px;
+  background: #ffffff;
   color: #6b7280 !important;
   font-size: 0.72rem;
   font-weight: 800;
@@ -4128,7 +4150,7 @@ body.woocommerce-cart .kangoo-rewards-cart--cart .kangoo-rewards-cart__info {
   height: 18px;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(255, 255, 255, 0.28);
+  border: 1px solid rgba(255, 255, 255, 0.48);
   border-radius: 999px;
   color: var(--color-text-soft);
   font-size: 0.72rem;

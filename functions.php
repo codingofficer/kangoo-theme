@@ -5180,7 +5180,7 @@ function kangoo_render_cart_email_capture() {
                 </span>
                 <span class="kangoo-cart-email-capture__row-copy">
                     <span><?php esc_html_e('Email', 'kangoo'); ?></span>
-                    <strong data-kangoo-cart-email-summary><?php echo $email ? esc_html($email) : esc_html__('Email needed', 'kangoo'); ?></strong>
+                    <strong data-kangoo-cart-email-summary><?php echo $email ? esc_html($email) : ''; ?></strong>
                 </span>
             </div>
 
@@ -5194,7 +5194,7 @@ function kangoo_render_cart_email_capture() {
                 </span>
                 <span class="kangoo-cart-email-capture__row-copy">
                     <span><?php esc_html_e('Date of Birth', 'kangoo'); ?></span>
-                    <strong data-kangoo-cart-dob-summary><?php echo $dob_display ? esc_html($dob_display) : esc_html__('Date needed', 'kangoo'); ?></strong>
+                    <strong data-kangoo-cart-dob-summary><?php echo $dob_display ? esc_html($dob_display) : ''; ?></strong>
                 </span>
                 <span class="kangoo-cart-email-capture__verified">
                     <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">

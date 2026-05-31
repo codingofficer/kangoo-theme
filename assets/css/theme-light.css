@@ -407,6 +407,12 @@ body.kangoo-theme--light .qty-btn {
   color: #111827;
 }
 
+body.kangoo-theme--light .kangoo-rewards-cart__info {
+  border-color: rgba(17, 24, 39, 0.4) !important;
+  background: #ffffff !important;
+  color: #111827 !important;
+}
+
 body.kangoo-theme--light .woocommerce-message,
 body.kangoo-theme--light .woocommerce-info,
 body.kangoo-theme--light .woocommerce-error,

@@ -1298,6 +1298,28 @@ document.addEventListener('DOMContentLoaded', function () {
     };
   }
 
+  function parseFlexibleCheckoutDob(value) {
+    const cleanValue = String(value || '').trim();
+
+    if (!cleanValue) {
+      return null;
+    }
+
+    const separated = cleanValue.match(/^(\d{1,2})\D+(\d{1,2})\D+(\d{4})$/);
+
+    if (separated) {
+      return normalizeCheckoutDob(separated[1], separated[2], separated[3]);
+    }
+
+    const compact = cleanValue.replace(/\D+/g, '');
+
+    if (compact.length === 8) {
+      return normalizeCheckoutDob(compact.slice(0, 2), compact.slice(2, 4), compact.slice(4));
+    }
+
+    return null;
+  }
+
   function isValidCheckoutDob(dob) {
     if (!dob || !dob.day || !dob.month || !dob.year) {
       return false;
@@ -1444,11 +1466,11 @@ document.addEventListener('DOMContentLoaded', function () {
         '<div class="kangoo-cart-email-capture__summary">',
         '<div class="kangoo-cart-email-capture__row">',
         '<span class="kangoo-cart-email-capture__icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M4 7h16v11H4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M5 8l7 5 7-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>',
-        '<span class="kangoo-cart-email-capture__row-copy"><span>Email</span><strong data-kangoo-cart-email-summary>', escapeHtml(storedEmail || 'Email needed'), '</strong></span>',
+        '<span class="kangoo-cart-email-capture__row-copy"><span>Email</span><strong data-kangoo-cart-email-summary>', escapeHtml(isValidEmail(storedEmail) ? storedEmail : ''), '</strong></span>',
         '</div>',
         '<div class="kangoo-cart-email-capture__row">',
         '<span class="kangoo-cart-email-capture__icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M5 6h14v14H5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8 4v4M16 4v4M5 10h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 17h.01M12 17h.01" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></span>',
-        '<span class="kangoo-cart-email-capture__row-copy"><span>Date of Birth</span><strong data-kangoo-cart-dob-summary>', escapeHtml(formatCheckoutDobDisplay(storedDob) || 'Date needed'), '</strong></span>',
+        '<span class="kangoo-cart-email-capture__row-copy"><span>Date of Birth</span><strong data-kangoo-cart-dob-summary>', escapeHtml(isValidCheckoutDob(storedDob) ? formatCheckoutDobDisplay(storedDob) : ''), '</strong></span>',
         '<span class="kangoo-cart-email-capture__verified"><svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path d="M7 12.5l3 3L17 8" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Verified</span>',
         '</div>',
         '</div>',
@@ -1554,11 +1576,63 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function updateSummaryDisplay(email, dob) {
       if (emailSummary) {
-        emailSummary.textContent = isValidEmail(email) ? email : 'Email needed';
+        emailSummary.textContent = isValidEmail(email) ? email : '';
       }
 
       if (dobSummary) {
-        dobSummary.textContent = isValidCheckoutDob(dob) ? formatCheckoutDobDisplay(dob) : 'Date needed';
+        dobSummary.textContent = isValidCheckoutDob(dob) ? formatCheckoutDobDisplay(dob) : '';
+      }
+    }
+
+    function setDobInputValues(dob, shouldPad) {
+      const cleanDob = normalizeCheckoutDob(dob && dob.day, dob && dob.month, dob && dob.year);
+
+      if (dobDay) {
+        dobDay.value = shouldPad && cleanDob.day ? cleanDob.day.padStart(2, '0') : cleanDob.day;
+      }
+
+      if (dobMonth) {
+        dobMonth.value = shouldPad && cleanDob.month ? cleanDob.month.padStart(2, '0') : cleanDob.month;
+      }
+
+      if (dobYear) {
+        dobYear.value = cleanDob.year;
+      }
+    }
+
+    function cleanDobInput(field) {
+      if (!field) {
+        return;
+      }
+
+      const maxLength = Number(field.maxLength) > 0 ? Number(field.maxLength) : 4;
+      field.value = field.value.replace(/\D+/g, '').slice(0, maxLength);
+    }
+
+    function padDobInput(field) {
+      if (!field || field === dobYear || field.value.length !== 1) {
+        return;
+      }
+
+      field.value = field.value.padStart(2, '0');
+    }
+
+    function focusDobInput(field) {
+      if (!field) {
+        return;
+      }
+
+      window.setTimeout(function () {
+        field.focus();
+        field.select();
+      }, 0);
+    }
+
+    function maybeAdvanceDobInput(field) {
+      if (field === dobDay && field.value.length >= 2) {
+        focusDobInput(dobMonth);
+      } else if (field === dobMonth && field.value.length >= 2) {
+        focusDobInput(dobYear);
       }
     }
 
@@ -1572,13 +1646,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function markSaved(payload) {
       const email = payload && payload.email ? payload.email : input.value;
-      const dob = payload && payload.dob ? payload.dob : formatCheckoutDob(getDobFromPanel());
+      const activeDob = getDobFromPanel();
+      const dob = payload && payload.dob ? payload.dob : formatCheckoutDob(activeDob);
 
       panel.classList.add('has-email');
       panel.classList.remove('needs-email');
       panel.classList.remove('is-editing');
+      setDobInputValues(activeDob, true);
       setMessage('Checkout details saved.', false);
-      updateSummaryDisplay(email, getDobFromPanel());
+      updateSummaryDisplay(email, activeDob);
 
       if (window.kangooRewards) {
         window.kangooRewards.checkout_email = email;
@@ -1630,12 +1706,58 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
       }
 
+      if (field !== input) {
+        field.addEventListener('paste', function (event) {
+          const clipboard = event.clipboardData || window.clipboardData;
+          const pasted = clipboard ? clipboard.getData('text') : '';
+          const parsedDob = parseFlexibleCheckoutDob(pasted);
+
+          if (!parsedDob) {
+            return;
+          }
+
+          event.preventDefault();
+          setDobInputValues(parsedDob, true);
+          focusDobInput(dobYear);
+          refreshCheckoutState();
+        });
+
+        field.addEventListener('keydown', function (event) {
+          if (!['/', '-', '.', ' '].includes(event.key)) {
+            return;
+          }
+
+          event.preventDefault();
+          cleanDobInput(field);
+          padDobInput(field);
+
+          if (field === dobDay) {
+            focusDobInput(dobMonth);
+          } else if (field === dobMonth) {
+            focusDobInput(dobYear);
+          }
+
+          refreshCheckoutState();
+        });
+      }
+
       field.addEventListener('input', function () {
-        field.value = field.type === 'email' ? field.value : field.value.replace(/\D+/g, '').slice(0, field.maxLength || 4);
+        if (field.type !== 'email') {
+          cleanDobInput(field);
+          maybeAdvanceDobInput(field);
+        }
+
         refreshCheckoutState();
       });
 
-      field.addEventListener('blur', refreshCheckoutState);
+      field.addEventListener('blur', function () {
+        if (field.type !== 'email') {
+          cleanDobInput(field);
+          padDobInput(field);
+        }
+
+        refreshCheckoutState();
+      });
     });
 
     refreshCheckoutState();

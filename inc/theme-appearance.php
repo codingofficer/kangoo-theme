@@ -267,6 +267,10 @@ function kangoo_render_theme_appearance_fallback_page() {
 }
 
 function kangoo_render_theme_preference_prompt() {
+    if ((function_exists('is_cart') && is_cart()) || (function_exists('is_checkout') && is_checkout())) {
+        return;
+    }
+
     $current = kangoo_get_active_theme_appearance();
     $target = $current === 'light-first' ? 'dark' : 'light-first';
     $is_light = $current === 'light-first';
