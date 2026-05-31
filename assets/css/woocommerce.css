@@ -1633,13 +1633,15 @@
   display: none;
   align-items: center;
   gap: 0.42rem;
-  padding: 0.42rem 0.72rem;
-  border: 1px solid rgba(58, 212, 116, 0.3);
+  justify-self: end;
+  align-self: center;
+  padding: 0.38rem 0.68rem;
+  border: 1px solid rgba(34, 197, 94, 0.56);
   border-radius: 999px;
-  background: rgba(58, 212, 116, 0.12);
-  color: #70f58e;
+  background: rgba(20, 83, 45, 0.72);
+  color: #ffffff;
   font-size: 0.82rem;
-  font-weight: 850;
+  font-weight: 900;
   white-space: nowrap;
 }
 
@@ -1647,8 +1649,8 @@
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: #70f58e;
-  color: #0b2713;
+  background: #22c55e;
+  color: #052e16;
 }
 
 .kangoo-cart-email-capture__message {
@@ -1767,18 +1769,27 @@
   }
 
   .kangoo-cart-email-capture__row {
-    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-columns: auto minmax(0, 1fr) auto;
   }
 
   .kangoo-cart-email-capture__verified {
-    grid-column: 2;
-    justify-self: start;
     width: fit-content;
     padding: 0.34rem 0.58rem;
   }
 
   .kangoo-cart-email-capture__dob {
     gap: 0.45rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .kangoo-cart-email-capture__row {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .kangoo-cart-email-capture__verified {
+    grid-column: 2;
+    justify-self: start;
   }
 }
 
