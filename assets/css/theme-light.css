@@ -1338,3 +1338,333 @@ body.kangoo-theme--light.woocommerce-checkout .wp-block-woocommerce-checkout-ord
     margin-inline: auto !important;
   }
 }
+
+/* WooCommerce account area */
+body.kangoo-theme--light.woocommerce-account .woocommerce {
+  color: #111827;
+}
+
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-navigation {
+  border-color: rgba(17, 24, 39, 0.1) !important;
+  background: #ffffff !important;
+  box-shadow: 0 18px 50px rgba(17, 24, 39, 0.08) !important;
+}
+
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-navigation-link--customer-logout {
+  border-top-color: rgba(17, 24, 39, 0.1) !important;
+}
+
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-navigation ul li a {
+  color: #445066 !important;
+  border-color: transparent !important;
+  background: transparent !important;
+}
+
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-navigation ul li a:hover {
+  color: #0f5ed1 !important;
+  border-color: rgba(22, 119, 232, 0.14) !important;
+  background: #f1f7ff !important;
+}
+
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-navigation ul li.is-active a {
+  color: #ffffff !important;
+  border-color: rgba(22, 119, 232, 0.24) !important;
+  background: linear-gradient(135deg, #3f91ff, #1677e8) !important;
+  box-shadow: 0 12px 28px rgba(22, 119, 232, 0.18) !important;
+}
+
+body.kangoo-theme--light.woocommerce-account .account-mobile-toggle {
+  border-color: rgba(17, 24, 39, 0.1) !important;
+  background: #ffffff !important;
+  color: #111827 !important;
+  box-shadow: 0 12px 30px rgba(17, 24, 39, 0.07);
+}
+
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content {
+  color: #111827;
+}
+
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content::before,
+body.kangoo-theme--light.is-account-endpoint-payment-methods .woocommerce-MyAccount-content::before,
+body.kangoo-theme--light.is-account-endpoint-edit-address .woocommerce-MyAccount-content::before,
+body.kangoo-theme--light.is-account-endpoint-edit-account .woocommerce-MyAccount-content::before {
+  color: #111827 !important;
+}
+
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content p,
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content em,
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content address,
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content small {
+  color: #4b5563 !important;
+}
+
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content h1,
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content h2,
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content h3,
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content h4,
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content legend,
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content strong,
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content b,
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content label {
+  color: #111827 !important;
+}
+
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content a:not(.button) {
+  color: #1677e8 !important;
+}
+
+body.kangoo-theme--light.woocommerce-account .kangoo-account-welcome,
+body.kangoo-theme--light.woocommerce-account .kangoo-account-stats article,
+body.kangoo-theme--light.woocommerce-account .kangoo-account-recent-orders,
+body.kangoo-theme--light.woocommerce-account .kangoo-rewards-hero,
+body.kangoo-theme--light.woocommerce-account .kangoo-rewards-rules,
+body.kangoo-theme--light.woocommerce-account .kangoo-rewards-history,
+body.kangoo-theme--light.woocommerce-account .kangoo-rewards-help,
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content .woocommerce-Address,
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content .account-dashboard-card,
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content table.shop_table,
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content table.my_account_orders,
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content table.woocommerce-orders-table,
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content form.woocommerce-EditAccountForm,
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content .woocommerce-PaymentMethods,
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content .woocommerce-Message,
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content .woocommerce-info,
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content .woocommerce-message,
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content .woocommerce-error,
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content .woocommerce-order-details,
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content .woocommerce-customer-details,
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content .woocommerce-column,
+body.kangoo-theme--light.woocommerce-account:not(.logged-in) form.woocommerce-form-login,
+body.kangoo-theme--light.woocommerce-account:not(.logged-in) form.login {
+  border-color: rgba(17, 24, 39, 0.1) !important;
+  background: #ffffff !important;
+  color: #111827 !important;
+  box-shadow: 0 18px 50px rgba(17, 24, 39, 0.07) !important;
+}
+
+body.kangoo-theme--light.woocommerce-account .kangoo-account-welcome {
+  background:
+    radial-gradient(circle at 100% 0%, rgba(22, 119, 232, 0.12), transparent 34%),
+    linear-gradient(180deg, #ffffff, #f8fbff) !important;
+}
+
+body.kangoo-theme--light.woocommerce-account .kangoo-account-welcome h1 {
+  color: #1677e8 !important;
+}
+
+body.kangoo-theme--light.woocommerce-account .kangoo-account-avatar,
+body.kangoo-theme--light.woocommerce-account .kangoo-account-stats article > span:first-child,
+body.kangoo-theme--light.woocommerce-account .kangoo-rewards-rules article > span,
+body.kangoo-theme--light.woocommerce-account .kangoo-account-hero__icon,
+body.kangoo-theme--light.woocommerce-account .kangoo-rewards-help > span {
+  background: linear-gradient(135deg, #3f91ff, #1677e8) !important;
+  color: #ffffff !important;
+  box-shadow: 0 14px 32px rgba(22, 119, 232, 0.18) !important;
+}
+
+body.kangoo-theme--light.woocommerce-account .kangoo-account-stats article,
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content .account-dashboard-card {
+  background: linear-gradient(180deg, #ffffff, #fbfdff) !important;
+}
+
+body.kangoo-theme--light.woocommerce-account .kangoo-account-stats p {
+  color: #5b6472 !important;
+}
+
+body.kangoo-theme--light.woocommerce-account .kangoo-account-order-card {
+  border-color: rgba(17, 24, 39, 0.1) !important;
+  background: #f8fafc !important;
+  color: #111827 !important;
+}
+
+body.kangoo-theme--light.woocommerce-account .kangoo-account-order-card:hover {
+  border-color: rgba(22, 119, 232, 0.24) !important;
+  background: #f1f7ff !important;
+}
+
+body.kangoo-theme--light.woocommerce-account .kangoo-account-order-card__image {
+  background: #ffffff !important;
+}
+
+body.kangoo-theme--light.woocommerce-account .kangoo-account-status {
+  color: #047832 !important;
+  background: #dcfce7 !important;
+}
+
+body.kangoo-theme--light.woocommerce-account .kangoo-account-status--processing,
+body.kangoo-theme--light.woocommerce-account .kangoo-account-status--on-hold {
+  color: #0f5ed1 !important;
+  background: #eaf4ff !important;
+}
+
+body.kangoo-theme--light.woocommerce-account .kangoo-account-status--cancelled,
+body.kangoo-theme--light.woocommerce-account .kangoo-account-status--failed {
+  color: #475569 !important;
+  background: #eef2f7 !important;
+}
+
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content .woocommerce-info,
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content .woocommerce-message {
+  background: #eef6ff !important;
+  color: #111827 !important;
+}
+
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content .woocommerce-error {
+  border-color: rgba(220, 38, 38, 0.2) !important;
+  background: #fff1f2 !important;
+  color: #7f1d1d !important;
+}
+
+body.kangoo-theme--light.is-account-endpoint-edit-address .woocommerce-MyAccount-content .woocommerce-info {
+  background: #eef6ff !important;
+}
+
+body.kangoo-theme--light.is-account-endpoint-edit-address .woocommerce-MyAccount-content .woocommerce-info::after {
+  color: #4b5563 !important;
+}
+
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content .woocommerce-Address-title .edit,
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content .woocommerce-Address-title a,
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content .addresses .title .edit,
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content .addresses .title a {
+  border-color: rgba(22, 119, 232, 0.28) !important;
+  background: #f1f7ff !important;
+  color: #0f5ed1 !important;
+}
+
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content .woocommerce-Address-title .edit:hover,
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content .addresses .title .edit:hover {
+  border-color: rgba(22, 119, 232, 0.42) !important;
+  background: #eaf4ff !important;
+}
+
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content .woocommerce-Address address em,
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content .addresses address em {
+  color: #111827 !important;
+}
+
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content input.input-text,
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content input[type="text"],
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content input[type="email"],
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content input[type="password"],
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content input[type="tel"],
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content input[type="date"],
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content textarea,
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content select,
+body.kangoo-theme--light.woocommerce-account:not(.logged-in) form.woocommerce-form-login input.input-text,
+body.kangoo-theme--light.woocommerce-account:not(.logged-in) form.login input.input-text {
+  border-color: rgba(17, 24, 39, 0.14) !important;
+  background: #ffffff !important;
+  color: #111827 !important;
+}
+
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content input::placeholder,
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content textarea::placeholder {
+  color: #8a94a6 !important;
+}
+
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content input:focus,
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content textarea:focus,
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content select:focus {
+  border-color: #1677e8 !important;
+  box-shadow: 0 0 0 3px rgba(22, 119, 232, 0.14) !important;
+}
+
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content fieldset {
+  border-color: rgba(17, 24, 39, 0.1) !important;
+  background: #f8fafc !important;
+}
+
+body.kangoo-theme--light.woocommerce-account .account-password-toggle {
+  border-color: rgba(17, 24, 39, 0.12) !important;
+  background: #f8fafc !important;
+  color: #1677e8 !important;
+}
+
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content table.shop_table,
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content table.my_account_orders,
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content table.woocommerce-orders-table,
+body.kangoo-theme--light.woocommerce-account .kangoo-rewards-history table {
+  background: #ffffff !important;
+}
+
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content table th,
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content table td,
+body.kangoo-theme--light.woocommerce-account .kangoo-rewards-history th,
+body.kangoo-theme--light.woocommerce-account .kangoo-rewards-history td {
+  border-bottom-color: rgba(17, 24, 39, 0.08) !important;
+  color: #111827 !important;
+}
+
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content table thead th,
+body.kangoo-theme--light.woocommerce-account .kangoo-rewards-history th {
+  background: #f1f5f9 !important;
+  color: #334155 !important;
+}
+
+body.kangoo-theme--light.woocommerce-account .kangoo-rewards-hero {
+  background:
+    radial-gradient(circle at 0% 0%, rgba(22, 119, 232, 0.12), transparent 34%),
+    linear-gradient(180deg, #ffffff, #f8fbff) !important;
+}
+
+body.kangoo-theme--light.woocommerce-account .kangoo-rewards-hero__balance > span,
+body.kangoo-theme--light.woocommerce-account .kangoo-rewards-hero__progress strong {
+  color: #111827 !important;
+}
+
+body.kangoo-theme--light.woocommerce-account .kangoo-rewards-hero__balance p {
+  background: #eef6ff !important;
+  color: #0f5ed1 !important;
+}
+
+body.kangoo-theme--light.woocommerce-account .kangoo-rewards-hero__progress {
+  border-left-color: rgba(17, 24, 39, 0.12) !important;
+}
+
+body.kangoo-theme--light.woocommerce-account .kangoo-rewards-progress {
+  background: rgba(17, 24, 39, 0.1) !important;
+}
+
+body.kangoo-theme--light.woocommerce-account .kangoo-rewards-rules article {
+  border-color: transparent !important;
+  background: transparent !important;
+}
+
+body.kangoo-theme--light.woocommerce-account .kangoo-rewards-badge {
+  color: #0f5ed1 !important;
+  background: #eaf4ff !important;
+}
+
+body.kangoo-theme--light.woocommerce-account .kangoo-rewards-badge--earned {
+  color: #047832 !important;
+  background: #dcfce7 !important;
+}
+
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content button.button,
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content .button,
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content a.button,
+body.kangoo-theme--light.woocommerce-account:not(.logged-in) form.woocommerce-form-login button.button,
+body.kangoo-theme--light.woocommerce-account:not(.logged-in) form.login button.button {
+  background: linear-gradient(135deg, #3f91ff, #1677e8) !important;
+  color: #ffffff !important;
+  box-shadow: 0 14px 30px rgba(22, 119, 232, 0.2) !important;
+}
+
+body.kangoo-theme--light.woocommerce-account:not(.logged-in) form.woocommerce-form-login::before,
+body.kangoo-theme--light.woocommerce-account:not(.logged-in) form.login::before,
+body.kangoo-theme--light.woocommerce-account:not(.logged-in) form.woocommerce-form-login label,
+body.kangoo-theme--light.woocommerce-account:not(.logged-in) form.login label {
+  color: #111827 !important;
+}
+
+body.kangoo-theme--light.woocommerce-account:not(.logged-in) form.woocommerce-form-login .lost_password a,
+body.kangoo-theme--light.woocommerce-account:not(.logged-in) form.login .lost_password a {
+  color: #1677e8 !important;
+}
+
+@media (max-width: 1100px) {
+  body.kangoo-theme--light.woocommerce-account .kangoo-rewards-hero__progress {
+    border-left: 0 !important;
+  }
+}
