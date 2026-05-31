@@ -1796,9 +1796,13 @@ body.woocommerce-cart {
   pointer-events: none;
 }
 
+.kangoo-cart-secure-checkout picture,
 .kangoo-cart-secure-checkout img {
   display: block;
   width: 100%;
+}
+
+.kangoo-cart-secure-checkout img {
   height: auto;
   border-radius: 12px;
   box-shadow: 0 16px 44px rgba(0,0,0,0.38);

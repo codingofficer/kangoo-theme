@@ -1405,14 +1405,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     button.classList.toggle('kangoo-checkout-disabled', !isEnabled);
     button.setAttribute('aria-disabled', isEnabled ? 'false' : 'true');
-    button.removeAttribute('disabled');
 
     const label = button.querySelector('.wc-block-components-button__text, span');
+    const checkoutLabel = 'Proceed to secure checkout';
 
-    if (label && /checkout/i.test(label.textContent || '')) {
-      label.textContent = 'Proceed to secure checkout';
-    } else if (!button.children.length && /checkout/i.test(button.textContent || '')) {
-      button.textContent = 'Proceed to secure checkout';
+    if (label && /checkout/i.test(label.textContent || '') && label.textContent.trim() !== checkoutLabel) {
+      label.textContent = checkoutLabel;
+    } else if (!button.children.length && /checkout/i.test(button.textContent || '') && button.textContent.trim() !== checkoutLabel) {
+      button.textContent = checkoutLabel;
     }
   }
 
