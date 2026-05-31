@@ -1967,6 +1967,61 @@ body {
   }
 }
 
+/* Theme controls */
+.kangoo-theme-menu-toggle {
+  display: inline-flex;
+  width: 100%;
+  min-height: 54px;
+  align-items: center;
+  gap: 0.72rem;
+  padding: 0.75rem 0.95rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 800;
+  text-align: left;
+  cursor: pointer;
+}
+
+.kangoo-mega-menu__sidebar .kangoo-theme-menu-toggle {
+  margin-top: 0.35rem;
+}
+
+.kangoo-theme-menu-toggle__icon {
+  position: relative;
+  display: inline-flex;
+  width: 28px;
+  height: 28px;
+  flex: 0 0 28px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: rgba(77, 163, 255, 0.14);
+}
+
+.kangoo-theme-menu-toggle__icon::before {
+  content: "";
+  display: block;
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  background: #ffd866;
+  box-shadow: 0 0 0 4px rgba(255, 216, 102, 0.16);
+}
+
+.kangoo-theme-menu-toggle--dark .kangoo-theme-menu-toggle__icon::before {
+  background: #ffd866;
+  box-shadow: -4px 0 0 0 #141922, 0 0 0 4px rgba(255, 216, 102, 0.16);
+}
+
+.kangoo-theme-menu-toggle:hover {
+  border-color: rgba(77, 163, 255, 0.38);
+  background: rgba(77, 163, 255, 0.12);
+}
+
 /* Theme preference prompt */
 .kangoo-theme-preference {
   position: fixed;

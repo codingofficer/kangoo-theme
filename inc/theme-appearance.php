@@ -133,6 +133,20 @@ function kangoo_filter_custom_logo_for_light_theme($html, $blog_id) {
 }
 add_filter('get_custom_logo', 'kangoo_filter_custom_logo_for_light_theme', 10, 2);
 
+function kangoo_get_theme_menu_toggle_html() {
+    $current = kangoo_get_active_theme_appearance();
+    $target = $current === 'light-first' ? 'dark' : 'light-first';
+    $is_light = $current === 'light-first';
+    $label = $is_light ? __('Switch to Dark Mode', 'kangoo') : __('Switch to Light Mode', 'kangoo');
+
+    return sprintf(
+        '<button type="button" class="kangoo-theme-menu-toggle kangoo-theme-menu-toggle--%1$s" data-kangoo-theme-menu-toggle data-target-theme="%2$s"><span class="kangoo-theme-menu-toggle__icon" aria-hidden="true"></span><span>%3$s</span></button>',
+        esc_attr($is_light ? 'dark' : 'light'),
+        esc_attr($target),
+        esc_html($label)
+    );
+}
+
 function kangoo_register_theme_appearance_acf_fields() {
     if (!function_exists('acf_add_local_field_group')) {
         return;

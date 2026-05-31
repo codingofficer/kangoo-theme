@@ -86,6 +86,7 @@ $kangoo_strength_cards  = !empty($kangoo_mega_menu['strength_cards']) && is_arra
 $kangoo_type_cards      = !empty($kangoo_mega_menu['type_cards']) && is_array($kangoo_mega_menu['type_cards']) ? $kangoo_mega_menu['type_cards'] : array();
 $kangoo_flavour_cards   = !empty($kangoo_mega_menu['flavour_cards']) && is_array($kangoo_mega_menu['flavour_cards']) ? $kangoo_mega_menu['flavour_cards'] : array();
 $kangoo_mobile_sections = !empty($kangoo_mega_menu['mobile_sections']) && is_array($kangoo_mega_menu['mobile_sections']) ? $kangoo_mega_menu['mobile_sections'] : array();
+$kangoo_theme_menu_toggle_html = function_exists('kangoo_get_theme_menu_toggle_html') ? kangoo_get_theme_menu_toggle_html() : '';
 
 $kangoo_normalize_panel_key = static function ($panel_key) {
     $value = strtolower(trim((string) $panel_key));
@@ -382,6 +383,9 @@ if (current_user_can('manage_options')) {
                         >
                             <?php esc_html_e('99p Pouches', 'kangoo'); ?>
                         </a>
+                        <?php if ($kangoo_theme_menu_toggle_html !== '') : ?>
+                            <?php echo $kangoo_theme_menu_toggle_html; ?>
+                        <?php endif; ?>
                     </aside>
 
                     <div class="kangoo-mega-menu__panels">
@@ -751,6 +755,9 @@ if (current_user_can('manage_options')) {
                     >
                         <?php esc_html_e('99p Pouches', 'kangoo'); ?>
                     </a>
+                    <?php if ($kangoo_theme_menu_toggle_html !== '') : ?>
+                        <?php echo $kangoo_theme_menu_toggle_html; ?>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>

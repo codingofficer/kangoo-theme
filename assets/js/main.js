@@ -1925,6 +1925,36 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  function applyThemePreference(targetTheme) {
+    if (!targetTheme) {
+      return;
+    }
+
+    document.cookie = 'kangoo_theme_preference=' + encodeURIComponent(targetTheme) + ';path=/;max-age=31536000;samesite=lax';
+
+    try {
+      window.localStorage.removeItem('kangooThemePreferenceDismissed:dark');
+      window.localStorage.removeItem('kangooThemePreferenceDismissed:light-first');
+    } catch (error) {}
+
+    const nextUrl = new URL(window.location.href);
+    nextUrl.searchParams.delete('kangoo_theme_preview');
+    window.location.assign(nextUrl.toString());
+  }
+
+  function setupThemePreferenceControls() {
+    document.querySelectorAll('[data-kangoo-theme-menu-toggle]').forEach(function (button) {
+      if (button.dataset.kangooThemeToggleReady === '1') {
+        return;
+      }
+
+      button.dataset.kangooThemeToggleReady = '1';
+      button.addEventListener('click', function () {
+        applyThemePreference(button.getAttribute('data-target-theme') || '');
+      });
+    });
+  }
+
   function setupThemePreferencePrompt() {
     const prompt = document.querySelector('[data-kangoo-theme-preference]');
 
@@ -1971,16 +2001,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (actionButton && targetTheme) {
       actionButton.addEventListener('click', function () {
-        document.cookie = 'kangoo_theme_preference=' + encodeURIComponent(targetTheme) + ';path=/;max-age=31536000;samesite=lax';
-
-        try {
-          window.localStorage.removeItem('kangooThemePreferenceDismissed:dark');
-          window.localStorage.removeItem('kangooThemePreferenceDismissed:light-first');
-        } catch (error) {}
-
-        const nextUrl = new URL(window.location.href);
-        nextUrl.searchParams.delete('kangoo_theme_preview');
-        window.location.assign(nextUrl.toString());
+        applyThemePreference(targetTheme);
       });
     }
   }
@@ -1993,6 +2014,7 @@ document.addEventListener('DOMContentLoaded', function () {
   setupCheckoutGuestNotice();
   setupCheckoutAddressToggle();
   setupCategoryMobileControls();
+  setupThemePreferenceControls();
   setupThemePreferencePrompt();
 
   if (document.querySelector('.woocommerce-checkout, .woocommerce-cart')) {
