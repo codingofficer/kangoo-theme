@@ -521,17 +521,26 @@ document.addEventListener('DOMContentLoaded', function () {
 	const siteHeader = document.querySelector('.site-header');
 	let lastScrollY = window.scrollY;
 
+  function setSiteHeaderHidden(isHidden) {
+    if (!siteHeader) {
+      return;
+    }
+
+    siteHeader.classList.toggle('site-header--hidden', isHidden);
+    body.classList.toggle('site-header-is-hidden', isHidden);
+  }
+
 	window.addEventListener('scroll', function () {
 	  if (!siteHeader || body.classList.contains('no-scroll')) return;
 
 	  const currentScrollY = window.scrollY;
 
 	  if (currentScrollY <= 80 || currentScrollY < lastScrollY) {
-		siteHeader.classList.remove('site-header--hidden');
+		setSiteHeaderHidden(false);
 	  }
 
 	  if (currentScrollY > lastScrollY && currentScrollY > 120) {
-		siteHeader.classList.add('site-header--hidden');
+		setSiteHeaderHidden(true);
 		closeDesktopMegaMenu();
 	  }
 
@@ -1916,6 +1925,66 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  function setupThemePreferencePrompt() {
+    const prompt = document.querySelector('[data-kangoo-theme-preference]');
+
+    if (!prompt || document.cookie.indexOf('kangoo_theme_preference=') !== -1) {
+      return;
+    }
+
+    const targetTheme = prompt.getAttribute('data-target-theme') || '';
+    const closeButton = prompt.querySelector('[data-kangoo-theme-preference-close]');
+    const actionButton = prompt.querySelector('[data-kangoo-theme-preference-action]');
+    const dismissedKey = 'kangooThemePreferenceDismissed:' + targetTheme;
+
+    function isDismissed() {
+      try {
+        return window.localStorage.getItem(dismissedKey) === '1';
+      } catch (error) {
+        return false;
+      }
+    }
+
+    function dismissPrompt() {
+      prompt.classList.remove('is-visible');
+      prompt.setAttribute('aria-hidden', 'true');
+
+      try {
+        window.localStorage.setItem(dismissedKey, '1');
+      } catch (error) {}
+    }
+
+    if (isDismissed()) {
+      return;
+    }
+
+    window.setTimeout(function () {
+      if (!isDismissed()) {
+        prompt.classList.add('is-visible');
+        prompt.setAttribute('aria-hidden', 'false');
+      }
+    }, 5000);
+
+    if (closeButton) {
+      closeButton.addEventListener('click', dismissPrompt);
+    }
+
+    if (actionButton && targetTheme) {
+      actionButton.addEventListener('click', function () {
+        document.cookie = 'kangoo_theme_preference=' + encodeURIComponent(targetTheme) + ';path=/;max-age=31536000;samesite=lax';
+
+        try {
+          window.localStorage.removeItem('kangooThemePreferenceDismissed:dark');
+          window.localStorage.removeItem('kangooThemePreferenceDismissed:light-first');
+        } catch (error) {}
+
+        const nextUrl = new URL(window.location.href);
+        nextUrl.searchParams.delete('kangoo_theme_preview');
+        window.location.assign(nextUrl.toString());
+      });
+    }
+  }
+
   setupCheckoutAgeVerificationRow();
   linkCheckoutTermsText();
   setupFreeShippingNudge();
@@ -1924,6 +1993,7 @@ document.addEventListener('DOMContentLoaded', function () {
   setupCheckoutGuestNotice();
   setupCheckoutAddressToggle();
   setupCategoryMobileControls();
+  setupThemePreferencePrompt();
 
   if (document.querySelector('.woocommerce-checkout, .woocommerce-cart')) {
     const checkoutAgeObserver = new MutationObserver(function () {

@@ -54,11 +54,31 @@ function kangoo_get_theme_preview_appearance() {
     return kangoo_normalize_theme_appearance(wp_unslash($_GET['kangoo_theme_preview']));
 }
 
+function kangoo_get_cookie_theme_appearance() {
+    if (empty($_COOKIE['kangoo_theme_preference'])) {
+        return '';
+    }
+
+    $appearance = sanitize_key(str_replace('_', '-', (string) wp_unslash($_COOKIE['kangoo_theme_preference'])));
+
+    if ($appearance === 'light') {
+        $appearance = 'light-first';
+    }
+
+    return array_key_exists($appearance, kangoo_theme_appearance_presets()) ? $appearance : '';
+}
+
 function kangoo_get_active_theme_appearance() {
     $preview = kangoo_get_theme_preview_appearance();
 
     if ($preview !== '') {
         return $preview;
+    }
+
+    $cookie_appearance = kangoo_get_cookie_theme_appearance();
+
+    if ($cookie_appearance !== '') {
+        return $cookie_appearance;
     }
 
     return kangoo_get_saved_theme_appearance();
@@ -231,3 +251,31 @@ function kangoo_render_theme_appearance_fallback_page() {
     </div>
     <?php
 }
+
+function kangoo_render_theme_preference_prompt() {
+    $current = kangoo_get_active_theme_appearance();
+    $target = $current === 'light-first' ? 'dark' : 'light-first';
+    $is_light = $current === 'light-first';
+    $title = $is_light ? __('Prefer dark backgrounds?', 'kangoo') : __('Prefer brighter pages?', 'kangoo');
+    $action = $is_light ? __('Activate Dark Mode', 'kangoo') : __('Activate Light Mode', 'kangoo');
+    ?>
+    <aside
+        class="kangoo-theme-preference kangoo-theme-preference--<?php echo esc_attr($is_light ? 'light' : 'dark'); ?>"
+        data-kangoo-theme-preference
+        data-target-theme="<?php echo esc_attr($target); ?>"
+        aria-hidden="true"
+    >
+        <span class="kangoo-theme-preference__icon" aria-hidden="true"></span>
+        <span class="kangoo-theme-preference__copy">
+            <strong><?php echo esc_html($title); ?></strong>
+            <button type="button" class="kangoo-theme-preference__action" data-kangoo-theme-preference-action>
+                <?php echo esc_html($action); ?> <span aria-hidden="true">-&gt;</span>
+            </button>
+        </span>
+        <button type="button" class="kangoo-theme-preference__close" data-kangoo-theme-preference-close aria-label="<?php esc_attr_e('Close theme preference notice', 'kangoo'); ?>">
+            &times;
+        </button>
+    </aside>
+    <?php
+}
+add_action('wp_footer', 'kangoo_render_theme_preference_prompt', 25);

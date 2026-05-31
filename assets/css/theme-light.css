@@ -595,3 +595,213 @@ body.kangoo-theme--light .kangoo-age-gate__smallprint {
     box-shadow: 0 8px 22px rgba(17, 24, 39, 0.07);
   }
 }
+
+/* Final light-mode refinements for late dark overrides. */
+body.kangoo-theme--light .hero.section {
+  background:
+    radial-gradient(circle at 84% 18%, rgba(22, 119, 232, 0.2), transparent 32%),
+    radial-gradient(circle at 18% 8%, rgba(255, 122, 0, 0.16), transparent 34%),
+    linear-gradient(135deg, #0b1018 0%, #121722 52%, #0d1118 100%);
+}
+
+body.kangoo-theme--light .hero.section .eyebrow {
+  border-color: rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.82);
+}
+
+body.kangoo-theme--light .hero__cta .btn--secondary {
+  border-color: rgba(255, 255, 255, 0.24);
+  background: rgba(255, 255, 255, 0.04);
+  color: #ffffff;
+}
+
+body.kangoo-theme--light .cart-icon,
+body.kangoo-theme--light .cart-icon svg,
+body.kangoo-theme--light .site-header__cart svg,
+body.kangoo-theme--light .site-header__cart path {
+  color: #111827 !important;
+  stroke: currentColor !important;
+}
+
+body.kangoo-theme--light .site-header__menu-toggle {
+  border-color: rgba(17, 24, 39, 0.12) !important;
+  background: #ffffff !important;
+  color: #111827 !important;
+}
+
+body.kangoo-theme--light .product-badge {
+  top: 10px;
+  left: 10px;
+  z-index: 5;
+  display: inline-flex;
+  min-height: 26px;
+  align-items: center;
+  padding: 0.32rem 0.65rem;
+  border: 1px solid rgba(17, 24, 39, 0.08);
+  background: #ffffff;
+  color: #111827;
+  line-height: 1;
+  box-shadow: 0 8px 20px rgba(17, 24, 39, 0.08);
+}
+
+body.kangoo-theme--light .kangoo-mega-menu__grid {
+  border-color: rgba(17, 24, 39, 0.1) !important;
+  background: #ffffff !important;
+  box-shadow: 0 24px 70px rgba(17, 24, 39, 0.14) !important;
+}
+
+body.kangoo-theme--light .kangoo-mega-menu__sidebar {
+  border-color: rgba(17, 24, 39, 0.08) !important;
+  background: #f4f7fb !important;
+}
+
+body.kangoo-theme--light .kangoo-mega-menu__sidebar-link {
+  background: #ffffff !important;
+  color: #111827 !important;
+}
+
+body.kangoo-theme--light .kangoo-mega-menu__sidebar-link.is-active,
+body.kangoo-theme--light .kangoo-mega-menu__sidebar-link:hover {
+  border-color: rgba(22, 119, 232, 0.55) !important;
+  background: #eef6ff !important;
+  color: #0f5ed1 !important;
+}
+
+body.kangoo-theme--light .kangoo-mega-menu__panel h2,
+body.kangoo-theme--light .kangoo-mega-menu__brand-card,
+body.kangoo-theme--light .kangoo-mega-menu__strength-card,
+body.kangoo-theme--light .kangoo-mega-menu__flavour-card,
+body.kangoo-theme--light .kangoo-mega-menu__type-card,
+body.kangoo-theme--light .kangoo-mega-menu__brand-card span,
+body.kangoo-theme--light .kangoo-mega-menu__strength-card strong,
+body.kangoo-theme--light .kangoo-mega-menu__flavour-card span {
+  color: #111827 !important;
+}
+
+body.kangoo-theme--light .kangoo-mega-menu__brand-card,
+body.kangoo-theme--light .kangoo-mega-menu__strength-card,
+body.kangoo-theme--light .kangoo-mega-menu__flavour-card {
+  border-color: rgba(17, 24, 39, 0.1) !important;
+  background: #f8fafc !important;
+}
+
+body.kangoo-theme--light .kangoo-mega-menu__brand-card:hover,
+body.kangoo-theme--light .kangoo-mega-menu__strength-card:hover,
+body.kangoo-theme--light .kangoo-mega-menu__flavour-card:hover {
+  border-color: rgba(22, 119, 232, 0.3) !important;
+  background: #eef6ff !important;
+}
+
+body.kangoo-theme--light .kangoo-mega-drawer__overlay {
+  background: rgba(17, 24, 39, 0.32) !important;
+}
+
+body.kangoo-theme--light .kangoo-mega-drawer__panel {
+  background: #ffffff !important;
+  color: #111827 !important;
+}
+
+body.kangoo-theme--light .kangoo-mega-drawer__close,
+body.kangoo-theme--light .kangoo-mega-drawer__top-links a,
+body.kangoo-theme--light .kangoo-mega-drawer__section,
+body.kangoo-theme--light .kangoo-mega-drawer__section summary,
+body.kangoo-theme--light .kangoo-mega-drawer__direct-link,
+body.kangoo-theme--light .kangoo-mega-drawer__brand-list a,
+body.kangoo-theme--light .kangoo-mega-drawer__flavour-list a,
+body.kangoo-theme--light .kangoo-mega-drawer__custom-links a,
+body.kangoo-theme--light .kangoo-mega-drawer__strength-item {
+  border-color: rgba(17, 24, 39, 0.1) !important;
+  background: #f8fafc !important;
+  color: #111827 !important;
+}
+
+body.kangoo-theme--light .kangoo-mega-drawer__section summary::after {
+  border-color: rgba(17, 24, 39, 0.72) !important;
+}
+
+body.kangoo-theme--light .kangoo-mega-drawer__strength-copy {
+  color: var(--color-text-soft) !important;
+}
+
+body.kangoo-theme--light .kangoo-search__section h3,
+body.kangoo-theme--light .kangoo-search__product-body strong,
+body.kangoo-theme--light .kangoo-search__price,
+body.kangoo-theme--light .kangoo-search__price ins,
+body.kangoo-theme--light .kangoo-search__guide strong {
+  color: #111827 !important;
+}
+
+body.kangoo-theme--light .kangoo-search__product,
+body.kangoo-theme--light .kangoo-search__guide,
+body.kangoo-theme--light .kangoo-search__empty,
+body.kangoo-theme--light .kangoo-search__popular button {
+  border-color: rgba(17, 24, 39, 0.1) !important;
+  background: #f8fafc !important;
+  color: #111827 !important;
+}
+
+body.kangoo-theme--light .kangoo-search__product img {
+  background: #ffffff !important;
+}
+
+body.kangoo-theme--light .kangoo-search__product-meta .is-muted,
+body.kangoo-theme--light .kangoo-search__price del,
+body.kangoo-theme--light .kangoo-search__guide span {
+  color: var(--color-text-soft) !important;
+}
+
+body.kangoo-theme--light .cart-drawer__content,
+body.kangoo-theme--light .cart-drawer__footer {
+  background: #ffffff !important;
+}
+
+body.kangoo-theme--light .cart-drawer__footer.is-empty .cart-drawer-summary {
+  opacity: 1 !important;
+}
+
+body.kangoo-theme--light .cart-drawer-summary {
+  background: #ffffff !important;
+}
+
+body.kangoo-theme--light .cart-drawer-summary__top,
+body.kangoo-theme--light .cart-drawer-summary__shipping,
+body.kangoo-theme--light .cart-drawer-summary__perks {
+  border-color: rgba(17, 24, 39, 0.1) !important;
+  background: #f8fafc !important;
+}
+
+body.kangoo-theme--light .cart-drawer-summary__shipping p,
+body.kangoo-theme--light .cart-drawer-summary__threshold,
+body.kangoo-theme--light .cart-drawer-summary__reward,
+body.kangoo-theme--light .woocommerce-mini-cart-item .quantity {
+  color: #111827 !important;
+}
+
+body.kangoo-theme--light .cart-drawer-summary__progress {
+  background: rgba(17, 24, 39, 0.1) !important;
+}
+
+body.kangoo-theme--light .cart-drawer-summary__checkout[aria-disabled="true"],
+body.kangoo-theme--light .cart-drawer-summary__checkout.is-disabled,
+body.kangoo-theme--light .cart-drawer__footer.is-empty .cart-drawer-summary__checkout {
+  background: #d9e6f7 !important;
+  color: #637083 !important;
+}
+
+body.kangoo-theme--light .woocommerce .quantity,
+body.kangoo-theme--light .product-cart .quantity,
+body.kangoo-theme--light .woocommerce .quantity .qty-btn,
+body.kangoo-theme--light .product-cart .qty-btn,
+body.kangoo-theme--light .woocommerce .quantity input.qty,
+body.kangoo-theme--light .product-cart input.qty {
+  border-color: rgba(17, 24, 39, 0.12) !important;
+  background: #ffffff !important;
+  color: #111827 !important;
+}
+
+body.kangoo-theme--light .product-cart .quantity {
+  padding: 0.35rem !important;
+  border-radius: 16px !important;
+  box-shadow: 0 8px 22px rgba(17, 24, 39, 0.06);
+}
