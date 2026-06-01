@@ -1336,9 +1336,7 @@ body.kangoo-theme--light.woocommerce-cart .cart-collaterals .kangoo-cart-secure-
   }
 
   body.kangoo-theme--light.woocommerce-cart .wc-block-cart,
-  body.kangoo-theme--light.woocommerce-cart .wp-block-woocommerce-cart,
-  body.kangoo-theme--light.woocommerce-checkout .wc-block-checkout,
-  body.kangoo-theme--light.woocommerce-checkout .wp-block-woocommerce-checkout {
+  body.kangoo-theme--light.woocommerce-cart .wp-block-woocommerce-cart {
     padding-inline: max(0.75rem, env(safe-area-inset-left)) max(0.75rem, env(safe-area-inset-right)) !important;
   }
 

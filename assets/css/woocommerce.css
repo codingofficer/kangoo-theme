@@ -4697,3 +4697,90 @@ body.woocommerce-checkout .kangoo-rewards-cart--checkout {
     padding-inline: 0 !important;
   }
 }
+
+/* Checkout block polish and mobile cart trust banner */
+body.woocommerce-checkout .wp-block-woocommerce-checkout-order-summary-block .wc-block-components-checkout-order-summary__title {
+  align-items: center !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  margin-top: unset !important;
+}
+
+@container (max-width: 699px) {
+  body.woocommerce-checkout .wp-block-woocommerce-checkout-order-summary-block .wc-block-components-checkout-order-summary__title {
+    border-bottom: unset !important;
+    border-top: unset !important;
+    cursor: pointer;
+    padding: 0 !important;
+  }
+}
+
+body.woocommerce-checkout .wc-block-components-order-summary .wc-block-components-order-summary-item {
+  display: flex !important;
+  width: 100% !important;
+  margin-top: 10px !important;
+  padding-bottom: 1px !important;
+}
+
+body.woocommerce-checkout .wc-block-components-radio-control--highlight-checked .wc-block-components-radio-control-accordion-option--checked-option-highlighted,
+body.woocommerce-checkout .wc-block-components-radio-control--highlight-checked label.wc-block-components-radio-control__option--checked-option-highlighted {
+  border-radius: 4px !important;
+  box-shadow: none !important;
+}
+
+body.woocommerce-checkout .wc-block-checkout__payment-method .wc-block-components-radio-control-accordion-content,
+body.woocommerce-checkout .wc-stripe-blocks-payment-method-content {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 0.72rem !important;
+  padding-inline: clamp(0.8rem, 3vw, 1rem) !important;
+}
+
+body.woocommerce-checkout .wc-stripe-blocks-payment-method-content > *,
+body.woocommerce-checkout .wc-block-checkout__payment-method .wc-block-components-radio-control-accordion-content > * {
+  min-width: 0 !important;
+}
+
+body.woocommerce-checkout .wc-stripe-blocks-payment-method-content .wc-block-components-card-number-input,
+body.woocommerce-checkout .wc-stripe-blocks-payment-method-content .wc-block-components-card-number-input + label,
+body.woocommerce-checkout .wc-stripe-blocks-payment-method-content > :has(.wc-block-components-card-number-input),
+body.woocommerce-checkout .wc-block-checkout__payment-method .wc-block-components-radio-control-accordion-content > :has(.wc-block-components-card-number-input) {
+  grid-column: 1 / -1 !important;
+}
+
+body.woocommerce-checkout .wc-stripe-blocks-payment-method-content .wc-block-components-card-expiry-input,
+body.woocommerce-checkout .wc-stripe-blocks-payment-method-content .wc-block-components-card-cvc-input,
+body.woocommerce-checkout .wc-stripe-blocks-payment-method-content > :has(.wc-block-components-card-expiry-input),
+body.woocommerce-checkout .wc-stripe-blocks-payment-method-content > :has(.wc-block-components-card-cvc-input),
+body.woocommerce-checkout .wc-block-checkout__payment-method .wc-block-components-radio-control-accordion-content > :has(.wc-block-components-card-expiry-input),
+body.woocommerce-checkout .wc-block-checkout__payment-method .wc-block-components-radio-control-accordion-content > :has(.wc-block-components-card-cvc-input) {
+  grid-column: span 1 !important;
+}
+
+@media (max-width: 782px) {
+  body.woocommerce-cart {
+    padding-bottom: calc(92px + env(safe-area-inset-bottom));
+  }
+
+  body.woocommerce-cart .cart-collaterals .kangoo-cart-secure-checkout {
+    position: fixed !important;
+    left: max(12px, env(safe-area-inset-left));
+    right: max(12px, env(safe-area-inset-right));
+    bottom: calc(10px + env(safe-area-inset-bottom));
+    z-index: 9985;
+    display: block !important;
+    width: auto !important;
+    max-width: none !important;
+    pointer-events: none;
+  }
+
+  body.woocommerce-cart .cart-collaterals .kangoo-cart-secure-checkout img {
+    width: 100%;
+    max-height: 82px;
+    object-fit: contain;
+    border: 1px solid rgba(17, 24, 39, 0.1);
+    border-radius: 12px;
+    background: #ffffff;
+    box-shadow: 0 14px 34px rgba(17, 24, 39, 0.18);
+  }
+}
