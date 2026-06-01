@@ -1203,16 +1203,36 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let nudge = container.querySelector('[data-kangoo-free-shipping-nudge]:not(.kangoo-free-shipping-nudge--cart-drawer)');
     const isCartPage = container.classList.contains('woocommerce-cart');
-    const cartBlock = isCartPage ? anchor.closest('.wp-block-woocommerce-cart, .wc-block-cart, .woocommerce-cart-form, .woocommerce') : null;
-    const nudgeAnchor = cartBlock || anchor;
+    const cartSidebar = isCartPage ? container.querySelector('.cart-collaterals, .wc-block-cart__sidebar, .wc-block-components-sidebar') : null;
+    const cartTotals = cartSidebar ? cartSidebar.querySelector('.cart_totals, .wp-block-woocommerce-cart-order-summary-block, .wc-block-cart__totals-title') : null;
+
+    function placeCartNudge() {
+      if (!cartSidebar) {
+        const cartBlock = anchor.closest('.wp-block-woocommerce-cart, .wc-block-cart, .woocommerce-cart-form, .woocommerce');
+        const nudgeAnchor = cartBlock || anchor;
+        nudgeAnchor.insertAdjacentElement('beforebegin', nudge);
+        return;
+      }
+
+      if (cartTotals && cartTotals.parentElement === cartSidebar) {
+        cartSidebar.insertBefore(nudge, cartTotals);
+        return;
+      }
+
+      cartSidebar.appendChild(nudge);
+    }
 
     if (!nudge) {
       nudge = document.createElement('div');
       nudge.className = 'kangoo-free-shipping-nudge ' + (isCartPage ? 'kangoo-free-shipping-nudge--cart' : 'kangoo-free-shipping-nudge--checkout');
       nudge.setAttribute('data-kangoo-free-shipping-nudge', '');
-      nudgeAnchor.insertAdjacentElement(isCartPage ? 'beforebegin' : 'afterend', nudge);
-    } else if (isCartPage && nudge.nextElementSibling !== nudgeAnchor) {
-      nudgeAnchor.insertAdjacentElement('beforebegin', nudge);
+      if (isCartPage) {
+        placeCartNudge();
+      } else {
+        anchor.insertAdjacentElement('afterend', nudge);
+      }
+    } else if (isCartPage && (nudge.parentElement !== cartSidebar || (cartSidebar && cartTotals && nudge.nextElementSibling !== cartTotals))) {
+      placeCartNudge();
     } else if (!isCartPage && nudge.previousElementSibling !== anchor) {
       anchor.insertAdjacentElement('afterend', nudge);
     }
