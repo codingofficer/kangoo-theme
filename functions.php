@@ -460,6 +460,23 @@ function kangoo_theme_setup() {
 }
 add_action('after_setup_theme', 'kangoo_theme_setup');
 
+function kangoo_theme_favicon_url($url, $size, $blog_id) {
+    return get_template_directory_uri() . '/assets/images/kangoo-icon-white.png';
+}
+add_filter('get_site_icon_url', 'kangoo_theme_favicon_url', 10, 3);
+
+function kangoo_theme_favicon_meta() {
+    if (function_exists('has_site_icon') && has_site_icon()) {
+        return;
+    }
+
+    $icon_url = get_template_directory_uri() . '/assets/images/kangoo-icon-white.png';
+    echo '<link rel="icon" href="' . esc_url($icon_url) . '" sizes="512x512" type="image/png">' . "\n";
+    echo '<link rel="apple-touch-icon" href="' . esc_url($icon_url) . '">' . "\n";
+}
+add_action('wp_head', 'kangoo_theme_favicon_meta', 1);
+add_action('admin_head', 'kangoo_theme_favicon_meta', 1);
+
 function kangoo_enqueue_assets() {
     $theme_version = wp_get_theme()->get('Version');
     $css_uri = get_template_directory_uri() . '/assets/css/';

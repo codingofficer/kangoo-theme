@@ -11,6 +11,7 @@ function kangoo_event_theme_presets() {
         'easter'             => __('Easter', 'kangoo'),
         'winter'             => __('Winter', 'kangoo'),
         'spring'             => __('Spring', 'kangoo'),
+        'autumn'             => __('Autumn', 'kangoo'),
         'summer'             => __('Summer', 'kangoo'),
     );
 }
