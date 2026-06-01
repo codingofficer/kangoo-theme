@@ -1852,21 +1852,6 @@ document.addEventListener('DOMContentLoaded', function () {
     return totalsPanel && totalsPanel !== sidebar ? totalsPanel : null;
   }
 
-  function moveElementBefore(element, reference, parent) {
-    if (!element || !parent) {
-      return;
-    }
-
-    if (reference && (element.parentElement !== parent || element.nextElementSibling !== reference)) {
-      parent.insertBefore(element, reference);
-      return;
-    }
-
-    if (!reference && element.parentElement !== parent) {
-      parent.appendChild(element);
-    }
-  }
-
   function setupCartSidebarPanels() {
     const cartPage = document.querySelector('.woocommerce-cart');
 
@@ -1885,11 +1870,42 @@ document.addEventListener('DOMContentLoaded', function () {
       cartPage.querySelector('.kangoo-rewards-cart--cart'),
       cartPage.querySelector('[data-kangoo-cart-email-capture]'),
       cartPage.querySelector('[data-kangoo-free-shipping-nudge]:not(.kangoo-free-shipping-nudge--cart-drawer)')
-    ];
+    ].filter(Boolean);
 
-    panelsBeforeTotals.forEach(function (panel) {
-      moveElementBefore(panel, totals, sidebar);
-    });
+    if (panelsBeforeTotals.length) {
+      let panelsArePlaced = panelsBeforeTotals.every(function (panel) {
+        return panel.parentElement === sidebar;
+      });
+
+      if (panelsArePlaced && totals) {
+        let cursor = totals.previousElementSibling;
+
+        for (let index = panelsBeforeTotals.length - 1; index >= 0; index -= 1) {
+          if (cursor !== panelsBeforeTotals[index]) {
+            panelsArePlaced = false;
+            break;
+          }
+
+          cursor = cursor.previousElementSibling;
+        }
+      } else if (panelsArePlaced) {
+        const sidebarChildren = Array.from(sidebar.children);
+        const startIndex = sidebarChildren.length - panelsBeforeTotals.length;
+        panelsArePlaced = startIndex >= 0 && panelsBeforeTotals.every(function (panel, index) {
+          return sidebarChildren[startIndex + index] === panel;
+        });
+      }
+
+      if (!panelsArePlaced) {
+        const fragment = document.createDocumentFragment();
+
+        panelsBeforeTotals.forEach(function (panel) {
+          fragment.appendChild(panel);
+        });
+
+        sidebar.insertBefore(fragment, totals || null);
+      }
+    }
 
     const secureCheckout = cartPage.querySelector('.kangoo-cart-secure-checkout');
 
