@@ -1519,6 +1519,26 @@ body.woocommerce-checkout [data-kangoo-pouch-finder-mascot] {
   display: none !important;
 }
 
+body.woocommerce-cart main.section {
+  padding-top: clamp(1.35rem, 4vw, 2.2rem);
+}
+
+body.woocommerce-cart .section-header {
+  margin-bottom: clamp(1rem, 3vw, 1.5rem);
+}
+
+body.woocommerce-cart .section-header h1 {
+  margin-bottom: 0;
+}
+
+body.woocommerce-cart .wc-block-cart__submit-container,
+body.woocommerce-cart .wp-block-woocommerce-proceed-to-checkout-block,
+body.woocommerce-cart .wc-proceed-to-checkout {
+  position: static !important;
+  inset: auto !important;
+  transform: none !important;
+}
+
 .kangoo-cart-email-capture {
   display: grid;
   gap: 0;
@@ -1737,6 +1757,10 @@ body.woocommerce-checkout [data-kangoo-pouch-finder-mascot] {
   font-weight: 700;
 }
 
+.kangoo-cart-email-capture.has-email:not(.is-editing) .kangoo-cart-email-capture__header {
+  padding-bottom: 0;
+}
+
 .kangoo-cart-email-capture__dob {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1815,17 +1839,11 @@ body.woocommerce-checkout [data-kangoo-pouch-finder-mascot] {
 }
 
 body.woocommerce-cart {
-  padding-bottom: calc(148px + env(safe-area-inset-bottom));
+  padding-bottom: 0;
 }
 
 .kangoo-cart-secure-checkout {
-  position: fixed;
-  left: 50%;
-  bottom: calc(10px + env(safe-area-inset-bottom));
-  z-index: 9960;
-  width: min(420px, calc(100vw - 24px));
-  transform: translateX(-50%);
-  pointer-events: none;
+  display: none !important;
 }
 
 .kangoo-cart-secure-checkout picture,
@@ -1842,12 +1860,11 @@ body.woocommerce-cart {
 
 @media (min-width: 900px) {
   body.woocommerce-cart {
-    padding-bottom: 178px;
+    padding-bottom: 0;
   }
 
   .kangoo-cart-secure-checkout {
-    bottom: 18px;
-    width: min(520px, calc(100vw - 48px));
+    display: none !important;
   }
 }
 
