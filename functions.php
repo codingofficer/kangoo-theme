@@ -634,6 +634,16 @@ function kangoo_enqueue_assets() {
     if (function_exists('is_product') && is_product()) {
         wp_enqueue_script('wc-add-to-cart-variation');
         wp_enqueue_script('wc-cart-fragments');
+        wp_enqueue_script(
+            'kangoo-product-reviews',
+            $js_uri . 'product-reviews.js',
+            array(),
+            $theme_version,
+            true
+        );
+        wp_localize_script('kangoo-product-reviews', 'kangooProductReviews', array(
+            'rest_url' => esc_url_raw(rest_url('kangoo-app/v1')),
+        ));
     }
 }
 add_action('wp_enqueue_scripts', 'kangoo_enqueue_assets');
@@ -2095,11 +2105,13 @@ function kangoo_product_schema() {
         $schema['sku'] = $product->get_sku();
     }
 
-    if ((int) $product->get_review_count() > 0 && (float) $product->get_average_rating() > 0) {
+    $kangoo_review_summary = function_exists('kangoo_reviews_get_summary') ? kangoo_reviews_get_summary($product_id) : array();
+
+    if (!empty($kangoo_review_summary['count']) && !empty($kangoo_review_summary['average'])) {
         $schema['aggregateRating'] = array(
             '@type' => 'AggregateRating',
-            'ratingValue' => (string) $product->get_average_rating(),
-            'reviewCount' => (int) $product->get_review_count(),
+            'ratingValue' => (string) $kangoo_review_summary['average'],
+            'reviewCount' => (int) $kangoo_review_summary['count'],
         );
     }
 
@@ -6350,6 +6362,7 @@ require_once get_template_directory() . '/inc/pack-pricing-admin.php';
 require_once get_template_directory() . '/inc/product-url-brand-audit.php';
 require_once get_template_directory() . '/inc/shipping-operations.php';
 require_once get_template_directory() . '/inc/event-themes.php';
+require_once get_template_directory() . '/inc/reviews.php';
 
 function kangoo_acf_add_types_panel_choice($field) {
     if (!empty($field['choices']) && !array_key_exists('types', $field['choices'])) {

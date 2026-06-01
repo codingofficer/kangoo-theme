@@ -156,6 +156,12 @@ foreach ($product_faq_rows as $product_faq_row) {
 						<?php endif; ?>
 					</h1>
 
+                    <?php
+                    if (function_exists('kangoo_reviews_theme_render_summary_link')) {
+                        kangoo_reviews_theme_render_summary_link($product->get_id());
+                    }
+                    ?>
+
                     <p class="product-subtitle">
                         <?php echo get_the_excerpt(); ?>
                     </p>
@@ -278,6 +284,12 @@ foreach ($product_faq_rows as $product_faq_row) {
                 </details>
             <?php endif; ?>
 
+            <?php
+            if (function_exists('kangoo_reviews_theme_render_accordion')) {
+                kangoo_reviews_theme_render_accordion($product->get_id());
+            }
+            ?>
+
 			<?php
 			$delivery_override = get_field('override_delivery_info');
 			$delivery_custom   = get_field('delivery_info');
@@ -353,6 +365,12 @@ foreach ($product_faq_rows as $product_faq_row) {
                     </div>
                 </details>
             <?php endif; ?>
+
+            <?php
+            if (function_exists('kangoo_reviews_theme_render_section')) {
+                kangoo_reviews_theme_render_section($product->get_id());
+            }
+            ?>
 
         <?php
         $related_ids = wc_get_related_products($product->get_id(), 4);

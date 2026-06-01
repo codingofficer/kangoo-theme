@@ -53,6 +53,33 @@
   color: var(--color-text-soft);
 }
 
+.product-review-summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  width: fit-content;
+  color: var(--color-text-soft);
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.product-review-summary:hover {
+  color: var(--color-accent);
+}
+
+.kangoo-review-stars {
+  display: inline-flex;
+  gap: 0.08rem;
+  color: #f59e0b;
+  font-size: 0.95em;
+  line-height: 1;
+}
+
+.kangoo-review-stars .is-empty {
+  color: rgba(148, 163, 184, 0.45);
+}
+
 .product-strength-ui {
   margin-top: var(--space-3);
   margin-bottom: var(--space-5);
@@ -361,6 +388,102 @@
   margin-bottom: 0;
 }
 
+.kangoo-customer-reviews {
+  margin-top: var(--space-8);
+  display: grid;
+  gap: var(--space-5);
+}
+
+.kangoo-customer-reviews .section-header p {
+  margin-top: 0.35rem;
+  color: var(--color-text-soft);
+}
+
+.kangoo-review-list {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.kangoo-review-card {
+  display: grid;
+  gap: 0.7rem;
+  padding: 1.1rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.kangoo-review-card__stars .kangoo-review-stars {
+  font-size: 1rem;
+}
+
+.kangoo-review-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+}
+
+.kangoo-review-card__meta strong {
+  color: var(--color-text);
+}
+
+.kangoo-review-verified {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.2rem 0.45rem;
+  border-radius: 999px;
+  color: #15803d;
+  background: rgba(34, 197, 94, 0.12);
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+
+.kangoo-review-card__purchase {
+  margin: -0.2rem 0 0;
+  color: var(--color-text-soft);
+  font-size: 0.88rem;
+}
+
+.kangoo-review-card blockquote {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.kangoo-review-helpful {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 0;
+  padding: 0.45rem 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--color-text-soft);
+  font-size: 0.84rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.kangoo-review-helpful:hover,
+.kangoo-review-helpful.is-voted {
+  border-color: rgba(30, 126, 231, 0.45);
+  color: var(--color-accent);
+}
+
+.product-review-accordion .kangoo-review-list {
+  gap: 0.85rem;
+}
+
+.product-review-accordion .kangoo-review-card {
+  padding: 0.95rem;
+  border-radius: var(--radius-sm);
+}
+
 .sticky-add {
   position: fixed;
   bottom: calc(12px + env(safe-area-inset-bottom));
@@ -577,10 +700,18 @@
   .product-accordion__content {
     padding: 0 1rem 1rem;
   }
+
+  .kangoo-customer-reviews {
+    display: none;
+  }
 }
 
 @media (min-width: 768px) {
   .sticky-add { display: none; }
+
+  .product-review-accordion {
+    display: none;
+  }
 }
 
 @media (max-width: 374px) {
@@ -649,6 +780,10 @@
     gap: 0.9rem;
   }
 
+  .kangoo-review-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .product-price {
     margin-top: 0.35rem;
   }
@@ -699,6 +834,7 @@
 
 @media (min-width: 1180px) {
   .single-product .product-accordion,
+  .single-product .kangoo-customer-reviews,
   .single-product .related-products {
     max-width: none;
     width: 100%;
