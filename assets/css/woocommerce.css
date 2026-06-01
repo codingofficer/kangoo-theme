@@ -4762,6 +4762,7 @@ body.woocommerce-checkout .wc-block-checkout__payment-method .wc-block-component
     padding-bottom: calc(92px + env(safe-area-inset-bottom));
   }
 
+  body.woocommerce-cart .kangoo-cart-secure-checkout,
   body.woocommerce-cart .cart-collaterals .kangoo-cart-secure-checkout {
     position: fixed !important;
     left: max(12px, env(safe-area-inset-left));
@@ -4774,6 +4775,7 @@ body.woocommerce-checkout .wc-block-checkout__payment-method .wc-block-component
     pointer-events: none;
   }
 
+  body.woocommerce-cart .kangoo-cart-secure-checkout img,
   body.woocommerce-cart .cart-collaterals .kangoo-cart-secure-checkout img {
     width: 100%;
     max-height: 82px;
