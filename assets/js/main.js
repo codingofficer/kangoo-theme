@@ -1203,8 +1203,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let nudge = container.querySelector('[data-kangoo-free-shipping-nudge]:not(.kangoo-free-shipping-nudge--cart-drawer)');
     const isCartPage = container.classList.contains('woocommerce-cart');
-    const cartSidebar = isCartPage ? container.querySelector('.cart-collaterals, .wc-block-cart__sidebar, .wc-block-components-sidebar') : null;
-    const cartTotals = cartSidebar ? cartSidebar.querySelector('.cart_totals, .wp-block-woocommerce-cart-order-summary-block, .wc-block-cart__totals-title') : null;
+    const cartSidebar = isCartPage ? getCartSidebar() : null;
+    const cartTotals = getCartTotalsPanel(cartSidebar);
 
     function placeCartNudge() {
       if (!cartSidebar) {
@@ -1505,6 +1505,8 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     }
 
+    setupCartSidebarPanels();
+
     if (!panel) {
       return;
     }
@@ -1536,6 +1538,7 @@ document.addEventListener('DOMContentLoaded', function () {
       cartPage.querySelectorAll(existingCheckoutSelector).forEach(function (button) {
         syncCartCheckoutButton(button, existingValid);
       });
+      setupCartSidebarPanels();
       return;
     }
 
@@ -1826,6 +1829,81 @@ document.addEventListener('DOMContentLoaded', function () {
           input.focus();
         });
       }, true);
+    }
+  }
+
+  function getCartSidebar() {
+    return document.querySelector('.woocommerce-cart .cart-collaterals, .woocommerce-cart .wc-block-cart__sidebar, .woocommerce-cart .wc-block-components-sidebar');
+  }
+
+  function getCartTotalsPanel(sidebar) {
+    if (!sidebar) {
+      return null;
+    }
+
+    const directTotals = sidebar.querySelector(':scope > .cart_totals, :scope > .wp-block-woocommerce-cart-order-summary-block');
+
+    if (directTotals) {
+      return directTotals;
+    }
+
+    const totalsTitle = sidebar.querySelector('.wc-block-cart__totals-title, .wp-block-woocommerce-cart-order-summary-heading-block');
+    const totalsPanel = totalsTitle ? totalsTitle.closest('.wp-block-woocommerce-cart-order-summary-block, .wc-block-components-totals-wrapper, .wc-block-components-sidebar') : null;
+    return totalsPanel && totalsPanel !== sidebar ? totalsPanel : null;
+  }
+
+  function moveElementBefore(element, reference, parent) {
+    if (!element || !parent) {
+      return;
+    }
+
+    if (reference && (element.parentElement !== parent || element.nextElementSibling !== reference)) {
+      parent.insertBefore(element, reference);
+      return;
+    }
+
+    if (!reference && element.parentElement !== parent) {
+      parent.appendChild(element);
+    }
+  }
+
+  function setupCartSidebarPanels() {
+    const cartPage = document.querySelector('.woocommerce-cart');
+
+    if (!cartPage) {
+      return;
+    }
+
+    const sidebar = getCartSidebar();
+
+    if (!sidebar) {
+      return;
+    }
+
+    const totals = getCartTotalsPanel(sidebar);
+    const panelsBeforeTotals = [
+      cartPage.querySelector('.kangoo-rewards-cart--cart'),
+      cartPage.querySelector('[data-kangoo-cart-email-capture]'),
+      cartPage.querySelector('[data-kangoo-free-shipping-nudge]:not(.kangoo-free-shipping-nudge--cart-drawer)')
+    ];
+
+    panelsBeforeTotals.forEach(function (panel) {
+      moveElementBefore(panel, totals, sidebar);
+    });
+
+    const secureCheckout = cartPage.querySelector('.kangoo-cart-secure-checkout');
+
+    if (!secureCheckout) {
+      return;
+    }
+
+    if (totals && totals.parentElement === sidebar && totals.nextElementSibling !== secureCheckout) {
+      totals.insertAdjacentElement('afterend', secureCheckout);
+      return;
+    }
+
+    if (!totals && secureCheckout.parentElement !== sidebar) {
+      sidebar.appendChild(secureCheckout);
     }
   }
 
@@ -2141,6 +2219,7 @@ document.addEventListener('DOMContentLoaded', function () {
   linkCheckoutTermsText();
   setupFreeShippingNudge();
   setupCartEmailCapture();
+  setupCartSidebarPanels();
   setupCheckoutEmailPrefill();
   setupCheckoutGuestNotice();
   setupCheckoutAddressToggle();
@@ -2154,6 +2233,7 @@ document.addEventListener('DOMContentLoaded', function () {
       linkCheckoutTermsText();
       setupFreeShippingNudge();
       setupCartEmailCapture();
+      setupCartSidebarPanels();
       setupCheckoutEmailPrefill();
       setupCheckoutGuestNotice();
       setupCheckoutAddressToggle();

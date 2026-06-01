@@ -5217,9 +5217,17 @@ function kangoo_render_cart_email_capture() {
 add_action('woocommerce_cart_collaterals', 'kangoo_render_cart_email_capture', 6);
 
 function kangoo_render_cart_secure_checkout_banner() {
+    static $rendered = false;
+
+    if ($rendered) {
+        return;
+    }
+
     if (!function_exists('is_cart') || !is_cart()) {
         return;
     }
+
+    $rendered = true;
 
     $image_url = get_theme_file_uri('/assets/images/secure-checkout-stripe.png');
     $avif_url = get_theme_file_uri('/assets/images/secure-checkout-stripe.avif');
@@ -5233,6 +5241,7 @@ function kangoo_render_cart_secure_checkout_banner() {
     <?php
 }
 add_action('woocommerce_cart_collaterals', 'kangoo_render_cart_secure_checkout_banner', 30);
+add_action('wp_footer', 'kangoo_render_cart_secure_checkout_banner', 20);
 
 function kangoo_guard_checkout_identity() {
     if (
