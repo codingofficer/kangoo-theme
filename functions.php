@@ -37,9 +37,9 @@ function kangoo_get_app_apk_release() {
     }
 
     $release = array(
-        'apk_url' => home_url('/app/android/kangoo-pouches-v0.6.0.apk'),
-        'version' => '0.6.0',
-        'file' => 'kangoo-pouches-v0.6.0.apk',
+        'apk_url' => home_url('/app/android/kangoo-pouches-v0.6.1.apk'),
+        'version' => '0.6.1',
+        'file' => 'kangoo-pouches-v0.6.1.apk',
     );
     $dir = trailingslashit(ABSPATH) . 'app/android';
 

@@ -29,9 +29,6 @@
                     <ul class="site-footer__menu">
                         <li><a href="<?php echo esc_url(home_url('/shop/')); ?>">Shop all products</a></li>
                         <li><a href="<?php echo esc_url(home_url('/product-category/nicotine-pouches/')); ?>">Nicotine pouches</a></li>
-                        <li><a href="<?php echo esc_url(home_url('/product-category/caffeine-pouches/')); ?>">Caffeine pouches</a></li>
-                        <li><a href="<?php echo esc_url(home_url('/sample-packs/')); ?>">Sample packs</a></li>
-                        <li><a href="<?php echo esc_url(home_url('/new-in/')); ?>">New arrivals</a></li>
                         <li><a href="<?php echo esc_url(home_url('/blog/')); ?>">Blog</a></li>
                     </ul>
                 <?php endif; ?>

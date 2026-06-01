@@ -2011,3 +2011,131 @@ body.kangoo-theme--light .kangoo-app-steps span {
     box-shadow: 0 10px 28px rgba(17, 24, 39, 0.08) !important;
   }
 }
+
+/* Final light-mode control polish for standalone ecommerce pages. */
+body.kangoo-theme--light .pouch-finder__hero-actions .btn,
+body.kangoo-theme--light .pouch-finder__actions .btn,
+body.kangoo-theme--light .pouch-finder__result > .btn,
+body.kangoo-theme--light .pouch-compare .btn,
+body.kangoo-theme--light .build-box .btn,
+body.kangoo-theme--light .strength-ladder .btn,
+body.kangoo-theme--light .flavour-explorer .btn,
+body.kangoo-theme--light .kangoo-app .btn,
+body.kangoo-theme--light .home-app-cta__button {
+  min-height: 2.9rem !important;
+  height: auto !important;
+  padding: 0.72rem 1.05rem !important;
+  border: 1px solid rgba(17, 24, 39, 0.16) !important;
+  border-radius: 999px !important;
+  box-shadow: none !important;
+}
+
+body.kangoo-theme--light .pouch-finder__hero-actions .btn--primary,
+body.kangoo-theme--light .pouch-finder__actions .btn--primary,
+body.kangoo-theme--light .pouch-compare .btn--primary,
+body.kangoo-theme--light .build-box .btn--primary,
+body.kangoo-theme--light .strength-ladder .btn--primary,
+body.kangoo-theme--light .flavour-explorer .btn--primary,
+body.kangoo-theme--light .kangoo-app .btn--primary,
+body.kangoo-theme--light .home-app-cta__button.btn--primary {
+  border-color: #1677e8 !important;
+  background: #1677e8 !important;
+  color: #ffffff !important;
+}
+
+body.kangoo-theme--light .pouch-finder__hero-actions .btn--secondary,
+body.kangoo-theme--light .pouch-finder__actions .btn--secondary,
+body.kangoo-theme--light .pouch-finder__result > .btn--secondary,
+body.kangoo-theme--light .pouch-compare .btn--secondary,
+body.kangoo-theme--light .build-box .btn--secondary,
+body.kangoo-theme--light .strength-ladder .btn--secondary,
+body.kangoo-theme--light .flavour-explorer .btn--secondary,
+body.kangoo-theme--light .kangoo-app .btn--secondary,
+body.kangoo-theme--light .home-app-cta__button.btn--secondary {
+  border-color: rgba(17, 24, 39, 0.16) !important;
+  background: #ffffff !important;
+  color: #111827 !important;
+}
+
+body.kangoo-theme--light .pouch-compare .btn--secondary:hover,
+body.kangoo-theme--light .build-box .btn--secondary:hover,
+body.kangoo-theme--light .strength-ladder .btn--secondary:hover,
+body.kangoo-theme--light .flavour-explorer .btn--secondary:hover,
+body.kangoo-theme--light .kangoo-app .btn--secondary:hover,
+body.kangoo-theme--light .home-app-cta__button.btn--secondary:hover {
+  border-color: rgba(22, 119, 232, 0.45) !important;
+  background: #eef6ff !important;
+  color: #0f5ed1 !important;
+}
+
+body.kangoo-theme--light .kangoo-app__actions {
+  align-items: center !important;
+}
+
+body.kangoo-theme--light .kangoo-app__actions .btn {
+  flex: 0 1 13rem !important;
+  min-width: min(100%, 13rem) !important;
+}
+
+body.kangoo-theme--light .kangoo-app__final-actions {
+  align-items: stretch !important;
+  gap: 0.85rem !important;
+}
+
+body.kangoo-theme--light .kangoo-app__final-actions .btn {
+  flex: 1 1 13rem !important;
+  max-width: 20rem !important;
+}
+
+body.kangoo-theme--light .build-box__sizes button {
+  min-height: 3rem !important;
+  padding: 0.55rem 0.85rem !important;
+  border: 1px solid rgba(17, 24, 39, 0.16) !important;
+  background: #ffffff !important;
+  color: #111827 !important;
+  box-shadow: none !important;
+}
+
+body.kangoo-theme--light .build-box__sizes button.is-active {
+  border-color: rgba(22, 119, 232, 0.62) !important;
+  background: #eef6ff !important;
+  color: #111827 !important;
+}
+
+body.kangoo-theme--light .build-box__pager button,
+body.kangoo-theme--light .box-product__qty button,
+body.kangoo-theme--light .pouch-compare__selected button,
+body.kangoo-theme--light .compare-product__body .btn {
+  border: 1px solid rgba(17, 24, 39, 0.16) !important;
+  background: #ffffff !important;
+  color: #111827 !important;
+  box-shadow: none !important;
+}
+
+body.kangoo-theme--light .compare-product__body .btn--primary {
+  border-color: #1677e8 !important;
+  background: #1677e8 !important;
+  color: #ffffff !important;
+}
+
+body.kangoo-theme--light .compare-product__body .btn--secondary {
+  border-color: rgba(22, 119, 232, 0.38) !important;
+  background: #ffffff !important;
+  color: #0f5ed1 !important;
+}
+
+body.kangoo-theme--light .build-box__search input,
+body.kangoo-theme--light .build-box__filters select,
+body.kangoo-theme--light .pouch-compare__search input {
+  box-shadow: none !important;
+}
+
+body.kangoo-theme--light .flavour-family__best,
+body.kangoo-theme--light .strength-level__best {
+  border-color: rgba(17, 24, 39, 0.12) !important;
+  background: #ffffff !important;
+}
+
+body.kangoo-theme--light .home-app-cta__button.btn--secondary {
+  border-color: rgba(22, 119, 232, 0.32) !important;
+}

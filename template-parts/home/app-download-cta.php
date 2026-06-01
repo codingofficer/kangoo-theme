@@ -16,7 +16,7 @@ if (!empty($app_page)) {
 }
 
 $app_release = function_exists('kangoo_get_app_apk_release') ? kangoo_get_app_apk_release() : array();
-$apk_url = !empty($app_release['apk_url']) ? $app_release['apk_url'] : home_url('/app/android/kangoo-pouches-v0.6.0.apk');
+$apk_url = !empty($app_release['apk_url']) ? $app_release['apk_url'] : home_url('/app/android/kangoo-pouches-v0.6.1.apk');
 ?>
 
 <section class="home-app-cta" aria-label="<?php esc_attr_e('Download the Kangoo Android app', 'kangoo'); ?>">
