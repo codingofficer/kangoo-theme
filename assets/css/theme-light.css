@@ -1992,11 +1992,49 @@ body.kangoo-theme--light .kangoo-app-steps span {
 }
 
 @media (max-width: 767px) {
+  body.kangoo-theme--light .kangoo-app__hero {
+    min-height: 760px !important;
+  }
+
+  body.kangoo-theme--light .kangoo-app__hero-copy {
+    position: relative !important;
+    z-index: 2 !important;
+  }
+
+  body.kangoo-theme--light .kangoo-app__hero-copy p {
+    color: #334155 !important;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.88) !important;
+  }
+
   body.kangoo-theme--light .kangoo-app__scene {
     background:
       linear-gradient(180deg, rgba(248, 251, 255, 0.98) 0%, rgba(248, 251, 255, 0.86) 46%, rgba(247, 248, 250, 0.98) 100%),
       linear-gradient(145deg, rgba(22, 119, 232, 0.14) 0%, transparent 52%),
       linear-gradient(35deg, transparent 38%, rgba(255, 122, 0, 0.12) 100%) !important;
+  }
+
+  body.kangoo-theme--light .kangoo-app__scene::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(180deg, rgba(248, 251, 255, 0.98) 0%, rgba(248, 251, 255, 0.95) 46%, rgba(248, 251, 255, 0.58) 72%, transparent 100%),
+      linear-gradient(90deg, rgba(248, 251, 255, 0.96) 0%, rgba(248, 251, 255, 0.78) 58%, transparent 100%);
+    pointer-events: none;
+  }
+
+  body.kangoo-theme--light .kangoo-app-phone--primary {
+    right: -4.5rem !important;
+    bottom: -5.5rem !important;
+    width: 16rem !important;
+    opacity: 0.42 !important;
+  }
+
+  body.kangoo-theme--light .kangoo-app-phone--secondary {
+    right: 8.5rem !important;
+    bottom: 1rem !important;
+    width: 10rem !important;
+    opacity: 0.28 !important;
   }
 
   body.kangoo-theme--light .kangoo-app__actions .btn--secondary {
