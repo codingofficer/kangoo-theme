@@ -542,6 +542,18 @@ function kangoo_shipping_register_email_classes($emails) {
                 $this->restore_locale();
             }
 
+            public function get_email_type() {
+                return 'html';
+            }
+
+            public function get_content_type($default_content_type = '') {
+                return 'text/html';
+            }
+
+            public function get_content() {
+                return $this->get_content_html();
+            }
+
             public function get_content_html() {
                 if (!$this->object instanceof WC_Order) {
                     return '';

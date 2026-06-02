@@ -198,10 +198,9 @@ function kangoo_email_rewards_balance_for_order($order, $fallback_points = 0) {
 
 function kangoo_email_icon_circle($filename, $size = 58, $icon_size = 30, $background = '#fff1e7') {
     return sprintf(
-        '<span style="display:inline-block;width:%1$dpx;height:%1$dpx;border-radius:999px;background:%4$s;line-height:%1$dpx;text-align:center;"><img src="%5$s" width="%2$d" alt="" style="display:inline-block;width:%2$dpx;height:%2$dpx;border:0;vertical-align:%3$dpx;"></span>',
+        '<span style="display:inline-block;width:%1$dpx;height:%1$dpx;border-radius:999px;background:%3$s;line-height:%1$dpx;text-align:center;"><img src="%4$s" width="%2$d" alt="" style="display:inline-block;width:%2$dpx;height:%2$dpx;border:0;vertical-align:middle;"></span>',
         (int) $size,
         (int) $icon_size,
-        -1 * (int) floor($icon_size / 4),
         esc_attr($background),
         kangoo_email_asset_url($filename)
     );
@@ -290,16 +289,16 @@ function kangoo_email_totals_rows($order) {
     ob_start();
     ?>
     <tr>
-        <td style="padding:13px 0 6px;border-top:1px solid #e5e7eb;color:#111827;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.3;"><?php esc_html_e('Subtotal', 'kangoo'); ?></td>
-        <td width="140" align="right" style="padding:13px 0 6px;border-top:1px solid #e5e7eb;color:#111827;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.3;text-align:right;white-space:nowrap;"><?php echo wp_kses_post(wc_price($order->get_subtotal(), array('currency' => $currency))); ?></td>
+        <td class="kg-total-label" style="padding:13px 0 6px;border-top:1px solid #e5e7eb;color:#111827;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.3;white-space:nowrap;"><?php esc_html_e('Subtotal', 'kangoo'); ?></td>
+        <td class="kg-total-value" width="92" align="right" style="width:92px;padding:13px 0 6px;border-top:1px solid #e5e7eb;color:#111827;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.3;text-align:right;white-space:nowrap;"><?php echo wp_kses_post(wc_price($order->get_subtotal(), array('currency' => $currency))); ?></td>
     </tr>
     <tr>
-        <td style="padding:6px 0 13px;color:#111827;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.3;"><?php echo esc_html($shipping_label ? sprintf(__('Shipping (%s)', 'kangoo'), $shipping_label) : __('Shipping', 'kangoo')); ?></td>
-        <td width="140" align="right" style="padding:6px 0 13px;color:#111827;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.3;text-align:right;white-space:nowrap;"><?php echo wp_kses_post($shipping_total); ?></td>
+        <td class="kg-total-label" style="padding:6px 0 13px;color:#111827;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.3;white-space:nowrap;"><?php echo esc_html($shipping_label ? sprintf(__('Shipping (%s)', 'kangoo'), $shipping_label) : __('Shipping', 'kangoo')); ?></td>
+        <td class="kg-total-value" width="92" align="right" style="width:92px;padding:6px 0 13px;color:#111827;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.3;text-align:right;white-space:nowrap;"><?php echo wp_kses_post($shipping_total); ?></td>
     </tr>
     <tr>
         <td style="padding:18px 0 0;border-top:1px solid #e5e7eb;color:#06080d;font-family:Arial,Helvetica,sans-serif;font-size:24px;font-weight:900;line-height:1.2;"><?php esc_html_e('Total', 'kangoo'); ?></td>
-        <td width="190" align="right" style="padding:18px 0 0;border-top:1px solid #e5e7eb;color:#ff5a00;font-family:Arial,Helvetica,sans-serif;font-size:24px;font-weight:900;line-height:1.2;text-align:right;white-space:nowrap;"><?php echo wp_kses_post($order->get_formatted_order_total()); ?></td>
+        <td width="170" align="right" style="width:170px;padding:18px 0 0;border-top:1px solid #e5e7eb;color:#ff5a00;font-family:Arial,Helvetica,sans-serif;font-size:24px;font-weight:900;line-height:1.2;text-align:right;white-space:nowrap;"><?php echo wp_kses_post($order->get_formatted_order_total()); ?></td>
     </tr>
     <?php
 
@@ -357,7 +356,7 @@ function kangoo_email_render_progress($stage) {
     ?>
     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin:18px 0 0;border:1px solid #e0e3e8;border-radius:14px;background:#ffffff;">
         <tr>
-            <td class="kg-progress-pad" style="padding:22px 24px 20px;">
+            <td class="kg-progress-pad" style="padding:20px 20px 18px;">
                 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
                     <tr>
                         <?php foreach ($keys as $index => $key) : ?>
@@ -380,10 +379,10 @@ function kangoo_email_render_progress($stage) {
                                         <td width="50%" style="vertical-align:middle;"><div style="height:0;border-top:4px solid <?php echo esc_attr($right_line); ?>;font-size:0;line-height:0;">&nbsp;</div></td>
                                     </tr>
                                 </table>
-                                <div style="margin:10px 0 5px;text-align:center;">
-                                    <img src="<?php echo kangoo_email_asset_url($steps[$key]['icon']); ?>" width="26" alt="" style="display:inline-block;width:26px;height:26px;border:0;">
+                                <div style="margin:8px 0 4px;text-align:center;">
+                                    <img src="<?php echo kangoo_email_asset_url($steps[$key]['icon']); ?>" width="22" alt="" style="display:block;width:22px;height:22px;border:0;margin:0 auto;">
                                 </div>
-                                <div class="kg-progress-label" style="color:<?php echo esc_attr($active ? '#ff5a00' : ($done ? '#111827' : '#6f7680')); ?>;font-family:Arial,Helvetica,sans-serif;font-size:14px;font-weight:<?php echo esc_attr($active ? '900' : '800'); ?>;line-height:1.15;text-align:center;"><?php echo wp_kses_post($steps[$key]['label']); ?></div>
+                                <div class="kg-progress-label" style="color:<?php echo esc_attr($active ? '#ff5a00' : ($done ? '#111827' : '#6f7680')); ?>;font-family:Arial,Helvetica,sans-serif;font-size:13px;font-weight:<?php echo esc_attr($active ? '900' : '800'); ?>;line-height:1.15;text-align:center;"><?php echo wp_kses_post($steps[$key]['label']); ?></div>
                             </td>
                         <?php endforeach; ?>
                     </tr>
@@ -403,8 +402,8 @@ function kangoo_email_render_order_strip($order, $button_label = null) {
     ?>
     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin:14px 0 0;border-radius:14px;background:#fff7ef;">
         <tr>
-            <td width="78" class="kg-strip-icon" style="width:78px;padding:16px 0 16px 20px;vertical-align:middle;">
-                <?php echo kangoo_email_icon_circle('order.png', 54, 28, '#ff5a00'); ?>
+            <td width="72" class="kg-strip-icon" style="width:72px;padding:16px 0 16px 20px;vertical-align:middle;">
+                <?php echo kangoo_email_icon_circle('order.png', 50, 28); ?>
             </td>
             <td class="kg-strip-copy" style="padding:16px 14px;vertical-align:middle;">
                 <strong style="display:block;color:#06080d;font-family:Arial,Helvetica,sans-serif;font-size:18px;line-height:1.25;font-weight:900;"><?php echo esc_html(sprintf(__('Order #%s', 'kangoo'), $order->get_order_number())); ?></strong>
@@ -629,8 +628,8 @@ function kangoo_email_render_pending_rewards_card($order) {
     ?>
     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin:16px 0 0;border-radius:14px;background:#fff7ef;">
         <tr>
-            <td width="86" class="kg-card-icon" style="width:86px;padding:22px 0 22px 24px;vertical-align:middle;">
-                <?php echo kangoo_email_icon_circle('giftbox.png', 62, 34, '#ffffff'); ?>
+            <td width="78" class="kg-card-icon" style="width:78px;padding:20px 0 20px 22px;vertical-align:middle;">
+                <?php echo kangoo_email_icon_circle('giftbox.png', 54, 30, '#ffffff'); ?>
             </td>
             <td style="padding:22px 18px;vertical-align:middle;">
                 <strong style="display:block;color:#06080d;font-family:Arial,Helvetica,sans-serif;font-size:17px;line-height:1.25;font-weight:900;"><?php echo esc_html(sprintf(__("You'll earn %d points from this order!", 'kangoo'), $points)); ?></strong>
@@ -658,8 +657,8 @@ function kangoo_email_render_earned_rewards_card($order) {
     ?>
     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin:16px 0 0;border-radius:14px;background:#ff5a00;">
         <tr>
-            <td width="92" class="kg-card-icon" style="width:92px;padding:22px 0 22px 26px;vertical-align:middle;">
-                <?php echo kangoo_email_icon_circle('giftbox.png', 66, 36, '#ffffff'); ?>
+            <td width="84" class="kg-card-icon" style="width:84px;padding:20px 0 20px 24px;vertical-align:middle;">
+                <?php echo kangoo_email_icon_circle('giftbox.png', 56, 32, '#ffffff'); ?>
             </td>
             <td style="padding:22px 18px;vertical-align:middle;">
                 <strong style="display:block;color:#ffffff;font-family:Arial,Helvetica,sans-serif;font-size:19px;line-height:1.25;font-weight:900;"><?php esc_html_e('Kangoo Rewards', 'kangoo'); ?></strong>
@@ -687,8 +686,8 @@ function kangoo_email_render_offer_card($order) {
     ?>
     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin:16px 0 0;border-radius:14px;background:#fff7ef;">
         <tr>
-            <td width="92" class="kg-card-icon" style="width:92px;padding:22px 0 22px 26px;vertical-align:middle;">
-                <?php echo kangoo_email_icon_circle('order-completed.png', 66, 34, '#ffffff'); ?>
+            <td width="84" class="kg-card-icon" style="width:84px;padding:20px 0 20px 24px;vertical-align:middle;">
+                <?php echo kangoo_email_icon_circle('order-completed.png', 56, 30, '#ffffff'); ?>
             </td>
             <td style="padding:22px 18px;vertical-align:middle;">
                 <strong style="display:block;color:#06080d;font-family:Arial,Helvetica,sans-serif;font-size:19px;line-height:1.25;font-weight:900;"><?php esc_html_e('Thank you for your order!', 'kangoo'); ?></strong>
@@ -797,6 +796,8 @@ function kangoo_email_render_document($order, $stage, $additional_content = '') 
                 .kg-hero-image { width: 46% !important; padding-left: 4px !important; vertical-align: middle !important; }
                 .kg-hero-img { width: 190px !important; max-width: 100% !important; }
                 .kg-hero-title { font-size: 38px !important; line-height: 1.08 !important; }
+                .kg-hero-title--received { margin-bottom: 8px !important; font-size: 25px !important; line-height: 1.08 !important; white-space: nowrap !important; }
+                .kg-hero-orange--received { font-size: 31px !important; line-height: 1.04 !important; }
                 .kg-hero-text { font-size: 17px !important; line-height: 1.45 !important; }
                 .kg-primary-action .kg-btn { display: block !important; width: 100% !important; min-width: 0 !important; padding-left: 12px !important; padding-right: 12px !important; }
                 .kg-progress-pad { padding: 18px 10px 16px !important; }
@@ -806,6 +807,7 @@ function kangoo_email_render_document($order, $stage, $additional_content = '') 
                 .kg-product-image { width: 82px !important; padding-right: 14px !important; }
                 .kg-product-img { width: 72px !important; max-width: 72px !important; }
                 .kg-product-name { font-size: 16px !important; }
+                .kg-total-label, .kg-total-value { font-size: 13px !important; }
                 .kg-strip-icon, .kg-card-icon, .kg-support-icon { width: 68px !important; padding-left: 18px !important; padding-right: 12px !important; }
                 .kg-strip-copy { padding-left: 10px !important; padding-right: 8px !important; }
                 .kg-strip-action { display: block !important; width: auto !important; padding: 0 18px 18px !important; text-align: center !important; }
@@ -820,6 +822,8 @@ function kangoo_email_render_document($order, $stage, $additional_content = '') 
             @media only screen and (max-width: 390px) {
                 .kg-inner { padding: 22px 16px 18px !important; }
                 .kg-hero-title { font-size: 31px !important; }
+                .kg-hero-title--received { font-size: 22px !important; }
+                .kg-hero-orange--received { font-size: 28px !important; }
                 .kg-hero-text { font-size: 15px !important; }
                 .kg-hero-img { width: 150px !important; }
                 .kg-logo { width: 260px !important; }
@@ -842,10 +846,19 @@ function kangoo_email_render_document($order, $stage, $additional_content = '') 
                                 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
                                     <tr>
                                         <td class="kg-hero-copy" width="54%" style="width:54%;padding:0 20px 18px 0;vertical-align:middle;">
-                                            <h1 class="kg-hero-title" style="margin:0 0 22px;color:#020407;font-family:Arial,Helvetica,sans-serif;font-size:43px;font-weight:900;line-height:1.08;letter-spacing:0;">
-                                                <?php echo esc_html($variant['title']); ?><br>
-                                                <span style="color:#ff5a00;"><?php echo esc_html($variant['title_orange']); ?></span>
-                                            </h1>
+                                            <?php if ($stage === 'received') : ?>
+                                                <h1 class="kg-hero-title--received" style="margin:0 0 10px;color:#020407;font-family:Arial,Helvetica,sans-serif;font-size:31px;font-weight:900;line-height:1.08;letter-spacing:0;white-space:nowrap;">
+                                                    <?php echo esc_html($variant['title']); ?>
+                                                </h1>
+                                                <div class="kg-hero-orange--received" style="margin:0 0 18px;color:#ff5a00;font-family:Arial,Helvetica,sans-serif;font-size:40px;font-weight:900;line-height:1.04;letter-spacing:0;">
+                                                    <?php echo esc_html($variant['title_orange']); ?>
+                                                </div>
+                                            <?php else : ?>
+                                                <h1 class="kg-hero-title" style="margin:0 0 22px;color:#020407;font-family:Arial,Helvetica,sans-serif;font-size:43px;font-weight:900;line-height:1.08;letter-spacing:0;">
+                                                    <?php echo esc_html($variant['title']); ?><br>
+                                                    <span style="color:#ff5a00;"><?php echo esc_html($variant['title_orange']); ?></span>
+                                                </h1>
+                                            <?php endif; ?>
                                             <p class="kg-hero-text" style="margin:0 0 12px;color:#0b0f14;font-family:Arial,Helvetica,sans-serif;font-size:18px;line-height:1.45;font-weight:700;"><?php echo wp_kses_post($variant['intro']); ?></p>
                                             <p class="kg-hero-text" style="margin:0;color:#0b0f14;font-family:Arial,Helvetica,sans-serif;font-size:17px;line-height:1.48;"><?php echo wp_kses_post($variant['body']); ?></p>
                                         </td>
