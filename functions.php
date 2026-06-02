@@ -6828,12 +6828,32 @@ function kangoo_acf_field_parent_reference($parent) {
 }
 
 function kangoo_acf_field_parent_names($field) {
+    static $is_resolving = false;
+    static $cache = array();
+
     $names = array();
     $parent = kangoo_acf_field_parent_reference(isset($field['parent']) ? $field['parent'] : '');
     $guard = 0;
 
-    while ($parent !== '' && $guard < 8 && function_exists('acf_get_field')) {
-        $parent_field = acf_get_field($parent);
+    if ($parent === '' || $is_resolving) {
+        return $names;
+    }
+
+    if (isset($cache[$parent])) {
+        return $cache[$parent];
+    }
+
+    $cache_key = $parent;
+    $is_resolving = true;
+
+    while ($parent !== '' && $guard < 8) {
+        if (function_exists('acf_get_raw_field')) {
+            $parent_field = acf_get_raw_field($parent);
+        } elseif (function_exists('acf_get_field')) {
+            $parent_field = acf_get_field($parent);
+        } else {
+            break;
+        }
 
         if (!is_array($parent_field)) {
             break;
@@ -6846,6 +6866,9 @@ function kangoo_acf_field_parent_names($field) {
         $parent = kangoo_acf_field_parent_reference(isset($parent_field['parent']) ? $parent_field['parent'] : '');
         $guard++;
     }
+
+    $is_resolving = false;
+    $cache[$cache_key] = $names;
 
     return $names;
 }
