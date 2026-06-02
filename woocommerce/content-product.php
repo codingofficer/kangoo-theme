@@ -259,6 +259,8 @@ if ($is_quick_add_card && $is_variable) {
         id="<?php echo esc_attr($pack_modal_id); ?>"
         aria-hidden="true"
         data-product-card-id="<?php echo esc_attr($product->get_id()); ?>"
+        data-product-title="<?php echo esc_attr(get_the_title($product->get_id())); ?>"
+        data-product-image="<?php echo esc_url(get_the_post_thumbnail_url($product->get_id(), 'woocommerce_thumbnail')); ?>"
     >
         <div class="pack-add-modal__overlay" data-pack-add-close></div>
 
@@ -273,7 +275,7 @@ if ($is_quick_add_card && $is_variable) {
                 </div>
                 <div>
                     <div class="pack-add-modal__brand"><?php echo esc_html($product->get_attribute('pa_brand')); ?></div>
-                    <h3><?php the_title(); ?></h3>
+                    <h3 class="pack-add-modal__title"><?php echo esc_html(get_the_title($product->get_id())); ?></h3>
                 </div>
             </div>
 

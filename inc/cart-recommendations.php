@@ -6,7 +6,7 @@ function kangoo_cart_recommendation_product_ids($limit = 4) {
         return array();
     }
 
-    $limit = max(1, (int) $limit);
+    $limit = max(1, (int) apply_filters('kangoo_cart_recommendations_limit', $limit));
     $cart_product_ids = array();
     $candidate_ids = array();
 
@@ -54,15 +54,8 @@ function kangoo_cart_recommendation_product_ids($limit = 4) {
         $fallback_query = new WP_Query(array(
             'post_type'      => 'product',
             'post_status'    => 'publish',
-            'posts_per_page' => 12,
+            'posts_per_page' => 30,
             'post__not_in'   => array_merge($cart_product_ids, $product_ids),
-            'meta_query'     => array(
-                array(
-                    'key'     => '_stock_status',
-                    'value'   => 'instock',
-                    'compare' => '=',
-                ),
-            ),
             'orderby'        => 'menu_order date',
             'order'          => 'DESC',
             'fields'         => 'ids',
