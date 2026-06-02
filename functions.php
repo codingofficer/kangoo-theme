@@ -2686,6 +2686,10 @@ function kangoo_resolve_product_category_term($value) {
         return null;
     }
 
+    if (is_wp_error($value)) {
+        return null;
+    }
+
     if ($value instanceof WP_Term && $value->taxonomy === 'product_cat') {
         return $value;
     }
@@ -2728,13 +2732,13 @@ function kangoo_resolve_product_category_term($value) {
 
     $term = get_term_by('slug', sanitize_title($value), 'product_cat');
 
-    if ($term instanceof WP_Term) {
+    if ($term instanceof WP_Term && !is_wp_error($term)) {
         return $term;
     }
 
     $term = get_term_by('name', $value, 'product_cat');
 
-    return $term instanceof WP_Term ? $term : null;
+    return $term instanceof WP_Term && !is_wp_error($term) ? $term : null;
 }
 
 function kangoo_get_product_category_image_url($term, $size = 'medium') {
@@ -6885,6 +6889,47 @@ function kangoo_acf_field_has_parent_name($field, $parent_names) {
     return false;
 }
 
+function kangoo_product_category_select_choices($parent = 0, $depth = 0) {
+    static $cache = array();
+
+    if (!taxonomy_exists('product_cat')) {
+        return array();
+    }
+
+    $cache_key = (int) $parent . ':' . (int) $depth;
+
+    if (isset($cache[$cache_key])) {
+        return $cache[$cache_key];
+    }
+
+    $choices = array();
+    $terms = get_terms(array(
+        'taxonomy'   => 'product_cat',
+        'hide_empty' => false,
+        'parent'     => (int) $parent,
+        'orderby'    => 'name',
+        'order'      => 'ASC',
+    ));
+
+    if (is_wp_error($terms) || !is_array($terms)) {
+        return $choices;
+    }
+
+    foreach ($terms as $term) {
+        if (!$term instanceof WP_Term) {
+            continue;
+        }
+
+        $prefix = $depth > 0 ? str_repeat('- ', $depth) : '';
+        $choices[(string) $term->term_id] = $prefix . $term->name;
+        $choices += kangoo_product_category_select_choices($term->term_id, $depth + 1);
+    }
+
+    $cache[$cache_key] = $choices;
+
+    return $choices;
+}
+
 function kangoo_acf_brand_category_selector_field($field) {
     $name = isset($field['name']) ? (string) $field['name'] : '';
     $is_home_brand_card = $name === 'brand_name' && kangoo_acf_field_has_parent_name($field, array('brands_cards'));
@@ -6896,15 +6941,13 @@ function kangoo_acf_brand_category_selector_field($field) {
 
     $field['label'] = __('Brand category', 'kangoo');
     $field['instructions'] = __('Choose a product category. The card title, link, and image are pulled from that category automatically.', 'kangoo');
-    $field['type'] = 'taxonomy';
-    $field['taxonomy'] = 'product_cat';
-    $field['field_type'] = 'select';
-    $field['return_format'] = 'id';
+    $field['type'] = 'select';
+    $field['choices'] = kangoo_product_category_select_choices();
     $field['allow_null'] = 1;
-    $field['add_term'] = 0;
-    $field['save_terms'] = 0;
-    $field['load_terms'] = 0;
     $field['multiple'] = 0;
+    $field['ui'] = 1;
+    $field['ajax'] = 0;
+    $field['placeholder'] = __('Select a brand category', 'kangoo');
 
     return $field;
 }
@@ -6912,6 +6955,10 @@ add_filter('acf/load_field/name=brand_name', 'kangoo_acf_brand_category_selector
 add_filter('acf/load_field/name=label', 'kangoo_acf_brand_category_selector_field');
 
 function kangoo_acf_brand_category_selector_value($value, $post_id, $field) {
+    if (is_wp_error($value)) {
+        return '';
+    }
+
     $name = isset($field['name']) ? (string) $field['name'] : '';
     $is_home_brand_card = $name === 'brand_name' && kangoo_acf_field_has_parent_name($field, array('brands_cards'));
     $is_mega_brand_card = $name === 'label' && kangoo_acf_field_has_parent_name($field, array('mega_menu_brand_cards', 'brand_cards'));
@@ -6922,7 +6969,7 @@ function kangoo_acf_brand_category_selector_value($value, $post_id, $field) {
 
     $term = kangoo_resolve_product_category_term($value);
 
-    return $term ? (int) $term->term_id : $value;
+    return $term ? (string) $term->term_id : $value;
 }
 add_filter('acf/load_value/name=brand_name', 'kangoo_acf_brand_category_selector_value', 10, 3);
 add_filter('acf/load_value/name=label', 'kangoo_acf_brand_category_selector_value', 10, 3);
@@ -6930,7 +6977,7 @@ add_filter('acf/load_value/name=label', 'kangoo_acf_brand_category_selector_valu
 function kangoo_acf_hide_legacy_brand_card_fields($field) {
     $name = isset($field['name']) ? (string) $field['name'] : '';
 
-    if (in_array($name, array('brand_image', 'brand_link'), true) && kangoo_acf_field_has_parent_name($field, array('brands_cards'))) {
+    if (in_array($name, array('brand_image', 'brand_link'), true)) {
         return false;
     }
 
