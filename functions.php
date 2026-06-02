@@ -579,6 +579,7 @@ function kangoo_enqueue_assets() {
         'first_order_free_shipping_threshold' => kangoo_first_order_free_shipping_threshold(),
         'first_order_shipping_coupon_code' => kangoo_first_order_shipping_coupon_code(),
         'first_order_free_shipping_active' => kangoo_is_first_order_free_shipping_offer_active(),
+        'checkout_email_is_existing_customer' => kangoo_saved_checkout_email_is_existing_customer(),
         'checkout_email'  => function_exists('kangoo_get_saved_checkout_email') ? kangoo_get_saved_checkout_email() : '',
         'checkout_dob'    => function_exists('kangoo_get_saved_checkout_dob') ? kangoo_get_saved_checkout_dob() : '',
     ));
@@ -4744,6 +4745,83 @@ function kangoo_first_order_shipping_coupon_code() {
     return apply_filters('kangoo_first_order_shipping_coupon_code', 'firstfree');
 }
 
+function kangoo_email_belongs_to_existing_customer($email) {
+    $email = sanitize_email($email);
+
+    if (!is_email($email)) {
+        return false;
+    }
+
+    if (email_exists($email)) {
+        return true;
+    }
+
+    if (!function_exists('wc_get_orders') || !function_exists('wc_get_order_statuses')) {
+        return false;
+    }
+
+    $orders = wc_get_orders(array(
+        'billing_email' => $email,
+        'limit'         => 1,
+        'return'        => 'ids',
+        'status'        => array_keys(wc_get_order_statuses()),
+    ));
+
+    return !empty($orders);
+}
+
+function kangoo_saved_checkout_email_is_existing_customer() {
+    if (is_user_logged_in()) {
+        return true;
+    }
+
+    $email = function_exists('kangoo_get_saved_checkout_email') ? kangoo_get_saved_checkout_email() : '';
+
+    return kangoo_email_belongs_to_existing_customer($email);
+}
+
+function kangoo_remove_first_order_coupon_for_existing_customer($email = '') {
+    if (!function_exists('WC') || !WC()->cart) {
+        return false;
+    }
+
+    $email = $email ? sanitize_email($email) : (function_exists('kangoo_get_saved_checkout_email') ? kangoo_get_saved_checkout_email() : '');
+
+    if (!kangoo_email_belongs_to_existing_customer($email)) {
+        return false;
+    }
+
+    $coupon_code = kangoo_first_order_shipping_coupon_code();
+    $coupon_code = function_exists('wc_format_coupon_code') ? wc_format_coupon_code($coupon_code) : strtolower($coupon_code);
+
+    if (!$coupon_code || !WC()->cart->has_discount($coupon_code)) {
+        return false;
+    }
+
+    WC()->cart->remove_coupon($coupon_code);
+    WC()->cart->calculate_totals();
+
+    if (WC()->session) {
+        WC()->session->__unset('kangoo_pending_url_coupon');
+        WC()->session->__unset('kangoo_pending_url_coupon_at');
+        WC()->session->__unset('kangoo_url_coupon_applied');
+        WC()->session->__unset('kangoo_url_coupon_applied_at');
+        WC()->session->__unset('kangoo_url_coupon_last_attempted');
+        WC()->session->__unset('kangoo_url_coupon_last_attempted_at');
+    }
+
+    return true;
+}
+
+function kangoo_remove_saved_first_order_coupon_for_existing_customer() {
+    if ((is_admin() && !wp_doing_ajax()) || !function_exists('WC') || !WC()->cart) {
+        return;
+    }
+
+    kangoo_remove_first_order_coupon_for_existing_customer();
+}
+add_action('wp_loaded', 'kangoo_remove_saved_first_order_coupon_for_existing_customer', 35);
+
 function kangoo_cart_has_first_order_shipping_coupon() {
     if (!function_exists('WC') || !WC()->cart) {
         return false;
@@ -4761,7 +4839,7 @@ function kangoo_cart_has_first_order_shipping_coupon() {
 }
 
 function kangoo_is_first_order_free_shipping_offer_active() {
-    return kangoo_cart_has_first_order_shipping_coupon();
+    return !kangoo_saved_checkout_email_is_existing_customer() && kangoo_cart_has_first_order_shipping_coupon();
 }
 
 function kangoo_get_active_free_shipping_threshold() {
@@ -4810,6 +4888,12 @@ function kangoo_get_free_shipping_nudge_html($context = 'cart-drawer') {
     ob_start();
     ?>
     <div class="<?php echo esc_attr(implode(' ', $classes)); ?>" data-kangoo-free-shipping-nudge>
+        <span class="kangoo-free-shipping-nudge__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false">
+                <path d="M3 7h11v10H3zM14 11h3.5l2.5 3v3h-6z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+                <path d="M6.5 19a1.7 1.7 0 1 0 0-3.4 1.7 1.7 0 0 0 0 3.4ZM17.5 19a1.7 1.7 0 1 0 0-3.4 1.7 1.7 0 0 0 0 3.4Z" fill="none" stroke="currentColor" stroke-width="1.8"/>
+            </svg>
+        </span>
         <div class="kangoo-free-shipping-nudge__copy">
             <?php if ($remaining > 0) : ?>
                 <strong><?php echo esc_html(sprintf($is_first_order_offer ? __('New customer: %s away from free delivery', 'kangoo') : __('%s away from free delivery', 'kangoo'), kangoo_plain_wc_price($remaining))); ?></strong>
@@ -5187,13 +5271,41 @@ function kangoo_ajax_store_checkout_email() {
         update_user_meta(get_current_user_id(), 'kangoo_date_of_birth', $dob);
     }
 
+    $existing_customer = kangoo_email_belongs_to_existing_customer($email);
+    $removed_first_order_coupon = $existing_customer ? kangoo_remove_first_order_coupon_for_existing_customer($email) : false;
+
     wp_send_json_success(array(
         'email' => $email,
         'dob' => $dob,
+        'existing_customer' => $existing_customer,
+        'removed_first_order_coupon' => $removed_first_order_coupon,
     ));
 }
 add_action('wp_ajax_kangoo_store_checkout_email', 'kangoo_ajax_store_checkout_email');
 add_action('wp_ajax_nopriv_kangoo_store_checkout_email', 'kangoo_ajax_store_checkout_email');
+
+function kangoo_ajax_check_existing_customer_email() {
+    check_ajax_referer('kangoo_rewards_ajax', 'nonce');
+
+    $email = isset($_POST['email']) ? sanitize_email(wp_unslash($_POST['email'])) : '';
+
+    if (!is_email($email)) {
+        wp_send_json_error(array(
+            'message' => __('Enter a valid email address.', 'kangoo'),
+        ), 400);
+    }
+
+    $existing_customer = kangoo_email_belongs_to_existing_customer($email);
+    $removed_first_order_coupon = $existing_customer ? kangoo_remove_first_order_coupon_for_existing_customer($email) : false;
+
+    wp_send_json_success(array(
+        'email' => $email,
+        'existing_customer' => $existing_customer,
+        'removed_first_order_coupon' => $removed_first_order_coupon,
+    ));
+}
+add_action('wp_ajax_kangoo_check_existing_customer_email', 'kangoo_ajax_check_existing_customer_email');
+add_action('wp_ajax_nopriv_kangoo_check_existing_customer_email', 'kangoo_ajax_check_existing_customer_email');
 
 function kangoo_render_account_dob_field() {
     $dob = kangoo_get_saved_checkout_dob();

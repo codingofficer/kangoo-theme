@@ -1183,6 +1183,17 @@ document.addEventListener('DOMContentLoaded', function () {
     );
   }
 
+  function getFreeShippingTruckIcon() {
+    return [
+      '<span class="kangoo-free-shipping-nudge__icon" aria-hidden="true">',
+      '<svg viewBox="0 0 24 24" focusable="false">',
+      '<path d="M3 7h11v10H3zM14 11h3.5l2.5 3v3h-6z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>',
+      '<path d="M6.5 19a1.7 1.7 0 1 0 0-3.4 1.7 1.7 0 0 0 0 3.4ZM17.5 19a1.7 1.7 0 1 0 0-3.4 1.7 1.7 0 0 0 0 3.4Z" fill="none" stroke="currentColor" stroke-width="1.8"/>',
+      '</svg>',
+      '</span>'
+    ].join('');
+  }
+
   function setupFreeShippingNudge() {
     const container = document.querySelector('.woocommerce-checkout, .woocommerce-cart');
 
@@ -1190,7 +1201,9 @@ document.addEventListener('DOMContentLoaded', function () {
       return;
     }
 
-    const firstOrderOfferActive = hasFirstOrderShippingCoupon(container);
+    const storedEmail = getStoredCheckoutEmail();
+    const existingCustomer = isStoredCheckoutEmailExistingCustomer();
+    const firstOrderOfferActive = !existingCustomer && hasFirstOrderShippingCoupon(container);
     const threshold = firstOrderOfferActive
       ? getConfiguredFreeShippingThreshold('first_order_free_shipping_threshold', 9.99)
       : getConfiguredFreeShippingThreshold('standard_free_shipping_threshold', 14.95);
@@ -1199,6 +1212,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (!anchor || subtotal === null) {
       return;
+    }
+
+    if (isValidEmail(storedEmail)) {
+      lookupExistingCustomerEmail(storedEmail).then(function (isExisting) {
+        if (isExisting !== existingCustomer) {
+          setupFreeShippingNudge();
+        }
+      });
     }
 
     let nudge = container.querySelector('[data-kangoo-free-shipping-nudge]:not(.kangoo-free-shipping-nudge--cart-drawer)');
@@ -1250,6 +1271,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (remaining > 0) {
       nudge.classList.remove('is-unlocked');
       nudge.innerHTML = [
+        getFreeShippingTruckIcon(),
         '<div class="kangoo-free-shipping-nudge__copy">',
         '<strong>', firstOrderOfferActive ? 'New customer: ' : '', formatCheckoutMoney(remaining), ' away from free delivery</strong>',
         '<span>', firstOrderOfferActive ? 'First-order free UK delivery' : 'Free UK delivery', ' unlocks at ', formatCheckoutMoney(threshold), '.</span>',
@@ -1263,6 +1285,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     nudge.classList.add('is-unlocked');
     nudge.innerHTML = [
+      getFreeShippingTruckIcon(),
       '<div class="kangoo-free-shipping-nudge__copy">',
       '<strong>', firstOrderOfferActive ? 'First-order free delivery unlocked' : 'Free delivery unlocked', '</strong>',
       '<span>', firstOrderOfferActive ? 'Your first order qualifies for free UK delivery.' : 'Your order qualifies for free UK delivery.', '</span>',
@@ -1279,6 +1302,120 @@ document.addEventListener('DOMContentLoaded', function () {
     const localizedEmail = window.kangooRewards && window.kangooRewards.checkout_email ? window.kangooRewards.checkout_email : '';
     const localEmail = window.localStorage ? window.localStorage.getItem('kangoo_checkout_email') : '';
     return isValidEmail(localEmail) ? localEmail : localizedEmail;
+  }
+
+  let existingCustomerLookupEmail = '';
+  let existingCustomerLookupPromise = null;
+
+  function cacheCheckoutExistingCustomerStatus(email, isExisting) {
+    const cleanEmail = String(email || '').trim().toLowerCase();
+
+    if (!cleanEmail || !window.localStorage) {
+      return;
+    }
+
+    window.localStorage.setItem('kangoo_checkout_existing_customer_email', cleanEmail);
+    window.localStorage.setItem('kangoo_checkout_existing_customer', isExisting ? '1' : '0');
+  }
+
+  function getCachedCheckoutExistingCustomerStatus(email) {
+    const cleanEmail = String(email || '').trim().toLowerCase();
+
+    if (!cleanEmail || !window.localStorage) {
+      return null;
+    }
+
+    const cachedEmail = window.localStorage.getItem('kangoo_checkout_existing_customer_email');
+
+    if (cachedEmail !== cleanEmail) {
+      return null;
+    }
+
+    const cachedValue = window.localStorage.getItem('kangoo_checkout_existing_customer');
+
+    if (cachedValue === '1') {
+      return true;
+    }
+
+    if (cachedValue === '0') {
+      return false;
+    }
+
+    return null;
+  }
+
+  function isStoredCheckoutEmailExistingCustomer() {
+    if (document.body.classList.contains('logged-in')) {
+      return true;
+    }
+
+    const email = getStoredCheckoutEmail();
+    const cached = getCachedCheckoutExistingCustomerStatus(email);
+
+    if (cached !== null) {
+      return cached;
+    }
+
+    return Boolean(window.kangooRewards && window.kangooRewards.checkout_email_is_existing_customer);
+  }
+
+  function lookupExistingCustomerEmail(email) {
+    const cleanEmail = String(email || '').trim();
+
+    if (!isValidEmail(cleanEmail)) {
+      return Promise.resolve(false);
+    }
+
+    const cached = getCachedCheckoutExistingCustomerStatus(cleanEmail);
+
+    if (cached !== null) {
+      return Promise.resolve(cached);
+    }
+
+    if (!window.kangooRewards || !window.kangooRewards.ajax_url || !window.kangooRewards.ajax_nonce) {
+      return Promise.resolve(false);
+    }
+
+    if (existingCustomerLookupEmail === cleanEmail && existingCustomerLookupPromise) {
+      return existingCustomerLookupPromise;
+    }
+
+    const formData = new FormData();
+    formData.append('action', 'kangoo_check_existing_customer_email');
+    formData.append('nonce', window.kangooRewards.ajax_nonce);
+    formData.append('email', cleanEmail);
+
+    existingCustomerLookupEmail = cleanEmail;
+    existingCustomerLookupPromise = fetch(window.kangooRewards.ajax_url, {
+      method: 'POST',
+      credentials: 'same-origin',
+      body: formData
+    }).then(function (response) {
+      if (!response.ok) {
+        throw new Error('Could not check email.');
+      }
+
+      return response.json();
+    }).then(function (payload) {
+      const isExisting = Boolean(payload && payload.success && payload.data && payload.data.existing_customer);
+      cacheCheckoutExistingCustomerStatus(cleanEmail, isExisting);
+
+      if (window.kangooRewards) {
+        window.kangooRewards.checkout_email_is_existing_customer = isExisting;
+      }
+
+      if (payload && payload.success && payload.data && payload.data.removed_first_order_coupon) {
+        window.location.reload();
+      }
+
+      return isExisting;
+    }).catch(function () {
+      return false;
+    }).finally(function () {
+      existingCustomerLookupPromise = null;
+    });
+
+    return existingCustomerLookupPromise;
   }
 
   function parseCheckoutDob(value) {
@@ -1437,7 +1574,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
       return {
         email: cleanEmail,
-        dob: formattedDob
+        dob: formattedDob,
+        existingCustomer: Boolean(payload.data && payload.data.existing_customer),
+        removedFirstOrderCoupon: Boolean(payload.data && payload.data.removed_first_order_coupon)
       };
     });
   }
@@ -1671,7 +1810,18 @@ document.addEventListener('DOMContentLoaded', function () {
       if (window.kangooRewards) {
         window.kangooRewards.checkout_email = email;
         window.kangooRewards.checkout_dob = dob;
+        window.kangooRewards.checkout_email_is_existing_customer = Boolean(payload && payload.existingCustomer);
       }
+
+      cacheCheckoutExistingCustomerStatus(email, Boolean(payload && payload.existingCustomer));
+
+      if (payload && payload.removedFirstOrderCoupon) {
+        window.location.reload();
+        return;
+      }
+
+      setupFreeShippingNudge();
+      setupCartSidebarPanels();
     }
 
     function clearCheckoutLoadingState(button) {
@@ -1921,6 +2071,51 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!totals && secureCheckout.parentElement !== sidebar) {
       sidebar.appendChild(secureCheckout);
     }
+  }
+
+  function replaceDirectText(element, pattern, replacement) {
+    if (!element || element.dataset.kangooLabelReplaced === replacement) {
+      return;
+    }
+
+    let replaced = false;
+
+    Array.from(element.childNodes).forEach(function (node) {
+      if (node.nodeType === window.Node.TEXT_NODE && pattern.test(node.textContent || '')) {
+        node.textContent = node.textContent.replace(pattern, replacement);
+        replaced = true;
+      }
+    });
+
+    if (!replaced && pattern.test(element.textContent || '')) {
+      const label = element.querySelector('span, strong');
+
+      if (label && pattern.test(label.textContent || '')) {
+        label.textContent = label.textContent.replace(pattern, replacement);
+        replaced = true;
+      }
+    }
+
+    if (replaced) {
+      element.dataset.kangooLabelReplaced = replacement;
+    }
+  }
+
+  function setupCartSummaryLabels() {
+    const root = document.querySelector('.woocommerce-cart, .woocommerce-checkout');
+
+    if (!root) {
+      return;
+    }
+
+    root.querySelectorAll('button, summary, .wc-block-components-panel__button').forEach(function (element) {
+      const text = String(element.textContent || '').replace(/\s+/g, ' ').trim();
+
+      if (/^add coupons$/i.test(text)) {
+        element.classList.add('kangoo-coupon-code-toggle');
+        replaceDirectText(element, /add coupons/i, 'Coupon code');
+      }
+    });
   }
 
   function setupCheckoutEmailPrefill() {
@@ -2236,6 +2431,7 @@ document.addEventListener('DOMContentLoaded', function () {
   setupFreeShippingNudge();
   setupCartEmailCapture();
   setupCartSidebarPanels();
+  setupCartSummaryLabels();
   setupCheckoutEmailPrefill();
   setupCheckoutGuestNotice();
   setupCheckoutAddressToggle();
@@ -2250,6 +2446,7 @@ document.addEventListener('DOMContentLoaded', function () {
       setupFreeShippingNudge();
       setupCartEmailCapture();
       setupCartSidebarPanels();
+      setupCartSummaryLabels();
       setupCheckoutEmailPrefill();
       setupCheckoutGuestNotice();
       setupCheckoutAddressToggle();

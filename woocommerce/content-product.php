@@ -11,8 +11,9 @@ $badge = function_exists('kangoo_get_product_badge') ? kangoo_get_product_badge(
 
 $is_quick_add_card = is_front_page() || is_product_category() || is_shop() || is_product_taxonomy() || (function_exists('is_cart') && is_cart());
 $is_variable = $product->is_type('variable');
-$modal_id = 'quick-add-' . $product->get_id();
-$pack_modal_id = 'pack-add-' . $product->get_id();
+$card_unique_suffix = function_exists('wp_unique_id') ? wp_unique_id() : uniqid('', false);
+$modal_id = 'quick-add-' . $product->get_id() . '-' . $card_unique_suffix;
+$pack_modal_id = 'pack-add-' . $product->get_id() . '-' . $card_unique_suffix;
 $card_pack_tiers = function_exists('kangoo_get_pack_pricing_tiers') ? kangoo_get_pack_pricing_tiers($product->get_id()) : array();
 $card_stock_limit = function_exists('kangoo_get_product_stock_limit') ? kangoo_get_product_stock_limit($product) : null;
 $card_low_stock_message = function_exists('kangoo_get_low_stock_message') ? kangoo_get_low_stock_message($product) : '';
@@ -264,7 +265,7 @@ if ($is_quick_add_card && $is_variable) {
     >
         <div class="pack-add-modal__overlay" data-pack-add-close></div>
 
-        <div class="pack-add-modal__panel" role="dialog" aria-modal="true" aria-label="<?php echo esc_attr(sprintf(__('Choose pack size for %s', 'kangoo'), get_the_title())); ?>">
+        <div class="pack-add-modal__panel" role="dialog" aria-modal="true" aria-label="<?php echo esc_attr(sprintf(__('Choose pack size for %s', 'kangoo'), get_the_title($product->get_id()))); ?>">
             <button type="button" class="pack-add-modal__close" data-pack-add-close aria-label="<?php esc_attr_e('Close', 'kangoo'); ?>">
                 &times;
             </button>

@@ -90,6 +90,130 @@ function kangoo_cart_recommendation_product_ids($limit = 4) {
     return array_slice($product_ids, 0, $limit);
 }
 
+function kangoo_cart_recommendation_strength_label($product) {
+    if (!$product instanceof WC_Product) {
+        return '';
+    }
+
+    $strength = function_exists('get_field') ? get_field('strength_mg', $product->get_id()) : '';
+
+    if (!$strength && $product->get_parent_id()) {
+        $strength = function_exists('get_field') ? get_field('strength_mg', $product->get_parent_id()) : '';
+    }
+
+    if (!$strength) {
+        foreach (array('pa_strength', 'pa_strengths') as $attribute_name) {
+            $terms = wc_get_product_terms($product->get_id(), $attribute_name, array('fields' => 'names'));
+
+            if (!empty($terms)) {
+                $strength = reset($terms);
+                break;
+            }
+        }
+    }
+
+    if (!$strength) {
+        return '';
+    }
+
+    $strength = strtoupper(trim((string) $strength));
+
+    if (is_numeric($strength) || preg_match('/^\d+(\.\d+)?$/', $strength)) {
+        $strength .= 'MG';
+    } elseif (strpos($strength, 'MG') === false && preg_match('/\d/', $strength)) {
+        $strength .= 'MG';
+    }
+
+    return $strength;
+}
+
+function kangoo_cart_recommendation_short_copy($product) {
+    if (!$product instanceof WC_Product) {
+        return '';
+    }
+
+    $copy = $product->get_short_description();
+
+    if (!$copy) {
+        $copy = $product->get_description();
+    }
+
+    $copy = trim(wp_strip_all_tags($copy));
+
+    if (!$copy) {
+        return __('Popular mint choice', 'kangoo');
+    }
+
+    return wp_trim_words($copy, 8, '...');
+}
+
+function kangoo_cart_recommendation_add_button($product) {
+    if (!$product instanceof WC_Product) {
+        return '';
+    }
+
+    if (!$product->is_purchasable() || !$product->is_in_stock()) {
+        return sprintf(
+            '<a class="kangoo-cart-rec-card__add kangoo-cart-rec-card__add--outline" href="%s">%s</a>',
+            esc_url($product->get_permalink()),
+            esc_html__('View', 'kangoo')
+        );
+    }
+
+    if (!$product->supports('ajax_add_to_cart') || !$product->is_type('simple')) {
+        return sprintf(
+            '<a class="kangoo-cart-rec-card__add kangoo-cart-rec-card__add--outline" href="%s">%s</a>',
+            esc_url($product->get_permalink()),
+            esc_html__('View', 'kangoo')
+        );
+    }
+
+    return sprintf(
+        '<a href="%1$s" data-quantity="1" class="button product_type_simple add_to_cart_button ajax_add_to_cart kangoo-cart-rec-card__add" data-product_id="%2$d" data-product_sku="%3$s" aria-label="%4$s" rel="nofollow">%5$s</a>',
+        esc_url($product->add_to_cart_url()),
+        absint($product->get_id()),
+        esc_attr($product->get_sku()),
+        esc_attr(sprintf(__('Add %s to your cart', 'kangoo'), $product->get_name())),
+        esc_html__('+ Add', 'kangoo')
+    );
+}
+
+function kangoo_render_cart_recommendation_card($product_id) {
+    $product = wc_get_product($product_id);
+
+    if (!$product instanceof WC_Product) {
+        return '';
+    }
+
+    $strength = kangoo_cart_recommendation_strength_label($product);
+    $image = $product->get_image('woocommerce_thumbnail', array(
+        'loading' => 'lazy',
+        'alt'     => $product->get_name(),
+    ));
+
+    ob_start();
+    ?>
+    <article class="kangoo-cart-rec-card">
+        <a class="kangoo-cart-rec-card__image" href="<?php echo esc_url($product->get_permalink()); ?>" aria-label="<?php echo esc_attr($product->get_name()); ?>">
+            <?php echo wp_kses_post($image); ?>
+        </a>
+        <div class="kangoo-cart-rec-card__body">
+            <h3><a href="<?php echo esc_url($product->get_permalink()); ?>"><?php echo esc_html($product->get_name()); ?></a></h3>
+            <p><?php echo esc_html(kangoo_cart_recommendation_short_copy($product)); ?></p>
+        </div>
+        <div class="kangoo-cart-rec-card__side">
+            <?php if ($strength) : ?>
+                <span class="kangoo-cart-rec-card__badge"><?php echo esc_html($strength); ?></span>
+            <?php endif; ?>
+            <strong class="kangoo-cart-rec-card__price"><?php echo wp_kses_post($product->get_price_html()); ?></strong>
+            <?php echo kangoo_cart_recommendation_add_button($product); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+        </div>
+    </article>
+    <?php
+
+    return ob_get_clean();
+}
+
 function kangoo_render_cart_recommendations() {
     static $rendered = false;
 
@@ -97,43 +221,30 @@ function kangoo_render_cart_recommendations() {
         return '';
     }
 
-    $product_ids = kangoo_cart_recommendation_product_ids(4);
+    $product_ids = kangoo_cart_recommendation_product_ids(3);
 
     if (empty($product_ids)) {
         return '';
     }
 
     $rendered = true;
-    $original_post = $GLOBALS['post'] ?? null;
-    $original_product = $GLOBALS['product'] ?? null;
 
     ob_start();
     ?>
     <section class="kangoo-cart-recommendations" aria-labelledby="kangoo-cart-recommendations-title">
         <header class="kangoo-cart-recommendations__header">
-            <span class="eyebrow"><?php esc_html_e('Add-ons', 'kangoo'); ?></span>
+            <span class="kangoo-cart-recommendations__icon" aria-hidden="true">&#127942;</span>
+            <span class="kangoo-cart-recommendations__label kangoo-cart-recommendations__label--desktop"><?php esc_html_e('Customers also add these to save on delivery', 'kangoo'); ?></span>
+            <span class="kangoo-cart-recommendations__label kangoo-cart-recommendations__label--mobile"><?php esc_html_e('Frequently bought together', 'kangoo'); ?></span>
             <h2 id="kangoo-cart-recommendations-title"><?php esc_html_e('Frequently bought together', 'kangoo'); ?></h2>
         </header>
 
         <div class="kangoo-cart-recommendations__grid">
-            <?php
-            foreach ($product_ids as $product_id) {
-                $GLOBALS['post'] = get_post($product_id);
-                $GLOBALS['product'] = wc_get_product($product_id);
-
-                if (!$GLOBALS['post'] || !$GLOBALS['product']) {
-                    continue;
-                }
-
-                setup_postdata($GLOBALS['post']);
-                wc_get_template_part('content', 'product');
-            }
-
-            wp_reset_postdata();
-            $GLOBALS['post'] = $original_post;
-            $GLOBALS['product'] = $original_product;
-            ?>
+            <?php foreach ($product_ids as $product_id) : ?>
+                <?php echo kangoo_render_cart_recommendation_card($product_id); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+            <?php endforeach; ?>
         </div>
+
     </section>
     <?php
 

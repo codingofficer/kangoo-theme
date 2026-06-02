@@ -1927,16 +1927,20 @@ jQuery(function ($) {
     const $section = $('.kangoo-cart-recommendations').first();
     const $main = $('.wc-block-cart__main, .wc-block-components-main.wc-block-cart__main').first();
 
-    if (!$section.length || !$main.length || $section.parent().is($main)) {
+    if (!$section.length || !$main.length) {
       return;
     }
 
     const $table = $main.find('table.wc-block-cart-items').last();
 
     if ($table.length) {
-      $section.insertAfter($table);
+      if (!$section.prev().is($table)) {
+        $section.insertAfter($table);
+      }
     } else {
-      $section.appendTo($main);
+      if (!$section.parent().is($main)) {
+        $section.appendTo($main);
+      }
     }
   }
 
