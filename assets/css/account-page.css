@@ -290,6 +290,14 @@ FILE: assets/css/account-page.css
   font-size: 0.9rem;
 }
 
+.woocommerce-account .woocommerce-MyAccount-content .woocommerce-orders-table__cell-order-actions,
+.woocommerce-account .woocommerce-MyAccount-content .my_account_orders .woocommerce-orders-table__cell-order-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
 .woocommerce-account .woocommerce-MyAccount-content .woocommerce-order-details,
 .woocommerce-account .woocommerce-MyAccount-content .woocommerce-customer-details,
 .woocommerce-account .woocommerce-MyAccount-content .kangoo-order-tracking {
@@ -614,6 +622,23 @@ FILE: assets/css/account-page.css
     display: block;
     overflow-x: auto;
     white-space: nowrap;
+  }
+
+  .woocommerce-account .woocommerce-MyAccount-content .woocommerce-orders-table__cell-order-actions {
+    display: flex !important;
+    align-items: center;
+    gap: 0.35rem;
+    white-space: normal;
+  }
+
+  .woocommerce-account .woocommerce-MyAccount-content .woocommerce-orders-table__cell-order-actions::before {
+    float: none !important;
+    margin: 0 auto 0 0 !important;
+  }
+
+  .woocommerce-account .woocommerce-MyAccount-content .woocommerce-orders-table__cell-order-actions .button {
+    min-height: 39px;
+    padding: 0.6rem 0.82rem;
   }
 
   .woocommerce-account .woocommerce-MyAccount-content fieldset {
