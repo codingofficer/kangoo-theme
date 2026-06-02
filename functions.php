@@ -2655,6 +2655,166 @@ function kangoo_get_term_url_by_slug($taxonomy, $slug, $fallback = '') {
     return $term_urls[$cache_key] ?: ($fallback ? home_url($fallback) : home_url('/'));
 }
 
+function kangoo_get_image_url_from_acf_value($image, $size = 'medium') {
+    if (is_array($image)) {
+        if (!empty($image['sizes'][$size])) {
+            return (string) $image['sizes'][$size];
+        }
+
+        if (!empty($image['url'])) {
+            return (string) $image['url'];
+        }
+
+        if (!empty($image['ID'])) {
+            return (string) wp_get_attachment_image_url((int) $image['ID'], $size);
+        }
+
+        if (!empty($image['id'])) {
+            return (string) wp_get_attachment_image_url((int) $image['id'], $size);
+        }
+    }
+
+    if (is_numeric($image)) {
+        return (string) wp_get_attachment_image_url((int) $image, $size);
+    }
+
+    return is_string($image) ? trim($image) : '';
+}
+
+function kangoo_resolve_product_category_term($value) {
+    if (!taxonomy_exists('product_cat')) {
+        return null;
+    }
+
+    if ($value instanceof WP_Term && $value->taxonomy === 'product_cat') {
+        return $value;
+    }
+
+    if (is_array($value)) {
+        if (isset($value['term_id'])) {
+            return kangoo_resolve_product_category_term((int) $value['term_id']);
+        }
+
+        if (isset($value['id'])) {
+            return kangoo_resolve_product_category_term((int) $value['id']);
+        }
+
+        if (isset($value['slug'])) {
+            return kangoo_resolve_product_category_term((string) $value['slug']);
+        }
+
+        if (isset($value['value'])) {
+            return kangoo_resolve_product_category_term($value['value']);
+        }
+
+        if (isset($value['label'])) {
+            return kangoo_resolve_product_category_term($value['label']);
+        }
+
+        $first = reset($value);
+        return $first ? kangoo_resolve_product_category_term($first) : null;
+    }
+
+    if (is_numeric($value)) {
+        $term = get_term((int) $value, 'product_cat');
+        return $term instanceof WP_Term && !is_wp_error($term) ? $term : null;
+    }
+
+    $value = trim((string) $value);
+
+    if ($value === '') {
+        return null;
+    }
+
+    $term = get_term_by('slug', sanitize_title($value), 'product_cat');
+
+    if ($term instanceof WP_Term) {
+        return $term;
+    }
+
+    $term = get_term_by('name', $value, 'product_cat');
+
+    return $term instanceof WP_Term ? $term : null;
+}
+
+function kangoo_get_product_category_image_url($term, $size = 'medium') {
+    $term = kangoo_resolve_product_category_term($term);
+
+    if (!$term) {
+        return '';
+    }
+
+    $thumbnail_id = (int) get_term_meta($term->term_id, 'thumbnail_id', true);
+
+    if ($thumbnail_id) {
+        $image_url = wp_get_attachment_image_url($thumbnail_id, $size);
+
+        if ($image_url) {
+            return (string) $image_url;
+        }
+    }
+
+    if (function_exists('get_field')) {
+        foreach (array('category_image', 'brand_image', 'image') as $field_name) {
+            $image_url = kangoo_get_image_url_from_acf_value(get_field($field_name, 'product_cat_' . $term->term_id), $size);
+
+            if ($image_url !== '') {
+                return $image_url;
+            }
+        }
+    }
+
+    foreach (array('category_image', 'brand_image', 'image') as $meta_key) {
+        $image_url = kangoo_get_image_url_from_acf_value(get_term_meta($term->term_id, $meta_key, true), $size);
+
+        if ($image_url !== '') {
+            return $image_url;
+        }
+    }
+
+    return '';
+}
+
+function kangoo_resolve_brand_category_card($category_value, $manual_label = '', $manual_image = null, $manual_link = array(), $extra = array()) {
+    $term = kangoo_resolve_product_category_term($category_value);
+    $label = trim((string) $manual_label);
+    $url = function_exists('kangoo_acf_link_url') ? kangoo_acf_link_url($manual_link) : '';
+    $target = function_exists('kangoo_acf_link_target') ? kangoo_acf_link_target($manual_link) : '_self';
+    $image_url = kangoo_get_image_url_from_acf_value($manual_image, 'medium');
+
+    if ($term) {
+        $term_link = get_term_link($term);
+
+        if (!is_wp_error($term_link)) {
+            $label = $term->name;
+            $url = (string) $term_link;
+            $target = '_self';
+            $term_image_url = kangoo_get_product_category_image_url($term, 'medium');
+
+            if ($term_image_url !== '') {
+                $image_url = $term_image_url;
+            }
+        }
+    }
+
+    $card = array(
+        'label'      => $label,
+        'url'        => $url,
+        'target'     => $target ?: '_self',
+        'link'       => array(
+            'title'  => $label,
+            'url'    => $url,
+            'target' => $target ?: '_self',
+        ),
+        'image_url'  => $image_url,
+        'image'      => $image_url !== '' ? array('url' => $image_url) : array(),
+        'featured'   => !empty($extra['featured']),
+        'badge_text' => isset($extra['badge_text']) ? (string) $extra['badge_text'] : '',
+    );
+
+    return $card;
+}
+
 function kangoo_get_product_brand_label($product) {
     if (!class_exists('WC_Product') || !$product instanceof WC_Product) {
         return '';
@@ -6297,10 +6457,22 @@ function kangoo_get_mega_menu_settings() {
                 continue;
             }
 
+            $manual_link = isset($item['link']) ? $item['link'] : (isset($item['url']) ? $item['url'] : array());
+            $resolved_card = kangoo_resolve_brand_category_card(
+                isset($item['label']) ? $item['label'] : '',
+                isset($item['label']) ? (string) $item['label'] : '',
+                isset($item['image']) ? $item['image'] : null,
+                $manual_link,
+                array(
+                    'featured'   => !empty($item['featured']),
+                    'badge_text' => isset($item['badge_text']) ? (string) $item['badge_text'] : '',
+                )
+            );
+
             $settings['brand_cards'][] = array(
-                'label'      => isset($item['label']) ? (string) $item['label'] : '',
-                'link'       => isset($item['link']) ? $item['link'] : (isset($item['url']) ? $item['url'] : array()),
-                'image'      => isset($item['image']) && is_array($item['image']) ? $item['image'] : array(),
+                'label'      => isset($resolved_card['label']) ? (string) $resolved_card['label'] : '',
+                'link'       => isset($resolved_card['link']) ? $resolved_card['link'] : array(),
+                'image'      => isset($resolved_card['image']) ? $resolved_card['image'] : array(),
                 'featured'   => !empty($item['featured']),
                 'badge_text' => isset($item['badge_text']) ? (string) $item['badge_text'] : '',
             );
@@ -6624,6 +6796,101 @@ function kangoo_acf_add_home_product_sources($field) {
     return $field;
 }
 add_filter('acf/load_field/name=source', 'kangoo_acf_add_home_product_sources');
+
+function kangoo_acf_field_parent_names($field) {
+    $names = array();
+    $parent = isset($field['parent']) ? (string) $field['parent'] : '';
+    $guard = 0;
+
+    while ($parent !== '' && $guard < 8 && function_exists('acf_get_field')) {
+        $parent_field = acf_get_field($parent);
+
+        if (!is_array($parent_field)) {
+            break;
+        }
+
+        if (!empty($parent_field['name'])) {
+            $names[] = (string) $parent_field['name'];
+        }
+
+        $parent = isset($parent_field['parent']) ? (string) $parent_field['parent'] : '';
+        $guard++;
+    }
+
+    return $names;
+}
+
+function kangoo_acf_field_has_parent_name($field, $parent_names) {
+    $names = kangoo_acf_field_parent_names($field);
+
+    foreach ((array) $parent_names as $parent_name) {
+        if (in_array($parent_name, $names, true)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function kangoo_acf_brand_category_selector_field($field) {
+    $name = isset($field['name']) ? (string) $field['name'] : '';
+    $is_home_brand_card = $name === 'brand_name' && kangoo_acf_field_has_parent_name($field, array('brands_cards'));
+    $is_mega_brand_card = $name === 'label' && kangoo_acf_field_has_parent_name($field, array('mega_menu_brand_cards', 'brand_cards'));
+
+    if (!$is_home_brand_card && !$is_mega_brand_card) {
+        return $field;
+    }
+
+    $field['label'] = __('Brand category', 'kangoo');
+    $field['instructions'] = __('Choose a product category. The card title, link, and image are pulled from that category automatically.', 'kangoo');
+    $field['type'] = 'taxonomy';
+    $field['taxonomy'] = 'product_cat';
+    $field['field_type'] = 'select';
+    $field['return_format'] = 'id';
+    $field['allow_null'] = 1;
+    $field['add_term'] = 0;
+    $field['save_terms'] = 0;
+    $field['load_terms'] = 0;
+    $field['multiple'] = 0;
+
+    return $field;
+}
+add_filter('acf/load_field/name=brand_name', 'kangoo_acf_brand_category_selector_field');
+add_filter('acf/load_field/name=label', 'kangoo_acf_brand_category_selector_field');
+
+function kangoo_acf_brand_category_selector_value($value, $post_id, $field) {
+    $name = isset($field['name']) ? (string) $field['name'] : '';
+    $is_home_brand_card = $name === 'brand_name' && kangoo_acf_field_has_parent_name($field, array('brands_cards'));
+    $is_mega_brand_card = $name === 'label' && kangoo_acf_field_has_parent_name($field, array('mega_menu_brand_cards', 'brand_cards'));
+
+    if (!$is_home_brand_card && !$is_mega_brand_card) {
+        return $value;
+    }
+
+    $term = kangoo_resolve_product_category_term($value);
+
+    return $term ? (int) $term->term_id : $value;
+}
+add_filter('acf/load_value/name=brand_name', 'kangoo_acf_brand_category_selector_value', 10, 3);
+add_filter('acf/load_value/name=label', 'kangoo_acf_brand_category_selector_value', 10, 3);
+
+function kangoo_acf_hide_legacy_brand_card_fields($field) {
+    $name = isset($field['name']) ? (string) $field['name'] : '';
+
+    if (in_array($name, array('brand_image', 'brand_link'), true) && kangoo_acf_field_has_parent_name($field, array('brands_cards'))) {
+        return false;
+    }
+
+    if (in_array($name, array('image', 'link'), true) && kangoo_acf_field_has_parent_name($field, array('mega_menu_brand_cards', 'brand_cards'))) {
+        return false;
+    }
+
+    return $field;
+}
+add_filter('acf/prepare_field/name=brand_image', 'kangoo_acf_hide_legacy_brand_card_fields');
+add_filter('acf/prepare_field/name=brand_link', 'kangoo_acf_hide_legacy_brand_card_fields');
+add_filter('acf/prepare_field/name=image', 'kangoo_acf_hide_legacy_brand_card_fields');
+add_filter('acf/prepare_field/name=link', 'kangoo_acf_hide_legacy_brand_card_fields');
 
 function kangoo_sold_out_availability_text($availability, $product) {
     if ($product && !$product->is_in_stock()) {

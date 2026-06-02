@@ -36,19 +36,19 @@ $subheading = get_sub_field('subheading');
 					$brand_name  = get_sub_field('brand_name');
 					$brand_image = get_sub_field('brand_image');
 					$brand_link  = get_sub_field('brand_link');
+					$brand_card  = function_exists('kangoo_resolve_brand_category_card')
+						? kangoo_resolve_brand_category_card($brand_name, $brand_name, $brand_image, $brand_link)
+						: array(
+							'label'     => $brand_name,
+							'url'       => !empty($brand_link['url']) ? $brand_link['url'] : '#',
+							'target'    => !empty($brand_link['target']) ? $brand_link['target'] : '_self',
+							'image_url' => is_array($brand_image) && !empty($brand_image['url']) ? $brand_image['url'] : '',
+						);
 
-					$url = !empty($brand_link['url']) ? $brand_link['url'] : '#';
-					$target = !empty($brand_link['target']) ? $brand_link['target'] : '_self';
-
-					$image_url = '';
-
-					if (is_array($brand_image) && !empty($brand_image['url'])) {
-						$image_url = $brand_image['url'];
-					} elseif (is_numeric($brand_image)) {
-						$image_url = wp_get_attachment_image_url($brand_image, 'medium');
-					} elseif (is_string($brand_image)) {
-						$image_url = $brand_image;
-					}
+					$brand_name = isset($brand_card['label']) ? (string) $brand_card['label'] : '';
+					$url = !empty($brand_card['url']) ? (string) $brand_card['url'] : '#';
+					$target = !empty($brand_card['target']) ? (string) $brand_card['target'] : '_self';
+					$image_url = !empty($brand_card['image_url']) ? (string) $brand_card['image_url'] : '';
 					?>
 
 					<a class="brand-card" href="<?php echo esc_url($url); ?>" target="<?php echo esc_attr($target); ?>">
