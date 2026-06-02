@@ -4,7 +4,6 @@ defined('ABSPATH') || exit;
 function kangoo_shipping_statuses() {
     return array(
         'dispatched' => __('Dispatched', 'kangoo'),
-        'shipped'    => __('Shipped', 'kangoo'),
         'delayed'    => __('Delayed', 'kangoo'),
     );
 }
@@ -50,7 +49,7 @@ add_filter('bulk_actions-edit-shop_order', 'kangoo_shipping_bulk_order_actions')
 add_filter('bulk_actions-woocommerce_page_wc-orders', 'kangoo_shipping_bulk_order_actions');
 
 function kangoo_shipping_paid_order_statuses($statuses) {
-    return array_values(array_unique(array_merge((array) $statuses, array('dispatched', 'shipped', 'delayed'))));
+    return array_values(array_unique(array_merge((array) $statuses, array('dispatched', 'delayed'))));
 }
 add_filter('woocommerce_order_is_paid_statuses', 'kangoo_shipping_paid_order_statuses');
 
@@ -307,7 +306,6 @@ function kangoo_shipping_order_meta_box() {
         );
     }
 }
-add_action('add_meta_boxes', 'kangoo_shipping_order_meta_box');
 
 function kangoo_render_shipping_order_meta_box($post_or_order) {
     $order = $post_or_order instanceof WC_Order ? $post_or_order : wc_get_order($post_or_order->ID);
@@ -322,10 +320,6 @@ function kangoo_render_shipping_order_meta_box($post_or_order) {
         'delayed'    => __('Delayed', 'kangoo'),
         'completed'  => __('Completed', 'kangoo'),
     );
-
-    if ($order->get_status() === 'shipped') {
-        $status_options['shipped'] = __('Shipped', 'kangoo');
-    }
 
     wp_nonce_field('kangoo_shipping_fields', 'kangoo_shipping_nonce');
     ?>
@@ -407,7 +401,7 @@ function kangoo_render_shipping_admin_page() {
 
     $orders = function_exists('wc_get_orders') ? wc_get_orders(array(
         'type'    => 'shop_order',
-        'status'  => array('processing', 'delayed'),
+        'status'  => array('processing', 'dispatched', 'delayed'),
         'limit'   => -1,
         'orderby' => 'date',
         'order'   => 'DESC',
@@ -456,7 +450,7 @@ function kangoo_render_shipping_admin_page() {
                             <label>
                                 <?php esc_html_e('Status', 'kangoo'); ?>
                                 <select name="kangoo_shipping_status">
-                                    <?php foreach (array('processing' => __('Processing', 'kangoo'), 'dispatched' => __('Dispatched', 'kangoo'), 'delayed' => __('Delayed', 'kangoo')) as $status => $label) : ?>
+                                    <?php foreach (array('processing' => __('Processing', 'kangoo'), 'dispatched' => __('Dispatched', 'kangoo'), 'delayed' => __('Delayed', 'kangoo'), 'completed' => __('Completed', 'kangoo')) as $status => $label) : ?>
                                         <option value="<?php echo esc_attr($status); ?>" <?php selected($order->get_status(), $status); ?>><?php echo esc_html($label); ?></option>
                                     <?php endforeach; ?>
                                 </select>
@@ -486,7 +480,7 @@ function kangoo_render_shipping_admin_page() {
                     </section>
                 <?php endforeach; ?>
             <?php else : ?>
-                <div class="notice notice-info"><p><?php esc_html_e('No processing or delayed orders need shipping updates right now.', 'kangoo'); ?></p></div>
+                <div class="notice notice-info"><p><?php esc_html_e('No processing, dispatched or delayed orders need shipping updates right now.', 'kangoo'); ?></p></div>
             <?php endif; ?>
         </div>
     </div>
@@ -627,9 +621,9 @@ function kangoo_shipping_register_email_classes($emails) {
             public function __construct() {
                 $this->id = 'kangoo_dispatched_order';
                 $this->title = __('Kangoo order dispatched', 'kangoo');
-                $this->description = __('Sent to customers when an order is marked Dispatched or legacy Shipped.', 'kangoo');
+                $this->description = __('Sent to customers when an order is marked Dispatched.', 'kangoo');
                 $this->kangoo_stage = 'dispatched';
-                $this->kangoo_order_statuses = array('dispatched', 'shipped');
+                $this->kangoo_order_statuses = array('dispatched');
                 $this->template_html = 'emails/customer-dispatched-order.php';
                 $this->template_base = trailingslashit(get_template_directory()) . 'woocommerce/';
 
@@ -691,7 +685,7 @@ function kangoo_shipping_customer_order_tracking($order) {
     $service = kangoo_shipping_get_order_meta($order, 'service', $order->get_shipping_method());
     $status = $order->get_status();
 
-    if (!$tracking_number && !in_array($status, array('dispatched', 'shipped', 'delayed'), true)) {
+    if (!$tracking_number && !in_array($status, array('dispatched', 'delayed'), true)) {
         return;
     }
     ?>

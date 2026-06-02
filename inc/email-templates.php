@@ -198,7 +198,7 @@ function kangoo_email_rewards_balance_for_order($order, $fallback_points = 0) {
 
 function kangoo_email_icon_circle($filename, $size = 58, $icon_size = 30, $background = '#fff1e7') {
     return sprintf(
-        '<span style="display:inline-block;width:%1$dpx;height:%1$dpx;border-radius:999px;background:%3$s;line-height:%1$dpx;text-align:center;"><img src="%4$s" width="%2$d" alt="" style="display:inline-block;width:%2$dpx;height:%2$dpx;border:0;vertical-align:middle;"></span>',
+        '<span style="display:inline-block;width:%1$dpx;height:%1$dpx;border-radius:999px;background:%3$s;text-align:center;"><span style="display:table;width:%1$dpx;height:%1$dpx;"><span style="display:table-cell;width:%1$dpx;height:%1$dpx;text-align:center;vertical-align:middle;"><img src="%4$s" width="%2$d" alt="" style="display:inline-block;width:%2$dpx;height:%2$dpx;border:0;margin:0 auto;vertical-align:middle;"></span></span></span>',
         (int) $size,
         (int) $icon_size,
         esc_attr($background),
