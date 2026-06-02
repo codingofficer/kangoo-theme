@@ -9,7 +9,7 @@ if (empty($product) || !$product->is_visible()) {
 
 $badge = function_exists('kangoo_get_product_badge') ? kangoo_get_product_badge($product->get_id()) : null;
 
-$is_quick_add_card = is_front_page() || is_product_category() || is_shop() || is_product_taxonomy();
+$is_quick_add_card = is_front_page() || is_product_category() || is_shop() || is_product_taxonomy() || (function_exists('is_cart') && is_cart());
 $is_variable = $product->is_type('variable');
 $modal_id = 'quick-add-' . $product->get_id();
 $pack_modal_id = 'pack-add-' . $product->get_id();

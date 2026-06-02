@@ -3,7 +3,6 @@ defined('ABSPATH') || exit;
 
 function kangoo_shipping_statuses() {
     return array(
-        'packed'  => __('Packed', 'kangoo'),
         'shipped' => __('Shipped', 'kangoo'),
         'delayed' => __('Delayed', 'kangoo'),
     );
@@ -173,7 +172,6 @@ function kangoo_render_shipping_order_meta_box($post_or_order) {
 
     $status_options = array(
         'processing' => __('Processing', 'kangoo'),
-        'packed'     => __('Packed', 'kangoo'),
         'shipped'    => __('Shipped', 'kangoo'),
         'delayed'    => __('Delayed', 'kangoo'),
         'completed'  => __('Completed', 'kangoo'),
@@ -258,8 +256,9 @@ function kangoo_render_shipping_admin_page() {
     }
 
     $orders = function_exists('wc_get_orders') ? wc_get_orders(array(
-        'status'  => array('processing', 'packed', 'delayed'),
-        'limit'   => 50,
+        'type'    => 'shop_order',
+        'status'  => array('processing', 'delayed'),
+        'limit'   => -1,
         'orderby' => 'date',
         'order'   => 'DESC',
         'return'  => 'objects',
@@ -267,7 +266,7 @@ function kangoo_render_shipping_admin_page() {
     ?>
     <div class="wrap kangoo-shipping-admin">
         <h1><?php esc_html_e('Kangoo Shipping', 'kangoo'); ?></h1>
-        <p><?php esc_html_e('Update packed, shipped, delayed and tracking details for live orders from one screen.', 'kangoo'); ?></p>
+        <p><?php esc_html_e('Update shipped, delayed and tracking details for live processing orders from one screen.', 'kangoo'); ?></p>
 
         <?php if (!empty($_GET['kangoo_shipping_updated'])) : ?>
             <div class="notice notice-success is-dismissible"><p><?php echo esc_html(sprintf(__('Order #%d updated.', 'kangoo'), absint($_GET['kangoo_shipping_updated']))); ?></p></div>
@@ -307,7 +306,7 @@ function kangoo_render_shipping_admin_page() {
                             <label>
                                 <?php esc_html_e('Status', 'kangoo'); ?>
                                 <select name="kangoo_shipping_status">
-                                    <?php foreach (array('processing' => __('Processing', 'kangoo'), 'packed' => __('Packed', 'kangoo'), 'shipped' => __('Shipped', 'kangoo'), 'delayed' => __('Delayed', 'kangoo')) as $status => $label) : ?>
+                                    <?php foreach (array('processing' => __('Processing', 'kangoo'), 'shipped' => __('Shipped', 'kangoo'), 'delayed' => __('Delayed', 'kangoo')) as $status => $label) : ?>
                                         <option value="<?php echo esc_attr($status); ?>" <?php selected($order->get_status(), $status); ?>><?php echo esc_html($label); ?></option>
                                     <?php endforeach; ?>
                                 </select>
@@ -337,7 +336,7 @@ function kangoo_render_shipping_admin_page() {
                     </section>
                 <?php endforeach; ?>
             <?php else : ?>
-                <div class="notice notice-info"><p><?php esc_html_e('No processing, packed or delayed orders need shipping updates right now.', 'kangoo'); ?></p></div>
+                <div class="notice notice-info"><p><?php esc_html_e('No processing or delayed orders need shipping updates right now.', 'kangoo'); ?></p></div>
             <?php endif; ?>
         </div>
     </div>
@@ -345,58 +344,11 @@ function kangoo_render_shipping_admin_page() {
 }
 
 function kangoo_shipping_email_body($order, $type) {
-    $tracking_number = kangoo_shipping_get_order_meta($order, 'tracking_number');
-    $tracking_url = kangoo_shipping_get_tracking_url($order);
-    $service = kangoo_shipping_get_order_meta($order, 'service', $order->get_shipping_method());
-    $note = kangoo_shipping_get_order_meta($order, 'note');
-    $is_delayed = $type === 'delayed';
-    $heading = $is_delayed
-        ? sprintf(__('Your Kangoo order #%s has a delivery update', 'kangoo'), $order->get_order_number())
-        : sprintf(__('Your Kangoo order #%s is now on its way', 'kangoo'), $order->get_order_number());
+    if (function_exists('kangoo_email_render_shipping_update')) {
+        return kangoo_email_render_shipping_update($order, $type);
+    }
 
-    ob_start();
-    ?>
-    <div style="font-family:Arial,sans-serif;color:#101216;">
-        <h1 style="margin:0 0 18px;text-align:center;font-size:28px;line-height:1.15;"><?php echo esc_html($heading); ?></h1>
-        <p style="text-align:center;font-size:15px;line-height:1.5;">
-            <?php if ($is_delayed) : ?>
-                <?php esc_html_e('Your order is still being handled, but there has been a delivery update. We will keep things moving and update your tracking as soon as it changes.', 'kangoo'); ?>
-            <?php else : ?>
-                <?php esc_html_e('Your order has been packed and is now on its way to you. Tracking details may take a little while to appear after dispatch.', 'kangoo'); ?>
-            <?php endif; ?>
-        </p>
-        <div style="margin:24px 0;padding:18px;background:#f6f7f2;text-align:center;">
-            <?php if ($tracking_url) : ?>
-                <p style="margin:0 0 16px;"><a href="<?php echo esc_url($tracking_url); ?>" style="display:inline-block;padding:13px 24px;background:#ff6f00;color:#fff;text-decoration:none;font-weight:700;border-radius:6px;"><?php esc_html_e('Track order', 'kangoo'); ?></a></p>
-            <?php endif; ?>
-            <?php if ($tracking_number) : ?>
-                <p style="margin:0;font-size:18px;"><strong><?php esc_html_e('Tracking number:', 'kangoo'); ?></strong><br><span style="color:#ff6f00;font-weight:700;"><?php echo esc_html($tracking_number); ?></span></p>
-            <?php endif; ?>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:20px;padding:18px;background:#f6f7f2;">
-            <div>
-                <p style="margin:0 0 4px;font-weight:700;"><?php esc_html_e('Order number:', 'kangoo'); ?></p>
-                <p style="margin:0;color:#ff6f00;"><?php echo esc_html($order->get_order_number()); ?></p>
-            </div>
-            <div>
-                <p style="margin:0 0 4px;font-weight:700;"><?php esc_html_e('Shipping method:', 'kangoo'); ?></p>
-                <p style="margin:0;color:#ff6f00;"><?php echo esc_html($service); ?></p>
-            </div>
-            <div>
-                <p style="margin:0 0 4px;font-weight:700;"><?php esc_html_e('Delivery address:', 'kangoo'); ?></p>
-                <p style="margin:0;"><?php echo wp_kses_post($order->get_formatted_shipping_address() ? $order->get_formatted_shipping_address() : $order->get_formatted_billing_address()); ?></p>
-            </div>
-            <div>
-                <p style="margin:0 0 4px;font-weight:700;"><?php esc_html_e('Order date:', 'kangoo'); ?></p>
-                <p style="margin:0;color:#ff6f00;"><?php echo esc_html(wc_format_datetime($order->get_date_created(), 'Y-m-d')); ?></p>
-            </div>
-        </div>
-        <?php if ($note) : ?>
-            <p style="margin-top:18px;"><?php echo esc_html($note); ?></p>
-        <?php endif; ?>
-    </div>
-    <?php
-    return ob_get_clean();
+    return '';
 }
 
 function kangoo_shipping_send_status_email($order_id, $order = null) {
@@ -431,7 +383,7 @@ function kangoo_shipping_customer_order_tracking($order) {
     $service = kangoo_shipping_get_order_meta($order, 'service', $order->get_shipping_method());
     $status = $order->get_status();
 
-    if (!$tracking_number && !in_array($status, array('packed', 'shipped', 'delayed'), true)) {
+    if (!$tracking_number && !in_array($status, array('shipped', 'delayed'), true)) {
         return;
     }
     ?>

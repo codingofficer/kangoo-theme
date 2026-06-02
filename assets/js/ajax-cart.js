@@ -1888,6 +1888,41 @@ jQuery(function ($) {
     }
   }
 
+  function hydratePackModalSummary($modal, $card) {
+    if (!$modal.length || !$card.length) {
+      return;
+    }
+
+    const $title = $modal.find('.pack-add-modal__top h3').first();
+    const $imageWrap = $modal.find('.pack-add-modal__image').first();
+    const title = $.trim($card.find('.product-card__title a').first().text());
+    const $cardImage = $card.find('.product-card__media img').first();
+    const imageSrc = $cardImage.attr('src') || $cardImage.attr('data-src') || '';
+    const imageSrcset = $cardImage.attr('srcset') || '';
+    const imageSizes = $cardImage.attr('sizes') || '';
+
+    if ($title.length && !$.trim($title.text()) && title) {
+      $title.text(title);
+    }
+
+    if ($imageWrap.length && !$imageWrap.find('img').length && imageSrc) {
+      const $img = $('<img>', {
+        src: imageSrc,
+        alt: title || ''
+      });
+
+      if (imageSrcset) {
+        $img.attr('srcset', imageSrcset);
+      }
+
+      if (imageSizes) {
+        $img.attr('sizes', imageSizes);
+      }
+
+      $imageWrap.append($img);
+    }
+  }
+
   $(document).on('click', '[data-card-minus], [data-card-plus]', function () {
     const $card = $(this).closest('.product-card');
     const $input = $card.find('[data-card-qty-input]');
@@ -1922,7 +1957,10 @@ jQuery(function ($) {
       return;
     }
 
-    syncPackModalSelection($modal, $(this).closest('.product-card'));
+    const $card = $(this).closest('.product-card');
+
+    hydratePackModalSummary($modal, $card);
+    syncPackModalSelection($modal, $card);
 
     $modal.addClass('is-open').attr('aria-hidden', 'false');
     $('body').addClass('no-scroll');
@@ -2341,7 +2379,7 @@ jQuery(function ($) {
       return quantity + '-pack';
     }
 
-    return quantity === 1 ? '1 pack' : quantity + ' packs';
+    return quantity === 1 ? '1-pack' : quantity + '-pack';
   }
 
   function getStickyUnitPrice($form, quantity) {
@@ -2405,7 +2443,7 @@ jQuery(function ($) {
       $select.empty();
 
       values.forEach(function (tier) {
-        const label = tier.qty === 1 ? '1 pack' : tier.qty + '-pack';
+        const label = tier.qty === 1 ? '1-pack' : tier.qty + '-pack';
         $select.append($('<option>', {
           value: String(tier.qty),
           text: label

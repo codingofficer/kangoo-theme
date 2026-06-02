@@ -985,7 +985,9 @@ add_action('woocommerce_blocks_validate_location_other_fields', 'kangoo_validate
 add_action('woocommerce_blocks_validate_location_contact_fields', 'kangoo_validate_checkout_block_age_fields', 10, 3);
 
 function kangoo_email_logo_url() {
-    return 'https://kangoopouches.co.uk/wp-content/uploads/2026/05/kangoo-logo-black.png';
+    return function_exists('kangoo_email_theme_logo_url')
+        ? kangoo_email_theme_logo_url()
+        : 'https://kangoopouches.co.uk/wp-content/uploads/2026/05/kangoo-logo-black.png';
 }
 
 function kangoo_email_header_image($image) {
@@ -6467,7 +6469,9 @@ add_action('admin_menu', 'kangoo_theme_options_menu');
 require_once get_template_directory() . '/inc/theme-appearance.php';
 require_once get_template_directory() . '/inc/pack-pricing-admin.php';
 require_once get_template_directory() . '/inc/product-url-brand-audit.php';
+require_once get_template_directory() . '/inc/email-templates.php';
 require_once get_template_directory() . '/inc/shipping-operations.php';
+require_once get_template_directory() . '/inc/cart-recommendations.php';
 require_once get_template_directory() . '/inc/event-themes.php';
 require_once get_template_directory() . '/inc/reviews.php';
 

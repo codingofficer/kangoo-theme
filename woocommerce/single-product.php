@@ -409,7 +409,7 @@ foreach ($product_faq_rows as $product_faq_row) {
             <div class="sticky-add__bar">
                 <label class="sticky-add__pack">
                     <select data-sticky-pack-select aria-label="<?php esc_attr_e('Choose pack size', 'kangoo'); ?>">
-                        <option value="1"><?php esc_html_e('1 pack', 'kangoo'); ?></option>
+                        <option value="1"><?php esc_html_e('1-pack', 'kangoo'); ?></option>
                     </select>
                 </label>
 
@@ -417,7 +417,7 @@ foreach ($product_faq_rows as $product_faq_row) {
                     <span class="sticky-add__unit" data-sticky-unit-price></span>
                     <span class="sticky-add__saving" data-sticky-saving></span>
                     <span class="sticky-add__meta" data-sticky-meta hidden>
-                        <?php esc_html_e('1 pack', 'kangoo'); ?>
+                        <?php esc_html_e('1-pack', 'kangoo'); ?>
                     </span>
                     <span data-sticky-price hidden><?php echo wp_kses_post(wc_price(wc_get_price_to_display($product))); ?></span>
                 </div>
