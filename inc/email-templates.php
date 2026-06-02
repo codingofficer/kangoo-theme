@@ -628,14 +628,16 @@ function kangoo_email_render_pending_rewards_card($order) {
     ?>
     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin:16px 0 0;border-radius:14px;background:#fff7ef;">
         <tr>
-            <td width="78" class="kg-card-icon" style="width:78px;padding:20px 0 20px 22px;vertical-align:middle;">
+            <td width="72" class="kg-card-icon" style="width:72px;padding:18px 0 10px 22px;vertical-align:middle;">
                 <?php echo kangoo_email_icon_circle('giftbox.png', 54, 30, '#ffffff'); ?>
             </td>
-            <td style="padding:22px 18px;vertical-align:middle;">
-                <strong style="display:block;color:#06080d;font-family:Arial,Helvetica,sans-serif;font-size:17px;line-height:1.25;font-weight:900;"><?php echo esc_html(sprintf(__("You'll earn %d points from this order!", 'kangoo'), $points)); ?></strong>
-                <span style="display:block;margin-top:6px;color:#111827;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.35;"><?php esc_html_e('Points will be added to your account once your order has been completed.', 'kangoo'); ?></span>
+            <td style="padding:18px 22px 10px 16px;vertical-align:middle;">
+                <strong style="display:block;color:#06080d;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.25;font-weight:900;"><?php echo esc_html(sprintf(__("You'll earn %d points from this order.", 'kangoo'), $points)); ?></strong>
+                <span style="display:block;margin-top:5px;color:#111827;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.3;"><?php esc_html_e('Points will be added when your order is completed.', 'kangoo'); ?></span>
             </td>
-            <td width="190" class="kg-strip-action" align="right" style="width:190px;padding:22px 24px 22px 0;text-align:right;vertical-align:middle;">
+        </tr>
+        <tr>
+            <td colspan="2" style="padding:6px 22px 20px;text-align:center;">
                 <?php echo kangoo_email_button(kangoo_email_rewards_url(), __('View rewards', 'kangoo'), '#ffffff', '#ff5a00', '#ff5a00'); ?>
             </td>
         </tr>
@@ -657,15 +659,16 @@ function kangoo_email_render_earned_rewards_card($order) {
     ?>
     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin:16px 0 0;border-radius:14px;background:#ff5a00;">
         <tr>
-            <td width="84" class="kg-card-icon" style="width:84px;padding:20px 0 20px 24px;vertical-align:middle;">
+            <td width="78" class="kg-card-icon" style="width:78px;padding:20px 0 8px 24px;vertical-align:middle;">
                 <?php echo kangoo_email_icon_circle('giftbox.png', 56, 32, '#ffffff'); ?>
             </td>
-            <td style="padding:22px 18px;vertical-align:middle;">
-                <strong style="display:block;color:#ffffff;font-family:Arial,Helvetica,sans-serif;font-size:19px;line-height:1.25;font-weight:900;"><?php esc_html_e('Kangoo Rewards', 'kangoo'); ?></strong>
-                <strong style="display:block;margin-top:8px;color:#ffffff;font-family:Arial,Helvetica,sans-serif;font-size:17px;line-height:1.3;"><?php echo esc_html(sprintf(__('You earned %d points!', 'kangoo'), $points)); ?></strong>
-                <strong style="display:block;color:#ffffff;font-family:Arial,Helvetica,sans-serif;font-size:17px;line-height:1.3;"><?php echo esc_html(sprintf(__('Current balance: %d points', 'kangoo'), $balance)); ?></strong>
+            <td style="padding:20px 24px 8px 16px;vertical-align:middle;">
+                <strong style="display:block;color:#ffffff;font-family:Arial,Helvetica,sans-serif;font-size:18px;line-height:1.2;font-weight:900;"><?php esc_html_e('Kangoo Rewards', 'kangoo'); ?></strong>
+                <span style="display:block;margin-top:6px;color:#ffffff;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.3;font-weight:800;"><?php echo esc_html(sprintf(__('You earned %d points. Balance: %d points.', 'kangoo'), $points, $balance)); ?></span>
             </td>
-            <td width="190" class="kg-strip-action" align="right" style="width:190px;padding:22px 26px 22px 0;text-align:right;vertical-align:middle;">
+        </tr>
+        <tr>
+            <td colspan="2" style="padding:8px 24px 22px;text-align:center;">
                 <?php echo kangoo_email_button(kangoo_email_rewards_url(), __('View rewards', 'kangoo'), '#ffffff', '#ff5a00', '#ffffff'); ?>
             </td>
         </tr>
@@ -686,14 +689,16 @@ function kangoo_email_render_offer_card($order) {
     ?>
     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin:16px 0 0;border-radius:14px;background:#fff7ef;">
         <tr>
-            <td width="84" class="kg-card-icon" style="width:84px;padding:20px 0 20px 24px;vertical-align:middle;">
+            <td width="78" class="kg-card-icon" style="width:78px;padding:20px 0 8px 24px;vertical-align:middle;">
                 <?php echo kangoo_email_icon_circle('order-completed.png', 56, 30, '#ffffff'); ?>
             </td>
-            <td style="padding:22px 18px;vertical-align:middle;">
-                <strong style="display:block;color:#06080d;font-family:Arial,Helvetica,sans-serif;font-size:19px;line-height:1.25;font-weight:900;"><?php esc_html_e('Thank you for your order!', 'kangoo'); ?></strong>
-                <span style="display:block;margin-top:9px;color:#111827;font-family:Arial,Helvetica,sans-serif;font-size:17px;line-height:1.45;"><?php esc_html_e('Use code', 'kangoo'); ?> <span style="display:inline-block;padding:4px 7px;border-radius:5px;background:#ff5a00;color:#ffffff;font-weight:900;white-space:nowrap;"><?php echo esc_html($discount_code); ?></span> <?php esc_html_e('for 10% off your next order.', 'kangoo'); ?></span>
+            <td style="padding:20px 24px 8px 16px;vertical-align:middle;">
+                <strong style="display:block;color:#06080d;font-family:Arial,Helvetica,sans-serif;font-size:18px;line-height:1.2;font-weight:900;"><?php esc_html_e('Thank you for your order!', 'kangoo'); ?></strong>
+                <span style="display:block;margin-top:7px;color:#111827;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.35;"><?php esc_html_e('Use code', 'kangoo'); ?> <span style="display:inline-block;padding:3px 7px;border-radius:5px;background:#ff5a00;color:#ffffff;font-weight:900;white-space:nowrap;"><?php echo esc_html($discount_code); ?></span> <?php esc_html_e('for 10% off your next order.', 'kangoo'); ?></span>
             </td>
-            <td width="170" class="kg-strip-action" align="right" style="width:170px;padding:22px 26px 22px 0;text-align:right;vertical-align:middle;">
+        </tr>
+        <tr>
+            <td colspan="2" style="padding:8px 24px 22px;text-align:center;">
                 <?php echo kangoo_email_button(kangoo_email_shop_url(), __('Shop again', 'kangoo')); ?>
             </td>
         </tr>
@@ -795,9 +800,9 @@ function kangoo_email_render_document($order, $stage, $additional_content = '') 
                 .kg-hero-copy { width: 54% !important; padding-right: 10px !important; vertical-align: top !important; }
                 .kg-hero-image { width: 46% !important; padding-left: 4px !important; vertical-align: middle !important; }
                 .kg-hero-img { width: 190px !important; max-width: 100% !important; }
-                .kg-hero-title { font-size: 38px !important; line-height: 1.08 !important; }
-                .kg-hero-title--received { margin-bottom: 8px !important; font-size: 25px !important; line-height: 1.08 !important; white-space: nowrap !important; }
-                .kg-hero-orange--received { font-size: 31px !important; line-height: 1.04 !important; }
+                .kg-hero-title { font-size: 34px !important; line-height: 1.06 !important; }
+                .kg-hero-title--received { margin-bottom: 8px !important; font-size: 32px !important; line-height: 1.08 !important; white-space: nowrap !important; }
+                .kg-hero-orange--received { font-size: 28px !important; line-height: 1.06 !important; }
                 .kg-hero-text { font-size: 17px !important; line-height: 1.45 !important; }
                 .kg-primary-action .kg-btn { display: block !important; width: 100% !important; min-width: 0 !important; padding-left: 12px !important; padding-right: 12px !important; }
                 .kg-progress-pad { padding: 18px 10px 16px !important; }
@@ -821,9 +826,9 @@ function kangoo_email_render_document($order, $stage, $additional_content = '') 
             }
             @media only screen and (max-width: 390px) {
                 .kg-inner { padding: 22px 16px 18px !important; }
-                .kg-hero-title { font-size: 31px !important; }
-                .kg-hero-title--received { font-size: 22px !important; }
-                .kg-hero-orange--received { font-size: 28px !important; }
+                .kg-hero-title { font-size: 29px !important; }
+                .kg-hero-title--received { font-size: 28px !important; }
+                .kg-hero-orange--received { font-size: 24px !important; }
                 .kg-hero-text { font-size: 15px !important; }
                 .kg-hero-img { width: 150px !important; }
                 .kg-logo { width: 260px !important; }
@@ -847,15 +852,15 @@ function kangoo_email_render_document($order, $stage, $additional_content = '') 
                                     <tr>
                                         <td class="kg-hero-copy" width="54%" style="width:54%;padding:0 20px 18px 0;vertical-align:middle;">
                                             <?php if ($stage === 'received') : ?>
-                                                <h1 class="kg-hero-title--received" style="margin:0 0 10px;color:#020407;font-family:Arial,Helvetica,sans-serif;font-size:31px;font-weight:900;line-height:1.08;letter-spacing:0;white-space:nowrap;">
+                                                <h1 class="kg-hero-title--received" style="margin:0 0 10px;color:#020407;font-family:Arial,Helvetica,sans-serif;font-size:39px;font-weight:900;line-height:1.08;letter-spacing:0;white-space:nowrap;">
                                                     <?php echo esc_html($variant['title']); ?>
                                                 </h1>
-                                                <div class="kg-hero-orange--received" style="margin:0 0 18px;color:#ff5a00;font-family:Arial,Helvetica,sans-serif;font-size:40px;font-weight:900;line-height:1.04;letter-spacing:0;">
+                                                <div class="kg-hero-orange--received" style="margin:0 0 18px;color:#ff5a00;font-family:Arial,Helvetica,sans-serif;font-size:34px;font-weight:900;line-height:1.06;letter-spacing:0;">
                                                     <?php echo esc_html($variant['title_orange']); ?>
                                                 </div>
                                             <?php else : ?>
-                                                <h1 class="kg-hero-title" style="margin:0 0 22px;color:#020407;font-family:Arial,Helvetica,sans-serif;font-size:43px;font-weight:900;line-height:1.08;letter-spacing:0;">
-                                                    <?php echo esc_html($variant['title']); ?><br>
+                                                <h1 class="kg-hero-title" style="margin:0 0 22px;color:#020407;font-family:Arial,Helvetica,sans-serif;font-size:38px;font-weight:900;line-height:1.06;letter-spacing:0;">
+                                                    <span style="white-space:nowrap;"><?php echo esc_html($variant['title']); ?></span><br>
                                                     <span style="color:#ff5a00;"><?php echo esc_html($variant['title_orange']); ?></span>
                                                 </h1>
                                             <?php endif; ?>
