@@ -152,13 +152,13 @@ FILE: assets/css/account-page.css
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 42px;
-  padding: 0.7rem 1rem;
-  border-radius: 999px;
+  min-height: 56px;
+  padding: 0 1.15rem;
+  border-radius: 14px;
   border: 1px solid var(--color-border);
   background: rgba(255,255,255,0.04);
   color: #fff;
-  font-weight: 600;
+  font-weight: 800;
 }
 
 .woocommerce-account .woocommerce-MyAccount-content form {
@@ -233,13 +233,13 @@ FILE: assets/css/account-page.css
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 50px;
-  padding: 0.85rem 1.2rem;
-  border-radius: 999px;
+  min-height: 56px;
+  padding: 0 1.15rem;
+  border-radius: 14px;
   border: 1px solid transparent;
   background: var(--color-accent) !important;
   color: #fff !important;
-  font-weight: 700;
+  font-weight: 800;
   box-shadow: 0 10px 30px rgba(77,163,255,0.18);
 }
 

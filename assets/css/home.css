@@ -338,8 +338,8 @@
   }
 
   .home-app-cta__button {
-    min-height: 42px;
-    padding: 0.55rem 0.5rem;
+    min-height: 56px;
+    padding: 0 0.75rem;
     font-size: clamp(0.78rem, 3.6vw, 0.9rem);
     white-space: nowrap;
   }
@@ -372,8 +372,8 @@
   }
 
   .home-finder-cta__button {
-    min-height: 42px;
-    padding: 0.55rem 0.5rem;
+    min-height: 56px;
+    padding: 0 0.75rem;
     font-size: clamp(0.78rem, 3.6vw, 0.9rem);
     white-space: nowrap;
   }
@@ -440,8 +440,8 @@
 
   .home-finder-cta__button {
     width: 100%;
-    min-height: 44px;
-    padding-block: 0.65rem;
+    min-height: 56px;
+    padding-block: 0;
     white-space: nowrap;
   }
 
