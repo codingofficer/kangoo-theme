@@ -508,10 +508,6 @@ function kangoo_shipping_register_email_classes($emails) {
             public function __construct() {
                 $this->customer_email = true;
 
-                foreach ((array) $this->kangoo_order_statuses as $status) {
-                    add_action('woocommerce_order_status_' . $status, array($this, 'trigger'), 10, 2);
-                }
-
                 parent::__construct();
             }
 
@@ -529,7 +525,16 @@ function kangoo_shipping_register_email_classes($emails) {
                 $this->recipient = $order->get_billing_email();
                 $this->placeholders['{order_number}'] = $order->get_order_number();
 
+                static $sent = array();
+                $sent_key = $this->id . ':' . $order->get_id() . ':' . $order->get_status();
+
+                if (isset($sent[$sent_key])) {
+                    $this->restore_locale();
+                    return;
+                }
+
                 if ($this->is_enabled() && $this->get_recipient()) {
+                    $sent[$sent_key] = true;
                     $this->send($this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments());
                 }
 
@@ -671,9 +676,39 @@ function kangoo_shipping_register_email_classes($emails) {
 }
 add_filter('woocommerce_email_classes', 'kangoo_shipping_register_email_classes');
 
-function kangoo_shipping_send_status_email($order_id, $order = null) {
-    return;
+function kangoo_shipping_trigger_customer_status_email($order_id, $order = false, $email_class = '') {
+    if (!$email_class || !function_exists('WC')) {
+        return;
+    }
+
+    $order = $order instanceof WC_Order ? $order : wc_get_order($order_id);
+
+    if (!$order instanceof WC_Order) {
+        return;
+    }
+
+    $mailer = WC()->mailer();
+
+    if (!$mailer || !method_exists($mailer, 'get_emails')) {
+        return;
+    }
+
+    $emails = $mailer->get_emails();
+
+    if (isset($emails[$email_class]) && is_object($emails[$email_class]) && method_exists($emails[$email_class], 'trigger')) {
+        $emails[$email_class]->trigger($order->get_id(), $order);
+    }
 }
+
+function kangoo_shipping_trigger_dispatched_email($order_id, $order = false) {
+    kangoo_shipping_trigger_customer_status_email($order_id, $order, 'WC_Email_Kangoo_Dispatched_Order');
+}
+add_action('woocommerce_order_status_dispatched', 'kangoo_shipping_trigger_dispatched_email', 10, 2);
+
+function kangoo_shipping_trigger_delayed_email($order_id, $order = false) {
+    kangoo_shipping_trigger_customer_status_email($order_id, $order, 'WC_Email_Kangoo_Delayed_Order');
+}
+add_action('woocommerce_order_status_delayed', 'kangoo_shipping_trigger_delayed_email', 10, 2);
 
 function kangoo_shipping_customer_order_tracking($order) {
     if (!$order instanceof WC_Order) {
