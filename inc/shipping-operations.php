@@ -444,7 +444,7 @@ function kangoo_shipping_customer_order_tracking($order) {
         <?php if ($tracking_number) : ?>
             <p><strong><?php esc_html_e('Tracking number:', 'kangoo'); ?></strong> <?php echo esc_html($tracking_number); ?></p>
         <?php endif; ?>
-        <?php if ($tracking_url) : ?>
+        <?php if ($tracking_url && $status !== 'completed') : ?>
             <p><a class="button" href="<?php echo esc_url($tracking_url); ?>" target="_blank" rel="noopener"><?php esc_html_e('Track order', 'kangoo'); ?></a></p>
         <?php endif; ?>
     </section>

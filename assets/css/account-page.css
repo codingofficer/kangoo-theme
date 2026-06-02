@@ -290,6 +290,53 @@ FILE: assets/css/account-page.css
   font-size: 0.9rem;
 }
 
+.woocommerce-account .woocommerce-MyAccount-content .woocommerce-order-details,
+.woocommerce-account .woocommerce-MyAccount-content .woocommerce-customer-details,
+.woocommerce-account .woocommerce-MyAccount-content .kangoo-order-tracking {
+  margin: 0 0 1.25rem;
+  padding: clamp(1rem, 1.8vw, 1.35rem);
+  border: 1px solid var(--color-border);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.035);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+}
+
+.woocommerce-account .woocommerce-MyAccount-content .woocommerce-order-details h2,
+.woocommerce-account .woocommerce-MyAccount-content .woocommerce-customer-details h2,
+.woocommerce-account .woocommerce-MyAccount-content .kangoo-order-tracking h2 {
+  margin-top: 0 !important;
+}
+
+.woocommerce-account .woocommerce-MyAccount-content .woocommerce-order-details table.shop_table,
+.woocommerce-account .woocommerce-MyAccount-content .woocommerce-order-details table.order_details {
+  margin: 0 !important;
+  box-shadow: none !important;
+}
+
+.woocommerce-account .woocommerce-MyAccount-content .woocommerce-customer-details .woocommerce-columns,
+.woocommerce-account .woocommerce-MyAccount-content .woocommerce-customer-details .col2-set {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.woocommerce-account .woocommerce-MyAccount-content .woocommerce-customer-details .woocommerce-column {
+  width: auto !important;
+  float: none !important;
+  margin: 0 !important;
+}
+
+.woocommerce-account .woocommerce-MyAccount-content .woocommerce-customer-details address {
+  min-height: 0;
+  margin: 0;
+  padding: 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.03);
+  line-height: 1.65;
+}
+
 .woocommerce-account .woocommerce-MyAccount-content .woocommerce-pagination {
   margin-top: 1rem;
 }
@@ -1332,12 +1379,23 @@ body.is-account-endpoint-edit-account .woocommerce-MyAccount-content .button {
 
 body.is-account-endpoint-edit-account .woocommerce-MyAccount-content form.woocommerce-EditAccountForm {
   display: grid;
-  gap: 0.9rem;
-  padding: clamp(1rem, 2vw, 1.6rem);
+  align-items: start;
+  gap: 0.9rem 1rem;
+  padding: clamp(0.95rem, 1.6vw, 1.25rem);
 }
 
 body.is-account-endpoint-edit-account .woocommerce-MyAccount-content form.woocommerce-EditAccountForm > p:not(.form-row) {
   margin: 0;
+}
+
+body.is-account-endpoint-edit-account .woocommerce-MyAccount-content form.woocommerce-EditAccountForm .form-row {
+  align-self: start;
+}
+
+body.is-account-endpoint-edit-account .woocommerce-MyAccount-content form.woocommerce-EditAccountForm em {
+  display: block;
+  margin-top: -0.1rem;
+  line-height: 1.45;
 }
 
 body.is-account-endpoint-edit-account .woocommerce-MyAccount-content form.woocommerce-EditAccountForm > p {
@@ -1353,9 +1411,21 @@ body.is-account-endpoint-edit-account .woocommerce-MyAccount-content form.woocom
   gap: 0.8rem;
   grid-template-columns: 1fr;
   order: 20;
-  margin-top: 0.75rem;
+  margin-top: 0.35rem;
   border-radius: 18px;
   background: rgba(255, 255, 255, 0.02);
+}
+
+body.is-account-endpoint-edit-account .woocommerce-MyAccount-content form.woocommerce-EditAccountForm p:has(input[name="kangoo/age-day"]),
+body.is-account-endpoint-edit-account .woocommerce-MyAccount-content form.woocommerce-EditAccountForm p:has(input[name="kangoo/age-month"]),
+body.is-account-endpoint-edit-account .woocommerce-MyAccount-content form.woocommerce-EditAccountForm p:has(input[name="kangoo/age-year"]),
+body.is-account-endpoint-edit-account .woocommerce-MyAccount-content form.woocommerce-EditAccountForm p:has(input[name*="age-day"]),
+body.is-account-endpoint-edit-account .woocommerce-MyAccount-content form.woocommerce-EditAccountForm p:has(input[name*="age-month"]),
+body.is-account-endpoint-edit-account .woocommerce-MyAccount-content form.woocommerce-EditAccountForm p:has(input[name*="age-year"]),
+body.is-account-endpoint-edit-account .woocommerce-MyAccount-content form.woocommerce-EditAccountForm p:has(input[id*="kangoo-age-day"]),
+body.is-account-endpoint-edit-account .woocommerce-MyAccount-content form.woocommerce-EditAccountForm p:has(input[id*="kangoo-age-month"]),
+body.is-account-endpoint-edit-account .woocommerce-MyAccount-content form.woocommerce-EditAccountForm p:has(input[id*="kangoo-age-year"]) {
+  display: none !important;
 }
 
 body.is-account-endpoint-edit-account .woocommerce-MyAccount-content input.input-text,
@@ -1372,6 +1442,7 @@ body.is-account-endpoint-edit-account .woocommerce-MyAccount-content input[type=
 @media (min-width: 900px) {
   body.is-account-endpoint-edit-account .woocommerce-MyAccount-content form.woocommerce-EditAccountForm {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: start;
   }
 
   body.is-account-endpoint-edit-account .woocommerce-MyAccount-content form.woocommerce-EditAccountForm .form-row-wide,
@@ -1423,6 +1494,7 @@ body.is-account-endpoint-edit-account .woocommerce-MyAccount-content input[type=
   body.is-account-endpoint-edit-account .woocommerce-MyAccount-content form.woocommerce-EditAccountForm .account-field--email,
   body.is-account-endpoint-edit-account .woocommerce-MyAccount-content form.woocommerce-EditAccountForm p:has(#account_email) {
     order: 5;
+    align-self: start;
     grid-column: auto !important;
   }
 
@@ -1509,6 +1581,11 @@ body.is-account-endpoint-edit-account .woocommerce-MyAccount-content input[type=
   .kangoo-account-section-heading {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .woocommerce-account .woocommerce-MyAccount-content .woocommerce-customer-details .woocommerce-columns,
+  .woocommerce-account .woocommerce-MyAccount-content .woocommerce-customer-details .col2-set {
+    grid-template-columns: 1fr;
   }
 
   .kangoo-rewards-help .button {

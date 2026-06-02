@@ -1569,6 +1569,31 @@ body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content .add
   background: #eaf4ff !important;
 }
 
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content .woocommerce-order-details,
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content .woocommerce-customer-details,
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content .woocommerce-column,
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content .woocommerce-customer-details address,
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content .kangoo-order-tracking,
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content .kangoo-order-review-submit,
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content .kangoo-order-review-card {
+  border-color: rgba(17, 24, 39, 0.1) !important;
+  background: #ffffff !important;
+  color: #111827 !important;
+  box-shadow: 0 18px 50px rgba(17, 24, 39, 0.07) !important;
+}
+
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content .kangoo-order-tracking,
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content .kangoo-order-review-submit {
+  background: #eef6ff !important;
+  border-color: rgba(22, 119, 232, 0.2) !important;
+}
+
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content .woocommerce-order-details table.shop_table,
+body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content .woocommerce-order-details table.order_details {
+  background: #ffffff !important;
+  box-shadow: none !important;
+}
+
 body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content .woocommerce-Address address em,
 body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content .addresses address em {
   color: #111827 !important;

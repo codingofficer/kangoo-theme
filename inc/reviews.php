@@ -153,7 +153,7 @@ function kangoo_reviews_theme_render_order_review_forms($order) {
         return;
     }
     ?>
-    <section class="kangoo-order-review-submit">
+    <section class="kangoo-order-review-submit" id="kangoo-order-reviews">
         <h2><?php esc_html_e('Review your pouches', 'kangoo'); ?></h2>
         <p><?php esc_html_e('Share a quick review for completed order items. Verified reviews are checked against your order email before approval.', 'kangoo'); ?></p>
         <div class="kangoo-order-review-submit__grid">
@@ -207,6 +207,24 @@ function kangoo_reviews_theme_render_order_review_forms($order) {
     <?php
 }
 add_action('woocommerce_order_details_after_order_table', 'kangoo_reviews_theme_render_order_review_forms', 20);
+
+function kangoo_reviews_theme_order_actions($actions, $order) {
+    if (!$order instanceof WC_Order || $order->get_status() !== 'completed') {
+        return $actions;
+    }
+
+    if (!function_exists('kangoo_reviews_customer_order_item_context')) {
+        return $actions;
+    }
+
+    $actions['kangoo-review'] = array(
+        'url'  => $order->get_view_order_url() . '#kangoo-order-reviews',
+        'name' => __('Review item', 'kangoo'),
+    );
+
+    return $actions;
+}
+add_filter('woocommerce_my_account_my_orders_actions', 'kangoo_reviews_theme_order_actions', 20, 2);
 
 function kangoo_reviews_theme_handle_order_review_submission() {
     if (!is_user_logged_in() || !function_exists('kangoo_reviews_create_customer_review')) {
