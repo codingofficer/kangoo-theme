@@ -368,6 +368,13 @@
   gap: var(--space-3);
 }
 
+.category-page__seo h2,
+.category-page__faq h2,
+.category-page__seo-content h2 {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  line-height: 1.15;
+}
+
 .category-page__empty {
   max-width: 560px;
 }

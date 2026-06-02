@@ -5561,18 +5561,35 @@ add_filter('woocommerce_cart_item_name', 'kangoo_cart_item_review_summary', 20, 
 function kangoo_mini_cart_quantity_stock_data($quantity_html, $cart_item, $cart_item_key) {
     $product = isset($cart_item['data']) && $cart_item['data'] instanceof WC_Product ? $cart_item['data'] : null;
     $max_quantity = $product ? (int) $product->get_max_purchase_quantity() : 0;
+    $attributes = array();
 
-    if (!$product || $max_quantity < 1 || strpos($quantity_html, 'data-stock-limit=') !== false) {
+    if (strpos($quantity_html, 'data-cart-item-key=') === false) {
+        $attributes[] = sprintf('data-cart-item-key="%s"', esc_attr($cart_item_key));
+    }
+
+    if ($product && $max_quantity > 0 && strpos($quantity_html, 'data-stock-limit=') === false) {
+        $attributes[] = sprintf('data-stock-limit="%d"', $max_quantity);
+    }
+
+    if ($product && strpos($quantity_html, 'data-line-total=') === false) {
+        $quantity = isset($cart_item['quantity']) ? max(1, (int) $cart_item['quantity']) : 1;
+        $line_total = isset($cart_item['line_subtotal']) ? (float) $cart_item['line_subtotal'] : ((float) $product->get_price() * $quantity);
+        $line_total_html = function_exists('WC') && WC()->cart
+            ? WC()->cart->get_product_subtotal($product, $quantity)
+            : wc_price($line_total);
+        $line_total_text = trim(wp_strip_all_tags($line_total_html));
+
+        $attributes[] = sprintf('data-line-total="%s"', esc_attr(wc_format_decimal($line_total, 4)));
+        $attributes[] = sprintf('data-line-total-text="%s"', esc_attr($line_total_text));
+    }
+
+    if (empty($attributes)) {
         return $quantity_html;
     }
 
     return str_replace(
         '<span class="quantity"',
-        sprintf(
-            '<span class="quantity" data-cart-item-key="%s" data-stock-limit="%d"',
-            esc_attr($cart_item_key),
-            $max_quantity
-        ),
+        '<span class="quantity" ' . implode(' ', $attributes),
         $quantity_html
     );
 }

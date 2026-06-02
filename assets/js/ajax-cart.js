@@ -787,12 +787,14 @@ jQuery(function ($) {
       const max = getMiniCartMax($qty);
       const clampedValue = max === null ? value : Math.min(value, max);
       const unitPrice = parseMiniCartMoney(text);
+      const exactLineTotalText = $.trim($qty.attr('data-line-total-text') || '');
+      const exactLineTotal = parseFloat($qty.attr('data-line-total') || '');
       const $title = $item.find('a:not(.remove):not(.mini-cart-remove)').first();
 
       const $remove = $item.find('.remove').first();
       const removeUrl = $remove.attr('href') || '';
 
-      if ($title.length && unitPrice !== null) {
+      if ($title.length && (exactLineTotalText || Number.isFinite(exactLineTotal) || unitPrice !== null)) {
         let $lineTotal = $item.find('.mini-cart-line-total').first();
 
         if (!$lineTotal.length) {
@@ -800,7 +802,13 @@ jQuery(function ($) {
           $title.after($lineTotal);
         }
 
-        $lineTotal.text(formatMiniCartMoney(unitPrice * clampedValue));
+        if (exactLineTotalText) {
+          $lineTotal.text(exactLineTotalText);
+        } else if (Number.isFinite(exactLineTotal)) {
+          $lineTotal.text(formatMiniCartMoney(exactLineTotal));
+        } else {
+          $lineTotal.text(formatMiniCartMoney(unitPrice * clampedValue));
+        }
       }
 
       $qty.html(`

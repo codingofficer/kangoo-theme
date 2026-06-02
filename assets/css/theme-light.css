@@ -2112,6 +2112,7 @@ body.kangoo-theme--light .build-box .btn,
 body.kangoo-theme--light .strength-ladder .btn,
 body.kangoo-theme--light .flavour-explorer .btn,
 body.kangoo-theme--light .kangoo-app .btn,
+body.kangoo-theme--light .hero__cta .btn,
 body.kangoo-theme--light .home-app-cta__button {
   min-height: 50px !important;
   height: auto !important;
@@ -2128,6 +2129,7 @@ body.kangoo-theme--light .build-box .btn--primary,
 body.kangoo-theme--light .strength-ladder .btn--primary,
 body.kangoo-theme--light .flavour-explorer .btn--primary,
 body.kangoo-theme--light .kangoo-app .btn--primary,
+body.kangoo-theme--light .hero__cta .btn--primary,
 body.kangoo-theme--light .home-app-cta__button.btn--primary {
   border-color: #1677e8 !important;
   background: #1677e8 !important;
@@ -2142,6 +2144,7 @@ body.kangoo-theme--light .build-box .btn--secondary,
 body.kangoo-theme--light .strength-ladder .btn--secondary,
 body.kangoo-theme--light .flavour-explorer .btn--secondary,
 body.kangoo-theme--light .kangoo-app .btn--secondary,
+body.kangoo-theme--light .hero__cta .btn--secondary,
 body.kangoo-theme--light .home-app-cta__button.btn--secondary {
   border-color: rgba(17, 24, 39, 0.16) !important;
   background: #ffffff !important;
@@ -2153,6 +2156,7 @@ body.kangoo-theme--light .build-box .btn--secondary:hover,
 body.kangoo-theme--light .strength-ladder .btn--secondary:hover,
 body.kangoo-theme--light .flavour-explorer .btn--secondary:hover,
 body.kangoo-theme--light .kangoo-app .btn--secondary:hover,
+body.kangoo-theme--light .hero__cta .btn--secondary:hover,
 body.kangoo-theme--light .home-app-cta__button.btn--secondary:hover {
   border-color: rgba(22, 119, 232, 0.45) !important;
   background: #eef6ff !important;
