@@ -9,9 +9,22 @@ defined('ABSPATH') || exit;
 
 do_action('woocommerce_email_header', $email_heading, $email);
 
-if (function_exists('kangoo_email_render_order_received')) {
-    echo kangoo_email_render_order_received($order); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-} else {
+$kangoo_rendered_order_email = false;
+
+if (function_exists('kangoo_email_render_order_received') && $order instanceof WC_Order) {
+    try {
+        $kangoo_order_email_body = kangoo_email_render_order_received($order);
+
+        if (trim(wp_strip_all_tags((string) $kangoo_order_email_body)) !== '') {
+            echo $kangoo_order_email_body; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+            $kangoo_rendered_order_email = true;
+        }
+    } catch (Throwable $error) {
+        error_log('Kangoo order received email failed: ' . $error->getMessage()); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+    }
+}
+
+if (!$kangoo_rendered_order_email) {
     ?>
     <p>
         <?php

@@ -352,6 +352,8 @@ function kangoo_shipping_email_body($order, $type) {
 }
 
 function kangoo_shipping_send_status_email($order_id, $order = null) {
+    static $sent = array();
+
     $order = $order instanceof WC_Order ? $order : wc_get_order($order_id);
 
     if (!$order || !$order->get_billing_email() || !function_exists('WC')) {
@@ -359,16 +361,68 @@ function kangoo_shipping_send_status_email($order_id, $order = null) {
     }
 
     $status = $order->get_status();
+
+    if (!in_array($status, array('shipped', 'delayed'), true)) {
+        return;
+    }
+
+    $send_key = $order->get_id() . ':' . $status;
+
+    if (isset($sent[$send_key])) {
+        return;
+    }
+
+    $sent[$send_key] = true;
     $is_delayed = $status === 'delayed';
     $heading = $is_delayed
         ? sprintf(__('Your Kangoo order #%s has a delivery update', 'kangoo'), $order->get_order_number())
         : sprintf(__('Your Kangoo order #%s is now on its way', 'kangoo'), $order->get_order_number());
     $subject = $heading;
-    $mailer = WC()->mailer();
-    $body = kangoo_shipping_email_body($order, $is_delayed ? 'delayed' : 'shipped');
-    $message = $mailer->wrap_message($heading, $body);
+    $buffer_level = ob_get_level();
 
-    $mailer->send($order->get_billing_email(), $subject, $message, "Content-Type: text/html\r\n");
+    try {
+        $mailer = WC()->mailer();
+
+        ob_start();
+        $body = kangoo_shipping_email_body($order, $is_delayed ? 'delayed' : 'shipped');
+        $unexpected_body_output = ob_get_clean();
+
+        if ($unexpected_body_output !== '') {
+            $body = $unexpected_body_output . $body;
+        }
+
+        if (trim(wp_strip_all_tags((string) $body)) === '') {
+            throw new RuntimeException('Kangoo shipping email body was empty.');
+        }
+
+        ob_start();
+        $message = $mailer->wrap_message($heading, $body);
+        $unexpected_wrap_output = ob_get_clean();
+
+        if ($unexpected_wrap_output !== '') {
+            $message = $unexpected_wrap_output . $message;
+        }
+
+        ob_start();
+        $sent_ok = $mailer->send($order->get_billing_email(), $subject, $message, "Content-Type: text/html\r\n");
+        $unexpected_send_output = ob_get_clean();
+
+        if ($unexpected_send_output !== '') {
+            error_log('Kangoo shipping email send produced unexpected output for order #' . $order->get_id()); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+        }
+
+        if (!$sent_ok) {
+            $order->add_order_note(__('Kangoo shipping email could not be sent by the mailer.', 'kangoo'));
+        }
+    } catch (Throwable $error) {
+        while (ob_get_level() > $buffer_level) {
+            ob_end_clean();
+        }
+
+        $message = sprintf('Kangoo shipping email failed: %s', $error->getMessage());
+        $order->add_order_note($message);
+        error_log($message); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+    }
 }
 add_action('woocommerce_order_status_shipped', 'kangoo_shipping_send_status_email', 10, 2);
 add_action('woocommerce_order_status_delayed', 'kangoo_shipping_send_status_email', 10, 2);

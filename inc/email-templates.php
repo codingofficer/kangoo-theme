@@ -238,7 +238,7 @@ function kangoo_email_render_order_received($order) {
                     </p>
                 </td>
                 <td width="190" style="padding:4px 0 18px;text-align:right;vertical-align:middle;">
-                    <img src="<?php echo kangoo_email_asset_url('kp-order-box.png'); ?>" width="170" alt="" style="display:inline-block;max-width:170px;width:100%;height:auto;">
+                    <img src="<?php echo kangoo_email_asset_url('kp-order-box-img.png'); ?>" width="170" alt="" style="display:inline-block;max-width:170px;width:100%;height:auto;">
                 </td>
             </tr>
         </table>
@@ -339,7 +339,7 @@ function kangoo_email_render_shipping_update($order, $type) {
     $tracking_number = kangoo_email_tracking_number_for_order($order);
     $service = kangoo_email_shipping_service_for_order($order);
     $address = kangoo_email_delivery_address($order);
-    $image = $is_delayed ? 'kp-delay.webp' : 'kp-order-box.png';
+    $image = $is_delayed ? 'kp-delay.png' : 'kp-order-box-img.png';
     $heading = $is_delayed ? __('Your order is experiencing a delay', 'kangoo') : __('Your order is on its way!', 'kangoo');
     $intro = $is_delayed
         ? __('Your order is still moving through the delivery network, but Royal Mail has reported a delay.', 'kangoo')
