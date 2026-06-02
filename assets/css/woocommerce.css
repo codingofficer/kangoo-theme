@@ -4435,6 +4435,12 @@ body.woocommerce-cart .cart-collaterals .kangoo-cart-secure-checkout img {
     align-content: start;
   }
 
+  body.woocommerce-cart .entry .wysiwyg > .woocommerce > .kangoo-cart-recommendations {
+    grid-column: 1;
+    grid-row: 3;
+    margin-top: 0;
+  }
+
   body.woocommerce-cart .entry .wysiwyg > .woocommerce > .cart-empty,
   body.woocommerce-cart .entry .wysiwyg > .woocommerce > .return-to-shop {
     grid-column: 1 / -1;
@@ -4529,6 +4535,40 @@ body.woocommerce-cart .cart-collaterals .kangoo-cart-secure-checkout img {
   overflow-x: auto;
   padding-bottom: 0.35rem;
   scroll-snap-type: x proximity;
+}
+
+body.woocommerce-cart table.shop_table th.product-name,
+body.woocommerce-cart table.shop_table td.product-name {
+  padding-left: clamp(0.85rem, 2vw, 1.25rem);
+}
+
+body.woocommerce-cart table.shop_table th.product-total,
+body.woocommerce-cart table.shop_table td.product-total,
+body.woocommerce-cart table.shop_table th.product-subtotal,
+body.woocommerce-cart table.shop_table td.product-subtotal {
+  padding-right: clamp(0.85rem, 2vw, 1.25rem);
+}
+
+.kangoo-cart-item-review-summary {
+  margin-top: 0.22rem;
+}
+
+.kangoo-cart-item-review-summary .product-card__review-summary,
+.kangoo-cart-recommendation .product-card__review-summary {
+  width: fit-content;
+  margin: 0;
+  gap: 0.28rem;
+  color: var(--color-text-soft);
+  font-size: 0.75rem;
+  line-height: 1.25;
+  text-decoration: none;
+}
+
+.kangoo-cart-item-review-summary .kangoo-review-stars,
+.kangoo-cart-recommendation .kangoo-review-stars {
+  color: #ff9f1c;
+  font-size: 0.72rem;
+  letter-spacing: 0.01em;
 }
 
 .kangoo-cart-recommendation {

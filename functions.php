@@ -1597,7 +1597,7 @@ function kangoo_add_automatic_product_badge_choice($field) {
 }
 add_filter('acf/load_field/name=badge', 'kangoo_add_automatic_product_badge_choice');
 
-function kangoo_product_is_new($product_id, $days = 30) {
+function kangoo_product_is_new($product_id, $days = 7) {
     $product_id = absint($product_id);
 
     if (!$product_id) {
@@ -1679,6 +1679,10 @@ function kangoo_get_product_badge($product_id = null) {
     );
 
     if ($manual_badge && isset($forced_badges[$manual_badge])) {
+        if ($manual_badge === 'new' && !kangoo_product_is_new($product_id)) {
+            return null;
+        }
+
         return array(
             'key'   => $manual_badge,
             'label' => $forced_badges[$manual_badge],
@@ -5407,6 +5411,11 @@ function kangoo_render_cart_frequently_bought() {
                     </a>
                     <div class="kangoo-cart-recommendation__body">
                         <h3><a href="<?php echo esc_url($product->get_permalink()); ?>"><?php echo esc_html($product->get_name()); ?></a></h3>
+                        <?php
+                        if (function_exists('kangoo_reviews_theme_render_card_summary')) {
+                            kangoo_reviews_theme_render_card_summary($product->get_id());
+                        }
+                        ?>
                         <div class="kangoo-cart-recommendation__price"><?php echo wp_kses_post($product->get_price_html()); ?></div>
                         <a class="button" href="<?php echo esc_url($product->get_permalink()); ?>"><?php esc_html_e('View', 'kangoo'); ?></a>
                     </div>
@@ -5417,6 +5426,23 @@ function kangoo_render_cart_frequently_bought() {
     <?php
 }
 add_action('woocommerce_after_cart_collaterals', 'kangoo_render_cart_frequently_bought', 20);
+
+function kangoo_cart_item_review_summary($name, $cart_item, $cart_item_key) {
+    if (!function_exists('is_cart') || !is_cart() || empty($cart_item['product_id']) || !function_exists('kangoo_reviews_theme_render_card_summary')) {
+        return $name;
+    }
+
+    ob_start();
+    kangoo_reviews_theme_render_card_summary((int) $cart_item['product_id']);
+    $summary = trim(ob_get_clean());
+
+    if ($summary === '') {
+        return $name;
+    }
+
+    return $name . '<div class="kangoo-cart-item-review-summary">' . $summary . '</div>';
+}
+add_filter('woocommerce_cart_item_name', 'kangoo_cart_item_review_summary', 20, 3);
 
 function kangoo_mini_cart_quantity_stock_data($quantity_html, $cart_item, $cart_item_key) {
     $product = isset($cart_item['data']) && $cart_item['data'] instanceof WC_Product ? $cart_item['data'] : null;
@@ -5789,7 +5815,7 @@ function kangoo_ajax_account_login() {
 
     if (is_wp_error($signed_in_user)) {
         wp_send_json_error(array(
-            'message' => $signed_in_user->get_error_message(),
+            'message' => kangoo_account_login_error_message($signed_in_user),
             'field'   => 'login',
         ), 400);
     }
@@ -5803,6 +5829,19 @@ function kangoo_ajax_account_login() {
 }
 add_action('wp_ajax_nopriv_kangoo_account_login', 'kangoo_ajax_account_login');
 add_action('wp_ajax_kangoo_account_login', 'kangoo_ajax_account_login');
+
+function kangoo_account_login_error_message($error) {
+    $code = is_wp_error($error) ? $error->get_error_code() : '';
+
+    if (in_array($code, array('incorrect_password', 'invalid_username', 'invalid_email', 'empty_username', 'empty_password'), true)) {
+        return __('The email/username or password is incorrect. Please try again or reset your password.', 'kangoo');
+    }
+
+    $message = is_wp_error($error) ? $error->get_error_message() : (string) $error;
+    $message = wp_strip_all_tags(html_entity_decode($message, ENT_QUOTES, get_bloginfo('charset')));
+
+    return $message ? $message : __('Unable to sign in. Please try again.', 'kangoo');
+}
 
 function kangoo_ajax_account_register() {
     check_ajax_referer('kangoo_account_register', 'nonce');

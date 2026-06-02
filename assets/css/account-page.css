@@ -254,6 +254,63 @@ FILE: assets/css/account-page.css
   width: fit-content;
 }
 
+.woocommerce-account.woocommerce-lost-password .woocommerce {
+  display: block;
+  max-width: 560px;
+  margin-inline: auto;
+}
+
+.woocommerce-account.woocommerce-lost-password .woocommerce-ResetPassword,
+.woocommerce-account.woocommerce-lost-password form.lost_reset_password {
+  display: grid;
+  gap: 1rem;
+  margin: 0;
+  padding: clamp(1.15rem, 4vw, 1.6rem);
+  border: 1px solid var(--color-border);
+  border-radius: 22px;
+  background: linear-gradient(180deg, rgba(27,29,35,0.88), rgba(20,22,28,0.88));
+  box-shadow: 0 12px 40px rgba(0,0,0,0.18);
+}
+
+.woocommerce-account.woocommerce-lost-password .woocommerce-ResetPassword p,
+.woocommerce-account.woocommerce-lost-password form.lost_reset_password p {
+  margin: 0;
+  color: var(--color-text-soft);
+  line-height: 1.65;
+}
+
+.woocommerce-account.woocommerce-lost-password .woocommerce-ResetPassword .form-row,
+.woocommerce-account.woocommerce-lost-password form.lost_reset_password .form-row {
+  display: grid;
+  gap: 0.45rem;
+  width: 100% !important;
+  float: none !important;
+  margin: 0 !important;
+}
+
+.woocommerce-account.woocommerce-lost-password .woocommerce-ResetPassword label,
+.woocommerce-account.woocommerce-lost-password form.lost_reset_password label {
+  color: #fff;
+  font-weight: 700;
+}
+
+.woocommerce-account.woocommerce-lost-password .woocommerce-ResetPassword input.input-text,
+.woocommerce-account.woocommerce-lost-password form.lost_reset_password input.input-text {
+  width: 100%;
+  min-height: 54px;
+  border-radius: 16px;
+  border: 1px solid var(--color-border);
+  background: rgba(255,255,255,0.03);
+  color: #fff;
+  padding: 0 1rem;
+}
+
+.woocommerce-account.woocommerce-lost-password .woocommerce-ResetPassword button.button,
+.woocommerce-account.woocommerce-lost-password form.lost_reset_password button.button {
+  width: fit-content;
+  min-width: 180px;
+}
+
 .woocommerce-account .woocommerce-MyAccount-content table.shop_table,
 .woocommerce-account .woocommerce-MyAccount-content table.my_account_orders,
 .woocommerce-account .woocommerce-MyAccount-content table.woocommerce-orders-table {

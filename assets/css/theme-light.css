@@ -1498,6 +1498,31 @@ body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content .acc
   background: linear-gradient(180deg, #ffffff, #fbfdff) !important;
 }
 
+body.kangoo-theme--light.woocommerce-account.woocommerce-lost-password .woocommerce-ResetPassword,
+body.kangoo-theme--light.woocommerce-account.woocommerce-lost-password form.lost_reset_password {
+  border-color: rgba(17, 24, 39, 0.1) !important;
+  background: #ffffff !important;
+  color: #111827 !important;
+  box-shadow: 0 18px 50px rgba(17, 24, 39, 0.07) !important;
+}
+
+body.kangoo-theme--light.woocommerce-account.woocommerce-lost-password .woocommerce-ResetPassword p,
+body.kangoo-theme--light.woocommerce-account.woocommerce-lost-password form.lost_reset_password p {
+  color: #4b5563 !important;
+}
+
+body.kangoo-theme--light.woocommerce-account.woocommerce-lost-password .woocommerce-ResetPassword label,
+body.kangoo-theme--light.woocommerce-account.woocommerce-lost-password form.lost_reset_password label {
+  color: #111827 !important;
+}
+
+body.kangoo-theme--light.woocommerce-account.woocommerce-lost-password .woocommerce-ResetPassword input.input-text,
+body.kangoo-theme--light.woocommerce-account.woocommerce-lost-password form.lost_reset_password input.input-text {
+  border-color: rgba(17, 24, 39, 0.14) !important;
+  background: #ffffff !important;
+  color: #111827 !important;
+}
+
 body.kangoo-theme--light.woocommerce-account .kangoo-account-stats p {
   color: #5b6472 !important;
 }

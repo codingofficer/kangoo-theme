@@ -740,12 +740,53 @@
   width: auto;
   max-width: min(100%, 420px);
   min-width: 0;
+  border: 1px solid var(--color-border);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--color-text);
+  box-shadow: none;
+}
+
+.section-actions .btn:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  background: rgba(77, 163, 255, 0.08);
 }
 
 @media (min-width: 768px) {
   .section-actions {
     margin-top: 32px;
   }
+}
+
+.why.section {
+  padding-block: clamp(2.4rem, 5vw, 4rem);
+}
+
+.faq.section {
+  padding-top: clamp(2.2rem, 4.5vw, 3.5rem);
+}
+
+.why + .faq {
+  padding-top: clamp(1.75rem, 4vw, 3rem);
+}
+
+.why .section-header {
+  margin-bottom: clamp(1.35rem, 3vw, 2.25rem);
+}
+
+.why .grid--4 {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 335px));
+  justify-content: center;
+}
+
+.why-item {
+  min-height: 92px;
+  display: flex;
+  align-items: center;
+}
+
+.why-item h3 {
+  margin: 0;
 }
 
 /* Brand Grid */
