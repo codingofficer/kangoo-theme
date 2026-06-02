@@ -112,6 +112,10 @@ if ($is_quick_add_card && $is_variable) {
             <?php endif; ?>
         </div>
 
+        <?php if (function_exists('kangoo_reviews_theme_render_card_summary')) : ?>
+            <?php kangoo_reviews_theme_render_card_summary($product->get_id()); ?>
+        <?php endif; ?>
+
         <div class="product-card__price">
             <?php echo wp_kses_post(function_exists('kangoo_get_product_price_html') ? kangoo_get_product_price_html($product) : $product->get_price_html()); ?>
         </div>

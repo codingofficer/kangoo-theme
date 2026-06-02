@@ -50,6 +50,32 @@ function kangoo_reviews_theme_render_summary_link($product_id) {
     <?php
 }
 
+function kangoo_reviews_theme_render_card_summary($product_id) {
+    $summary = kangoo_reviews_theme_summary($product_id);
+
+    if (empty($summary['count'])) {
+        return;
+    }
+
+    $count = absint($summary['count']);
+    $average = number_format_i18n((float) $summary['average'], 1);
+    ?>
+    <a class="product-review-summary product-card__review-summary" href="<?php echo esc_url(get_permalink($product_id) . '#kangoo-customer-reviews'); ?>">
+        <?php echo wp_kses_post(kangoo_reviews_theme_render_stars((float) $summary['average'])); ?>
+        <span><?php echo esc_html($average); ?></span>
+        <span aria-hidden="true">|</span>
+        <span>
+            <?php
+            echo esc_html(sprintf(
+                _n('%s verified review', '%s verified reviews', $count, 'kangoo'),
+                number_format_i18n($count)
+            ));
+            ?>
+        </span>
+    </a>
+    <?php
+}
+
 function kangoo_reviews_theme_get_reviews($product_id, $limit = 8) {
     if (!function_exists('kangoo_reviews_get_product_reviews')) {
         return array();

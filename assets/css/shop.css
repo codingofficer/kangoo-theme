@@ -399,6 +399,25 @@
   min-width: 0;
 }
 
+.product-card .product-card__review-summary {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  max-width: 100%;
+  color: var(--color-text-soft);
+  font-size: 0.72rem;
+  line-height: 1.25;
+  margin-top: -2px;
+}
+
+.product-card .product-card__review-summary:hover {
+  color: var(--color-accent);
+}
+
+.product-card .product-card__review-summary .kangoo-review-stars {
+  font-size: 0.95em;
+}
+
 .product-card__content {
   padding: 14px;
   gap: 8px;

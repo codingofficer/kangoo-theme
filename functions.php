@@ -2138,6 +2138,49 @@ function kangoo_product_schema() {
             'ratingValue' => (string) $kangoo_review_summary['average'],
             'reviewCount' => (int) $kangoo_review_summary['count'],
         );
+
+        if (function_exists('kangoo_reviews_get_product_reviews')) {
+            $kangoo_schema_reviews = array();
+            $kangoo_reviews = kangoo_reviews_get_product_reviews($product_id, 8);
+
+            foreach ($kangoo_reviews as $kangoo_review) {
+                $kangoo_review_body = trim((string) ($kangoo_review['review_body'] ?? ''));
+                $kangoo_review_rating = isset($kangoo_review['rating']) ? (float) $kangoo_review['rating'] : 0;
+
+                if ($kangoo_review_body === '' || $kangoo_review_rating <= 0) {
+                    continue;
+                }
+
+                $kangoo_schema_review = array(
+                    '@type' => 'Review',
+                    'reviewBody' => $kangoo_review_body,
+                    'reviewRating' => array(
+                        '@type' => 'Rating',
+                        'ratingValue' => (string) $kangoo_review_rating,
+                        'bestRating' => '5',
+                        'worstRating' => '1',
+                    ),
+                    'author' => array(
+                        '@type' => 'Person',
+                        'name' => !empty($kangoo_review['reviewer_name']) ? (string) $kangoo_review['reviewer_name'] : __('Kangoo customer', 'kangoo'),
+                    ),
+                    'publisher' => array(
+                        '@type' => 'Organization',
+                        'name' => get_bloginfo('name'),
+                    ),
+                );
+
+                if (!empty($kangoo_review['date'])) {
+                    $kangoo_schema_review['datePublished'] = (string) $kangoo_review['date'];
+                }
+
+                $kangoo_schema_reviews[] = $kangoo_schema_review;
+            }
+
+            if (!empty($kangoo_schema_reviews)) {
+                $schema['review'] = $kangoo_schema_reviews;
+            }
+        }
     }
 
     kangoo_print_json_ld($schema);
