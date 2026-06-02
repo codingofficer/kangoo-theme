@@ -152,7 +152,7 @@ FILE: assets/css/account-page.css
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 56px;
+  min-height: 50px;
   padding: 0 1.15rem;
   border-radius: 14px;
   border: 1px solid var(--color-border);
@@ -233,7 +233,7 @@ FILE: assets/css/account-page.css
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 56px;
+  min-height: 50px;
   padding: 0 1.15rem;
   border-radius: 14px;
   border: 1px solid transparent;

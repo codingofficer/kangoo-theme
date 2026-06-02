@@ -338,7 +338,7 @@
   }
 
   .home-app-cta__button {
-    min-height: 56px;
+    min-height: 50px;
     padding: 0 0.75rem;
     font-size: clamp(0.78rem, 3.6vw, 0.9rem);
     white-space: nowrap;
@@ -372,7 +372,7 @@
   }
 
   .home-finder-cta__button {
-    min-height: 56px;
+    min-height: 50px;
     padding: 0 0.75rem;
     font-size: clamp(0.78rem, 3.6vw, 0.9rem);
     white-space: nowrap;
@@ -440,7 +440,7 @@
 
   .home-finder-cta__button {
     width: 100%;
-    min-height: 56px;
+    min-height: 50px;
     padding-block: 0;
     white-space: nowrap;
   }

@@ -52,7 +52,7 @@ body.kangoo-theme--light .woocommerce input.button {
   background: var(--color-accent) !important;
   border-color: var(--color-accent) !important;
   color: #ffffff !important;
-  min-height: 56px;
+  min-height: 50px;
   border-radius: 14px !important;
   font-weight: 800 !important;
 }
@@ -2113,9 +2113,8 @@ body.kangoo-theme--light .strength-ladder .btn,
 body.kangoo-theme--light .flavour-explorer .btn,
 body.kangoo-theme--light .kangoo-app .btn,
 body.kangoo-theme--light .home-app-cta__button {
-  min-height: 56px !important;
+  min-height: 50px !important;
   height: auto !important;
-  padding: 0 1.15rem !important;
   border: 1px solid rgba(17, 24, 39, 0.16) !important;
   border-radius: 14px !important;
   box-shadow: none !important;

@@ -139,7 +139,7 @@
 }
 
 .category-choice-tools__actions .btn {
-  min-height: 56px;
+  min-height: 50px;
   border-radius: 14px;
   font-size: 0.9rem;
 }
@@ -469,7 +469,7 @@
 
 .category-show-more__button {
   display: inline-flex;
-  min-height: 56px;
+  min-height: 50px;
   align-items: center;
   justify-content: center;
   padding: 0 1.15rem;
@@ -535,7 +535,7 @@
 
   .product-card__add,
   .product-card__actions .btn {
-    min-height: 56px;
+    min-height: 50px;
   }
 }
 
@@ -641,7 +641,7 @@
 
 .product-card__add,
 .product-card__actions .btn {
-  min-height: 56px;
+  min-height: 50px;
   border-radius: 14px;
   font-size: 14px;
   font-weight: 800;
@@ -689,14 +689,14 @@
   .product-card__add,
   .product-card__actions .btn {
     margin-top: 8px;
-    min-height: 56px;
+    min-height: 50px;
     font-size: 13px;
   }
 
   .product-card__add,
   .product-card__actions .btn {
     margin-top: 8px;
-    min-height: 56px;
+    min-height: 50px;
     font-size: 13px;
   }
 }
@@ -839,7 +839,7 @@
   grid-template-columns: minmax(78px, 1fr) minmax(78px, auto) minmax(78px, auto) 22px;
   gap: var(--space-3);
   align-items: center;
-  min-height: 56px;
+  min-height: 50px;
   padding: 0.75rem 1rem;
   border: 0;
   border-bottom: 1px solid rgba(0,0,0,0.1);
@@ -1165,7 +1165,7 @@
 .seo-product-card__footer .btn {
   width: 100%;
   min-width: 0;
-  min-height: 56px;
+  min-height: 50px;
   white-space: normal;
   overflow-wrap: anywhere;
   text-align: center;
@@ -1431,7 +1431,7 @@
   .seo-link-chips a,
   .kangoo-seo-strip__links a {
     width: 100%;
-    min-height: 56px;
+    min-height: 50px;
     padding: 0 1.15rem;
     border-radius: 14px;
     justify-content: center;

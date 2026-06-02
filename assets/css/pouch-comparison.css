@@ -156,7 +156,7 @@
 
 .compare-product .btn {
   width: 100%;
-  min-height: 56px;
+  min-height: 50px;
 }
 
 .compare-product .btn:disabled {
