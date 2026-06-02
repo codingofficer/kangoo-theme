@@ -6797,9 +6797,39 @@ function kangoo_acf_add_home_product_sources($field) {
 }
 add_filter('acf/load_field/name=source', 'kangoo_acf_add_home_product_sources');
 
+function kangoo_acf_field_parent_reference($parent) {
+    if ($parent === null || $parent === false || $parent === '') {
+        return '';
+    }
+
+    if (is_string($parent) || is_numeric($parent)) {
+        return (string) $parent;
+    }
+
+    if (is_array($parent)) {
+        foreach (array('key', 'ID', 'id', 'name') as $key) {
+            if (!empty($parent[$key]) && (is_string($parent[$key]) || is_numeric($parent[$key]))) {
+                return (string) $parent[$key];
+            }
+        }
+
+        return '';
+    }
+
+    if (is_object($parent)) {
+        foreach (array('key', 'ID', 'id', 'post_name') as $key) {
+            if (!empty($parent->{$key}) && (is_string($parent->{$key}) || is_numeric($parent->{$key}))) {
+                return (string) $parent->{$key};
+            }
+        }
+    }
+
+    return '';
+}
+
 function kangoo_acf_field_parent_names($field) {
     $names = array();
-    $parent = isset($field['parent']) ? (string) $field['parent'] : '';
+    $parent = kangoo_acf_field_parent_reference(isset($field['parent']) ? $field['parent'] : '');
     $guard = 0;
 
     while ($parent !== '' && $guard < 8 && function_exists('acf_get_field')) {
@@ -6813,7 +6843,7 @@ function kangoo_acf_field_parent_names($field) {
             $names[] = (string) $parent_field['name'];
         }
 
-        $parent = isset($parent_field['parent']) ? (string) $parent_field['parent'] : '';
+        $parent = kangoo_acf_field_parent_reference(isset($parent_field['parent']) ? $parent_field['parent'] : '');
         $guard++;
     }
 
