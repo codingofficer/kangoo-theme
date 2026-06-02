@@ -26,7 +26,7 @@ $logo_url = apply_filters(
 
 $box_url = apply_filters(
     'kangoo_email_shipped_box_url',
-    get_theme_file_uri('/assets/images/email/kp-order-box.png')
+    get_theme_file_uri('/assets/images/email/kp-order-box-img.png')
 );
 
 $tracking_number = function_exists('kangoo_email_tracking_number_for_order') ? kangoo_email_tracking_number_for_order($order) : '';
@@ -68,17 +68,20 @@ $shipping_total = (float) $order->get_shipping_total() > 0
     <style>
         @media only screen and (max-width: 620px) {
             .kg-wrap { width: 100% !important; max-width: 100% !important; border-radius: 14px !important; }
-            .kg-inner { padding: 24px 18px !important; }
-            .kg-logo { width: 250px !important; max-width: 88% !important; }
-            .kg-stack { display: block !important; width: 100% !important; }
-            .kg-stack-cell { display: block !important; width: 100% !important; box-sizing: border-box !important; }
-            .kg-hero-copy { padding-right: 0 !important; }
-            .kg-hero-title { font-size: 42px !important; line-height: 1.08 !important; }
-            .kg-hero-image { display: none !important; }
+            .kg-body-pad { padding: 12px 8px !important; }
+            .kg-header { padding: 18px 16px 16px !important; }
+            .kg-inner { padding: 28px 26px 22px !important; }
+            .kg-logo { width: 285px !important; max-width: 90% !important; }
+            .kg-hero-copy { width: 58% !important; padding: 0 12px 0 0 !important; vertical-align: top !important; }
+            .kg-hero-title { margin-bottom: 20px !important; font-size: 34px !important; line-height: 1.12 !important; }
+            .kg-hero-text { font-size: 17px !important; line-height: 1.45 !important; }
+            .kg-hero-image { display: table-cell !important; width: 42% !important; padding: 8px 0 0 !important; vertical-align: middle !important; }
+            .kg-hero-box { width: 172px !important; max-width: 100% !important; }
+            .kg-primary-action { margin: 18px 0 22px !important; }
             .kg-btn { display: block !important; width: 100% !important; box-sizing: border-box !important; text-align: center !important; white-space: nowrap !important; }
             .kg-card { padding: 18px !important; }
-            .kg-track-copy { display: block !important; width: 100% !important; padding: 12px 0 0 !important; }
-            .kg-track-action { display: block !important; width: 100% !important; padding: 16px 0 0 !important; text-align: left !important; }
+            .kg-track-copy { padding: 0 !important; vertical-align: middle !important; }
+            .kg-track-action { padding-top: 18px !important; text-align: center !important; }
             .kg-address-icon, .kg-track-icon, .kg-help-icon { width: 62px !important; padding-right: 14px !important; }
             .kg-summary-product-image { width: 78px !important; padding-right: 14px !important; }
             .kg-summary-product-copy { padding-left: 0 !important; }
@@ -88,8 +91,11 @@ $shipping_total = (float) $order->get_shipping_total() > 0
             .kg-progress-circle { width: 36px !important; height: 36px !important; line-height: 36px !important; }
         }
         @media only screen and (max-width: 380px) {
-            .kg-inner { padding: 20px 14px !important; }
-            .kg-hero-title { font-size: 36px !important; }
+            .kg-inner { padding: 24px 18px 20px !important; }
+            .kg-logo { width: 255px !important; }
+            .kg-hero-title { font-size: 30px !important; }
+            .kg-hero-text { font-size: 15px !important; }
+            .kg-hero-box { width: 142px !important; }
             .kg-card { padding: 16px !important; }
             .kg-progress-label { font-size: 12px !important; }
             .kg-total-value { font-size: 21px !important; }
@@ -97,12 +103,12 @@ $shipping_total = (float) $order->get_shipping_total() > 0
     </style>
 </head>
 <body style="margin:0; padding:0; background:#f5f6f8; font-family:Arial, Helvetica, sans-serif; color:#0b0f14;">
-    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background:#f5f6f8; margin:0; padding:24px 12px;">
+    <table role="presentation" class="kg-body-pad" width="100%" cellspacing="0" cellpadding="0" border="0" style="background:#f5f6f8; margin:0; padding:24px 12px;">
         <tr>
             <td align="center">
                 <table role="presentation" class="kg-wrap" width="680" cellspacing="0" cellpadding="0" border="0" style="width:680px; max-width:680px; background:#ffffff; border:1px solid #dfe3e8; border-radius:16px; overflow:hidden; box-shadow:0 18px 48px rgba(15,23,42,0.12);">
                     <tr>
-                        <td align="center" style="padding:30px 24px 24px; border-bottom:4px solid #ff5a00;">
+                        <td class="kg-header" align="center" style="padding:30px 24px 24px; border-bottom:4px solid #ff5a00;">
                             <img class="kg-logo" src="<?php echo esc_url($logo_url); ?>" width="360" alt="<?php echo esc_attr(get_bloginfo('name')); ?>" style="display:block; width:360px; max-width:82%; height:auto; border:0;" />
                         </td>
                     </tr>
@@ -110,13 +116,13 @@ $shipping_total = (float) $order->get_shipping_total() > 0
                     <tr>
                         <td class="kg-inner" style="padding:40px 52px 30px;">
                             <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
-                                <tr class="kg-stack">
+                                <tr>
                                     <td class="kg-stack-cell kg-hero-copy" width="56%" style="width:56%; padding:0 24px 20px 0; vertical-align:middle;">
                                         <h1 class="kg-hero-title" style="margin:0 0 22px; font-size:44px; line-height:1.08; font-weight:900; color:#020407;">
                                             <?php esc_html_e('Your order is', 'kangoo'); ?><br />
                                             <span style="color:#ff5a00;"><?php esc_html_e('on its way!', 'kangoo'); ?></span>
                                         </h1>
-                                        <p style="margin:0 0 12px; font-size:18px; line-height:1.45; color:#0b0f14;">
+                                        <p class="kg-hero-text" style="margin:0 0 12px; font-size:18px; line-height:1.45; color:#0b0f14;">
                                             <?php
                                             printf(
                                                 wp_kses_post(__('Great news, <strong>%s</strong>.', 'kangoo')),
@@ -124,25 +130,28 @@ $shipping_total = (float) $order->get_shipping_total() > 0
                                             );
                                             ?>
                                         </p>
-                                        <p style="margin:0 0 24px; font-size:17px; line-height:1.5; color:#0b0f14;">
+                                        <p class="kg-hero-text" style="margin:0; font-size:17px; line-height:1.5; color:#0b0f14;">
                                             <?php esc_html_e('Your order', 'kangoo'); ?>
                                             <strong style="color:#ff5a00;">#<?php echo esc_html($order_number); ?></strong>
                                             <?php esc_html_e('has now been packed and handed over to Royal Mail.', 'kangoo'); ?>
                                         </p>
-                                        <?php if ($primary_url) : ?>
-                                            <a class="kg-btn" href="<?php echo esc_url($primary_url); ?>" style="display:inline-block; min-width:292px; padding:18px 22px; border-radius:8px; background:#ff5a00; color:#ffffff; font-size:19px; line-height:1; font-weight:900; text-decoration:none; text-transform:uppercase; text-align:center;">
-                                                <span style="font-size:24px; line-height:0; vertical-align:-3px;">&#9638;</span>
-                                                <span style="display:inline-block; padding-left:12px;"><?php esc_html_e('Track my order', 'kangoo'); ?></span>
-                                            </a>
-                                        <?php endif; ?>
                                     </td>
                                     <td class="kg-stack-cell kg-hero-image" width="44%" align="right" style="width:44%; padding:0 0 20px; vertical-align:middle;">
-                                        <img src="<?php echo esc_url($box_url); ?>" width="270" alt="" style="display:block; width:270px; max-width:100%; height:auto; border:0;" />
+                                        <img class="kg-hero-box" src="<?php echo esc_url($box_url); ?>" width="270" alt="" style="display:block; width:270px; max-width:100%; height:auto; border:0;" />
                                     </td>
                                 </tr>
                             </table>
 
-                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin:10px 0 18px; border:1px solid #e0e3e8; border-radius:14px; background:#ffffff;">
+                            <?php if ($primary_url) : ?>
+                                <p class="kg-primary-action" style="margin:0 0 24px;">
+                                    <a class="kg-btn" href="<?php echo esc_url($primary_url); ?>" style="display:inline-block; min-width:292px; padding:18px 22px; border-radius:8px; background:#ff5a00; color:#ffffff; font-size:19px; line-height:1; font-weight:900; text-decoration:none; text-transform:uppercase; text-align:center;">
+                                        <span style="font-size:24px; line-height:0; vertical-align:-3px;">&#9638;</span>
+                                        <span style="display:inline-block; padding-left:12px;"><?php esc_html_e('Track my order', 'kangoo'); ?></span>
+                                    </a>
+                                </p>
+                            <?php endif; ?>
+
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin:0 0 16px; border:1px solid #e0e3e8; border-radius:14px; background:#ffffff;">
                                 <tr>
                                     <?php
                                     $steps = array(
@@ -185,13 +194,13 @@ $shipping_total = (float) $order->get_shipping_total() > 0
                                 </tr>
                             </table>
 
-                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-top:16px; border:1px solid #e0e3e8; border-radius:14px; background:#ffffff;">
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-top:0; border:1px solid #e0e3e8; border-radius:14px; background:#ffffff;">
                                 <tr>
                                     <td class="kg-card" style="padding:24px;">
                                         <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
                                             <tr>
                                                 <td class="kg-track-icon" width="84" style="width:84px; padding-right:20px; vertical-align:middle;">
-                                                    <span style="display:inline-block; width:64px; height:64px; border-radius:50%; background:#fff1e7; color:#ff5a00; font-size:30px; line-height:64px; text-align:center;">&#128205;</span>
+                                                    <span style="display:inline-block; width:64px; height:64px; border-radius:50%; background:#fff1e7; color:#ff5a00; font-size:33px; line-height:64px; text-align:center;">&#128205;&#65038;</span>
                                                 </td>
                                                 <td class="kg-track-copy" style="vertical-align:middle;">
                                                     <strong style="display:block; margin-bottom:8px; color:#0b0f14; font-size:19px; line-height:1.25;"><?php esc_html_e('Tracking Number', 'kangoo'); ?></strong>
@@ -203,14 +212,16 @@ $shipping_total = (float) $order->get_shipping_total() > 0
                                                     <?php endif; ?>
                                                     <span style="display:block; margin-top:8px; color:#59616b; font-size:18px; line-height:1.35;"><?php echo esc_html($shipping_service); ?></span>
                                                 </td>
-                                                <?php if ($primary_url) : ?>
-                                                    <td class="kg-track-action" width="188" align="right" style="width:188px; vertical-align:middle; text-align:right;">
-                                                        <a class="kg-btn" href="<?php echo esc_url($primary_url); ?>" style="display:inline-block; padding:15px 20px; border:1px solid #ff5a00; border-radius:7px; color:#ff5a00; background:#ffffff; font-size:16px; line-height:1; font-weight:900; text-decoration:none; text-transform:uppercase; text-align:center; white-space:nowrap;">
+                                            </tr>
+                                            <?php if ($primary_url) : ?>
+                                                <tr>
+                                                    <td class="kg-track-action" colspan="2" align="center" style="padding-top:20px; text-align:center;">
+                                                        <a class="kg-btn" href="<?php echo esc_url($primary_url); ?>" style="display:block; padding:15px 20px; border:1px solid #ff5a00; border-radius:7px; color:#ff5a00; background:#ffffff; font-size:16px; line-height:1; font-weight:900; text-decoration:none; text-transform:uppercase; text-align:center; white-space:nowrap;">
                                                             <?php esc_html_e('Track parcel', 'kangoo'); ?> <span style="font-size:16px;">&#8599;</span>
                                                         </a>
                                                     </td>
-                                                <?php endif; ?>
-                                            </tr>
+                                                </tr>
+                                            <?php endif; ?>
                                         </table>
                                     </td>
                                 </tr>
@@ -222,7 +233,7 @@ $shipping_total = (float) $order->get_shipping_total() > 0
                                         <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
                                             <tr>
                                                 <td class="kg-address-icon" width="84" style="width:84px; padding-right:20px; vertical-align:top;">
-                                                    <span style="display:inline-block; width:64px; height:64px; border-radius:50%; background:#fff1e7; color:#ff5a00; font-size:30px; line-height:64px; text-align:center;">&#128205;</span>
+                                                    <span style="display:inline-block; width:64px; height:64px; border-radius:50%; background:#fff1e7; color:#ff5a00; font-size:33px; line-height:64px; text-align:center;">&#128205;&#65038;</span>
                                                 </td>
                                                 <td style="vertical-align:top;">
                                                     <strong style="display:block; margin-bottom:10px; color:#0b0f14; font-size:19px; line-height:1.25;"><?php esc_html_e('Delivery Address', 'kangoo'); ?></strong>
@@ -295,7 +306,7 @@ $shipping_total = (float) $order->get_shipping_total() > 0
                                         <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
                                             <tr>
                                                 <td class="kg-help-icon" width="88" style="width:88px; padding-right:22px; vertical-align:middle;">
-                                                    <span style="display:inline-block; width:66px; height:66px; border-radius:50%; background:#fff1e7; color:#ff5a00; font-size:34px; line-height:66px; text-align:center;">&#9742;</span>
+                                                    <span style="display:inline-block; width:66px; height:66px; border-radius:50%; background:#fff1e7; color:#ff5a00; font-size:32px; line-height:66px; text-align:center;">&#127911;&#65038;</span>
                                                 </td>
                                                 <td style="vertical-align:middle;">
                                                     <strong style="display:block; margin-bottom:10px; color:#0b0f14; font-size:20px; line-height:1.25;"><?php esc_html_e("Need help? We're here for you.", 'kangoo'); ?></strong>
