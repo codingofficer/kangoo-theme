@@ -2093,7 +2093,7 @@ body.woocommerce-cart {
   border-top: 1px solid rgba(255,255,255,0.06);
 }
 
-.cart-drawer .woocommerce-mini-cart-item a:not(.remove):not(.mini-cart-remove) {
+.cart-drawer .woocommerce-mini-cart-item a:not(.remove):not(.mini-cart-remove):not(.product-card__review-summary) {
   display: block;
   color: #fff;
   font-weight: 600;
@@ -2167,15 +2167,45 @@ body.woocommerce-cart {
   border-top: 1px solid rgba(255,255,255,0.06);
 }
 
-.cart-drawer .cart-drawer__content .woocommerce-mini-cart-item a:not(.remove):not(.mini-cart-remove) {
+.cart-drawer .cart-drawer__content .woocommerce-mini-cart-item a:not(.remove):not(.mini-cart-remove):not(.product-card__review-summary) {
   box-sizing: border-box;
   width: 100%;
   max-width: 100%;
-  min-height: 2.7em;
+  min-height: 0;
   padding-right: 88px !important;
   overflow-wrap: anywhere;
   word-break: normal;
   line-height: 1.35;
+}
+
+.cart-drawer .woocommerce-mini-cart-item .kangoo-cart-item-review-summary {
+  display: block;
+  width: fit-content;
+  max-width: calc(100% - 88px);
+  margin: 0.28rem 0 0 !important;
+  line-height: 1.15;
+}
+
+.cart-drawer .woocommerce-mini-cart-item .kangoo-cart-item-review-summary .product-card__review-summary {
+  display: inline-flex !important;
+  align-items: center;
+  flex-wrap: wrap;
+  width: auto !important;
+  min-height: 0 !important;
+  max-width: 100%;
+  margin: 0 !important;
+  padding: 0 !important;
+  color: var(--color-text-soft);
+  font-size: 0.74rem;
+  font-weight: 750;
+  line-height: 1.15;
+  text-decoration: none;
+}
+
+.cart-drawer .woocommerce-mini-cart-item .kangoo-cart-item-review-summary .kangoo-review-stars {
+  color: #ff9f1c;
+  font-size: 0.72rem;
+  letter-spacing: 0.01em;
 }
 
 .cart-drawer .mini-cart-line-total {
