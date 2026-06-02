@@ -3,8 +3,9 @@ defined('ABSPATH') || exit;
 
 function kangoo_shipping_statuses() {
     return array(
-        'shipped' => __('Shipped', 'kangoo'),
-        'delayed' => __('Delayed', 'kangoo'),
+        'dispatched' => __('Dispatched', 'kangoo'),
+        'shipped'    => __('Shipped', 'kangoo'),
+        'delayed'    => __('Delayed', 'kangoo'),
     );
 }
 
@@ -39,6 +40,20 @@ function kangoo_add_shipping_order_statuses($statuses) {
 }
 add_filter('wc_order_statuses', 'kangoo_add_shipping_order_statuses');
 
+function kangoo_shipping_bulk_order_actions($actions) {
+    $actions['mark_dispatched'] = __('Change status to dispatched', 'kangoo');
+    $actions['mark_delayed'] = __('Change status to delayed', 'kangoo');
+
+    return $actions;
+}
+add_filter('bulk_actions-edit-shop_order', 'kangoo_shipping_bulk_order_actions');
+add_filter('bulk_actions-woocommerce_page_wc-orders', 'kangoo_shipping_bulk_order_actions');
+
+function kangoo_shipping_paid_order_statuses($statuses) {
+    return array_values(array_unique(array_merge((array) $statuses, array('dispatched', 'shipped', 'delayed'))));
+}
+add_filter('woocommerce_order_is_paid_statuses', 'kangoo_shipping_paid_order_statuses');
+
 function kangoo_shipping_meta_keys() {
     return array(
         'carrier'         => '_kangoo_shipping_carrier',
@@ -58,7 +73,138 @@ function kangoo_shipping_get_order_meta($order, $field, $default = '') {
 
     $value = $order->get_meta($keys[$field]);
 
-    return $value !== '' ? $value : $default;
+    if (is_scalar($value) && trim((string) $value) !== '') {
+        return (string) $value;
+    }
+
+    if ($field === 'tracking_number') {
+        return kangoo_shipping_get_tracking_number($order, $default);
+    }
+
+    if ($field === 'tracking_url') {
+        return kangoo_shipping_get_tracking_url_from_meta($order, $default);
+    }
+
+    if ($field === 'service') {
+        return kangoo_shipping_get_service_from_tracking_meta($order, $default);
+    }
+
+    return $default;
+}
+
+function kangoo_shipping_get_first_meta_value($order, $keys) {
+    if (!$order instanceof WC_Order) {
+        return '';
+    }
+
+    foreach ((array) $keys as $key) {
+        $value = $order->get_meta($key);
+
+        if (is_scalar($value) && trim((string) $value) !== '') {
+            return trim((string) $value);
+        }
+    }
+
+    return '';
+}
+
+function kangoo_shipping_get_shipment_tracking_items($order) {
+    if (!$order instanceof WC_Order) {
+        return array();
+    }
+
+    $items = $order->get_meta('_wc_shipment_tracking_items');
+
+    if (is_string($items) && $items !== '') {
+        $decoded = json_decode($items, true);
+        $items = is_array($decoded) ? $decoded : maybe_unserialize($items);
+    }
+
+    if (!is_array($items)) {
+        return array();
+    }
+
+    if (isset($items['tracking_number']) || isset($items['tracking_id'])) {
+        return array($items);
+    }
+
+    return $items;
+}
+
+function kangoo_shipping_get_tracking_number($order, $default = '') {
+    $tracking_number = kangoo_shipping_get_first_meta_value($order, array(
+        '_kangoo_tracking_number',
+        '_tracking_number',
+        'tracking_number',
+        '_royal_mail_tracking_number',
+        'royal_mail_tracking_number',
+        '_royalmail_tracking_number',
+        'royalmail_tracking_number',
+    ));
+
+    if ($tracking_number !== '') {
+        return $tracking_number;
+    }
+
+    foreach (kangoo_shipping_get_shipment_tracking_items($order) as $item) {
+        if (!is_array($item)) {
+            continue;
+        }
+
+        foreach (array('tracking_number', 'tracking_id') as $key) {
+            if (!empty($item[$key]) && is_scalar($item[$key])) {
+                return trim((string) $item[$key]);
+            }
+        }
+    }
+
+    return $default;
+}
+
+function kangoo_shipping_get_tracking_url_from_meta($order, $default = '') {
+    $tracking_url = kangoo_shipping_get_first_meta_value($order, array(
+        '_kangoo_tracking_url',
+        '_tracking_url',
+        'tracking_url',
+        '_royal_mail_tracking_url',
+        'royal_mail_tracking_url',
+        '_royalmail_tracking_url',
+        'royalmail_tracking_url',
+    ));
+
+    if ($tracking_url !== '') {
+        return kangoo_shipping_normalize_tracking_url($tracking_url);
+    }
+
+    foreach (kangoo_shipping_get_shipment_tracking_items($order) as $item) {
+        if (!is_array($item)) {
+            continue;
+        }
+
+        foreach (array('tracking_url', 'custom_tracking_link', 'formatted_tracking_link') as $key) {
+            if (!empty($item[$key]) && is_scalar($item[$key])) {
+                return kangoo_shipping_normalize_tracking_url((string) $item[$key]);
+            }
+        }
+    }
+
+    return $default;
+}
+
+function kangoo_shipping_get_service_from_tracking_meta($order, $default = '') {
+    foreach (kangoo_shipping_get_shipment_tracking_items($order) as $item) {
+        if (!is_array($item)) {
+            continue;
+        }
+
+        foreach (array('shipping_provider', 'tracking_provider', 'custom_tracking_provider', 'carrier_name', 'provider') as $key) {
+            if (!empty($item[$key]) && is_scalar($item[$key])) {
+                return trim((string) $item[$key]);
+            }
+        }
+    }
+
+    return $default;
 }
 
 function kangoo_shipping_default_tracking_url($tracking_number) {
@@ -72,13 +218,13 @@ function kangoo_shipping_default_tracking_url($tracking_number) {
 }
 
 function kangoo_shipping_get_tracking_url($order) {
-    $custom_url = kangoo_shipping_get_order_meta($order, 'tracking_url');
+    $custom_url = kangoo_shipping_get_tracking_url_from_meta($order);
 
     if ($custom_url) {
         return esc_url_raw($custom_url);
     }
 
-    return kangoo_shipping_default_tracking_url(kangoo_shipping_get_order_meta($order, 'tracking_number'));
+    return kangoo_shipping_default_tracking_url(kangoo_shipping_get_tracking_number($order));
 }
 
 function kangoo_shipping_normalize_tracking_url($url) {
@@ -171,11 +317,15 @@ function kangoo_render_shipping_order_meta_box($post_or_order) {
     }
 
     $status_options = array(
-        'processing' => __('Processing', 'kangoo'),
-        'shipped'    => __('Shipped', 'kangoo'),
+        'processing'  => __('Processing', 'kangoo'),
+        'dispatched' => __('Dispatched', 'kangoo'),
         'delayed'    => __('Delayed', 'kangoo'),
         'completed'  => __('Completed', 'kangoo'),
     );
+
+    if ($order->get_status() === 'shipped') {
+        $status_options['shipped'] = __('Shipped', 'kangoo');
+    }
 
     wp_nonce_field('kangoo_shipping_fields', 'kangoo_shipping_nonce');
     ?>
@@ -208,7 +358,7 @@ function kangoo_render_shipping_order_meta_box($post_or_order) {
             <label for="kangoo_shipping_note"><?php esc_html_e('Customer note', 'kangoo'); ?></label>
             <textarea id="kangoo_shipping_note" name="kangoo_shipping_note" rows="3" style="width:100%;"><?php echo esc_textarea(kangoo_shipping_get_order_meta($order, 'note')); ?></textarea>
         </p>
-        <p class="description"><?php esc_html_e('Changing the status to Shipped or Delayed sends the customer an email.', 'kangoo'); ?></p>
+        <p class="description"><?php esc_html_e('Changing the status to Dispatched or Delayed sends the customer an email.', 'kangoo'); ?></p>
     </div>
     <?php
 }
@@ -266,7 +416,7 @@ function kangoo_render_shipping_admin_page() {
     ?>
     <div class="wrap kangoo-shipping-admin">
         <h1><?php esc_html_e('Kangoo Shipping', 'kangoo'); ?></h1>
-        <p><?php esc_html_e('Update shipped, delayed and tracking details for live processing orders from one screen.', 'kangoo'); ?></p>
+        <p><?php esc_html_e('Update dispatched, delayed and tracking details for live processing orders from one screen.', 'kangoo'); ?></p>
 
         <?php if (!empty($_GET['kangoo_shipping_updated'])) : ?>
             <div class="notice notice-success is-dismissible"><p><?php echo esc_html(sprintf(__('Order #%d updated.', 'kangoo'), absint($_GET['kangoo_shipping_updated']))); ?></p></div>
@@ -306,7 +456,7 @@ function kangoo_render_shipping_admin_page() {
                             <label>
                                 <?php esc_html_e('Status', 'kangoo'); ?>
                                 <select name="kangoo_shipping_status">
-                                    <?php foreach (array('processing' => __('Processing', 'kangoo'), 'shipped' => __('Shipped', 'kangoo'), 'delayed' => __('Delayed', 'kangoo')) as $status => $label) : ?>
+                                    <?php foreach (array('processing' => __('Processing', 'kangoo'), 'dispatched' => __('Dispatched', 'kangoo'), 'delayed' => __('Delayed', 'kangoo')) as $status => $label) : ?>
                                         <option value="<?php echo esc_attr($status); ?>" <?php selected($order->get_status(), $status); ?>><?php echo esc_html($label); ?></option>
                                     <?php endforeach; ?>
                                 </select>
@@ -351,81 +501,173 @@ function kangoo_shipping_email_body($order, $type) {
     return '';
 }
 
-function kangoo_shipping_send_status_email($order_id, $order = null) {
-    static $sent = array();
-
-    $order = $order instanceof WC_Order ? $order : wc_get_order($order_id);
-
-    if (!$order || !$order->get_billing_email() || !function_exists('WC')) {
-        return;
+function kangoo_shipping_register_email_classes($emails) {
+    if (!class_exists('WC_Email')) {
+        return $emails;
     }
 
-    $status = $order->get_status();
+    if (!class_exists('WC_Email_Kangoo_Order_Status')) {
+        abstract class WC_Email_Kangoo_Order_Status extends WC_Email {
+            public $kangoo_stage = '';
+            public $kangoo_order_statuses = array();
 
-    if (!in_array($status, array('shipped', 'delayed'), true)) {
-        return;
+            public function __construct() {
+                $this->customer_email = true;
+
+                foreach ((array) $this->kangoo_order_statuses as $status) {
+                    add_action('woocommerce_order_status_' . $status, array($this, 'trigger'), 10, 2);
+                }
+
+                parent::__construct();
+            }
+
+            public function trigger($order_id, $order = false) {
+                $this->setup_locale();
+
+                $order = $order instanceof WC_Order ? $order : wc_get_order($order_id);
+
+                if (!$order instanceof WC_Order) {
+                    $this->restore_locale();
+                    return;
+                }
+
+                $this->object = $order;
+                $this->recipient = $order->get_billing_email();
+                $this->placeholders['{order_number}'] = $order->get_order_number();
+
+                if ($this->is_enabled() && $this->get_recipient()) {
+                    $this->send($this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments());
+                }
+
+                $this->restore_locale();
+            }
+
+            public function get_content_html() {
+                if (!$this->object instanceof WC_Order) {
+                    return '';
+                }
+
+                if (!empty($this->template_html) && function_exists('wc_get_template_html')) {
+                    return wc_get_template_html(
+                        $this->template_html,
+                        array(
+                            'order'              => $this->object,
+                            'email'              => $this,
+                            'sent_to_admin'      => false,
+                            'plain_text'         => false,
+                            'additional_content' => '',
+                        ),
+                        '',
+                        $this->template_base
+                    );
+                }
+
+                if ($this->kangoo_stage === 'delayed' && function_exists('kangoo_email_render_order_delayed')) {
+                    return kangoo_email_render_order_delayed($this->object);
+                }
+
+                if (function_exists('kangoo_email_render_order_dispatched')) {
+                    return kangoo_email_render_order_dispatched($this->object);
+                }
+
+                return '';
+            }
+
+            public function get_content_plain() {
+                return wp_strip_all_tags($this->get_content_html());
+            }
+
+            public function init_form_fields() {
+                $placeholder_text = sprintf(
+                    /* translators: %s: available placeholder list */
+                    __('Available placeholders: %s', 'woocommerce'),
+                    '<code>{order_number}</code>'
+                );
+
+                $this->form_fields = array(
+                    'enabled' => array(
+                        'title'   => __('Enable/Disable', 'woocommerce'),
+                        'type'    => 'checkbox',
+                        'label'   => __('Enable this email notification', 'woocommerce'),
+                        'default' => 'yes',
+                    ),
+                    'subject' => array(
+                        'title'       => __('Subject', 'woocommerce'),
+                        'type'        => 'text',
+                        'description' => $placeholder_text,
+                        'placeholder' => $this->get_default_subject(),
+                        'default'     => '',
+                    ),
+                    'heading' => array(
+                        'title'       => __('Email heading', 'woocommerce'),
+                        'type'        => 'text',
+                        'description' => $placeholder_text,
+                        'placeholder' => $this->get_default_heading(),
+                        'default'     => '',
+                    ),
+                );
+            }
+        }
     }
 
-    $send_key = $order->get_id() . ':' . $status;
+    if (!class_exists('WC_Email_Kangoo_Dispatched_Order')) {
+        class WC_Email_Kangoo_Dispatched_Order extends WC_Email_Kangoo_Order_Status {
+            public function __construct() {
+                $this->id = 'kangoo_dispatched_order';
+                $this->title = __('Kangoo order dispatched', 'kangoo');
+                $this->description = __('Sent to customers when an order is marked Dispatched or legacy Shipped.', 'kangoo');
+                $this->kangoo_stage = 'dispatched';
+                $this->kangoo_order_statuses = array('dispatched', 'shipped');
+                $this->template_html = 'emails/customer-dispatched-order.php';
+                $this->template_base = trailingslashit(get_template_directory()) . 'woocommerce/';
 
-    if (isset($sent[$send_key])) {
-        return;
+                parent::__construct();
+            }
+
+            public function get_default_subject() {
+                return __('Your Kangoo Pouches order #{order_number} is on its way', 'kangoo');
+            }
+
+            public function get_default_heading() {
+                return __('Your order is on its way', 'kangoo');
+            }
+        }
     }
 
-    $sent[$send_key] = true;
-    $is_delayed = $status === 'delayed';
-    $heading = $is_delayed
-        ? sprintf(__('Your Kangoo order #%s has a delivery update', 'kangoo'), $order->get_order_number())
-        : sprintf(__('Your Kangoo order #%s is now on its way', 'kangoo'), $order->get_order_number());
-    $subject = $heading;
-    $buffer_level = ob_get_level();
+    if (!class_exists('WC_Email_Kangoo_Delayed_Order')) {
+        class WC_Email_Kangoo_Delayed_Order extends WC_Email_Kangoo_Order_Status {
+            public function __construct() {
+                $this->id = 'kangoo_delayed_order';
+                $this->title = __('Kangoo order delayed', 'kangoo');
+                $this->description = __('Sent to customers when an order is manually marked Delayed.', 'kangoo');
+                $this->kangoo_stage = 'delayed';
+                $this->kangoo_order_statuses = array('delayed');
+                $this->template_html = 'emails/customer-delayed-order.php';
+                $this->template_base = trailingslashit(get_template_directory()) . 'woocommerce/';
 
-    try {
-        $mailer = WC()->mailer();
+                parent::__construct();
+            }
 
-        ob_start();
-        $body = kangoo_shipping_email_body($order, $is_delayed ? 'delayed' : 'shipped');
-        $unexpected_body_output = ob_get_clean();
+            public function get_default_subject() {
+                return __('Update on your Kangoo Pouches order #{order_number}', 'kangoo');
+            }
 
-        if ($unexpected_body_output !== '') {
-            $body = $unexpected_body_output . $body;
+            public function get_default_heading() {
+                return __('Your order has been delayed', 'kangoo');
+            }
         }
-
-        if (trim(wp_strip_all_tags((string) $body)) === '') {
-            throw new RuntimeException('Kangoo shipping email body was empty.');
-        }
-
-        ob_start();
-        $message = $mailer->wrap_message($heading, $body);
-        $unexpected_wrap_output = ob_get_clean();
-
-        if ($unexpected_wrap_output !== '') {
-            $message = $unexpected_wrap_output . $message;
-        }
-
-        ob_start();
-        $sent_ok = $mailer->send($order->get_billing_email(), $subject, $message, "Content-Type: text/html\r\n");
-        $unexpected_send_output = ob_get_clean();
-
-        if ($unexpected_send_output !== '') {
-            error_log('Kangoo shipping email send produced unexpected output for order #' . $order->get_id()); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-        }
-
-        if (!$sent_ok) {
-            $order->add_order_note(__('Kangoo shipping email could not be sent by the mailer.', 'kangoo'));
-        }
-    } catch (Throwable $error) {
-        while (ob_get_level() > $buffer_level) {
-            ob_end_clean();
-        }
-
-        $message = sprintf('Kangoo shipping email failed: %s', $error->getMessage());
-        $order->add_order_note($message);
-        error_log($message); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
     }
+
+    $emails['WC_Email_Kangoo_Dispatched_Order'] = new WC_Email_Kangoo_Dispatched_Order();
+    $emails['WC_Email_Kangoo_Delayed_Order'] = new WC_Email_Kangoo_Delayed_Order();
+
+    return $emails;
 }
-add_action('woocommerce_order_status_shipped', 'kangoo_shipping_send_status_email', 10, 2);
-add_action('woocommerce_order_status_delayed', 'kangoo_shipping_send_status_email', 10, 2);
+add_filter('woocommerce_email_classes', 'kangoo_shipping_register_email_classes');
+
+function kangoo_shipping_send_status_email($order_id, $order = null) {
+    return;
+}
 
 function kangoo_shipping_customer_order_tracking($order) {
     if (!$order instanceof WC_Order) {
@@ -437,7 +679,7 @@ function kangoo_shipping_customer_order_tracking($order) {
     $service = kangoo_shipping_get_order_meta($order, 'service', $order->get_shipping_method());
     $status = $order->get_status();
 
-    if (!$tracking_number && !in_array($status, array('shipped', 'delayed'), true)) {
+    if (!$tracking_number && !in_array($status, array('dispatched', 'shipped', 'delayed'), true)) {
         return;
     }
     ?>

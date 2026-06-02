@@ -1,6 +1,6 @@
 <?php
 /**
- * Customer completed order email.
+ * Customer delayed order email.
  *
  * @package Kangoo
  */
@@ -13,7 +13,7 @@ if (!isset($order) || !($order instanceof WC_Order)) {
 
 $additional_content = isset($additional_content) ? (string) $additional_content : '';
 
-if (function_exists('kangoo_email_render_order_completed')) {
-    echo kangoo_email_render_order_completed($order, $additional_content); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+if (function_exists('kangoo_email_render_order_delayed')) {
+    echo kangoo_email_render_order_delayed($order, $additional_content); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
     return;
 }
