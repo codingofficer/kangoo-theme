@@ -460,6 +460,31 @@ function kangoo_theme_setup() {
 }
 add_action('after_setup_theme', 'kangoo_theme_setup');
 
+function kangoo_append_app_link_to_menus($items, $args) {
+    $items = (string) $items;
+
+    if (!is_object($args) || empty($args->theme_location)) {
+        return $items;
+    }
+
+    if (!in_array($args->theme_location, array('primary', 'footer'), true)) {
+        return $items;
+    }
+
+    if (stripos($items, '/kangoo-app') !== false || stripos($items, 'Kangoo App') !== false) {
+        return $items;
+    }
+
+    $items .= sprintf(
+        '<li class="menu-item menu-item-type-custom menu-item-kangoo-app"><a href="%1$s">%2$s</a></li>',
+        esc_url(home_url('/kangoo-app/')),
+        esc_html__('Kangoo App', 'kangoo')
+    );
+
+    return $items;
+}
+add_filter('wp_nav_menu_items', 'kangoo_append_app_link_to_menus', 10, 2);
+
 function kangoo_theme_favicon_url($url, $size, $blog_id) {
     return get_template_directory_uri() . '/assets/images/kangoo-icon-white.png';
 }

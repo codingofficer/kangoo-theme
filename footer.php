@@ -28,6 +28,7 @@
                 <?php else : ?>
                     <ul class="site-footer__menu">
                         <li><a href="<?php echo esc_url(home_url('/shop/')); ?>">Shop all products</a></li>
+                        <li><a href="<?php echo esc_url(home_url('/kangoo-app/')); ?>">Kangoo App</a></li>
                         <li><a href="<?php echo esc_url(home_url('/product-category/nicotine-pouches/')); ?>">Nicotine pouches</a></li>
                         <li><a href="<?php echo esc_url(home_url('/blog/')); ?>">Blog</a></li>
                     </ul>

@@ -383,6 +383,12 @@ if (current_user_can('manage_options')) {
                         >
                             <?php esc_html_e('99p Pouches', 'kangoo'); ?>
                         </a>
+                        <a
+                            href="<?php echo esc_url(home_url('/kangoo-app/')); ?>"
+                            class="kangoo-mega-menu__sidebar-link kangoo-mega-menu__sidebar-link--app"
+                        >
+                            <?php esc_html_e('Kangoo App', 'kangoo'); ?>
+                        </a>
                         <?php if ($kangoo_theme_menu_toggle_html !== '') : ?>
                             <?php echo $kangoo_theme_menu_toggle_html; ?>
                         <?php endif; ?>
@@ -754,6 +760,12 @@ if (current_user_can('manage_options')) {
                         class="kangoo-mega-drawer__direct-link"
                     >
                         <?php esc_html_e('99p Pouches', 'kangoo'); ?>
+                    </a>
+                    <a
+                        href="<?php echo esc_url(home_url('/kangoo-app/')); ?>"
+                        class="kangoo-mega-drawer__direct-link"
+                    >
+                        <?php esc_html_e('Kangoo App', 'kangoo'); ?>
                     </a>
                     <?php if ($kangoo_theme_menu_toggle_html !== '') : ?>
                         <?php echo $kangoo_theme_menu_toggle_html; ?>
