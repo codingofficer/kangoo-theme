@@ -1064,8 +1064,8 @@ function kangoo_woocommerce_email_styles($css, $email = null) {
         }
 
         #template_header_image {
-            padding: 28px 32px 10px !important;
-            text-align: left !important;
+            padding: 28px 32px 24px !important;
+            text-align: center !important;
         }
 
         #template_header_image img {
@@ -1080,7 +1080,10 @@ function kangoo_woocommerce_email_styles($css, $email = null) {
             font-size: 28px !important;
             line-height: 1.2 !important;
             font-weight: 800 !important;
-            padding: 8px 32px 26px !important;
+            display: none !important;
+            max-height: 0 !important;
+            overflow: hidden !important;
+            padding: 0 !important;
             margin: 0 !important;
         }
 
@@ -1218,7 +1221,7 @@ function kangoo_woocommerce_email_styles($css, $email = null) {
 
             #template_header h1 {
                 font-size: 24px !important;
-                padding: 8px 20px 22px !important;
+                padding: 0 !important;
                 text-align: left !important;
             }
 

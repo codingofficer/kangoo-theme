@@ -195,20 +195,24 @@ function kangoo_email_rewards_points_for_order($order) {
 function kangoo_email_common_support() {
     ob_start();
     ?>
-    <?php echo kangoo_email_card_start('#f8fafc'); ?>
-        <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
-            <tr>
-                <td width="58" style="vertical-align:top;">
-                    <span style="display:inline-block;width:46px;height:46px;border-radius:999px;background:#fff1e7;color:#ff5a00;font-family:Arial,Helvetica,sans-serif;font-size:24px;font-weight:900;line-height:46px;text-align:center;">?</span>
-                </td>
-                <td style="color:#111827;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.5;">
-                    <strong><?php esc_html_e("Need help? We're here for you.", 'kangoo'); ?></strong><br>
-                    <?php esc_html_e('Our team is ready to help if you have any questions.', 'kangoo'); ?><br>
-                    <a href="mailto:hello@kangoopouches.co.uk" style="color:#ff5a00;font-weight:800;text-decoration:none;">hello@kangoopouches.co.uk</a>
-                </td>
-            </tr>
-        </table>
-    <?php echo kangoo_email_card_end(); ?>
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin:22px 0 0;border-top:1px solid #e5e7eb;">
+        <tr>
+            <td style="padding:20px 0 0;">
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td width="62" style="vertical-align:top;">
+                            <span style="display:inline-block;width:48px;height:48px;border-radius:999px;background:#fff1e7;color:#ff5a00;font-family:Arial,Helvetica,sans-serif;font-size:24px;font-weight:900;line-height:48px;text-align:center;">&#9742;</span>
+                        </td>
+                        <td style="color:#111827;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.5;">
+                            <strong style="font-size:17px;"><?php esc_html_e("Need help? We're here for you.", 'kangoo'); ?></strong><br>
+                            <a href="mailto:hello@kangoopouches.co.uk" style="color:#ff5a00;font-weight:800;text-decoration:none;">hello@kangoopouches.co.uk</a><br>
+                            <span style="color:#4b5563;">kangoopouches.co.uk</span>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
     <?php
 
     return ob_get_clean();
@@ -223,22 +227,29 @@ function kangoo_email_render_order_received($order) {
     $shop_url = function_exists('wc_get_page_permalink') ? wc_get_page_permalink('shop') : home_url('/');
     $rewards_url = function_exists('wc_get_account_endpoint_url') ? wc_get_account_endpoint_url('kangoo-rewards') : home_url('/my-account/kangoo-rewards/');
     $points = kangoo_email_rewards_points_for_order($order);
+    $user_id = function_exists('kangoo_rewards_get_order_user_id') ? (int) kangoo_rewards_get_order_user_id($order) : (int) $order->get_user_id();
+    $balance = $user_id && function_exists('kangoo_rewards_get_balance') ? (int) kangoo_rewards_get_balance($user_id) : 0;
+    $balance = $balance > 0 ? $balance : $points;
     $address = kangoo_email_delivery_address($order);
+    $hero_image = kangoo_email_asset_url('kp-order-box-img.png');
 
     ob_start();
     ?>
     <div class="kangoo-email kangoo-email--received" style="color:#111827;font-family:Arial,Helvetica,sans-serif;">
         <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
             <tr>
-                <td style="padding:4px 0 18px;vertical-align:middle;">
-                    <h2 style="margin:0;color:#111827;font-size:34px;font-weight:900;line-height:1.08;"><?php esc_html_e('Good things are heading your way!', 'kangoo'); ?></h2>
-                    <p style="margin:14px 0 0;color:#111827;font-size:16px;line-height:1.55;">
+                <td width="58%" style="padding:8px 18px 18px 0;vertical-align:middle;">
+                    <h2 style="margin:0;color:#111827;font-family:Arial,Helvetica,sans-serif;font-size:36px;font-weight:900;line-height:1.08;">
+                        <?php esc_html_e('Good things are', 'kangoo'); ?><br>
+                        <?php esc_html_e('heading', 'kangoo'); ?> <span style="color:#ff5a00;"><?php esc_html_e('your way!', 'kangoo'); ?></span>
+                    </h2>
+                    <div style="margin:18px 0 0;color:#111827;font-family:Arial,Helvetica,sans-serif;font-size:17px;line-height:1.45;">
                         <?php echo esc_html(sprintf(__('Hi %s,', 'kangoo'), kangoo_email_customer_first_name($order))); ?><br>
-                        <?php esc_html_e("We've received your order and it is now being prepared for dispatch.", 'kangoo'); ?>
-                    </p>
+                        <?php esc_html_e("We've packed your order and it's now being prepared for dispatch.", 'kangoo'); ?>
+                    </div>
                 </td>
-                <td width="190" style="padding:4px 0 18px;text-align:right;vertical-align:middle;">
-                    <img src="<?php echo kangoo_email_asset_url('kp-order-box-img.png'); ?>" width="170" alt="" style="display:inline-block;max-width:170px;width:100%;height:auto;">
+                <td width="42%" style="padding:8px 0 18px;text-align:right;vertical-align:middle;">
+                    <img src="<?php echo esc_url($hero_image); ?>" width="240" alt="" style="display:inline-block;max-width:240px;width:100%;height:auto;">
                 </td>
             </tr>
         </table>
@@ -252,20 +263,20 @@ function kangoo_email_render_order_received($order) {
         ));
         ?>
 
-        <?php echo kangoo_email_card_start('#fff7ed', '#fed7aa'); ?>
+        <?php echo kangoo_email_card_start('#fff7ed', '#fde4d2'); ?>
             <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
                 <tr>
-                    <td width="58" style="vertical-align:top;">
-                        <span style="display:inline-block;width:46px;height:46px;border-radius:999px;background:#ff6b00;color:#ffffff;font-family:Arial,Helvetica,sans-serif;font-size:22px;font-weight:900;line-height:46px;text-align:center;">#</span>
+                    <td width="68" style="vertical-align:middle;">
+                        <span style="display:inline-block;width:52px;height:52px;border-radius:999px;background:#ff6b00;color:#ffffff;font-family:Arial,Helvetica,sans-serif;font-size:24px;font-weight:900;line-height:52px;text-align:center;">&#128203;</span>
                     </td>
-                    <td style="color:#111827;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.45;">
-                        <strong style="font-size:18px;"><?php echo esc_html(sprintf(__('Order #%s', 'kangoo'), $order->get_order_number())); ?></strong><br>
+                    <td style="color:#111827;font-family:Arial,Helvetica,sans-serif;font-size:17px;line-height:1.35;vertical-align:middle;">
+                        <strong style="font-size:20px;"><?php echo esc_html(sprintf(__('Order #%s', 'kangoo'), $order->get_order_number())); ?></strong><br>
                         <span style="color:#4b5563;"><?php echo esc_html(kangoo_email_order_date($order)); ?></span>
                     </td>
                     <td width="160" style="text-align:right;vertical-align:middle;"><?php echo kangoo_email_button($view_order_url, __('View order', 'kangoo')); ?></td>
                 </tr>
             </table>
-            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin-top:18px;border:1px solid #fed7aa;border-radius:12px;background:#ffffff;">
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin-top:18px;border:1px solid #e5e7eb;border-radius:12px;background:#ffffff;">
                 <?php echo kangoo_email_order_items_rows($order); ?>
             </table>
         <?php echo kangoo_email_card_end(); ?>
@@ -279,15 +290,33 @@ function kangoo_email_render_order_received($order) {
         <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
             <tr>
                 <td width="50%" style="padding-right:8px;vertical-align:top;">
-                    <?php echo kangoo_email_card_start('#f0fdf4', '#bbf7d0'); ?>
-                        <strong style="display:block;color:#111827;font-size:18px;line-height:1.35;"><?php esc_html_e('Age verification complete', 'kangoo'); ?></strong>
-                        <span style="display:inline-block;margin-top:12px;padding:6px 10px;border-radius:999px;background:#dcfce7;color:#15803d;font-size:13px;font-weight:800;"><?php esc_html_e('Verified customer', 'kangoo'); ?></span>
+                    <?php echo kangoo_email_card_start('#f0fdf4', '#dcfce7'); ?>
+                        <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td width="58" style="vertical-align:top;">
+                                    <span style="display:inline-block;width:46px;height:46px;border-radius:999px;color:#16a34a;font-family:Arial,Helvetica,sans-serif;font-size:34px;font-weight:900;line-height:46px;text-align:center;">&#10003;</span>
+                                </td>
+                                <td style="vertical-align:top;">
+                                    <strong style="display:block;color:#111827;font-family:Arial,Helvetica,sans-serif;font-size:18px;line-height:1.25;"><?php esc_html_e('Age verification complete', 'kangoo'); ?></strong>
+                                    <span style="display:inline-block;margin-top:14px;padding:6px 11px;border-radius:999px;background:#dcfce7;color:#15803d;font-family:Arial,Helvetica,sans-serif;font-size:13px;font-weight:800;">&#10003; <?php esc_html_e('Verified customer', 'kangoo'); ?></span>
+                                </td>
+                            </tr>
+                        </table>
                     <?php echo kangoo_email_card_end(); ?>
                 </td>
                 <td width="50%" style="padding-left:8px;vertical-align:top;">
                     <?php echo kangoo_email_card_start(); ?>
-                        <strong style="display:block;margin-bottom:8px;color:#111827;font-size:18px;"><?php esc_html_e('Delivery address', 'kangoo'); ?></strong>
-                        <div style="color:#374151;font-size:15px;line-height:1.45;"><?php echo wp_kses_post($address); ?></div>
+                        <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td width="58" style="vertical-align:top;">
+                                    <span style="display:inline-block;width:46px;height:46px;border-radius:999px;color:#ff5a00;font-family:Arial,Helvetica,sans-serif;font-size:34px;font-weight:900;line-height:46px;text-align:center;">&#9679;</span>
+                                </td>
+                                <td style="vertical-align:top;">
+                                    <strong style="display:block;margin-bottom:8px;color:#111827;font-family:Arial,Helvetica,sans-serif;font-size:18px;"><?php esc_html_e('Delivery address', 'kangoo'); ?></strong>
+                                    <div style="color:#374151;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.45;"><?php echo wp_kses_post($address); ?></div>
+                                </td>
+                            </tr>
+                        </table>
                     <?php echo kangoo_email_card_end(); ?>
                 </td>
             </tr>
@@ -298,11 +327,12 @@ function kangoo_email_render_order_received($order) {
                 <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
                     <tr>
                         <td width="70" style="vertical-align:middle;">
-                            <span style="display:inline-block;width:54px;height:54px;border-radius:999px;background:#ffffff;color:#ff6b00;font-family:Arial,Helvetica,sans-serif;font-size:26px;font-weight:900;line-height:54px;text-align:center;">*</span>
+                            <span style="display:inline-block;width:58px;height:58px;border-radius:999px;background:#ffffff;color:#ff6b00;font-family:Arial,Helvetica,sans-serif;font-size:28px;font-weight:900;line-height:58px;text-align:center;">&#127873;</span>
                         </td>
                         <td style="color:#ffffff;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.4;">
                             <strong style="font-size:20px;"><?php esc_html_e('Kangoo Rewards', 'kangoo'); ?></strong><br>
-                            <?php echo esc_html(sprintf(__('You will earn %d points from this order.', 'kangoo'), $points)); ?>
+                            <strong><?php echo esc_html(sprintf(__('You earned %d points!', 'kangoo'), $points)); ?></strong><br>
+                            <?php echo esc_html(sprintf(__('Current balance: %d points', 'kangoo'), $balance)); ?>
                         </td>
                         <td width="160" style="text-align:right;vertical-align:middle;"><?php echo kangoo_email_button($rewards_url, __('View rewards', 'kangoo'), '#ffffff', '#ff5a00'); ?></td>
                     </tr>
@@ -313,9 +343,12 @@ function kangoo_email_render_order_received($order) {
         <?php echo kangoo_email_card_start('#fff7ed', '#fed7aa'); ?>
             <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
                 <tr>
-                    <td style="color:#111827;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.45;">
-                        <strong><?php esc_html_e('Thanks for your order!', 'kangoo'); ?></strong><br>
-                        <?php esc_html_e('Use code THANKYOU10 for 10% off your next order.', 'kangoo'); ?>
+                    <td width="68" style="vertical-align:middle;">
+                        <span style="display:inline-block;width:58px;height:58px;border-radius:999px;background:#ffffff;color:#ff5a00;font-family:Arial,Helvetica,sans-serif;font-size:28px;font-weight:900;line-height:58px;text-align:center;">&#127991;</span>
+                    </td>
+                    <td style="color:#111827;font-family:Arial,Helvetica,sans-serif;font-size:17px;line-height:1.45;">
+                        <strong style="font-size:18px;"><?php esc_html_e('Thanks for your order!', 'kangoo'); ?></strong><br>
+                        <?php esc_html_e('Use code', 'kangoo'); ?> <span style="display:inline-block;padding:2px 6px;border-radius:5px;background:#ff6b00;color:#ffffff;font-weight:900;">THANKYOU10</span> <?php esc_html_e('for 10% off your next order.', 'kangoo'); ?>
                     </td>
                     <td width="150" style="text-align:right;vertical-align:middle;"><?php echo kangoo_email_button($shop_url, __('Shop again', 'kangoo')); ?></td>
                 </tr>

@@ -41,7 +41,7 @@ if (!$kangoo_rendered_order_email) {
     do_action('woocommerce_email_customer_details', $order, $sent_to_admin, $plain_text, $email);
 }
 
-if ($additional_content) {
+if (!$kangoo_rendered_order_email && $additional_content) {
     echo wp_kses_post(wpautop(wptexturize($additional_content)));
 }
 
