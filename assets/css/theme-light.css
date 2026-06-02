@@ -1248,11 +1248,17 @@ body.kangoo-theme--light.woocommerce-checkout .kangoo-block-age__confirm label {
   }
 
   body.kangoo-theme--light .sticky-add--single-pack .sticky-add__bar {
-    grid-template-columns: minmax(108px, 1fr) minmax(68px, 0.55fr) minmax(112px, 1fr);
+    grid-template-columns: minmax(108px, 1fr) minmax(92px, max-content) minmax(112px, 1fr);
   }
 
   body.kangoo-theme--light .sticky-add--single-pack .sticky-add__pack {
     display: block;
+  }
+
+  body.kangoo-theme--light .sticky-add--single-pack .sticky-add__summary {
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    overflow: visible;
   }
 
   body.kangoo-theme--light .sticky-add__pack select {
@@ -1266,9 +1272,12 @@ body.kangoo-theme--light.woocommerce-checkout .kangoo-block-age__confirm label {
     align-items: baseline;
     gap: 0.32rem;
     color: #111827 !important;
+    max-width: 100%;
+    white-space: nowrap;
   }
 
   body.kangoo-theme--light .sticky-add__unit strong {
+    flex: 0 0 auto;
     color: #111827 !important;
     font-size: 1.05rem;
     font-weight: 950;
@@ -1276,6 +1285,7 @@ body.kangoo-theme--light.woocommerce-checkout .kangoo-block-age__confirm label {
   }
 
   body.kangoo-theme--light .sticky-add__unit span {
+    flex: 0 0 auto;
     color: #6b7280 !important;
     font-size: 0.64rem;
     font-weight: 800;
@@ -1290,6 +1300,30 @@ body.kangoo-theme--light.woocommerce-checkout .kangoo-block-age__confirm label {
     background: linear-gradient(135deg, #3f91ff, #1677e8) !important;
     color: #ffffff !important;
     box-shadow: 0 10px 24px rgba(22, 119, 232, 0.22);
+  }
+}
+
+@media (max-width: 374px) {
+  body.kangoo-theme--light .sticky-add--single-pack .sticky-add__bar {
+    grid-template-columns: minmax(92px, 0.95fr) minmax(82px, max-content) minmax(96px, 1fr);
+  }
+
+  body.kangoo-theme--light .sticky-add__unit {
+    gap: 0.22rem;
+  }
+
+  body.kangoo-theme--light .sticky-add__unit strong {
+    font-size: 0.95rem;
+  }
+
+  body.kangoo-theme--light .sticky-add__unit span {
+    font-size: 0.56rem;
+  }
+}
+
+@media (max-width: 340px) {
+  body.kangoo-theme--light .sticky-add--single-pack .sticky-add__unit span {
+    display: none;
   }
 }
 
