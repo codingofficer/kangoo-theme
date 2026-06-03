@@ -948,10 +948,13 @@ function kangoo_get_product_card_thumbnail($product, $attr = array()) {
         return '';
     }
 
+    $image_sizes = !empty($attr['sizes']) ? $attr['sizes'] : '(max-width: 640px) 44vw, 300px';
+
     $defaults = array(
         'alt'      => $product->get_name(),
         'class'    => 'attachment-woocommerce_thumbnail size-woocommerce_thumbnail',
         'decoding' => 'async',
+        'sizes'    => $image_sizes,
     );
 
     $attr = wp_parse_args($attr, $defaults);
@@ -964,7 +967,7 @@ function kangoo_get_product_card_thumbnail($product, $attr = array()) {
             $markup,
             $image_id,
             'woocommerce_thumbnail',
-            isset($attr['sizes']) ? $attr['sizes'] : '(max-width: 640px) 44vw, 300px'
+            $attr['sizes']
         );
     }
 
@@ -3423,7 +3426,8 @@ function kangoo_resolve_brand_category_card($category_value, $manual_label = '',
     $label = trim((string) $manual_label);
     $url = function_exists('kangoo_acf_link_url') ? kangoo_acf_link_url($manual_link) : '';
     $target = function_exists('kangoo_acf_link_target') ? kangoo_acf_link_target($manual_link) : '_self';
-    $image_url = kangoo_get_image_url_from_acf_value($manual_image, 'medium');
+    $image_size = !empty($extra['image_size']) ? sanitize_key((string) $extra['image_size']) : 'medium';
+    $image_url = kangoo_get_image_url_from_acf_value($manual_image, $image_size);
 
     if ($term) {
         $term_link = get_term_link($term);
@@ -3432,7 +3436,7 @@ function kangoo_resolve_brand_category_card($category_value, $manual_label = '',
             $label = $term->name;
             $url = (string) $term_link;
             $target = '_self';
-            $term_image_url = kangoo_get_product_category_image_url($term, 'medium');
+            $term_image_url = kangoo_get_product_category_image_url($term, $image_size);
 
             if ($term_image_url !== '') {
                 $image_url = $term_image_url;

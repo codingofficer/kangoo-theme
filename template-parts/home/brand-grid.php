@@ -37,7 +37,9 @@ $subheading = get_sub_field('subheading');
 					$brand_image = get_sub_field('brand_image');
 					$brand_link  = get_sub_field('brand_link');
 					$brand_card  = function_exists('kangoo_resolve_brand_category_card')
-						? kangoo_resolve_brand_category_card($brand_name, $brand_name, $brand_image, $brand_link)
+						? kangoo_resolve_brand_category_card($brand_name, $brand_name, $brand_image, $brand_link, array(
+							'image_size' => 'thumbnail',
+						))
 						: array(
 							'label'     => $brand_name,
 							'url'       => !empty($brand_link['url']) ? $brand_link['url'] : '#',
