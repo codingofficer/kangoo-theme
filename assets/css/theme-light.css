@@ -561,6 +561,7 @@ body.kangoo-theme--light .cart-drawer-summary__reward .amount {
 
 body.kangoo-theme--light .account-tabs__button.is-active {
   border-bottom-color: #0f5ed1 !important;
+  border-radius: 10px 10px 0 0 !important;
   background: #eef6ff !important;
   color: #0f5ed1 !important;
 }
