@@ -1350,10 +1350,12 @@ function kangoo_flush_rewrite_rules_on_theme_switch() {
     kangoo_register_blog_post_type();
     kangoo_register_blog_taxonomy();
     kangoo_rewards_add_account_endpoint();
+    kangoo_referrals_add_account_endpoint();
     kangoo_add_attribute_landing_rewrites();
     flush_rewrite_rules();
     update_option('kangoo_blog_rewrite_version', '1');
     update_option('kangoo_rewards_rewrite_version', '1');
+    update_option('kangoo_referrals_rewrite_version', '1');
     update_option('kangoo_attribute_rewrite_version', '1');
 }
 add_action('after_switch_theme', 'kangoo_flush_rewrite_rules_on_theme_switch');
@@ -1362,6 +1364,7 @@ function kangoo_maybe_flush_blog_rewrite_rules() {
     if (
         get_option('kangoo_blog_rewrite_version') === '1'
         && get_option('kangoo_rewards_rewrite_version') === '1'
+        && get_option('kangoo_referrals_rewrite_version') === '1'
         && get_option('kangoo_attribute_rewrite_version') === '1'
     ) {
         return;
@@ -1370,10 +1373,12 @@ function kangoo_maybe_flush_blog_rewrite_rules() {
     kangoo_register_blog_post_type();
     kangoo_register_blog_taxonomy();
     kangoo_rewards_add_account_endpoint();
+    kangoo_referrals_add_account_endpoint();
     kangoo_add_attribute_landing_rewrites();
     flush_rewrite_rules();
     update_option('kangoo_blog_rewrite_version', '1');
     update_option('kangoo_rewards_rewrite_version', '1');
+    update_option('kangoo_referrals_rewrite_version', '1');
     update_option('kangoo_attribute_rewrite_version', '1');
 }
 add_action('admin_init', 'kangoo_maybe_flush_blog_rewrite_rules');
@@ -4680,6 +4685,962 @@ function kangoo_rewards_account_endpoint_content_modern() {
 remove_action('woocommerce_account_rewards_endpoint', 'kangoo_rewards_account_endpoint_content');
 add_action('woocommerce_account_rewards_endpoint', 'kangoo_rewards_account_endpoint_content_modern');
 
+/* =========================================================================
+KANGOO REFERRALS
+========================================================================= */
+
+function kangoo_referrals_endpoint_slug() {
+    return 'refer-a-friend';
+}
+
+function kangoo_referrals_reward_amount() {
+    return 10.0;
+}
+
+function kangoo_referrals_qualification_spend() {
+    return 30.0;
+}
+
+function kangoo_referrals_friend_discount_percent() {
+    return 15;
+}
+
+function kangoo_referrals_add_account_endpoint() {
+    add_rewrite_endpoint(kangoo_referrals_endpoint_slug(), EP_ROOT | EP_PAGES);
+    add_rewrite_rule('^r/([A-Za-z0-9]+)/?$', 'index.php?kangoo_referral_code=$matches[1]', 'top');
+}
+add_action('init', 'kangoo_referrals_add_account_endpoint');
+
+function kangoo_referrals_query_vars($vars) {
+    $vars[] = 'kangoo_referral_code';
+
+    return $vars;
+}
+add_filter('query_vars', 'kangoo_referrals_query_vars');
+
+function kangoo_referrals_normalize_code($code) {
+    $code = strtoupper(sanitize_text_field((string) $code));
+
+    return preg_replace('/[^A-Z0-9]/', '', $code);
+}
+
+function kangoo_referrals_find_referrer_by_code($code) {
+    $code = kangoo_referrals_normalize_code($code);
+
+    if (!$code) {
+        return 0;
+    }
+
+    $users = get_users(array(
+        'meta_key'   => 'kangoo_referral_code',
+        'meta_value' => $code,
+        'number'     => 1,
+        'fields'     => 'ID',
+    ));
+
+    return !empty($users) ? absint($users[0]) : 0;
+}
+
+function kangoo_referrals_generate_code($user_id) {
+    $user_id = absint($user_id);
+
+    if (!$user_id) {
+        return '';
+    }
+
+    $existing = kangoo_referrals_normalize_code(get_user_meta($user_id, 'kangoo_referral_code', true));
+    $existing_owner = $existing ? kangoo_referrals_find_referrer_by_code($existing) : 0;
+
+    if ($existing && (!$existing_owner || $existing_owner === $user_id)) {
+        if (!$existing_owner) {
+            update_user_meta($user_id, 'kangoo_referral_code', $existing);
+        }
+
+        return $existing;
+    }
+
+    for ($attempt = 0; $attempt < 25; $attempt++) {
+        $code = kangoo_referrals_normalize_code(wp_generate_password(6, false, false));
+
+        if (strlen($code) < 6) {
+            $code = kangoo_referrals_normalize_code(base_convert($user_id, 10, 36) . wp_generate_password(6, false, false));
+            $code = substr($code, 0, 6);
+        }
+
+        if (!$code || strlen($code) < 6) {
+            continue;
+        }
+
+        $owner = kangoo_referrals_find_referrer_by_code($code);
+
+        if (!$owner || $owner === $user_id) {
+            update_user_meta($user_id, 'kangoo_referral_code', $code);
+
+            return $code;
+        }
+    }
+
+    $fallback = kangoo_referrals_normalize_code('KP' . base_convert($user_id, 10, 36) . substr(wp_hash($user_id . time()), 0, 4));
+    $fallback = substr($fallback, 0, 10);
+    update_user_meta($user_id, 'kangoo_referral_code', $fallback);
+
+    return $fallback;
+}
+
+function kangoo_referrals_get_code($user_id = null) {
+    $user_id = $user_id ? absint($user_id) : get_current_user_id();
+
+    if (!$user_id) {
+        return '';
+    }
+
+    return kangoo_referrals_generate_code($user_id);
+}
+
+function kangoo_referrals_get_link($user_id = null) {
+    $code = kangoo_referrals_get_code($user_id);
+
+    return $code ? home_url('/r/' . rawurlencode($code) . '/') : '';
+}
+
+function kangoo_referrals_set_active_code($code) {
+    $code = kangoo_referrals_normalize_code($code);
+
+    if (!$code) {
+        return;
+    }
+
+    if (function_exists('WC') && WC()->session) {
+        WC()->session->set('kangoo_referral_code', $code);
+    }
+
+    if (function_exists('wc_setcookie')) {
+        wc_setcookie('kangoo_referral_code', $code, time() + MONTH_IN_SECONDS, is_ssl(), false);
+    }
+}
+
+function kangoo_referrals_clear_active_code() {
+    if (function_exists('WC') && WC()->session) {
+        WC()->session->__unset('kangoo_referral_code');
+    }
+
+    if (function_exists('wc_setcookie')) {
+        wc_setcookie('kangoo_referral_code', '', time() - HOUR_IN_SECONDS, is_ssl(), false);
+    }
+}
+
+function kangoo_referrals_get_active_code() {
+    $code = '';
+
+    if (function_exists('WC') && WC()->session) {
+        $code = kangoo_referrals_normalize_code(WC()->session->get('kangoo_referral_code'));
+    }
+
+    if (!$code && !empty($_COOKIE['kangoo_referral_code'])) {
+        $code = kangoo_referrals_normalize_code(wp_unslash($_COOKIE['kangoo_referral_code']));
+    }
+
+    return $code;
+}
+
+function kangoo_referrals_handle_landing() {
+    $code = get_query_var('kangoo_referral_code');
+
+    if (!$code) {
+        return;
+    }
+
+    $code = kangoo_referrals_normalize_code($code);
+    $referrer_id = kangoo_referrals_find_referrer_by_code($code);
+
+    if ($referrer_id) {
+        kangoo_referrals_set_active_code($code);
+
+        if (function_exists('wc_add_notice')) {
+            wc_add_notice(sprintf(__('Your %d%% friend discount is ready for your first order.', 'kangoo'), kangoo_referrals_friend_discount_percent()), 'success');
+        }
+    } elseif (function_exists('wc_add_notice')) {
+        wc_add_notice(__('That referral link is not active. Please check the code and try again.', 'kangoo'), 'notice');
+    }
+
+    wp_safe_redirect(function_exists('wc_get_page_permalink') ? wc_get_page_permalink('shop') : home_url('/shop/'));
+    exit;
+}
+add_action('template_redirect', 'kangoo_referrals_handle_landing', 4);
+
+function kangoo_referrals_customer_has_prior_orders($user_id = 0, $email = '') {
+    if (!function_exists('wc_get_orders')) {
+        return false;
+    }
+
+    $statuses = array('pending', 'processing', 'on-hold', 'completed');
+    $base_args = array(
+        'limit'  => 1,
+        'return' => 'ids',
+        'status' => $statuses,
+    );
+
+    if ($user_id) {
+        $orders = wc_get_orders(array_merge($base_args, array(
+            'customer_id' => absint($user_id),
+        )));
+
+        if (!empty($orders)) {
+            return true;
+        }
+    }
+
+    $email = sanitize_email($email);
+
+    if ($email) {
+        $orders = wc_get_orders(array_merge($base_args, array(
+            'billing_email' => $email,
+        )));
+
+        if (!empty($orders)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function kangoo_referrals_is_self_referral($referrer_id, $email = '') {
+    $referrer_id = absint($referrer_id);
+
+    if (!$referrer_id) {
+        return false;
+    }
+
+    if (is_user_logged_in() && get_current_user_id() === $referrer_id) {
+        return true;
+    }
+
+    $email = sanitize_email($email);
+
+    if ($email) {
+        $email_user = get_user_by('email', $email);
+
+        if ($email_user && (int) $email_user->ID === $referrer_id) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function kangoo_referrals_can_apply_discount($email = '') {
+    $code = kangoo_referrals_get_active_code();
+    $referrer_id = kangoo_referrals_find_referrer_by_code($code);
+
+    if (!$code || !$referrer_id || kangoo_referrals_is_self_referral($referrer_id, $email)) {
+        return false;
+    }
+
+    $user_id = is_user_logged_in() ? get_current_user_id() : 0;
+
+    if (kangoo_referrals_customer_has_prior_orders($user_id, $email)) {
+        return false;
+    }
+
+    return true;
+}
+
+function kangoo_referrals_apply_discount_fee($cart) {
+    if ((is_admin() && !defined('DOING_AJAX')) || !$cart || !kangoo_referrals_can_apply_discount()) {
+        return;
+    }
+
+    $eligible_total = max(0, (float) $cart->get_subtotal() - (float) $cart->get_discount_total());
+    $discount = round($eligible_total * (kangoo_referrals_friend_discount_percent() / 100), function_exists('wc_get_price_decimals') ? wc_get_price_decimals() : 2);
+
+    if ($discount <= 0) {
+        return;
+    }
+
+    $cart->add_fee(sprintf(__('Referral %d%% discount', 'kangoo'), kangoo_referrals_friend_discount_percent()), -$discount, false);
+}
+add_action('woocommerce_cart_calculate_fees', 'kangoo_referrals_apply_discount_fee', 18);
+
+function kangoo_referrals_validate_checkout($data, $errors) {
+    $code = kangoo_referrals_get_active_code();
+
+    if (!$code) {
+        return;
+    }
+
+    $referrer_id = kangoo_referrals_find_referrer_by_code($code);
+    $email = isset($data['billing_email']) ? sanitize_email($data['billing_email']) : '';
+
+    if (!$referrer_id) {
+        $errors->add('kangoo_referral_invalid', __('This referral code is no longer active.', 'kangoo'));
+        return;
+    }
+
+    if (kangoo_referrals_is_self_referral($referrer_id, $email)) {
+        $errors->add('kangoo_referral_self', __('Referral rewards cannot be used on your own account.', 'kangoo'));
+        return;
+    }
+
+    $email_user = $email ? get_user_by('email', $email) : null;
+    $user_id = $email_user ? (int) $email_user->ID : (is_user_logged_in() ? get_current_user_id() : 0);
+
+    if (kangoo_referrals_customer_has_prior_orders($user_id, $email)) {
+        $errors->add('kangoo_referral_existing_customer', __('Referral discounts are available on a referred customer\'s first order only.', 'kangoo'));
+    }
+}
+add_action('woocommerce_after_checkout_validation', 'kangoo_referrals_validate_checkout', 10, 2);
+
+function kangoo_referrals_attach_order_meta($order, $data) {
+    if (!$order || !is_a($order, 'WC_Order')) {
+        return;
+    }
+
+    $code = kangoo_referrals_get_active_code();
+    $referrer_id = kangoo_referrals_find_referrer_by_code($code);
+    $email = isset($data['billing_email']) ? sanitize_email($data['billing_email']) : sanitize_email($order->get_billing_email());
+
+    if (!$code || !$referrer_id || !kangoo_referrals_can_apply_discount($email)) {
+        return;
+    }
+
+    $order->update_meta_data('_kangoo_referral_code', $code);
+    $order->update_meta_data('_kangoo_referrer_user_id', $referrer_id);
+    $order->update_meta_data('_kangoo_referral_discount_percent', kangoo_referrals_friend_discount_percent());
+    $order->update_meta_data('_kangoo_referral_reward_amount', kangoo_referrals_reward_amount());
+}
+add_action('woocommerce_checkout_create_order', 'kangoo_referrals_attach_order_meta', 20, 2);
+
+function kangoo_referrals_clear_code_after_order($order_id) {
+    $order = function_exists('wc_get_order') ? wc_get_order($order_id) : null;
+
+    if ($order && $order->get_meta('_kangoo_referral_code')) {
+        kangoo_referrals_clear_active_code();
+    }
+}
+add_action('woocommerce_checkout_order_processed', 'kangoo_referrals_clear_code_after_order', 20);
+
+function kangoo_referrals_record_defaults($referrer_id = 0) {
+    return array(
+        'referral_code'            => '',
+        'referral_link'            => '',
+        'referrer_user_id'         => absint($referrer_id),
+        'referred_user_id'         => 0,
+        'referred_customer_email'  => '',
+        'referred_customer_name'   => '',
+        'completed_spend_total'    => 0.0,
+        'reward_status'            => 'pending',
+        'reward_amount'            => kangoo_referrals_reward_amount(),
+        'first_order_date'         => '',
+        'qualified_date'           => '',
+        'paid_date'                => '',
+        'is_placeholder'           => false,
+    );
+}
+
+function kangoo_referrals_prepare_record($record, $referrer_id = 0) {
+    $record = is_array($record) ? wp_parse_args($record, kangoo_referrals_record_defaults($referrer_id)) : kangoo_referrals_record_defaults($referrer_id);
+    $allowed_statuses = array('pending', 'qualified', 'paid', 'rejected');
+    $status = sanitize_key($record['reward_status']);
+
+    $record['referrer_user_id'] = absint($record['referrer_user_id']);
+    $record['referred_user_id'] = absint($record['referred_user_id']);
+    $record['referred_customer_email'] = sanitize_email($record['referred_customer_email']);
+    $record['referred_customer_name'] = sanitize_text_field($record['referred_customer_name']);
+    $record['completed_spend_total'] = max(0, (float) $record['completed_spend_total']);
+    $record['reward_status'] = in_array($status, $allowed_statuses, true) ? $status : 'pending';
+    $record['reward_amount'] = max(0, (float) $record['reward_amount']);
+    $record['first_order_date'] = sanitize_text_field($record['first_order_date']);
+    $record['qualified_date'] = sanitize_text_field($record['qualified_date']);
+    $record['paid_date'] = sanitize_text_field($record['paid_date']);
+    $record['is_placeholder'] = !empty($record['is_placeholder']);
+
+    return $record;
+}
+
+function kangoo_referrals_record_storage_key($record) {
+    $record = is_array($record) ? $record : array();
+    $user_id = !empty($record['referred_user_id']) ? absint($record['referred_user_id']) : 0;
+
+    if ($user_id) {
+        return 'user_' . $user_id;
+    }
+
+    $email = !empty($record['referred_customer_email']) ? sanitize_email($record['referred_customer_email']) : '';
+
+    if ($email) {
+        return 'email_' . md5(strtolower($email));
+    }
+
+    return 'guest_' . md5(wp_json_encode($record));
+}
+
+function kangoo_referrals_get_real_records($user_id = null) {
+    $user_id = $user_id ? absint($user_id) : get_current_user_id();
+
+    if (!$user_id) {
+        return array();
+    }
+
+    $records = get_user_meta($user_id, 'kangoo_referral_records', true);
+
+    if (!is_array($records)) {
+        return array();
+    }
+
+    $prepared = array();
+
+    foreach ($records as $record) {
+        $prepared[] = kangoo_referrals_prepare_record($record, $user_id);
+    }
+
+    usort($prepared, function ($a, $b) {
+        return strtotime($b['first_order_date']) <=> strtotime($a['first_order_date']);
+    });
+
+    return $prepared;
+}
+
+function kangoo_referrals_get_placeholder_records($user_id = null) {
+    $user_id = $user_id ? absint($user_id) : get_current_user_id();
+    $code = $user_id ? kangoo_referrals_get_code($user_id) : 'ABC123';
+    $link = $user_id ? kangoo_referrals_get_link($user_id) : home_url('/r/ABC123/');
+    $base = array(
+        'referral_code'    => $code,
+        'referral_link'    => $link,
+        'referrer_user_id' => $user_id,
+        'reward_amount'    => kangoo_referrals_reward_amount(),
+        'is_placeholder'   => true,
+    );
+
+    return array(
+        kangoo_referrals_prepare_record(array_merge($base, array(
+            'referred_customer_name'  => 'Annie Smith',
+            'referred_customer_email' => 'annie@example.com',
+            'completed_spend_total'   => 18.00,
+            'reward_status'           => 'pending',
+            'first_order_date'        => '2026-06-03',
+        )), $user_id),
+        kangoo_referrals_prepare_record(array_merge($base, array(
+            'referred_customer_name'  => 'Michael Brown',
+            'referred_customer_email' => 'michael@example.com',
+            'completed_spend_total'   => 42.50,
+            'reward_status'           => 'paid',
+            'first_order_date'        => '2026-05-12',
+            'qualified_date'          => '2026-05-12',
+            'paid_date'               => '2026-05-19',
+        )), $user_id),
+        kangoo_referrals_prepare_record(array_merge($base, array(
+            'referred_customer_name'  => 'Connor Wilson',
+            'referred_customer_email' => 'connor@example.com',
+            'completed_spend_total'   => 31.20,
+            'reward_status'           => 'paid',
+            'first_order_date'        => '2026-04-28',
+            'qualified_date'          => '2026-04-28',
+            'paid_date'               => '2026-05-05',
+        )), $user_id),
+    );
+}
+
+function kangoo_referrals_get_records($user_id = null) {
+    $records = kangoo_referrals_get_real_records($user_id);
+
+    if (!empty($records)) {
+        return array(
+            'records'        => $records,
+            'is_placeholder' => false,
+        );
+    }
+
+    return array(
+        'records'        => kangoo_referrals_get_placeholder_records($user_id),
+        'is_placeholder' => true,
+    );
+}
+
+function kangoo_referrals_get_summary($records, $is_placeholder = false) {
+    if ($is_placeholder) {
+        return array(
+            'successful_referrals' => 8,
+            'pending_rewards'      => 30,
+            'total_earned'         => 80,
+        );
+    }
+
+    $summary = array(
+        'successful_referrals' => 0,
+        'pending_rewards'      => 0,
+        'total_earned'         => 0,
+    );
+
+    foreach ($records as $record) {
+        $status = isset($record['reward_status']) ? $record['reward_status'] : 'pending';
+        $reward_amount = isset($record['reward_amount']) ? (float) $record['reward_amount'] : kangoo_referrals_reward_amount();
+        $completed_spend = isset($record['completed_spend_total']) ? (float) $record['completed_spend_total'] : 0;
+
+        if ($completed_spend >= kangoo_referrals_qualification_spend() || in_array($status, array('qualified', 'paid'), true)) {
+            $summary['successful_referrals']++;
+        }
+
+        if ($status === 'qualified') {
+            $summary['pending_rewards'] += $reward_amount;
+        }
+
+        if ($status === 'paid') {
+            $summary['total_earned'] += $reward_amount;
+        }
+    }
+
+    return $summary;
+}
+
+function kangoo_referrals_calculate_completed_spend($referred_user_id, $email, $first_order_date = '') {
+    if (!function_exists('wc_get_orders')) {
+        return 0;
+    }
+
+    $orders_by_id = array();
+    $base_args = array(
+        'limit'   => -1,
+        'status'  => array('completed'),
+        'return'  => 'objects',
+        'orderby' => 'date',
+        'order'   => 'ASC',
+    );
+
+    if ($referred_user_id) {
+        foreach (wc_get_orders(array_merge($base_args, array('customer_id' => absint($referred_user_id)))) as $order) {
+            if ($order instanceof WC_Order) {
+                $orders_by_id[$order->get_id()] = $order;
+            }
+        }
+    }
+
+    $email = sanitize_email($email);
+
+    if ($email) {
+        foreach (wc_get_orders(array_merge($base_args, array('billing_email' => $email))) as $order) {
+            if ($order instanceof WC_Order) {
+                $orders_by_id[$order->get_id()] = $order;
+            }
+        }
+    }
+
+    $first_timestamp = $first_order_date ? strtotime($first_order_date . ' 00:00:00') : 0;
+    $total = 0;
+
+    foreach ($orders_by_id as $order) {
+        $created = $order->get_date_created();
+        $created_timestamp = $created ? $created->getTimestamp() : 0;
+
+        if ($first_timestamp && $created_timestamp && $created_timestamp < ($first_timestamp - DAY_IN_SECONDS)) {
+            continue;
+        }
+
+        $refunded = method_exists($order, 'get_total_refunded') ? (float) $order->get_total_refunded() : 0;
+        $total += max(0, (float) $order->get_total() - $refunded);
+    }
+
+    return $total;
+}
+
+function kangoo_referrals_update_record_for_order($order_id) {
+    $order = function_exists('wc_get_order') ? wc_get_order($order_id) : null;
+
+    if (!$order || !is_a($order, 'WC_Order')) {
+        return;
+    }
+
+    $referrer_id = absint($order->get_meta('_kangoo_referrer_user_id'));
+    $code = kangoo_referrals_normalize_code($order->get_meta('_kangoo_referral_code'));
+
+    if (!$referrer_id || !$code) {
+        return;
+    }
+
+    $referred_user_id = function_exists('kangoo_rewards_get_order_user_id') ? kangoo_rewards_get_order_user_id($order) : (int) $order->get_user_id();
+    $email = sanitize_email($order->get_billing_email());
+
+    if (!$email || $referred_user_id === $referrer_id) {
+        return;
+    }
+
+    $first_name = sanitize_text_field($order->get_billing_first_name());
+    $last_name = sanitize_text_field($order->get_billing_last_name());
+    $name = trim($first_name . ' ' . $last_name);
+    $order_date = $order->get_date_created() ? $order->get_date_created()->date('Y-m-d') : current_time('Y-m-d');
+    $records = get_user_meta($referrer_id, 'kangoo_referral_records', true);
+    $records = is_array($records) ? $records : array();
+    $prepared = array();
+
+    foreach ($records as $record) {
+        $record = kangoo_referrals_prepare_record($record, $referrer_id);
+        $prepared[kangoo_referrals_record_storage_key($record)] = $record;
+    }
+
+    $key = kangoo_referrals_record_storage_key(array(
+        'referred_user_id'        => $referred_user_id,
+        'referred_customer_email' => $email,
+    ));
+
+    $existing = isset($prepared[$key]) ? $prepared[$key] : kangoo_referrals_record_defaults($referrer_id);
+    $first_order_date = !empty($existing['first_order_date']) ? $existing['first_order_date'] : $order_date;
+    $completed_spend = kangoo_referrals_calculate_completed_spend($referred_user_id, $email, $first_order_date);
+    $status = $completed_spend >= kangoo_referrals_qualification_spend() ? 'qualified' : 'pending';
+
+    if ($existing['reward_status'] === 'paid' && $completed_spend >= kangoo_referrals_qualification_spend()) {
+        $status = 'paid';
+    } elseif ($existing['reward_status'] === 'paid' && $completed_spend < kangoo_referrals_qualification_spend()) {
+        $status = 'rejected';
+    }
+
+    $completed_date = $order->get_date_completed() ? $order->get_date_completed()->date('Y-m-d') : current_time('Y-m-d');
+    $qualified_date = $existing['qualified_date'];
+
+    if (!$qualified_date && in_array($status, array('qualified', 'paid'), true)) {
+        $qualified_date = $completed_date;
+    }
+
+    $prepared[$key] = kangoo_referrals_prepare_record(array(
+        'referral_code'            => $code,
+        'referral_link'            => home_url('/r/' . rawurlencode($code) . '/'),
+        'referrer_user_id'         => $referrer_id,
+        'referred_user_id'         => $referred_user_id,
+        'referred_customer_email'  => $email,
+        'referred_customer_name'   => $name ? $name : $email,
+        'completed_spend_total'    => $completed_spend,
+        'reward_status'            => $status,
+        'reward_amount'            => kangoo_referrals_reward_amount(),
+        'first_order_date'         => $first_order_date,
+        'qualified_date'           => $qualified_date,
+        'paid_date'                => $existing['paid_date'],
+    ), $referrer_id);
+
+    update_user_meta($referrer_id, 'kangoo_referral_records', $prepared);
+
+    if ($referred_user_id) {
+        update_user_meta($referred_user_id, 'kangoo_referred_by_user_id', $referrer_id);
+        update_user_meta($referred_user_id, 'kangoo_referred_by_code', $code);
+        update_user_meta($referred_user_id, 'kangoo_referred_first_order_id', $order->get_id());
+    }
+}
+add_action('woocommerce_order_status_completed', 'kangoo_referrals_update_record_for_order', 20);
+add_action('woocommerce_order_status_refunded', 'kangoo_referrals_update_record_for_order', 20);
+add_action('woocommerce_order_status_cancelled', 'kangoo_referrals_update_record_for_order', 20);
+add_action('woocommerce_order_status_failed', 'kangoo_referrals_update_record_for_order', 20);
+add_action('woocommerce_order_refunded', 'kangoo_referrals_update_record_for_order', 20);
+
+function kangoo_referrals_account_menu_items($items) {
+    $slug = kangoo_referrals_endpoint_slug();
+    unset($items[$slug]);
+
+    $new_items = array();
+    $inserted = false;
+
+    foreach ($items as $key => $label) {
+        $new_items[$key] = $label;
+
+        if ($key === 'rewards') {
+            $new_items[$slug] = __('Refer a Friend', 'kangoo');
+            $inserted = true;
+        }
+    }
+
+    if ($inserted) {
+        return $new_items;
+    }
+
+    $fallback_items = array();
+
+    foreach ($new_items as $key => $label) {
+        if ($key === 'customer-logout') {
+            $fallback_items[$slug] = __('Refer a Friend', 'kangoo');
+            $inserted = true;
+        }
+
+        $fallback_items[$key] = $label;
+    }
+
+    if (!$inserted) {
+        $fallback_items[$slug] = __('Refer a Friend', 'kangoo');
+    }
+
+    return $fallback_items;
+}
+add_filter('woocommerce_account_menu_items', 'kangoo_referrals_account_menu_items', 25);
+
+function kangoo_referrals_status_label($status) {
+    switch ($status) {
+        case 'qualified':
+            return __('Qualified', 'kangoo');
+        case 'paid':
+            return __('Paid', 'kangoo');
+        case 'rejected':
+            return __('Rejected', 'kangoo');
+        case 'pending':
+        default:
+            return __('Pending', 'kangoo');
+    }
+}
+
+function kangoo_referrals_mask_email($email) {
+    $email = sanitize_email($email);
+
+    if (!$email || strpos($email, '@') === false) {
+        return '';
+    }
+
+    list($local, $domain) = explode('@', $email, 2);
+    $first = substr($local, 0, 1);
+
+    return $first . '***@' . $domain;
+}
+
+function kangoo_referrals_display_name($record) {
+    if (!empty($record['referred_customer_name'])) {
+        return $record['referred_customer_name'];
+    }
+
+    return kangoo_referrals_mask_email(isset($record['referred_customer_email']) ? $record['referred_customer_email'] : '');
+}
+
+function kangoo_referrals_initials($label) {
+    $label = trim((string) $label);
+
+    if (!$label) {
+        return 'RF';
+    }
+
+    if (strpos($label, '@') !== false) {
+        return strtoupper(substr($label, 0, 1));
+    }
+
+    $parts = preg_split('/\s+/', $label);
+    $initials = '';
+
+    foreach (array_slice(array_filter($parts), 0, 2) as $part) {
+        $initials .= strtoupper(substr($part, 0, 1));
+    }
+
+    return $initials ? $initials : 'RF';
+}
+
+function kangoo_referrals_format_date($date) {
+    $timestamp = $date ? strtotime($date) : 0;
+
+    return $timestamp ? date_i18n('j M Y', $timestamp) : '-';
+}
+
+function kangoo_referrals_account_endpoint_content() {
+    if (!is_user_logged_in()) {
+        return;
+    }
+
+    $user_id = get_current_user_id();
+    $code = kangoo_referrals_get_code($user_id);
+    $link = kangoo_referrals_get_link($user_id);
+    $records_data = kangoo_referrals_get_records($user_id);
+    $records = $records_data['records'];
+    $is_placeholder = $records_data['is_placeholder'];
+    $summary = kangoo_referrals_get_summary($records, $is_placeholder);
+    $target = kangoo_referrals_qualification_spend();
+    $reward_amount = kangoo_referrals_reward_amount();
+    $icon_url = get_template_directory_uri() . '/assets/images/kangoo-icon-white.png';
+    $referral_icon_base = get_template_directory_uri() . '/assets/images/referrals/';
+    $referral_icons = array(
+        'earn'       => $referral_icon_base . 'earn.png',
+        'gifts'      => $referral_icon_base . 'gifts.png',
+        'referral'   => $referral_icon_base . 'referral.png',
+        'share'      => $referral_icon_base . 'share.png',
+        'wall_clock' => $referral_icon_base . 'wall-clock.png',
+        'wallet'     => $referral_icon_base . 'wallet.png',
+    );
+    ?>
+    <div class="kangoo-referrals-dashboard">
+        <section class="kangoo-referrals-hero">
+            <div class="kangoo-referrals-hero__content">
+                <span class="kangoo-referrals-hero__badge" aria-hidden="true"><img src="<?php echo esc_url($referral_icons['referral']); ?>" alt="" loading="lazy"></span>
+                <div>
+                    <h1><?php esc_html_e('Refer a Friend', 'kangoo'); ?></h1>
+                    <p class="kangoo-referrals-hero__lead">
+                        <?php echo wp_kses_post(sprintf(__('Give your friends <strong>%1$d%% off</strong> their first order and earn <strong>%2$s cash</strong> once they spend %3$s+.', 'kangoo'), kangoo_referrals_friend_discount_percent(), kangoo_plain_wc_price($reward_amount), kangoo_plain_wc_price($target))); ?>
+                    </p>
+                    <p><?php echo wp_kses_post(sprintf(__('Share your referral link with friends. When they place their first order and reach %1$s or more in completed orders, you will receive a %2$s cash reward.', 'kangoo'), kangoo_plain_wc_price($target), kangoo_plain_wc_price($reward_amount))); ?></p>
+                </div>
+            </div>
+            <img class="kangoo-referrals-hero__mascot" src="<?php echo esc_url($icon_url); ?>" alt="" loading="lazy">
+        </section>
+
+        <section class="kangoo-referrals-card kangoo-referrals-share" aria-label="<?php esc_attr_e('Referral sharing details', 'kangoo'); ?>">
+            <div class="kangoo-referrals-share__row">
+                <label for="kangoo_referral_link"><?php esc_html_e('Your referral link', 'kangoo'); ?></label>
+                <div class="kangoo-referrals-copy-field">
+                    <input id="kangoo_referral_link" type="text" value="<?php echo esc_attr($link); ?>" readonly>
+                    <button type="button" class="button kangoo-referrals-copy-button" data-copy-value="<?php echo esc_attr($link); ?>" data-copy-label="<?php esc_attr_e('Copy Link', 'kangoo'); ?>" data-copy-success="<?php esc_attr_e('Copied', 'kangoo'); ?>">
+                        <span class="kangoo-referrals-copy-button__icon" aria-hidden="true"></span>
+                        <span><?php esc_html_e('Copy Link', 'kangoo'); ?></span>
+                    </button>
+                </div>
+            </div>
+            <div class="kangoo-referrals-share__row">
+                <label for="kangoo_referral_code"><?php esc_html_e('Your referral code', 'kangoo'); ?></label>
+                <div class="kangoo-referrals-copy-field">
+                    <input id="kangoo_referral_code" type="text" value="<?php echo esc_attr($code); ?>" readonly>
+                    <button type="button" class="button kangoo-referrals-copy-button" data-copy-value="<?php echo esc_attr($code); ?>" data-copy-label="<?php esc_attr_e('Copy Code', 'kangoo'); ?>" data-copy-success="<?php esc_attr_e('Copied', 'kangoo'); ?>">
+                        <span class="kangoo-referrals-copy-button__icon" aria-hidden="true"></span>
+                        <span><?php esc_html_e('Copy Code', 'kangoo'); ?></span>
+                    </button>
+                </div>
+            </div>
+            <?php if ($is_placeholder) : ?>
+                <p class="kangoo-referrals-placeholder-note"><?php esc_html_e('Showing example referral activity until live referral records are available for this customer.', 'kangoo'); ?></p>
+            <?php endif; ?>
+        </section>
+
+        <section class="kangoo-referrals-stats" aria-label="<?php esc_attr_e('Referral summary', 'kangoo'); ?>">
+            <article class="kangoo-referrals-stat kangoo-referrals-stat--blue">
+                <span aria-hidden="true"><img src="<?php echo esc_url($referral_icons['referral']); ?>" alt="" loading="lazy"></span>
+                <div>
+                    <p><?php esc_html_e('Successful Referrals', 'kangoo'); ?></p>
+                    <strong><?php echo esc_html(number_format_i18n($summary['successful_referrals'])); ?></strong>
+                    <small><?php echo wp_kses_post(sprintf(__('Friends who have spent %s+', 'kangoo'), kangoo_plain_wc_price($target))); ?></small>
+                </div>
+            </article>
+            <article class="kangoo-referrals-stat kangoo-referrals-stat--orange">
+                <span aria-hidden="true"><img src="<?php echo esc_url($referral_icons['wall_clock']); ?>" alt="" loading="lazy"></span>
+                <div>
+                    <p><?php esc_html_e('Pending Rewards', 'kangoo'); ?></p>
+                    <strong><?php echo esc_html(kangoo_plain_wc_price($summary['pending_rewards'])); ?></strong>
+                    <small><?php esc_html_e('Rewards waiting to be paid', 'kangoo'); ?></small>
+                </div>
+            </article>
+            <article class="kangoo-referrals-stat kangoo-referrals-stat--green">
+                <span aria-hidden="true"><img src="<?php echo esc_url($referral_icons['wallet']); ?>" alt="" loading="lazy"></span>
+                <div>
+                    <p><?php esc_html_e('Total Earned', 'kangoo'); ?></p>
+                    <strong><?php echo esc_html(kangoo_plain_wc_price($summary['total_earned'])); ?></strong>
+                    <small><?php esc_html_e('Total rewards paid to you', 'kangoo'); ?></small>
+                </div>
+            </article>
+        </section>
+
+        <section class="kangoo-referrals-card kangoo-referrals-steps">
+            <h2><?php esc_html_e('How it works', 'kangoo'); ?></h2>
+            <div class="kangoo-referrals-steps__grid">
+                <article>
+                    <span class="kangoo-referrals-step-icon kangoo-referrals-step-icon--share" aria-hidden="true"><img src="<?php echo esc_url($referral_icons['share']); ?>" alt="" loading="lazy"></span>
+                    <strong><?php esc_html_e('1. Invite', 'kangoo'); ?></strong>
+                    <p><?php esc_html_e('Share your referral link or code with friends.', 'kangoo'); ?></p>
+                </article>
+                <article>
+                    <span class="kangoo-referrals-step-icon kangoo-referrals-step-icon--gift" aria-hidden="true"><img src="<?php echo esc_url($referral_icons['gifts']); ?>" alt="" loading="lazy"></span>
+                    <strong><?php esc_html_e('2. Friend gets 15% off', 'kangoo'); ?></strong>
+                    <p><?php esc_html_e('Your friend receives 15% off their first order.', 'kangoo'); ?></p>
+                </article>
+                <article>
+                    <span class="kangoo-referrals-step-icon kangoo-referrals-step-icon--cash" aria-hidden="true"><img src="<?php echo esc_url($referral_icons['earn']); ?>" alt="" loading="lazy"></span>
+                    <strong><?php echo esc_html(sprintf(__('3. Earn %s cash', 'kangoo'), kangoo_plain_wc_price($reward_amount))); ?></strong>
+                    <p><?php echo wp_kses_post(sprintf(__('Once your referred friend spends %s or more in completed orders, you will receive a %s reward.', 'kangoo'), kangoo_plain_wc_price($target), kangoo_plain_wc_price($reward_amount))); ?></p>
+                </article>
+            </div>
+        </section>
+
+        <section class="kangoo-referrals-card kangoo-referrals-progress-list">
+            <h2><?php esc_html_e('Referral progress', 'kangoo'); ?></h2>
+            <div class="kangoo-referrals-progress-list__items">
+                <?php foreach ($records as $record) : ?>
+                    <?php
+                    $display_name = kangoo_referrals_display_name($record);
+                    $completed_spend = (float) $record['completed_spend_total'];
+                    $progress = $target > 0 ? min(100, max(0, ($completed_spend / $target) * 100)) : 0;
+                    $remaining = max(0, $target - $completed_spend);
+                    $status = $record['reward_status'];
+                    ?>
+                    <article class="kangoo-referrals-progress-card">
+                        <span class="kangoo-referrals-avatar" aria-hidden="true"><?php echo esc_html(kangoo_referrals_initials($display_name)); ?></span>
+                        <div class="kangoo-referrals-progress-card__main">
+                            <div class="kangoo-referrals-progress-card__topline">
+                                <strong><?php echo esc_html($display_name); ?></strong>
+                                <small><?php echo esc_html(sprintf(__('First order: %s', 'kangoo'), kangoo_referrals_format_date($record['first_order_date']))); ?></small>
+                            </div>
+                            <p><?php echo esc_html(sprintf(__('%1$s / %2$s completed', 'kangoo'), kangoo_plain_wc_price($completed_spend), kangoo_plain_wc_price($target))); ?></p>
+                            <div class="kangoo-referrals-progress-track" aria-hidden="true"><span style="width: <?php echo esc_attr(number_format($progress, 2, '.', '')); ?>%"></span></div>
+                            <small><?php echo $remaining > 0 ? esc_html(sprintf(__('%s remaining until reward unlocks', 'kangoo'), kangoo_plain_wc_price($remaining))) : esc_html__('Spend target reached', 'kangoo'); ?></small>
+                        </div>
+                        <div class="kangoo-referrals-progress-card__reward">
+                            <span class="kangoo-referrals-status kangoo-referrals-status--<?php echo esc_attr($status); ?>"><?php echo esc_html(kangoo_referrals_status_label($status)); ?></span>
+                            <strong><?php echo esc_html(sprintf(__('Reward: %s', 'kangoo'), kangoo_plain_wc_price($record['reward_amount']))); ?></strong>
+                            <small><?php echo wp_kses_post(sprintf(__('Reward is paid after %s+ in completed orders.', 'kangoo'), kangoo_plain_wc_price($target))); ?></small>
+                        </div>
+                    </article>
+                <?php endforeach; ?>
+            </div>
+        </section>
+
+        <section class="kangoo-referrals-card kangoo-referrals-history">
+            <div class="kangoo-account-section-heading">
+                <h2><?php esc_html_e('Referral history', 'kangoo'); ?></h2>
+                <a href="<?php echo esc_url(wc_get_account_endpoint_url(kangoo_referrals_endpoint_slug())); ?>"><?php esc_html_e('View full history', 'kangoo'); ?> <span aria-hidden="true">-&gt;</span></a>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th><?php esc_html_e('Date', 'kangoo'); ?></th>
+                        <th><?php esc_html_e('Referred friend', 'kangoo'); ?></th>
+                        <th><?php esc_html_e('Their spend', 'kangoo'); ?></th>
+                        <th><?php esc_html_e('Status', 'kangoo'); ?></th>
+                        <th><?php esc_html_e('Reward', 'kangoo'); ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($records as $record) : ?>
+                        <?php
+                        $status = $record['reward_status'];
+                        $spend_label = (float) $record['completed_spend_total'] < $target
+                            ? sprintf(__('%1$s / %2$s', 'kangoo'), kangoo_plain_wc_price($record['completed_spend_total']), kangoo_plain_wc_price($target))
+                            : kangoo_plain_wc_price($record['completed_spend_total']);
+                        ?>
+                        <tr>
+                            <td data-label="<?php esc_attr_e('Date', 'kangoo'); ?>"><?php echo esc_html(kangoo_referrals_format_date($record['first_order_date'])); ?></td>
+                            <td data-label="<?php esc_attr_e('Referred friend', 'kangoo'); ?>"><?php echo esc_html(kangoo_referrals_display_name($record)); ?></td>
+                            <td data-label="<?php esc_attr_e('Their spend', 'kangoo'); ?>"><?php echo esc_html($spend_label); ?></td>
+                            <td data-label="<?php esc_attr_e('Status', 'kangoo'); ?>"><span class="kangoo-referrals-status kangoo-referrals-status--<?php echo esc_attr($status); ?>"><?php echo esc_html(kangoo_referrals_status_label($status)); ?></span></td>
+                            <td data-label="<?php esc_attr_e('Reward', 'kangoo'); ?>"><?php echo esc_html(kangoo_plain_wc_price($record['reward_amount'])); ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="kangoo-referrals-info-grid" aria-label="<?php esc_attr_e('Referral rules', 'kangoo'); ?>">
+            <article>
+                <strong><?php esc_html_e('Valid orders only', 'kangoo'); ?></strong>
+                <p><?php esc_html_e('Rewards are paid on completed orders only.', 'kangoo'); ?></p>
+            </article>
+            <article>
+                <strong><?php esc_html_e('Minimum spend', 'kangoo'); ?></strong>
+                <p><?php echo wp_kses_post(sprintf(__('Your friend must spend %s or more in total completed orders.', 'kangoo'), kangoo_plain_wc_price($target))); ?></p>
+            </article>
+            <article>
+                <strong><?php echo esc_html(sprintf(__('%s cash reward', 'kangoo'), kangoo_plain_wc_price($reward_amount))); ?></strong>
+                <p><?php echo wp_kses_post(sprintf(__('We will pay %s to your chosen payout method once the referral qualifies.', 'kangoo'), kangoo_plain_wc_price($reward_amount))); ?></p>
+            </article>
+            <article>
+                <strong><?php esc_html_e('Fraud protection', 'kangoo'); ?></strong>
+                <p><?php esc_html_e('Self-referrals, duplicate accounts, refunded orders, and suspicious activity are excluded.', 'kangoo'); ?></p>
+            </article>
+        </section>
+
+        <section class="kangoo-referrals-terms">
+            <span aria-hidden="true">i</span>
+            <p><?php echo wp_kses_post(sprintf(__('Referrers receive a %1$s reward once the referred customer has spent %2$s or more in completed orders. Rewards are reviewed before payment and cancelled/refunded orders do not qualify.', 'kangoo'), kangoo_plain_wc_price($reward_amount), kangoo_plain_wc_price($target))); ?></p>
+            <a href="<?php echo esc_url(home_url('/terms-and-conditions/#referrals')); ?>"><?php esc_html_e('View full terms', 'kangoo'); ?> <span aria-hidden="true">-&gt;</span></a>
+        </section>
+    </div>
+    <?php
+}
+add_action('woocommerce_account_refer-a-friend_endpoint', 'kangoo_referrals_account_endpoint_content');
+
 function kangoo_account_get_user_initials($user) {
     $name = trim((string) $user->display_name);
 
@@ -7356,7 +8317,7 @@ function kangoo_account_page_body_class($classes) {
         $classes[] = 'is-account-page';
 
         $endpoint = 'dashboard';
-        $account_endpoints = array('orders', 'edit-address', 'payment-methods', 'edit-account', 'rewards');
+        $account_endpoints = array('orders', 'edit-address', 'payment-methods', 'edit-account', 'rewards', kangoo_referrals_endpoint_slug());
 
         foreach ($account_endpoints as $account_endpoint) {
             if (function_exists('is_wc_endpoint_url') && is_wc_endpoint_url($account_endpoint)) {

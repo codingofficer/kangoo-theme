@@ -63,6 +63,71 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
+  function copyText(value) {
+    if (navigator.clipboard && window.isSecureContext) {
+      return navigator.clipboard.writeText(value);
+    }
+
+    return new Promise(function (resolve, reject) {
+      const textarea = document.createElement('textarea');
+      textarea.value = value;
+      textarea.setAttribute('readonly', '');
+      textarea.style.position = 'fixed';
+      textarea.style.top = '-1000px';
+      textarea.style.left = '-1000px';
+      document.body.appendChild(textarea);
+      textarea.select();
+
+      try {
+        const didCopy = document.execCommand('copy');
+        document.body.removeChild(textarea);
+        didCopy ? resolve() : reject(new Error('Copy command was blocked.'));
+      } catch (error) {
+        document.body.removeChild(textarea);
+        reject(error);
+      }
+    });
+  }
+
+  content.querySelectorAll('.kangoo-referrals-copy-button[data-copy-value]').forEach(function (button) {
+    let resetTimer = null;
+    const label = button.querySelector('span:last-child');
+    const originalLabel = button.getAttribute('data-copy-label') || (label ? label.textContent : 'Copy');
+    const successLabel = button.getAttribute('data-copy-success') || 'Copied';
+
+    button.addEventListener('click', function () {
+      const value = button.getAttribute('data-copy-value') || '';
+
+      if (!value) {
+        return;
+      }
+
+      copyText(value).then(function () {
+        if (label) {
+          label.textContent = successLabel;
+        }
+
+        button.classList.add('is-copied');
+        window.clearTimeout(resetTimer);
+        resetTimer = window.setTimeout(function () {
+          if (label) {
+            label.textContent = originalLabel;
+          }
+
+          button.classList.remove('is-copied');
+        }, 2000);
+      }).catch(function () {
+        const field = button.closest('.kangoo-referrals-copy-field');
+        const input = field ? field.querySelector('input') : null;
+
+        if (input) {
+          input.focus();
+          input.select();
+        }
+      });
+    });
+  });
+
   document.addEventListener('keydown', function (event) {
     if (event.key === 'Escape') {
       closeMenu();

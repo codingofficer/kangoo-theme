@@ -1765,3 +1765,581 @@ body.is-account-endpoint-edit-account .woocommerce-MyAccount-content input[type=
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+/* =========================
+   REFER A FRIEND
+========================= */
+
+.kangoo-referrals-dashboard {
+  display: grid;
+  gap: clamp(1rem, 2vw, 1.45rem);
+}
+
+.kangoo-referrals-card,
+.kangoo-referrals-stat,
+.kangoo-referrals-info-grid article,
+.kangoo-referrals-terms {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(77, 163, 255, 0.08), transparent 28%),
+    linear-gradient(180deg, rgba(25, 29, 38, 0.78), rgba(13, 16, 22, 0.88));
+  box-shadow: 0 22px 80px rgba(0, 0, 0, 0.2);
+}
+
+.kangoo-referrals-hero {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(170px, 0.34fr);
+  align-items: center;
+  gap: clamp(1rem, 3vw, 2.4rem);
+  min-height: 280px;
+  padding: clamp(1.25rem, 3vw, 2.2rem);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 72% 30%, rgba(255, 255, 255, 0.1), transparent 19rem),
+    linear-gradient(135deg, rgba(22, 136, 255, 0.2), rgba(77, 163, 255, 0.06) 44%, rgba(255, 255, 255, 0.035));
+  box-shadow: 0 22px 80px rgba(0, 0, 0, 0.2);
+}
+
+.kangoo-referrals-hero__content {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 1rem;
+  align-items: start;
+  max-width: 740px;
+}
+
+.kangoo-referrals-hero__badge,
+.kangoo-referrals-stat > span,
+.kangoo-referrals-step-icon,
+.kangoo-referrals-terms > span {
+  display: inline-flex;
+  width: 58px;
+  height: 58px;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  border-radius: 999px;
+  background: rgba(77, 163, 255, 0.15);
+}
+
+.kangoo-referrals-hero__badge img,
+.kangoo-referrals-stat > span img,
+.kangoo-referrals-step-icon img {
+  display: block;
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+}
+
+.kangoo-referrals-hero h1 {
+  margin: 0 0 0.35rem !important;
+  color: #fff;
+  font-size: clamp(2rem, 3.2vw, 3rem);
+  line-height: 1.06;
+}
+
+.kangoo-referrals-hero p {
+  max-width: 62ch;
+  margin: 0.65rem 0 0;
+}
+
+.kangoo-referrals-hero__lead {
+  color: #fff !important;
+  font-size: clamp(1.12rem, 1.6vw, 1.45rem);
+  font-weight: 700;
+}
+
+.kangoo-referrals-hero__lead strong {
+  color: #4da3ff !important;
+}
+
+.kangoo-referrals-hero__mascot {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 260px);
+  justify-self: end;
+  filter: drop-shadow(0 28px 36px rgba(0, 0, 0, 0.24));
+}
+
+.kangoo-referrals-share {
+  display: grid;
+  gap: 1rem;
+  padding: clamp(1rem, 2vw, 1.45rem);
+}
+
+.kangoo-referrals-share__row {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.kangoo-referrals-share label {
+  color: #fff;
+  font-weight: 800;
+}
+
+.kangoo-referrals-copy-field {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  min-height: 56px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.woocommerce-account .woocommerce-MyAccount-content .kangoo-referrals-copy-field input[type="text"] {
+  min-height: 54px;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: #fff;
+  padding-inline: 1rem;
+  box-shadow: none !important;
+}
+
+.woocommerce-account .woocommerce-MyAccount-content .kangoo-referrals-copy-button.button {
+  min-height: 44px;
+  margin-right: 0.35rem;
+  gap: 0.5rem;
+  border-radius: 10px;
+  white-space: nowrap;
+}
+
+.woocommerce-account .woocommerce-MyAccount-content .kangoo-referrals-copy-button.is-copied.button {
+  background: linear-gradient(135deg, #22c55e, #16a34a) !important;
+  box-shadow: 0 14px 30px rgba(34, 197, 94, 0.18);
+}
+
+.kangoo-referrals-copy-button__icon {
+  width: 18px;
+  height: 18px;
+  background: currentColor;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M8 3h12v14h-3V6H8zm-4 4h12v16H4zm3 3v10h6V10z'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M8 3h12v14h-3V6H8zm-4 4h12v16H4zm3 3v10h6V10z'/%3E%3C/svg%3E");
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+.kangoo-referrals-placeholder-note {
+  width: fit-content;
+  margin: 0;
+  padding: 0.55rem 0.75rem;
+  border-radius: 10px;
+  background: rgba(245, 158, 11, 0.13);
+  color: #fed7aa !important;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.kangoo-referrals-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.kangoo-referrals-stat {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 1rem;
+  align-items: center;
+  padding: clamp(1rem, 2vw, 1.3rem);
+}
+
+.kangoo-referrals-stat > span {
+  width: 66px;
+  height: 66px;
+}
+
+.kangoo-referrals-stat > span img {
+  width: 40px;
+  height: 40px;
+}
+
+.kangoo-referrals-stat p,
+.kangoo-referrals-stat small {
+  margin: 0;
+}
+
+.kangoo-referrals-stat strong {
+  display: block;
+  margin: 0.15rem 0;
+  font-size: clamp(2rem, 3vw, 2.8rem);
+  line-height: 1;
+}
+
+.kangoo-referrals-stat--blue strong {
+  color: #4da3ff !important;
+}
+
+.kangoo-referrals-stat--orange strong {
+  color: #fb923c !important;
+}
+
+.kangoo-referrals-stat--green strong {
+  color: #4ade80 !important;
+}
+
+.kangoo-referrals-steps,
+.kangoo-referrals-progress-list,
+.kangoo-referrals-history {
+  padding: clamp(1rem, 2vw, 1.45rem);
+}
+
+.kangoo-referrals-steps h2,
+.kangoo-referrals-progress-list h2 {
+  margin: 0 0 1.05rem !important;
+}
+
+.kangoo-referrals-steps__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 1.4rem);
+}
+
+.kangoo-referrals-steps article {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 0.65rem;
+  text-align: center;
+}
+
+.kangoo-referrals-steps article:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 31px;
+  right: calc(-0.7rem - 24px);
+  width: 48px;
+  height: 18px;
+  background: rgba(77, 163, 255, 0.5);
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 18'%3E%3Cpath fill='black' d='M36 0 48 9 36 18v-7H0V7h36z'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 18'%3E%3Cpath fill='black' d='M36 0 48 9 36 18v-7H0V7h36z'/%3E%3C/svg%3E");
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+.kangoo-referrals-step-icon {
+  width: 72px;
+  height: 72px;
+}
+
+.kangoo-referrals-step-icon img {
+  width: 42px;
+  height: 42px;
+}
+
+.kangoo-referrals-steps strong {
+  color: #4da3ff !important;
+}
+
+.kangoo-referrals-steps p {
+  max-width: 28ch;
+  margin: 0;
+}
+
+.kangoo-referrals-progress-list__items {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.kangoo-referrals-progress-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) minmax(160px, 0.28fr);
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.kangoo-referrals-avatar {
+  display: inline-flex;
+  width: 56px;
+  height: 56px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: rgba(77, 163, 255, 0.16);
+  color: #93c5fd;
+  font-weight: 900;
+}
+
+.kangoo-referrals-progress-card__main,
+.kangoo-referrals-progress-card__reward {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.kangoo-referrals-progress-card__main p,
+.kangoo-referrals-progress-card__main small,
+.kangoo-referrals-progress-card__reward small {
+  margin: 0;
+}
+
+.kangoo-referrals-progress-card__topline {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.kangoo-referrals-progress-track {
+  height: 12px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.kangoo-referrals-progress-track span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(135deg, #1688ff, #006dff);
+}
+
+.kangoo-referrals-progress-card__reward {
+  justify-items: end;
+  text-align: right;
+}
+
+.kangoo-referrals-status {
+  display: inline-flex;
+  min-height: 28px;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  padding: 0.24rem 0.72rem;
+  border-radius: 999px;
+  background: rgba(245, 158, 11, 0.18);
+  color: #fed7aa;
+  font-size: 0.82rem;
+  font-weight: 850;
+}
+
+.kangoo-referrals-status--qualified {
+  background: rgba(77, 163, 255, 0.18);
+  color: #bfdbfe;
+}
+
+.kangoo-referrals-status--paid {
+  background: rgba(34, 197, 94, 0.18);
+  color: #bbf7d0;
+}
+
+.kangoo-referrals-status--rejected {
+  background: rgba(148, 163, 184, 0.2);
+  color: #e2e8f0;
+}
+
+.kangoo-referrals-history table {
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 14px !important;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: rgba(255, 255, 255, 0.02) !important;
+}
+
+.kangoo-referrals-history th,
+.kangoo-referrals-history td {
+  padding: 0.95rem 1rem !important;
+}
+
+.kangoo-referrals-history td:last-child,
+.kangoo-referrals-history th:last-child {
+  text-align: right;
+}
+
+.kangoo-referrals-info-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.kangoo-referrals-info-grid article {
+  display: grid;
+  gap: 0.35rem;
+  padding: 1rem;
+}
+
+.kangoo-referrals-info-grid p {
+  margin: 0;
+}
+
+.kangoo-referrals-terms {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem 1.2rem;
+}
+
+.kangoo-referrals-terms > span {
+  width: 46px;
+  height: 46px;
+  color: #fff;
+  font-size: 1.35rem;
+  font-weight: 900;
+}
+
+.kangoo-referrals-terms p {
+  margin: 0;
+}
+
+.kangoo-referrals-terms a {
+  color: #4da3ff !important;
+  font-weight: 850;
+  white-space: nowrap;
+}
+
+.woocommerce-account.logged-in .woocommerce-MyAccount-navigation-link--refer-a-friend a::before {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M8.5 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8m7-1a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7M2 21a6.5 6.5 0 0 1 13 0zm11.5 0a7.7 7.7 0 0 0-1.5-4.6 5.7 5.7 0 0 1 9 4.6z'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M8.5 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8m7-1a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7M2 21a6.5 6.5 0 0 1 13 0zm11.5 0a7.7 7.7 0 0 0-1.5-4.6 5.7 5.7 0 0 1 9 4.6z'/%3E%3C/svg%3E");
+}
+
+@media (max-width: 1100px) {
+  .kangoo-referrals-hero,
+  .kangoo-referrals-stats,
+  .kangoo-referrals-steps__grid,
+  .kangoo-referrals-info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .kangoo-referrals-hero__mascot {
+    position: absolute;
+    right: 1rem;
+    bottom: 1rem;
+    width: min(32vw, 180px);
+    opacity: 0.2;
+  }
+
+  .kangoo-referrals-steps article:not(:last-child)::after {
+    display: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .kangoo-referrals-hero {
+    min-height: 0;
+  }
+
+  .kangoo-referrals-hero__content,
+  .kangoo-referrals-progress-card,
+  .kangoo-referrals-terms {
+    grid-template-columns: 1fr;
+  }
+
+  .kangoo-referrals-hero__badge,
+  .kangoo-referrals-terms > span {
+    width: 50px;
+    height: 50px;
+  }
+
+  .kangoo-referrals-hero__badge img {
+    width: 30px;
+    height: 30px;
+  }
+
+  .kangoo-referrals-copy-field {
+    grid-template-columns: 1fr;
+    padding-bottom: 0.35rem;
+  }
+
+  .woocommerce-account .woocommerce-MyAccount-content .kangoo-referrals-copy-button.button {
+    width: calc(100% - 0.7rem);
+    margin: 0.35rem;
+  }
+
+  .kangoo-referrals-stat,
+  .kangoo-referrals-progress-card__topline {
+    align-items: flex-start;
+  }
+
+  .kangoo-referrals-progress-card__topline {
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .kangoo-referrals-progress-card__reward {
+    justify-items: start;
+    text-align: left;
+  }
+
+  .kangoo-referrals-history table,
+  .kangoo-referrals-history thead,
+  .kangoo-referrals-history tbody,
+  .kangoo-referrals-history tr,
+  .kangoo-referrals-history td {
+    display: block !important;
+    width: 100% !important;
+    white-space: normal !important;
+  }
+
+  .kangoo-referrals-history table {
+    border: 0 !important;
+    background: transparent !important;
+  }
+
+  .kangoo-referrals-history thead {
+    display: none !important;
+  }
+
+  .kangoo-referrals-history tr {
+    margin-bottom: 0.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.03);
+    overflow: hidden;
+  }
+
+  .kangoo-referrals-history td {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+    text-align: right !important;
+  }
+
+  .kangoo-referrals-history td::before {
+    content: attr(data-label);
+    flex: 0 0 auto;
+    color: rgba(226, 232, 240, 0.72);
+    font-weight: 800;
+    text-align: left;
+  }
+
+  .kangoo-referrals-history td:last-child {
+    border-bottom: 0 !important;
+  }
+
+  .kangoo-referrals-terms a {
+    width: fit-content;
+  }
+}
+
+@media (max-width: 520px) {
+  .kangoo-referrals-stat {
+    grid-template-columns: 1fr;
+  }
+
+  .kangoo-referrals-stat > span {
+    width: 58px;
+    height: 58px;
+  }
+}
