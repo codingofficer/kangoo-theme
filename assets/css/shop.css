@@ -420,6 +420,17 @@
   color: var(--color-accent);
 }
 
+.kangoo-review-stars {
+  display: inline-flex;
+  gap: 0.08rem;
+  color: #f59e0b;
+  line-height: 1;
+}
+
+.kangoo-review-stars .is-empty {
+  color: rgba(148, 163, 184, 0.45);
+}
+
 .product-card .product-card__review-summary .kangoo-review-stars {
   font-size: 0.95em;
 }
