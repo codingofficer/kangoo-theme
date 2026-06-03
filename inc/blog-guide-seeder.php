@@ -5,6 +5,10 @@ function kangoo_blog_guide_seeder_data_path() {
     return get_template_directory() . '/guides/blog-guides/kangoo-blog-seed-data.json';
 }
 
+function kangoo_blog_guide_seeder_banner_map_path() {
+    return get_template_directory() . '/generated-blog-banners/banner-map.csv';
+}
+
 function kangoo_blog_guide_seeder_load_guides() {
     $path = kangoo_blog_guide_seeder_data_path();
 
@@ -20,6 +24,56 @@ function kangoo_blog_guide_seeder_load_guides() {
     }
 
     return $guides;
+}
+
+function kangoo_blog_guide_seeder_load_banner_map() {
+    $path = kangoo_blog_guide_seeder_banner_map_path();
+
+    if (!file_exists($path) || !is_readable($path)) {
+        return new WP_Error('kangoo_blog_banner_map_missing', __('Banner map file is missing.', 'kangoo'));
+    }
+
+    $handle = fopen($path, 'r');
+
+    if (!$handle) {
+        return new WP_Error('kangoo_blog_banner_map_unreadable', __('Banner map file could not be opened.', 'kangoo'));
+    }
+
+    $headers = fgetcsv($handle);
+    $rows = array();
+
+    if (!is_array($headers)) {
+        fclose($handle);
+        return new WP_Error('kangoo_blog_banner_map_invalid', __('Banner map file has no header row.', 'kangoo'));
+    }
+
+    while (($data = fgetcsv($handle)) !== false) {
+        $row = array();
+
+        foreach ($headers as $index => $header) {
+            $row[$header] = isset($data[$index]) ? $data[$index] : '';
+        }
+
+        if (!empty($row['slug']) && !empty($row['banner_filename'])) {
+            $rows[] = $row;
+        }
+    }
+
+    fclose($handle);
+
+    return $rows;
+}
+
+function kangoo_blog_guide_seeder_get_blog_post_by_slug($slug) {
+    $posts = get_posts(array(
+        'name'           => sanitize_title($slug),
+        'post_type'      => 'kangoo_blog',
+        'post_status'    => 'any',
+        'posts_per_page' => 1,
+        'fields'         => 'ids',
+    ));
+
+    return $posts ? (int) $posts[0] : 0;
 }
 
 function kangoo_blog_guide_seeder_admin_menu() {
@@ -42,12 +96,15 @@ function kangoo_blog_guide_seeder_admin_page() {
     $is_error = is_wp_error($guides);
     $guide_count = $is_error ? 0 : count($guides);
     $existing_count = 0;
+    $banner_rows = kangoo_blog_guide_seeder_load_banner_map();
+    $banner_map_error = is_wp_error($banner_rows);
+    $banner_count = $banner_map_error ? 0 : count($banner_rows);
 
     if (!$is_error) {
         foreach ($guides as $guide) {
             $slug = isset($guide['slug']) ? sanitize_title($guide['slug']) : '';
 
-            if ($slug && get_page_by_path($slug, OBJECT, 'kangoo_blog')) {
+            if ($slug && kangoo_blog_guide_seeder_get_blog_post_by_slug($slug)) {
                 $existing_count++;
             }
         }
@@ -134,6 +191,40 @@ function kangoo_blog_guide_seeder_admin_page() {
                 </form>
             </div>
 
+            <div class="card" style="max-width: 760px;">
+                <h2><?php esc_html_e('Blog banners', 'kangoo'); ?></h2>
+
+                <?php if ($banner_map_error) : ?>
+                    <p><?php echo esc_html($banner_rows->get_error_message()); ?></p>
+                    <p><code><?php echo esc_html(kangoo_blog_guide_seeder_banner_map_path()); ?></code></p>
+                <?php else : ?>
+                    <p>
+                        <?php
+                        printf(
+                            esc_html__('%d banner rows found. Import matching PNGs into Media Library, set featured images, and write attachment alt text.', 'kangoo'),
+                            (int) $banner_count
+                        );
+                        ?>
+                    </p>
+
+                    <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
+                        <?php wp_nonce_field('kangoo_blog_banner_import', 'kangoo_blog_banner_import_nonce'); ?>
+                        <input type="hidden" name="action" value="kangoo_assign_blog_banners">
+
+                        <p>
+                            <label>
+                                <input type="checkbox" name="overwrite_featured_image" value="1">
+                                <?php esc_html_e('Replace existing featured images', 'kangoo'); ?>
+                            </label>
+                        </p>
+
+                        <p class="description"><?php esc_html_e('Leave unchecked to only fill posts without a featured image. Existing imported banner attachments are reused when possible.', 'kangoo'); ?></p>
+
+                        <?php submit_button(__('Import and assign blog banners', 'kangoo')); ?>
+                    </form>
+                <?php endif; ?>
+            </div>
+
             <h2><?php esc_html_e('Guides in this batch', 'kangoo'); ?></h2>
             <table class="widefat striped" style="max-width: 1100px;">
                 <thead>
@@ -150,7 +241,8 @@ function kangoo_blog_guide_seeder_admin_page() {
                     <?php foreach ($guides as $guide) : ?>
                         <?php
                         $slug = isset($guide['slug']) ? sanitize_title($guide['slug']) : '';
-                        $existing = $slug ? get_page_by_path($slug, OBJECT, 'kangoo_blog') : null;
+                        $existing_id = $slug ? kangoo_blog_guide_seeder_get_blog_post_by_slug($slug) : 0;
+                        $existing = $existing_id ? get_post($existing_id) : null;
                         ?>
                         <tr>
                             <td><?php echo esc_html(isset($guide['order']) ? (int) $guide['order'] : ''); ?></td>
@@ -203,6 +295,107 @@ function kangoo_blog_guide_seeder_assign_topic($post_id, $topic_name) {
 
     $term_id = is_array($term) ? (int) $term['term_id'] : (int) $term;
     wp_set_object_terms($post_id, array($term_id), 'blog_topic', false);
+}
+
+function kangoo_blog_guide_seeder_banner_alt_text($row, $post_id) {
+    $title = '';
+
+    foreach (array('seo_title', 'post_title', 'title') as $key) {
+        if (!empty($row[$key])) {
+            $title = $row[$key];
+            break;
+        }
+    }
+
+    if ($title === '') {
+        $title = get_the_title($post_id);
+    }
+
+    $title = preg_replace('/\s+\|\s*Kangoo(?:\s+Pouches)?\s*$/i', '', wp_strip_all_tags($title));
+    $title = trim(preg_replace('/\s+/', ' ', $title));
+
+    return sprintf(
+        __('Kangoo Pouches blog banner for %s', 'kangoo'),
+        $title ? $title : get_the_title($post_id)
+    );
+}
+
+function kangoo_blog_guide_seeder_find_banner_attachment($slug) {
+    $attachments = get_posts(array(
+        'post_type'      => 'attachment',
+        'post_status'    => 'inherit',
+        'posts_per_page' => 1,
+        'fields'         => 'ids',
+        'meta_key'       => '_kangoo_blog_banner_slug',
+        'meta_value'     => sanitize_title($slug),
+    ));
+
+    return $attachments ? (int) $attachments[0] : 0;
+}
+
+function kangoo_blog_guide_seeder_media_includes() {
+    require_once ABSPATH . 'wp-admin/includes/file.php';
+    require_once ABSPATH . 'wp-admin/includes/image.php';
+    require_once ABSPATH . 'wp-admin/includes/media.php';
+}
+
+function kangoo_blog_guide_seeder_import_banner_attachment($row, $post_id) {
+    $slug = isset($row['slug']) ? sanitize_title($row['slug']) : '';
+    $filename = isset($row['banner_filename']) ? sanitize_file_name(basename($row['banner_filename'])) : '';
+
+    if ($slug === '' || $filename === '') {
+        return new WP_Error('kangoo_blog_banner_row_invalid', __('Banner row is missing a slug or filename.', 'kangoo'));
+    }
+
+    $existing_attachment_id = kangoo_blog_guide_seeder_find_banner_attachment($slug);
+    $alt_text = kangoo_blog_guide_seeder_banner_alt_text($row, $post_id);
+
+    if ($existing_attachment_id) {
+        update_post_meta($existing_attachment_id, '_wp_attachment_image_alt', $alt_text);
+        return $existing_attachment_id;
+    }
+
+    $source_path = get_template_directory() . '/generated-blog-banners/' . $filename;
+
+    if (!file_exists($source_path) || !is_readable($source_path)) {
+        return new WP_Error('kangoo_blog_banner_missing_file', sprintf(__('Banner file is missing: %s', 'kangoo'), $filename));
+    }
+
+    kangoo_blog_guide_seeder_media_includes();
+
+    $temporary_file = wp_tempnam($filename);
+
+    if (!$temporary_file || !copy($source_path, $temporary_file)) {
+        return new WP_Error('kangoo_blog_banner_temp_failed', sprintf(__('Could not prepare banner file: %s', 'kangoo'), $filename));
+    }
+
+    $file_type = wp_check_filetype($filename);
+    $file_array = array(
+        'name'     => $filename,
+        'type'     => !empty($file_type['type']) ? $file_type['type'] : 'image/png',
+        'tmp_name' => $temporary_file,
+        'error'    => 0,
+        'size'     => filesize($source_path),
+    );
+
+    $attachment_id = media_handle_sideload($file_array, $post_id, $alt_text);
+
+    if (is_wp_error($attachment_id)) {
+        @unlink($temporary_file);
+        return $attachment_id;
+    }
+
+    wp_update_post(array(
+        'ID'           => $attachment_id,
+        'post_title'   => $alt_text,
+        'post_excerpt' => $alt_text,
+    ));
+
+    update_post_meta($attachment_id, '_wp_attachment_image_alt', $alt_text);
+    update_post_meta($attachment_id, '_kangoo_blog_banner_slug', $slug);
+    update_post_meta($attachment_id, '_kangoo_blog_banner_filename', $filename);
+
+    return (int) $attachment_id;
 }
 
 function kangoo_blog_guide_seeder_post_dates($mode, $index, $start_date, $publish_time, $scheduled_at = '') {
@@ -270,7 +463,8 @@ function kangoo_blog_guide_seeder_handle_import() {
             continue;
         }
 
-        $existing = get_page_by_path($slug, OBJECT, 'kangoo_blog');
+        $existing_id = kangoo_blog_guide_seeder_get_blog_post_by_slug($slug);
+        $existing = $existing_id ? get_post($existing_id) : null;
 
         if ($existing && !$overwrite_existing) {
             $skipped++;
@@ -350,3 +544,81 @@ function kangoo_blog_guide_seeder_handle_import() {
     exit;
 }
 add_action('admin_post_kangoo_seed_blog_guides', 'kangoo_blog_guide_seeder_handle_import');
+
+function kangoo_blog_guide_seeder_handle_banner_import() {
+    if (!current_user_can('manage_options')) {
+        wp_die(esc_html__('You do not have permission to import blog banners.', 'kangoo'));
+    }
+
+    check_admin_referer('kangoo_blog_banner_import', 'kangoo_blog_banner_import_nonce');
+
+    $rows = kangoo_blog_guide_seeder_load_banner_map();
+
+    if (is_wp_error($rows)) {
+        wp_die(esc_html($rows->get_error_message()));
+    }
+
+    $overwrite_featured_image = !empty($_POST['overwrite_featured_image']);
+    $matched = 0;
+    $imported = 0;
+    $reused = 0;
+    $assigned = 0;
+    $skipped_with_image = 0;
+    $missing_posts = 0;
+    $errors = 0;
+
+    foreach ($rows as $row) {
+        $slug = isset($row['slug']) ? sanitize_title($row['slug']) : '';
+        $post_id = $slug ? kangoo_blog_guide_seeder_get_blog_post_by_slug($slug) : 0;
+
+        if (!$post_id) {
+            $missing_posts++;
+            continue;
+        }
+
+        $matched++;
+
+        if (!$overwrite_featured_image && has_post_thumbnail($post_id)) {
+            $skipped_with_image++;
+            continue;
+        }
+
+        $existing_attachment_id = kangoo_blog_guide_seeder_find_banner_attachment($slug);
+        $attachment_id = kangoo_blog_guide_seeder_import_banner_attachment($row, $post_id);
+
+        if (is_wp_error($attachment_id)) {
+            $errors++;
+            continue;
+        }
+
+        if ($existing_attachment_id) {
+            $reused++;
+        } else {
+            $imported++;
+        }
+
+        if (set_post_thumbnail($post_id, $attachment_id)) {
+            $assigned++;
+        }
+    }
+
+    set_transient(
+        'kangoo_blog_guide_seeder_result',
+        sprintf(
+            __('Blog banner import finished. Rows: %1$d. Matched posts: %2$d. Imported: %3$d. Reused: %4$d. Assigned: %5$d. Already had images: %6$d. Missing posts: %7$d. Errors: %8$d.', 'kangoo'),
+            count($rows),
+            $matched,
+            $imported,
+            $reused,
+            $assigned,
+            $skipped_with_image,
+            $missing_posts,
+            $errors
+        ),
+        60
+    );
+
+    wp_safe_redirect(admin_url('tools.php?page=kangoo-blog-guide-seeder'));
+    exit;
+}
+add_action('admin_post_kangoo_assign_blog_banners', 'kangoo_blog_guide_seeder_handle_banner_import');
