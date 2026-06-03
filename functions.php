@@ -1217,6 +1217,25 @@ function kangoo_dequeue_homepage_woocommerce_styles() {
 }
 add_action('wp_enqueue_scripts', 'kangoo_dequeue_homepage_woocommerce_styles', 100);
 
+function kangoo_dequeue_homepage_woocommerce_scripts() {
+    if (!is_front_page()) {
+        return;
+    }
+
+    $homepage_unused_woocommerce_scripts = array(
+        'wc-jquery-blockui',
+        'wc-add-to-cart',
+        'wc-js-cookie',
+        'woocommerce',
+        'wc-cart-fragments',
+    );
+
+    foreach ($homepage_unused_woocommerce_scripts as $script_handle) {
+        wp_dequeue_script($script_handle);
+    }
+}
+add_action('wp_enqueue_scripts', 'kangoo_dequeue_homepage_woocommerce_scripts', 100);
+
 function kangoo_should_delay_homepage_third_parties() {
     return is_front_page()
         && !is_user_logged_in()
