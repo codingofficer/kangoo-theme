@@ -25,6 +25,8 @@ $kangoo_age_gate_settings = function_exists('kangoo_get_age_gate_settings') ? ka
                     class="kangoo-age-gate__logo"
                     src="<?php echo esc_url('https://kangoopouches.co.uk/wp-content/uploads/2026/04/cropped-cropped-kangoo-pouches-logo-orange-white.png'); ?>"
                     alt="<?php echo esc_attr(get_bloginfo('name')); ?>"
+                    width="1212"
+                    height="311"
                     loading="eager"
                     decoding="async"
                 >
@@ -427,7 +429,13 @@ if (current_user_can('manage_options')) {
                                         <?php endif; ?>
 
                                         <?php if (!empty($image['url'])) : ?>
-                                            <img src="<?php echo esc_url($image['url']); ?>" alt="<?php echo esc_attr($label); ?>">
+                                            <?php
+                                            echo kangoo_render_acf_image($image, 'woocommerce_thumbnail', array(
+                                                'alt' => $label,
+                                                'loading' => 'lazy',
+                                                'sizes' => '72px',
+                                            ));
+                                            ?>
                                         <?php endif; ?>
 
                                         <span><?php echo esc_html($label); ?></span>
@@ -524,7 +532,13 @@ if (current_user_can('manage_options')) {
                                         style="background:<?php echo esc_attr($bg); ?>;color:<?php echo esc_attr($text); ?>;"
                                     >
                                         <?php if (!empty($icon['url'])) : ?>
-                                            <img src="<?php echo esc_url($icon['url']); ?>" alt="<?php echo esc_attr($label); ?>">
+                                            <?php
+                                            echo kangoo_render_acf_image($icon, 'medium', array(
+                                                'alt' => $label,
+                                                'loading' => 'lazy',
+                                                'sizes' => '76px',
+                                            ));
+                                            ?>
                                         <?php endif; ?>
 
                                         <span><?php echo esc_html($label); ?></span>
@@ -562,7 +576,13 @@ if (current_user_can('manage_options')) {
                                         style="background:<?php echo esc_attr($bg); ?>;color:<?php echo esc_attr($text); ?>;"
                                     >
                                         <?php if (!empty($icon['url'])) : ?>
-                                            <img src="<?php echo esc_url($icon['url']); ?>" alt="<?php echo esc_attr($label); ?>">
+                                            <?php
+                                            echo kangoo_render_acf_image($icon, 'medium', array(
+                                                'alt' => $label,
+                                                'loading' => 'lazy',
+                                                'sizes' => '84px',
+                                            ));
+                                            ?>
                                         <?php endif; ?>
 
                                         <span><?php echo esc_html($label); ?></span>
@@ -657,7 +677,13 @@ if (current_user_can('manage_options')) {
                                             ?>
 											<a href="<?php echo esc_url($card_url); ?>" target="<?php echo esc_attr($card_target); ?>">
 												<?php if (!empty($card['image']['url'])) : ?>
-													<img src="<?php echo esc_url($card['image']['url']); ?>" alt="<?php echo esc_attr($card_label); ?>">
+													<?php
+													echo kangoo_render_acf_image($card['image'], 'woocommerce_thumbnail', array(
+														'alt' => $card_label,
+														'loading' => 'lazy',
+														'sizes' => '64px',
+													));
+													?>
 												<?php endif; ?>
 
 												<span><?php echo esc_html($card_label); ?></span>
@@ -744,7 +770,13 @@ if (current_user_can('manage_options')) {
                                                 style="background:<?php echo esc_attr($card_bg); ?>;color:<?php echo esc_attr($card_text); ?>;"
                                             >
                                                 <?php if (!empty($card_icon['url'])) : ?>
-                                                    <img src="<?php echo esc_url($card_icon['url']); ?>" alt="<?php echo esc_attr($card_label); ?>">
+                                                    <?php
+                                                    echo kangoo_render_acf_image($card_icon, 'medium', array(
+                                                        'alt' => $card_label,
+                                                        'loading' => 'lazy',
+                                                        'sizes' => '72px',
+                                                    ));
+                                                    ?>
                                                 <?php endif; ?>
 
                                                 <span><?php echo esc_html($card_label); ?></span>
