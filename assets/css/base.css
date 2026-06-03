@@ -2,6 +2,14 @@
 ***************************BASE**********************************
 ****************************************************************/
 
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url("../fonts/inter-var.woff2") format("woff2");
+}
+
 :root {
   --color-bg: #0d0d0f;
   --color-bg-soft: #16171b;

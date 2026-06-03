@@ -822,6 +822,11 @@ function kangoo_preload_home_hero_image() {
 }
 add_action('wp_head', 'kangoo_preload_home_hero_image', 2);
 
+function kangoo_preload_theme_font() {
+    echo '<link rel="preload" as="font" type="font/woff2" href="' . esc_url(get_template_directory_uri() . '/assets/fonts/inter-var.woff2') . '" crossorigin>' . "\n";
+}
+add_action('wp_head', 'kangoo_preload_theme_font', 3);
+
 function kangoo_is_product_archive_view() {
     return is_front_page()
         || (function_exists('is_shop') && is_shop())
@@ -953,14 +958,7 @@ function kangoo_enqueue_assets() {
     $is_commerce_view = kangoo_is_commerce_view();
     $critical_style_handle = 'kangoo-header-footer';
 
-    wp_enqueue_style(
-        'kangoo-google-fonts',
-        'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap',
-        array(),
-        null
-    );
-
-    wp_enqueue_style('kangoo-base', $css_uri . 'base.css', array('kangoo-google-fonts'), $theme_version);
+    wp_enqueue_style('kangoo-base', $css_uri . 'base.css', array(), $theme_version);
     wp_enqueue_style('kangoo-components', $css_uri . 'components.css', array('kangoo-base'), $theme_version);
     wp_enqueue_style('kangoo-header-footer', $css_uri . 'header-footer.css', array('kangoo-components'), $theme_version);
 
@@ -1176,6 +1174,25 @@ function kangoo_enqueue_assets() {
     }
 }
 add_action('wp_enqueue_scripts', 'kangoo_enqueue_assets');
+
+function kangoo_dequeue_homepage_woocommerce_styles() {
+    if (!is_front_page()) {
+        return;
+    }
+
+    $homepage_unused_woocommerce_styles = array(
+        'wc-blocks-style',
+        'woocommerce-layout',
+        'woocommerce-smallscreen',
+        'woocommerce-general',
+    );
+
+    foreach ($homepage_unused_woocommerce_styles as $style_handle) {
+        wp_dequeue_style($style_handle);
+        wp_deregister_style($style_handle);
+    }
+}
+add_action('wp_enqueue_scripts', 'kangoo_dequeue_homepage_woocommerce_styles', 100);
 
 function kangoo_checkout_county_field_required($fields) {
     foreach (array('billing', 'shipping') as $section) {
