@@ -560,6 +560,142 @@ function kangoo_theme_favicon_meta() {
 add_action('wp_head', 'kangoo_theme_favicon_meta', 1);
 add_action('admin_head', 'kangoo_theme_favicon_meta', 1);
 
+function kangoo_get_acf_image_id($image) {
+    if (is_array($image)) {
+        if (!empty($image['ID'])) {
+            return (int) $image['ID'];
+        }
+
+        if (!empty($image['id'])) {
+            return (int) $image['id'];
+        }
+    }
+
+    return is_numeric($image) ? (int) $image : 0;
+}
+
+function kangoo_get_acf_image_alt($image, $attachment_id = 0) {
+    if (is_array($image) && isset($image['alt'])) {
+        return (string) $image['alt'];
+    }
+
+    if ($attachment_id) {
+        return (string) get_post_meta($attachment_id, '_wp_attachment_image_alt', true);
+    }
+
+    return '';
+}
+
+function kangoo_render_acf_image($image, $size = 'large', $attr = array()) {
+    $attachment_id = kangoo_get_acf_image_id($image);
+    $attr = wp_parse_args($attr, array(
+        'decoding' => 'async',
+    ));
+
+    if (!array_key_exists('alt', $attr)) {
+        $attr['alt'] = kangoo_get_acf_image_alt($image, $attachment_id);
+    }
+
+    if ($attachment_id) {
+        $markup = wp_get_attachment_image($attachment_id, $size, false, $attr);
+
+        if ($markup) {
+            return $markup;
+        }
+    }
+
+    $src = function_exists('kangoo_get_image_url_from_acf_value') ? kangoo_get_image_url_from_acf_value($image, $size) : '';
+
+    if ($src === '') {
+        return '';
+    }
+
+    if (is_array($image)) {
+        if (empty($attr['width']) && !empty($image['width'])) {
+            $attr['width'] = (int) $image['width'];
+        }
+
+        if (empty($attr['height']) && !empty($image['height'])) {
+            $attr['height'] = (int) $image['height'];
+        }
+    }
+
+    $attributes = '';
+    foreach ($attr as $name => $value) {
+        if ($value === false || $value === null || $value === '') {
+            continue;
+        }
+
+        $attributes .= ' ' . esc_attr($name) . '="' . esc_attr($value) . '"';
+    }
+
+    return '<img src="' . esc_url($src) . '"' . $attributes . '>';
+}
+
+function kangoo_get_home_hero_image() {
+    if (!is_front_page() || !function_exists('get_field')) {
+        return null;
+    }
+
+    $sections = get_field('homepage_sections');
+
+    if (!is_array($sections)) {
+        return null;
+    }
+
+    foreach ($sections as $section) {
+        if (!is_array($section) || ($section['acf_fc_layout'] ?? '') !== 'hero') {
+            continue;
+        }
+
+        if (array_key_exists('show_section', $section) && ($section['show_section'] === false || $section['show_section'] === '0' || $section['show_section'] === 0)) {
+            return null;
+        }
+
+        return $section['hero_image'] ?? null;
+    }
+
+    return null;
+}
+
+function kangoo_preload_home_hero_image() {
+    $image = kangoo_get_home_hero_image();
+
+    if (!$image) {
+        return;
+    }
+
+    $attachment_id = kangoo_get_acf_image_id($image);
+    $href = $attachment_id ? wp_get_attachment_image_url($attachment_id, 'large') : kangoo_get_image_url_from_acf_value($image, 'large');
+
+    if (!$href) {
+        return;
+    }
+
+    $attributes = array(
+        'rel' => 'preload',
+        'as' => 'image',
+        'href' => $href,
+    );
+
+    if ($attachment_id) {
+        $srcset = wp_get_attachment_image_srcset($attachment_id, 'large');
+
+        if ($srcset) {
+            $attributes['imagesrcset'] = $srcset;
+            $attributes['imagesizes'] = '(max-width: 768px) 86vw, 42vw';
+        }
+    }
+
+    $markup = '<link';
+    foreach ($attributes as $name => $value) {
+        $markup .= ' ' . esc_attr($name) . '="' . esc_attr($value) . '"';
+    }
+
+    echo $markup . '>' . "\n";
+}
+add_action('wp_head', 'kangoo_preload_home_hero_image', 2);
+
 function kangoo_enqueue_assets() {
     $theme_version = wp_get_theme()->get('Version');
     $css_uri = get_template_directory_uri() . '/assets/css/';
