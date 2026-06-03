@@ -1008,12 +1008,10 @@ function kangoo_enqueue_assets() {
         $critical_style_handle = 'kangoo-product';
     }
 
-    if ($is_front_page || $is_commerce_view) {
-        wp_enqueue_style('kangoo-woocommerce', $css_uri . 'woocommerce.css', array($critical_style_handle), $theme_version);
+    wp_enqueue_style('kangoo-woocommerce', $css_uri . 'woocommerce.css', array($critical_style_handle), $theme_version);
 
-        if (!$is_front_page) {
-            $critical_style_handle = 'kangoo-woocommerce';
-        }
+    if (!$is_front_page) {
+        $critical_style_handle = 'kangoo-woocommerce';
     }
 
     wp_enqueue_style('kangoo-account-drawer', $css_uri . 'account-drawer.css', array($critical_style_handle), $theme_version);
