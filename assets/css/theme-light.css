@@ -559,6 +559,16 @@ body.kangoo-theme--light .cart-drawer-summary__reward .amount {
   color: #111827;
 }
 
+body.kangoo-theme--light .account-tabs__button.is-active {
+  border-bottom-color: #0f5ed1 !important;
+  background: #eef6ff !important;
+  color: #0f5ed1 !important;
+}
+
+body.kangoo-theme--light .account-tabs__button.is-active .account-tabs__sub {
+  color: #0b4fb8 !important;
+}
+
 body.kangoo-theme--light .account-field input,
 body.kangoo-theme--light .account-social__button,
 body.kangoo-theme--light .account-summary,

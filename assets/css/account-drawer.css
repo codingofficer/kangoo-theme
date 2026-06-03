@@ -101,6 +101,12 @@ html, body {
 
 .account-tabs__button.is-active {
   border-bottom-color: var(--color-accent);
+  background: rgba(77, 163, 255, 0.1);
+  color: var(--color-accent);
+}
+
+.account-tabs__button.is-active .account-tabs__sub {
+  color: #8dc8ff;
 }
 
 .account-tabs__label {
