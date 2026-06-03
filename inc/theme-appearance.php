@@ -109,6 +109,14 @@ function kangoo_light_theme_logo_path() {
     return get_template_directory() . '/assets/images/kangoo-logo-black.png';
 }
 
+function kangoo_light_theme_logo_webp_url() {
+    return get_template_directory_uri() . '/assets/images/kangoo-logo-black.webp';
+}
+
+function kangoo_light_theme_logo_webp_path() {
+    return get_template_directory() . '/assets/images/kangoo-logo-black.webp';
+}
+
 function kangoo_filter_custom_logo_for_light_theme($html, $blog_id) {
     if (!kangoo_is_light_theme_active()) {
         return $html;
@@ -122,6 +130,17 @@ function kangoo_filter_custom_logo_for_light_theme($html, $blog_id) {
     $site_name = esc_attr(get_bloginfo('name'));
     $logo_url = esc_url(kangoo_light_theme_logo_url());
     $current_attr = is_front_page() ? ' aria-current="page"' : '';
+
+    if (file_exists(kangoo_light_theme_logo_webp_path())) {
+        return sprintf(
+            '<a href="%1$s" class="custom-logo-link" rel="home"%5$s><picture><source srcset="%4$s" type="image/webp"><img width="402" height="117" src="%2$s" class="custom-logo" alt="%3$s" decoding="async" fetchpriority="high" /></picture></a>',
+            $home_url,
+            $logo_url,
+            $site_name,
+            esc_url(kangoo_light_theme_logo_webp_url()),
+            $current_attr
+        );
+    }
 
     return sprintf(
         '<a href="%1$s" class="custom-logo-link" rel="home"%4$s><img width="402" height="117" src="%2$s" class="custom-logo" alt="%3$s" decoding="async" fetchpriority="high" /></a>',

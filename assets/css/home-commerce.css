@@ -1,0 +1,91 @@
+/* Homepage commerce controls needed before the full WooCommerce sheet finishes loading. */
+
+.quick-add-open {
+  cursor: pointer;
+}
+
+.quick-add-submit {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.quick-add-submit .button-label,
+.quick-add-submit .button-total {
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+}
+
+.quick-add-submit .button-total {
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+.product-card .added_to_cart.wc-forward,
+.added_to_cart.wc-forward {
+  display: none !important;
+}
+
+.product-card__qty {
+  display: grid;
+  grid-template-columns: 42px 1fr 42px;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.product-card__qty .qty-btn,
+.product-card__qty-input {
+  height: 42px;
+  border-radius: 12px;
+  border: 1px solid var(--color-border);
+  background: rgba(255, 255, 255, 0.04);
+  color: #fff;
+  text-align: center;
+}
+
+.product-card__qty .qty-btn {
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.product-card__qty-input {
+  width: 100%;
+  font-weight: 700;
+}
+
+.product-card__qty-input::-webkit-outer-spin-button,
+.product-card__qty-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.product-card__qty-input[type="number"] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.product-card__saving {
+  margin: -1px 0 4px;
+  color: #17823b;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.product-card__add {
+  width: 100%;
+}
+
+.product-card__qty.product-card__qty--pack {
+  display: block;
+}
+
+.product-card__qty.product-card__qty--hidden {
+  display: none !important;
+}
+
+.product-card__qty--pack .product-card__pack-trigger {
+  width: 100%;
+}

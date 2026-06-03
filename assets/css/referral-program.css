@@ -198,7 +198,7 @@
 }
 
 .referral-program__stats article:nth-child(1) strong {
-  color: #1677e8;
+  color: #0f5ed1;
 }
 
 .referral-program__stats article:nth-child(2) strong {
@@ -238,7 +238,7 @@
   justify-content: center;
   border-radius: 999px;
   background: #eaf4ff;
-  color: #1677e8;
+  color: #0f5ed1;
   font-weight: 900;
 }
 

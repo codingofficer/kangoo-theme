@@ -93,7 +93,20 @@ if ($is_quick_add_card && $is_variable) {
     <?php endif; ?>
 
     <a href="<?php the_permalink(); ?>" class="product-card__media">
-        <?php echo woocommerce_get_product_thumbnail('woocommerce_thumbnail'); ?>
+        <?php
+        $card_image_attrs = array(
+            'loading' => 'lazy',
+        );
+
+        if (function_exists('kangoo_should_prioritize_product_card_image') && kangoo_should_prioritize_product_card_image()) {
+            $card_image_attrs['loading'] = 'eager';
+            $card_image_attrs['fetchpriority'] = 'high';
+        }
+
+        echo function_exists('kangoo_get_product_card_thumbnail')
+            ? kangoo_get_product_card_thumbnail($product, $card_image_attrs)
+            : woocommerce_get_product_thumbnail('woocommerce_thumbnail');
+        ?>
     </a>
 
     <div class="product-card__content">

@@ -287,8 +287,9 @@ if (current_user_can('manage_options')) {
                         type="button"
                         class="site-header__cart"
                         id="header-cart-trigger"
-                        aria-label="<?php esc_attr_e('Open cart', 'kangoo'); ?>"
+                        aria-labelledby="header-cart-label header-cart-count"
                     >
+                        <span class="screen-reader-text" id="header-cart-label"><?php esc_html_e('Open cart', 'kangoo'); ?></span>
                         <span class="cart-icon" aria-hidden="true">
                             <svg viewBox="0 0 24 24" focusable="false">
                                 <path d="M6 6h15l-1.5 8.5a2 2 0 0 1-2 1.5H9a2 2 0 0 1-2-1.3L4.3 4H2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -296,7 +297,7 @@ if (current_user_can('manage_options')) {
                                 <circle cx="18" cy="20" r="1.75" fill="currentColor"/>
                             </svg>
                         </span>
-                        <span class="cart-badge">
+                        <span class="cart-badge" id="header-cart-count">
                             <?php echo function_exists('WC') && WC()->cart ? (int) WC()->cart->get_cart_contents_count() : 0; ?>
                         </span>
                     </button>

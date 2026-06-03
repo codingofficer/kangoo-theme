@@ -91,6 +91,15 @@
   justify-content: flex-end;
 }
 
+.hero__media picture,
+.hero__media img {
+  display: block;
+}
+
+.hero__media picture {
+  width: min(100%, 520px);
+}
+
 .hero__media img {
   width: min(100%, 520px);
   height: auto;
@@ -475,6 +484,14 @@
 }
 
 /* IMAGE */
+.quick-card__media picture {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 .quick-card__media img {
   width: 100%;
   height: 100%;
@@ -825,6 +842,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.brand-card__image picture {
+    display: block;
+    line-height: 0;
 }
 
 .brand-card__image img {

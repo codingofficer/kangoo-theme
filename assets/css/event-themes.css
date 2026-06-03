@@ -26,6 +26,10 @@
   top: 5px;
   height: calc(var(--kangoo-event-decor-size) * 1.28);
   background-image: url("../images/events/world-cup-icon-small.png");
+  background-image: image-set(
+    url("../images/events/world-cup-icon-small.webp") type("image/webp"),
+    url("../images/events/world-cup-icon-small.png") type("image/png")
+  );
 }
 
 .kangoo-event-decor--christmas {
