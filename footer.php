@@ -41,6 +41,7 @@
                     <li><a href="<?php echo esc_url(home_url('/delivery-information/')); ?>">Delivery &amp; shipping</a></li>
                     <li><a href="<?php echo esc_url(home_url('/returns-and-refunds/')); ?>">Returns &amp; refunds</a></li>
                     <li><a href="<?php echo esc_url(home_url('/kangoo-rewards/')); ?>">Kangoo Rewards</a></li>
+                    <li><a href="<?php echo esc_url(home_url('/referral-program/')); ?>">Referral Program</a></li>
                     <li><a href="<?php echo esc_url(home_url('/faq/')); ?>">FAQ</a></li>
                     <li><a href="<?php echo esc_url(home_url('/contact/')); ?>">Contact us</a></li>
                 </ul>

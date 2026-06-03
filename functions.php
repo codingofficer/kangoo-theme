@@ -556,6 +556,15 @@ function kangoo_enqueue_assets() {
         wp_enqueue_style('kangoo-theme-light', $css_uri . 'theme-light.css', array('kangoo-account-drawer'), $theme_version);
     }
 
+    if (is_page('referral-program')) {
+        wp_enqueue_style(
+            'kangoo-referral-program',
+            $css_uri . 'referral-program.css',
+            function_exists('kangoo_is_light_theme_active') && kangoo_is_light_theme_active() ? array('kangoo-theme-light') : array('kangoo-info-page'),
+            $theme_version
+        );
+    }
+
     wp_enqueue_script(
         'kangoo-main',
         $js_uri . 'main.js',
@@ -5101,72 +5110,16 @@ function kangoo_referrals_get_real_records($user_id = null) {
     return $prepared;
 }
 
-function kangoo_referrals_get_placeholder_records($user_id = null) {
-    $user_id = $user_id ? absint($user_id) : get_current_user_id();
-    $code = $user_id ? kangoo_referrals_get_code($user_id) : 'ABC123';
-    $link = $user_id ? kangoo_referrals_get_link($user_id) : home_url('/r/ABC123/');
-    $base = array(
-        'referral_code'    => $code,
-        'referral_link'    => $link,
-        'referrer_user_id' => $user_id,
-        'reward_amount'    => kangoo_referrals_reward_amount(),
-        'is_placeholder'   => true,
-    );
-
-    return array(
-        kangoo_referrals_prepare_record(array_merge($base, array(
-            'referred_customer_name'  => 'Annie Smith',
-            'referred_customer_email' => 'annie@example.com',
-            'completed_spend_total'   => 18.00,
-            'reward_status'           => 'pending',
-            'first_order_date'        => '2026-06-03',
-        )), $user_id),
-        kangoo_referrals_prepare_record(array_merge($base, array(
-            'referred_customer_name'  => 'Michael Brown',
-            'referred_customer_email' => 'michael@example.com',
-            'completed_spend_total'   => 42.50,
-            'reward_status'           => 'paid',
-            'first_order_date'        => '2026-05-12',
-            'qualified_date'          => '2026-05-12',
-            'paid_date'               => '2026-05-19',
-        )), $user_id),
-        kangoo_referrals_prepare_record(array_merge($base, array(
-            'referred_customer_name'  => 'Connor Wilson',
-            'referred_customer_email' => 'connor@example.com',
-            'completed_spend_total'   => 31.20,
-            'reward_status'           => 'paid',
-            'first_order_date'        => '2026-04-28',
-            'qualified_date'          => '2026-04-28',
-            'paid_date'               => '2026-05-05',
-        )), $user_id),
-    );
-}
-
 function kangoo_referrals_get_records($user_id = null) {
     $records = kangoo_referrals_get_real_records($user_id);
 
-    if (!empty($records)) {
-        return array(
-            'records'        => $records,
-            'is_placeholder' => false,
-        );
-    }
-
     return array(
-        'records'        => kangoo_referrals_get_placeholder_records($user_id),
-        'is_placeholder' => true,
+        'records'        => $records,
+        'is_placeholder' => false,
     );
 }
 
-function kangoo_referrals_get_summary($records, $is_placeholder = false) {
-    if ($is_placeholder) {
-        return array(
-            'successful_referrals' => 8,
-            'pending_rewards'      => 30,
-            'total_earned'         => 80,
-        );
-    }
-
+function kangoo_referrals_get_summary($records) {
     $summary = array(
         'successful_referrals' => 0,
         'pending_rewards'      => 0,
@@ -5441,8 +5394,7 @@ function kangoo_referrals_account_endpoint_content() {
     $link = kangoo_referrals_get_link($user_id);
     $records_data = kangoo_referrals_get_records($user_id);
     $records = $records_data['records'];
-    $is_placeholder = $records_data['is_placeholder'];
-    $summary = kangoo_referrals_get_summary($records, $is_placeholder);
+    $summary = kangoo_referrals_get_summary($records);
     $target = kangoo_referrals_qualification_spend();
     $reward_amount = kangoo_referrals_reward_amount();
     $icon_url = get_template_directory_uri() . '/assets/images/kangoo-icon-white.png';
@@ -5492,9 +5444,6 @@ function kangoo_referrals_account_endpoint_content() {
                     </button>
                 </div>
             </div>
-            <?php if ($is_placeholder) : ?>
-                <p class="kangoo-referrals-placeholder-note"><?php esc_html_e('Showing example referral activity until live referral records are available for this customer.', 'kangoo'); ?></p>
-            <?php endif; ?>
         </section>
 
         <section class="kangoo-referrals-stats" aria-label="<?php esc_attr_e('Referral summary', 'kangoo'); ?>">
@@ -5548,7 +5497,8 @@ function kangoo_referrals_account_endpoint_content() {
         <section class="kangoo-referrals-card kangoo-referrals-progress-list">
             <h2><?php esc_html_e('Referral progress', 'kangoo'); ?></h2>
             <div class="kangoo-referrals-progress-list__items">
-                <?php foreach ($records as $record) : ?>
+                <?php if (!empty($records)) : ?>
+                    <?php foreach ($records as $record) : ?>
                     <?php
                     $display_name = kangoo_referrals_display_name($record);
                     $completed_spend = (float) $record['completed_spend_total'];
@@ -5573,43 +5523,58 @@ function kangoo_referrals_account_endpoint_content() {
                             <small><?php echo wp_kses_post(sprintf(__('Reward is paid after %s+ in completed orders.', 'kangoo'), kangoo_plain_wc_price($target))); ?></small>
                         </div>
                     </article>
-                <?php endforeach; ?>
+                    <?php endforeach; ?>
+                <?php else : ?>
+                    <div class="kangoo-referrals-empty">
+                        <strong><?php esc_html_e('No referral activity yet', 'kangoo'); ?></strong>
+                        <p><?php esc_html_e('Share your link or code with friends. Their progress will appear here once they place an order through your referral.', 'kangoo'); ?></p>
+                    </div>
+                <?php endif; ?>
             </div>
         </section>
 
         <section class="kangoo-referrals-card kangoo-referrals-history">
             <div class="kangoo-account-section-heading">
                 <h2><?php esc_html_e('Referral history', 'kangoo'); ?></h2>
-                <a href="<?php echo esc_url(wc_get_account_endpoint_url(kangoo_referrals_endpoint_slug())); ?>"><?php esc_html_e('View full history', 'kangoo'); ?> <span aria-hidden="true">-&gt;</span></a>
+                <?php if (!empty($records)) : ?>
+                    <a href="<?php echo esc_url(wc_get_account_endpoint_url(kangoo_referrals_endpoint_slug())); ?>"><?php esc_html_e('View full history', 'kangoo'); ?> <span aria-hidden="true">-&gt;</span></a>
+                <?php endif; ?>
             </div>
-            <table>
-                <thead>
-                    <tr>
-                        <th><?php esc_html_e('Date', 'kangoo'); ?></th>
-                        <th><?php esc_html_e('Referred friend', 'kangoo'); ?></th>
-                        <th><?php esc_html_e('Their spend', 'kangoo'); ?></th>
-                        <th><?php esc_html_e('Status', 'kangoo'); ?></th>
-                        <th><?php esc_html_e('Reward', 'kangoo'); ?></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($records as $record) : ?>
-                        <?php
-                        $status = $record['reward_status'];
-                        $spend_label = (float) $record['completed_spend_total'] < $target
-                            ? sprintf(__('%1$s / %2$s', 'kangoo'), kangoo_plain_wc_price($record['completed_spend_total']), kangoo_plain_wc_price($target))
-                            : kangoo_plain_wc_price($record['completed_spend_total']);
-                        ?>
+            <?php if (!empty($records)) : ?>
+                <table>
+                    <thead>
                         <tr>
-                            <td data-label="<?php esc_attr_e('Date', 'kangoo'); ?>"><?php echo esc_html(kangoo_referrals_format_date($record['first_order_date'])); ?></td>
-                            <td data-label="<?php esc_attr_e('Referred friend', 'kangoo'); ?>"><?php echo esc_html(kangoo_referrals_display_name($record)); ?></td>
-                            <td data-label="<?php esc_attr_e('Their spend', 'kangoo'); ?>"><?php echo esc_html($spend_label); ?></td>
-                            <td data-label="<?php esc_attr_e('Status', 'kangoo'); ?>"><span class="kangoo-referrals-status kangoo-referrals-status--<?php echo esc_attr($status); ?>"><?php echo esc_html(kangoo_referrals_status_label($status)); ?></span></td>
-                            <td data-label="<?php esc_attr_e('Reward', 'kangoo'); ?>"><?php echo esc_html(kangoo_plain_wc_price($record['reward_amount'])); ?></td>
+                            <th><?php esc_html_e('Date', 'kangoo'); ?></th>
+                            <th><?php esc_html_e('Referred friend', 'kangoo'); ?></th>
+                            <th><?php esc_html_e('Their spend', 'kangoo'); ?></th>
+                            <th><?php esc_html_e('Status', 'kangoo'); ?></th>
+                            <th><?php esc_html_e('Reward', 'kangoo'); ?></th>
                         </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($records as $record) : ?>
+                            <?php
+                            $status = $record['reward_status'];
+                            $spend_label = (float) $record['completed_spend_total'] < $target
+                                ? sprintf(__('%1$s / %2$s', 'kangoo'), kangoo_plain_wc_price($record['completed_spend_total']), kangoo_plain_wc_price($target))
+                                : kangoo_plain_wc_price($record['completed_spend_total']);
+                            ?>
+                            <tr>
+                                <td data-label="<?php esc_attr_e('Date', 'kangoo'); ?>"><?php echo esc_html(kangoo_referrals_format_date($record['first_order_date'])); ?></td>
+                                <td data-label="<?php esc_attr_e('Referred friend', 'kangoo'); ?>"><?php echo esc_html(kangoo_referrals_display_name($record)); ?></td>
+                                <td data-label="<?php esc_attr_e('Their spend', 'kangoo'); ?>"><?php echo esc_html($spend_label); ?></td>
+                                <td data-label="<?php esc_attr_e('Status', 'kangoo'); ?>"><span class="kangoo-referrals-status kangoo-referrals-status--<?php echo esc_attr($status); ?>"><?php echo esc_html(kangoo_referrals_status_label($status)); ?></span></td>
+                                <td data-label="<?php esc_attr_e('Reward', 'kangoo'); ?>"><?php echo esc_html(kangoo_plain_wc_price($record['reward_amount'])); ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            <?php else : ?>
+                <div class="kangoo-referrals-empty">
+                    <strong><?php esc_html_e('No referral history yet', 'kangoo'); ?></strong>
+                    <p><?php esc_html_e('Referral history will appear here after friends use your link and start placing qualifying orders.', 'kangoo'); ?></p>
+                </div>
+            <?php endif; ?>
         </section>
 
         <section class="kangoo-referrals-info-grid" aria-label="<?php esc_attr_e('Referral rules', 'kangoo'); ?>">
@@ -5633,8 +5598,8 @@ function kangoo_referrals_account_endpoint_content() {
 
         <section class="kangoo-referrals-terms">
             <span aria-hidden="true">i</span>
-            <p><?php echo wp_kses_post(sprintf(__('Referrers receive a %1$s reward once the referred customer has spent %2$s or more in completed orders. Rewards are reviewed before payment and cancelled/refunded orders do not qualify.', 'kangoo'), kangoo_plain_wc_price($reward_amount), kangoo_plain_wc_price($target))); ?></p>
-            <a href="<?php echo esc_url(home_url('/terms-and-conditions/#referrals')); ?>"><?php esc_html_e('View full terms', 'kangoo'); ?> <span aria-hidden="true">-&gt;</span></a>
+            <p><?php echo wp_kses_post(sprintf(__('Referrers receive a %1$s reward once the referred customer has spent %2$s or more in completed orders. Rewards are reviewed before payment and cancelled/refunded orders, chargebacks, disputes, duplicate accounts, and self-referrals do not qualify.', 'kangoo'), kangoo_plain_wc_price($reward_amount), kangoo_plain_wc_price($target))); ?></p>
+            <a href="<?php echo esc_url(home_url('/terms-and-conditions/')); ?>"><?php esc_html_e('View full terms', 'kangoo'); ?> <span aria-hidden="true">-&gt;</span></a>
         </section>
     </div>
     <?php

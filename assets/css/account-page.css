@@ -1931,17 +1931,6 @@ body.is-account-endpoint-edit-account .woocommerce-MyAccount-content input[type=
   mask-size: contain;
 }
 
-.kangoo-referrals-placeholder-note {
-  width: fit-content;
-  margin: 0;
-  padding: 0.55rem 0.75rem;
-  border-radius: 10px;
-  background: rgba(245, 158, 11, 0.13);
-  color: #fed7aa !important;
-  font-size: 0.9rem;
-  font-weight: 700;
-}
-
 .kangoo-referrals-stats {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -2053,6 +2042,20 @@ body.is-account-endpoint-edit-account .woocommerce-MyAccount-content input[type=
 .kangoo-referrals-progress-list__items {
   display: grid;
   gap: 0.8rem;
+}
+
+.kangoo-referrals-empty {
+  display: grid;
+  gap: 0.35rem;
+  padding: 1rem;
+  border: 1px dashed rgba(255, 255, 255, 0.14);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.kangoo-referrals-empty p {
+  max-width: 62ch;
+  margin: 0;
 }
 
 .kangoo-referrals-progress-card {

@@ -1841,14 +1841,14 @@ body.kangoo-theme--light.woocommerce-account .woocommerce-MyAccount-content .kan
   color: #111827 !important;
 }
 
-body.kangoo-theme--light.woocommerce-account .kangoo-referrals-placeholder-note {
-  background: #fff7ed !important;
-  color: #c45d00 !important;
-}
-
 body.kangoo-theme--light.woocommerce-account .kangoo-referrals-progress-card,
+body.kangoo-theme--light.woocommerce-account .kangoo-referrals-empty,
 body.kangoo-theme--light.woocommerce-account .kangoo-referrals-history tr {
   background: #f8fafc !important;
+}
+
+body.kangoo-theme--light.woocommerce-account .kangoo-referrals-empty {
+  border-color: rgba(22, 119, 232, 0.24) !important;
 }
 
 body.kangoo-theme--light.woocommerce-account .kangoo-referrals-avatar {
