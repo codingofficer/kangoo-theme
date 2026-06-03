@@ -101,6 +101,7 @@ if ($is_quick_add_card && $is_variable) {
         if (function_exists('kangoo_should_prioritize_product_card_image') && kangoo_should_prioritize_product_card_image()) {
             $card_image_attrs['loading'] = 'eager';
             $card_image_attrs['fetchpriority'] = 'high';
+            $card_image_attrs['decoding'] = 'sync';
         }
 
         echo function_exists('kangoo_get_product_card_thumbnail')

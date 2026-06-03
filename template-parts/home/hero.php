@@ -50,8 +50,8 @@ $cta_secondary_text = __('Nicotine Pouch Finder', 'kangoo');
                 <?php if ($img): ?>
                     <?php
                     echo kangoo_render_acf_image($img, 'large', array(
-                        'loading' => 'eager',
-                        'fetchpriority' => 'high',
+                        'loading' => 'lazy',
+                        'decoding' => 'async',
                         'sizes' => '(max-width: 768px) 86vw, 42vw',
                     ));
                     ?>
