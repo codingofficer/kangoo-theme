@@ -795,7 +795,6 @@ function kangoo_preload_home_hero_image() {
         'rel' => 'preload',
         'as' => 'image',
         'href' => $href,
-        'media' => '(min-width: 769px)',
     );
 
     if ($attachment_id) {
@@ -810,7 +809,7 @@ function kangoo_preload_home_hero_image() {
 
         if ($webp_srcset || $srcset) {
             $attributes['imagesrcset'] = $webp_srcset ? $webp_srcset : $srcset;
-            $attributes['imagesizes'] = '42vw';
+            $attributes['imagesizes'] = '(max-width: 768px) 86vw, 42vw';
         }
     }
 
