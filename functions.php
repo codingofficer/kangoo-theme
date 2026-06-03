@@ -560,6 +560,155 @@ function kangoo_theme_favicon_meta() {
 add_action('wp_head', 'kangoo_theme_favicon_meta', 1);
 add_action('admin_head', 'kangoo_theme_favicon_meta', 1);
 
+function kangoo_is_blog_page() {
+    return (function_exists('is_post_type_archive') && is_post_type_archive('kangoo_blog'))
+        || (function_exists('is_singular') && is_singular('kangoo_blog'))
+        || (function_exists('is_tax') && is_tax('blog_topic'));
+}
+
+function kangoo_is_info_page() {
+    return is_page_template('page-templates/template-info-page.php')
+        || is_page('referral-program');
+}
+
+function kangoo_is_commerce_listing() {
+    if (is_front_page()) {
+        return true;
+    }
+
+    return (function_exists('is_shop') && is_shop())
+        || (function_exists('is_product_category') && is_product_category())
+        || (function_exists('is_product_taxonomy') && is_product_taxonomy())
+        || (function_exists('is_woocommerce') && is_woocommerce() && !(function_exists('is_product') && is_product()))
+        || is_search();
+}
+
+function kangoo_is_dynamic_commerce_page() {
+    return (function_exists('is_cart') && is_cart())
+        || (function_exists('is_checkout') && is_checkout())
+        || (function_exists('is_account_page') && is_account_page())
+        || (function_exists('is_wc_endpoint_url') && (is_wc_endpoint_url('order-pay') || is_wc_endpoint_url('order-received')));
+}
+
+function kangoo_get_acf_image_id($image) {
+    if (is_array($image)) {
+        if (!empty($image['ID'])) {
+            return (int) $image['ID'];
+        }
+
+        if (!empty($image['id'])) {
+            return (int) $image['id'];
+        }
+    }
+
+    return is_numeric($image) ? (int) $image : 0;
+}
+
+function kangoo_get_acf_image_alt($image, $attachment_id = 0) {
+    if (is_array($image) && isset($image['alt'])) {
+        return (string) $image['alt'];
+    }
+
+    if ($attachment_id) {
+        return (string) get_post_meta($attachment_id, '_wp_attachment_image_alt', true);
+    }
+
+    return '';
+}
+
+function kangoo_render_acf_image($image, $size = 'large', $attr = array()) {
+    $attachment_id = kangoo_get_acf_image_id($image);
+    $attr = wp_parse_args($attr, array(
+        'decoding' => 'async',
+    ));
+
+    if (!array_key_exists('alt', $attr)) {
+        $attr['alt'] = kangoo_get_acf_image_alt($image, $attachment_id);
+    }
+
+    if ($attachment_id) {
+        return wp_get_attachment_image($attachment_id, $size, false, $attr);
+    }
+
+    $src = function_exists('kangoo_get_image_url_from_acf_value') ? kangoo_get_image_url_from_acf_value($image, $size) : '';
+
+    if ($src === '') {
+        return '';
+    }
+
+    if (is_array($image)) {
+        if (empty($attr['width']) && !empty($image['width'])) {
+            $attr['width'] = (int) $image['width'];
+        }
+
+        if (empty($attr['height']) && !empty($image['height'])) {
+            $attr['height'] = (int) $image['height'];
+        }
+    }
+
+    $attributes = '';
+    foreach ($attr as $name => $value) {
+        if ($value === false || $value === null || $value === '') {
+            continue;
+        }
+
+        $attributes .= ' ' . esc_attr($name) . '="' . esc_attr($value) . '"';
+    }
+
+    return '<img src="' . esc_url($src) . '"' . $attributes . '>';
+}
+
+function kangoo_get_home_hero_image() {
+    if (!is_front_page() || !function_exists('get_field')) {
+        return null;
+    }
+
+    $sections = get_field('homepage_sections');
+
+    if (!is_array($sections)) {
+        return null;
+    }
+
+    foreach ($sections as $section) {
+        if (!is_array($section) || ($section['acf_fc_layout'] ?? '') !== 'hero') {
+            continue;
+        }
+
+        return $section['hero_image'] ?? null;
+    }
+
+    return null;
+}
+
+function kangoo_preload_home_hero_image() {
+    $image = kangoo_get_home_hero_image();
+    $attachment_id = kangoo_get_acf_image_id($image);
+    $href = '';
+    $srcset = '';
+    $sizes = '(max-width: 768px) 86vw, 42vw';
+
+    if ($attachment_id) {
+        $src = wp_get_attachment_image_src($attachment_id, 'large');
+        $href = $src ? (string) $src[0] : '';
+        $srcset = (string) wp_get_attachment_image_srcset($attachment_id, 'large');
+    } elseif (function_exists('kangoo_get_image_url_from_acf_value')) {
+        $href = kangoo_get_image_url_from_acf_value($image, 'large');
+    }
+
+    if ($href === '') {
+        return;
+    }
+
+    echo '<link rel="preload" as="image" href="' . esc_url($href) . '"';
+
+    if ($srcset !== '') {
+        echo ' imagesrcset="' . esc_attr($srcset) . '" imagesizes="' . esc_attr($sizes) . '"';
+    }
+
+    echo ' fetchpriority="high">' . "\n";
+}
+add_action('wp_head', 'kangoo_preload_home_hero_image', 2);
+
 function kangoo_enqueue_assets() {
     $theme_version = wp_get_theme()->get('Version');
     $css_uri = get_template_directory_uri() . '/assets/css/';
@@ -575,16 +724,31 @@ function kangoo_enqueue_assets() {
     wp_enqueue_style('kangoo-base', $css_uri . 'base.css', array('kangoo-google-fonts'), $theme_version);
     wp_enqueue_style('kangoo-components', $css_uri . 'components.css', array('kangoo-base'), $theme_version);
     wp_enqueue_style('kangoo-header-footer', $css_uri . 'header-footer.css', array('kangoo-components'), $theme_version);
-    wp_enqueue_style('kangoo-home', $css_uri . 'home.css', array('kangoo-header-footer'), $theme_version);
-    wp_enqueue_style('kangoo-shop', $css_uri . 'shop.css', array('kangoo-home'), $theme_version);
-    wp_enqueue_style('kangoo-product', $css_uri . 'product.css', array('kangoo-shop'), $theme_version);
-    wp_enqueue_style('kangoo-woocommerce', $css_uri . 'woocommerce.css', array('kangoo-product'), $theme_version);
+    if (is_front_page()) {
+        wp_enqueue_style('kangoo-home', $css_uri . 'home.css', array('kangoo-header-footer'), $theme_version);
+    }
+
+    if (kangoo_is_commerce_listing()) {
+        wp_enqueue_style('kangoo-shop', $css_uri . 'shop.css', is_front_page() ? array('kangoo-home') : array('kangoo-header-footer'), $theme_version);
+    }
+
+    if (function_exists('is_product') && is_product()) {
+        wp_enqueue_style('kangoo-product', $css_uri . 'product.css', array('kangoo-header-footer'), $theme_version);
+    }
+
+    wp_enqueue_style('kangoo-woocommerce', $css_uri . 'woocommerce.css', array('kangoo-header-footer'), $theme_version);
     wp_enqueue_style('kangoo-account-drawer', $css_uri . 'account-drawer.css', array('kangoo-woocommerce'), $theme_version);
     if (function_exists('kangoo_is_event_theme_active') && kangoo_is_event_theme_active()) {
         wp_enqueue_style('kangoo-event-themes', $css_uri . 'event-themes.css', array('kangoo-woocommerce'), $theme_version);
     }
-	wp_enqueue_style('kangoo-info-page', $css_uri . 'info-page.css', array('kangoo-header-footer'), $theme_version);
-    wp_enqueue_style('kangoo-blog', $css_uri . 'blog.css', array('kangoo-header-footer'), $theme_version);
+
+    if (kangoo_is_info_page()) {
+        wp_enqueue_style('kangoo-info-page', $css_uri . 'info-page.css', array('kangoo-header-footer'), $theme_version);
+    }
+
+    if (kangoo_is_blog_page()) {
+        wp_enqueue_style('kangoo-blog', $css_uri . 'blog.css', array('kangoo-header-footer'), $theme_version);
+    }
 
     if (is_page_template('page-templates/template-pouch-finder.php')) {
         wp_enqueue_style('kangoo-pouch-finder', $css_uri . 'pouch-finder.css', array('kangoo-header-footer'), $theme_version);
@@ -1324,11 +1488,7 @@ function kangoo_woocommerce_email_styles($css, $email = null) {
 add_filter('woocommerce_email_styles', 'kangoo_woocommerce_email_styles', 20, 2);
 
 function kangoo_no_cache_cart_pages() {
-    if (
-        (function_exists('is_cart') && is_cart())
-        || (function_exists('is_checkout') && is_checkout())
-        || (function_exists('is_account_page') && is_account_page())
-    ) {
+    if (kangoo_is_dynamic_commerce_page()) {
         nocache_headers();
 
         if (!defined('DONOTCACHEPAGE')) {

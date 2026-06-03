@@ -852,6 +852,10 @@ jQuery(function ($) {
 });
 
 jQuery(function ($) {
+  if (!$('[data-card-add]').length) {
+    return;
+  }
+
   function showCardStockMessage($button, message) {
     const $card = $button.closest('.product-card');
     let $message = $card.find('[data-card-stock-message]');
@@ -1299,6 +1303,10 @@ jQuery(function ($) {
 });
 
 jQuery(function ($) {
+  if (!$('.quick-add-modal, .quick-add-open').length) {
+    return;
+  }
+
   function formatCurrency(amount) {
     if (!Number.isFinite(amount)) {
       return '';
@@ -1763,6 +1771,10 @@ jQuery(function ($) {
 });
 
 jQuery(function ($) {
+  if (!$('.product-card, .pack-add-modal, .kangoo-cart-recommendations').length) {
+    return;
+  }
+
   function formatCardPrice(amount) {
     try {
       return new Intl.NumberFormat('en-GB', {
@@ -2060,6 +2072,10 @@ jQuery(function ($) {
 });
 
 jQuery(function ($) {
+  if (!$('[data-single-saving], .product-cart form.cart').length) {
+    return;
+  }
+
   function formatSingleSaving(amount) {
     try {
       return new Intl.NumberFormat('en-GB', {
