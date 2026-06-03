@@ -2221,12 +2221,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const readMore = document.querySelector('[data-category-readmore]');
     const readMoreToggle = document.querySelector('[data-category-readmore-toggle]');
     const productGrid = document.querySelector('.category-page__products .woo-grid');
-    const filterOpenButtons = document.querySelectorAll('[data-category-filter-open]');
-    const filterCloseButtons = document.querySelectorAll('[data-category-filter-close]');
-
-    if (!filter && !readMore && !readMoreToggle && !productGrid && !filterOpenButtons.length && !filterCloseButtons.length) {
-      return;
-    }
 
     if (filter) {
       filter.addEventListener('submit', function (event) {
@@ -2256,7 +2250,7 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     }
 
-    filterOpenButtons.forEach(function (button) {
+    document.querySelectorAll('[data-category-filter-open]').forEach(function (button) {
       button.addEventListener('click', function () {
         document.body.classList.add('category-filter-open');
         if (filter) {
@@ -2270,7 +2264,7 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     });
 
-    filterCloseButtons.forEach(function (button) {
+    document.querySelectorAll('[data-category-filter-close]').forEach(function (button) {
       button.addEventListener('click', function () {
         document.body.classList.remove('category-filter-open');
       });

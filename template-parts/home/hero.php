@@ -48,15 +48,7 @@ $cta_secondary_text = __('Nicotine Pouch Finder', 'kangoo');
             <div class="hero__media">
                 <?php $img = get_sub_field('hero_image'); ?>
                 <?php if ($img): ?>
-                    <?php
-                    echo kangoo_render_acf_image($img, 'large', array(
-                        'class' => 'hero__image skip-lazy',
-                        'loading' => 'eager',
-                        'fetchpriority' => 'high',
-                        'sizes' => '(max-width: 768px) 86vw, 42vw',
-                        'data-skip-lazy' => 'true',
-                    ));
-                    ?>
+                    <img src="<?php echo $img['url']; ?>" alt="<?php echo $img['alt']; ?>">
                 <?php endif; ?>
             </div>
 

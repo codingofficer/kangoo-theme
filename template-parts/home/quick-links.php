@@ -13,12 +13,7 @@
 
             <div class="quick-card__media">
               <?php if ($image): ?>
-                <?php
-                echo kangoo_render_acf_image($image, 'large', array(
-                  'loading' => 'lazy',
-                  'sizes' => '(max-width: 640px) 100vw, 50vw',
-                ));
-                ?>
+                <img src="<?php echo esc_url($image['url']); ?>" alt="<?php echo esc_attr($image['alt']); ?>">
               <?php endif; ?>
             </div>
 
