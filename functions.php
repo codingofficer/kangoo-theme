@@ -1194,6 +1194,75 @@ function kangoo_dequeue_homepage_woocommerce_styles() {
 }
 add_action('wp_enqueue_scripts', 'kangoo_dequeue_homepage_woocommerce_styles', 100);
 
+function kangoo_should_delay_homepage_third_parties() {
+    return is_front_page()
+        && !is_user_logged_in()
+        && empty($_GET['kangoo_no_delay_third_parties']);
+}
+
+function kangoo_start_homepage_third_party_delay_buffer() {
+    if (kangoo_should_delay_homepage_third_parties()) {
+        ob_start('kangoo_delay_homepage_third_party_loaders');
+    }
+}
+add_action('template_redirect', 'kangoo_start_homepage_third_party_delay_buffer', 0);
+
+function kangoo_delay_homepage_third_party_loaders($html) {
+    if (!is_string($html) || $html === '') {
+        return $html;
+    }
+
+    $html = preg_replace(
+        '#<script id=(["\'])google_gtagjs-js\1 src=(["\'])(https://www\.googletagmanager\.com/gtag/js\?id=GT-[^"\']+)\2 async></script>#',
+        '<script id="google_gtagjs-js" type="text/plain" data-kangoo-delayed-src="$3"></script>',
+        $html
+    );
+
+    $html = preg_replace(
+        '#<script type=(["\'])text/plain\1([^>]*?)data-cmplz-src=(["\'])(https://www\.googletagmanager\.com/gtag/js\?id=AW-[^"\']+)\3([^>]*)></script>#',
+        '<script type="text/plain" data-kangoo-delayed-src="$4"></script>',
+        $html
+    );
+
+    if (strpos($html, 'https://www.clarity.ms/tag/') !== false) {
+        $html = str_replace(
+            'y.parentNode.insertBefore(t, y);',
+            'window.addEventListener("load",function(){setTimeout(function(){y.parentNode.insertBefore(t, y);},10000);});',
+            $html
+        );
+    }
+
+    if (strpos($html, 'data-kangoo-delayed-src') === false) {
+        return $html;
+    }
+
+    $loader = <<<'HTML'
+<script>
+(function(){
+  var loaded=false;
+  function loadDelayedThirdParties(){
+    if(loaded){return;}
+    loaded=true;
+    document.querySelectorAll('script[data-kangoo-delayed-src]').forEach(function(script){
+      var next=document.createElement('script');
+      next.async=true;
+      next.src=script.getAttribute('data-kangoo-delayed-src');
+      document.head.appendChild(next);
+    });
+  }
+  ['pointerdown','keydown','touchstart','scroll'].forEach(function(eventName){
+    window.addEventListener(eventName, loadDelayedThirdParties, {once:true, passive:true});
+  });
+  window.addEventListener('load', function(){
+    window.setTimeout(loadDelayedThirdParties, 10000);
+  });
+})();
+</script>
+HTML;
+
+    return str_replace('</body>', $loader . "\n</body>", $html);
+}
+
 function kangoo_checkout_county_field_required($fields) {
     foreach (array('billing', 'shipping') as $section) {
         $key = $section . '_state';
