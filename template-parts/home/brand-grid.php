@@ -56,14 +56,14 @@ $subheading = get_sub_field('subheading');
 							<div class="brand-card__image">
 								<?php if ($brand_image) : ?>
 									<?php
-									echo kangoo_render_acf_image($brand_image, 'woocommerce_thumbnail', array(
+									echo kangoo_render_acf_image($brand_image, 'thumbnail', array(
 										'alt' => $brand_name . ' nicotine pouches',
 										'loading' => 'lazy',
-										'sizes' => '(max-width: 640px) 44vw, 180px',
+										'sizes' => '(max-width: 640px) 32vw, 110px',
 									));
 									?>
 								<?php else : ?>
-									<img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($brand_name . ' nicotine pouches'); ?>" width="300" height="300" loading="lazy" decoding="async">
+									<img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($brand_name . ' nicotine pouches'); ?>" width="150" height="150" loading="lazy" decoding="async">
 								<?php endif; ?>
 							</div>
 						<?php endif; ?>
