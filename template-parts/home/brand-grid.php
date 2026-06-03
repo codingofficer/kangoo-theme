@@ -63,7 +63,7 @@ $subheading = get_sub_field('subheading');
 									));
 									?>
 								<?php else : ?>
-									<img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($brand_name . ' nicotine pouches'); ?>" loading="lazy" decoding="async">
+									<img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($brand_name . ' nicotine pouches'); ?>" width="300" height="300" loading="lazy" decoding="async">
 								<?php endif; ?>
 							</div>
 						<?php endif; ?>
