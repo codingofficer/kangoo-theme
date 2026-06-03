@@ -300,8 +300,9 @@ function kangoo_apply_url_coupon() {
     }
 
     $coupon = new WC_Coupon($coupon_code);
+    $is_referral_coupon = function_exists('kangoo_referrals_is_coupon_code') && kangoo_referrals_is_coupon_code($coupon_code);
 
-    if (!$coupon->get_id()) {
+    if (!$coupon->get_id() && !$is_referral_coupon) {
         WC()->session->__unset('kangoo_pending_url_coupon');
         WC()->session->__unset('kangoo_pending_url_coupon_at');
         kangoo_remove_url_coupon_notices($coupon_code);
@@ -352,8 +353,9 @@ function kangoo_apply_pending_url_coupon() {
     }
 
     $coupon = new WC_Coupon($coupon_code);
+    $is_referral_coupon = function_exists('kangoo_referrals_is_coupon_code') && kangoo_referrals_is_coupon_code($coupon_code);
 
-    if (!$coupon->get_id()) {
+    if (!$coupon->get_id() && !$is_referral_coupon) {
         WC()->session->__unset('kangoo_pending_url_coupon');
         WC()->session->__unset('kangoo_pending_url_coupon_at');
         kangoo_remove_url_coupon_notices($coupon_code);
@@ -405,8 +407,9 @@ function kangoo_ajax_apply_url_coupon() {
     }
 
     $coupon = new WC_Coupon($coupon_code);
+    $is_referral_coupon = function_exists('kangoo_referrals_is_coupon_code') && kangoo_referrals_is_coupon_code($coupon_code);
 
-    if (!$coupon->get_id()) {
+    if (!$coupon->get_id() && !$is_referral_coupon) {
         wp_send_json_error(array(
             'message' => __('That coupon code could not be found.', 'kangoo'),
         ), 404);
@@ -4852,6 +4855,33 @@ function kangoo_referrals_get_active_code() {
     return $code;
 }
 
+function kangoo_referrals_get_validation_email() {
+    $email = '';
+
+    if (!empty($_POST['billing_email'])) {
+        $email = sanitize_email(wp_unslash($_POST['billing_email']));
+    }
+
+    if (!$email && function_exists('WC') && WC()->customer) {
+        $email = sanitize_email(WC()->customer->get_billing_email());
+    }
+
+    if (!$email && function_exists('kangoo_get_saved_checkout_email')) {
+        $email = sanitize_email(kangoo_get_saved_checkout_email());
+    }
+
+    if (!$email && is_user_logged_in()) {
+        $user = wp_get_current_user();
+        $email = $user ? sanitize_email($user->user_email) : '';
+    }
+
+    return $email;
+}
+
+function kangoo_referrals_is_coupon_code($coupon_code) {
+    return (bool) kangoo_referrals_find_referrer_by_code($coupon_code);
+}
+
 function kangoo_referrals_handle_landing() {
     $code = get_query_var('kangoo_referral_code');
 
@@ -4938,8 +4968,8 @@ function kangoo_referrals_is_self_referral($referrer_id, $email = '') {
     return false;
 }
 
-function kangoo_referrals_can_apply_discount($email = '') {
-    $code = kangoo_referrals_get_active_code();
+function kangoo_referrals_can_apply_code($code, $email = '') {
+    $code = kangoo_referrals_normalize_code($code);
     $referrer_id = kangoo_referrals_find_referrer_by_code($code);
 
     if (!$code || !$referrer_id || kangoo_referrals_is_self_referral($referrer_id, $email)) {
@@ -4955,24 +4985,148 @@ function kangoo_referrals_can_apply_discount($email = '') {
     return true;
 }
 
-function kangoo_referrals_apply_discount_fee($cart) {
-    if ((is_admin() && !defined('DOING_AJAX')) || !$cart || !kangoo_referrals_can_apply_discount()) {
-        return;
-    }
-
-    $eligible_total = max(0, (float) $cart->get_subtotal() - (float) $cart->get_discount_total());
-    $discount = round($eligible_total * (kangoo_referrals_friend_discount_percent() / 100), function_exists('wc_get_price_decimals') ? wc_get_price_decimals() : 2);
-
-    if ($discount <= 0) {
-        return;
-    }
-
-    $cart->add_fee(sprintf(__('Referral %d%% discount', 'kangoo'), kangoo_referrals_friend_discount_percent()), -$discount, false);
+function kangoo_referrals_can_apply_discount($email = '') {
+    return kangoo_referrals_can_apply_code(kangoo_referrals_get_active_code(), $email);
 }
-add_action('woocommerce_cart_calculate_fees', 'kangoo_referrals_apply_discount_fee', 18);
+
+function kangoo_referrals_virtual_coupon_data($coupon_data, $coupon_code) {
+    $code = kangoo_referrals_normalize_code($coupon_code);
+
+    if (!$code || !kangoo_referrals_find_referrer_by_code($code)) {
+        return $coupon_data;
+    }
+
+    return array(
+        'id'                         => 0,
+        'discount_type'              => 'percent',
+        'amount'                     => kangoo_referrals_friend_discount_percent(),
+        'individual_use'             => false,
+        'product_ids'                => array(),
+        'exclude_product_ids'        => array(),
+        'usage_limit'                => 0,
+        'usage_limit_per_user'       => 0,
+        'limit_usage_to_x_items'     => null,
+        'usage_count'                => 0,
+        'expiry_date'                => null,
+        'free_shipping'              => false,
+        'product_categories'         => array(),
+        'exclude_product_categories' => array(),
+        'exclude_sale_items'         => false,
+        'minimum_amount'             => '',
+        'maximum_amount'             => '',
+        'customer_email'             => array(),
+    );
+}
+add_filter('woocommerce_get_shop_coupon_data', 'kangoo_referrals_virtual_coupon_data', 15, 2);
+
+function kangoo_referrals_validate_coupon($valid, $coupon, $discounts = null) {
+    $code = is_object($coupon) && method_exists($coupon, 'get_code') ? $coupon->get_code() : (string) $coupon;
+
+    if (!kangoo_referrals_is_coupon_code($code)) {
+        return $valid;
+    }
+
+    if (!$valid) {
+        return $valid;
+    }
+
+    return kangoo_referrals_can_apply_code($code, kangoo_referrals_get_validation_email());
+}
+add_filter('woocommerce_coupon_is_valid', 'kangoo_referrals_validate_coupon', 10, 3);
+
+function kangoo_referrals_coupon_error_message($message, $error_code, $coupon) {
+    $code = is_object($coupon) && method_exists($coupon, 'get_code') ? $coupon->get_code() : (string) $coupon;
+
+    if (!kangoo_referrals_is_coupon_code($code)) {
+        return $message;
+    }
+
+    $email = kangoo_referrals_get_validation_email();
+    $referrer_id = kangoo_referrals_find_referrer_by_code($code);
+
+    if (kangoo_referrals_is_self_referral($referrer_id, $email)) {
+        return __('Referral codes cannot be used on your own account.', 'kangoo');
+    }
+
+    $user_id = is_user_logged_in() ? get_current_user_id() : 0;
+
+    if (kangoo_referrals_customer_has_prior_orders($user_id, $email)) {
+        return __('Referral codes are for a referred customer\'s first order only.', 'kangoo');
+    }
+
+    return __('This referral code is not eligible for this order.', 'kangoo');
+}
+add_filter('woocommerce_coupon_error', 'kangoo_referrals_coupon_error_message', 10, 3);
+
+function kangoo_referrals_coupon_label($label, $coupon) {
+    $code = is_object($coupon) && method_exists($coupon, 'get_code') ? $coupon->get_code() : (string) $coupon;
+
+    if (kangoo_referrals_is_coupon_code($code)) {
+        return sprintf(__('Referral code (%d%% off)', 'kangoo'), kangoo_referrals_friend_discount_percent());
+    }
+
+    return $label;
+}
+add_filter('woocommerce_cart_totals_coupon_label', 'kangoo_referrals_coupon_label', 20, 2);
+
+function kangoo_referrals_track_coupon($coupon_code) {
+    if (kangoo_referrals_is_coupon_code($coupon_code)) {
+        kangoo_referrals_set_active_code($coupon_code);
+    }
+}
+add_action('woocommerce_applied_coupon', 'kangoo_referrals_track_coupon');
+
+function kangoo_referrals_clear_removed_coupon($coupon_code) {
+    $code = kangoo_referrals_normalize_code($coupon_code);
+
+    if ($code && $code === kangoo_referrals_get_active_code()) {
+        kangoo_referrals_clear_active_code();
+    }
+}
+add_action('woocommerce_removed_coupon', 'kangoo_referrals_clear_removed_coupon');
+
+function kangoo_referrals_apply_active_coupon() {
+    if ((is_admin() && !wp_doing_ajax()) || !function_exists('WC')) {
+        return;
+    }
+
+    if (function_exists('wc_load_cart') && (!WC()->cart || !WC()->session)) {
+        wc_load_cart();
+    }
+
+    if (!WC()->cart || !WC()->session || WC()->cart->is_empty()) {
+        return;
+    }
+
+    $code = kangoo_referrals_get_active_code();
+
+    if (!$code || !kangoo_referrals_is_coupon_code($code) || WC()->cart->has_discount($code)) {
+        return;
+    }
+
+    if (!kangoo_referrals_can_apply_code($code, kangoo_referrals_get_validation_email())) {
+        kangoo_referrals_clear_active_code();
+        return;
+    }
+
+    WC()->session->set_customer_session_cookie(true);
+    kangoo_apply_coupon_without_customer_notices($code);
+}
+add_action('woocommerce_cart_loaded_from_session', 'kangoo_referrals_apply_active_coupon', 25);
+add_action('woocommerce_before_calculate_totals', 'kangoo_referrals_apply_active_coupon', 6);
+add_action('wp_loaded', 'kangoo_referrals_apply_active_coupon', 35);
 
 function kangoo_referrals_validate_checkout($data, $errors) {
     $code = kangoo_referrals_get_active_code();
+
+    if (!$code && function_exists('WC') && WC()->cart) {
+        foreach (WC()->cart->get_applied_coupons() as $coupon_code) {
+            if (kangoo_referrals_is_coupon_code($coupon_code)) {
+                $code = kangoo_referrals_normalize_code($coupon_code);
+                break;
+            }
+        }
+    }
 
     if (!$code) {
         return;
@@ -5006,10 +5160,20 @@ function kangoo_referrals_attach_order_meta($order, $data) {
     }
 
     $code = kangoo_referrals_get_active_code();
+
+    if (!$code && function_exists('WC') && WC()->cart) {
+        foreach (WC()->cart->get_applied_coupons() as $coupon_code) {
+            if (kangoo_referrals_is_coupon_code($coupon_code)) {
+                $code = kangoo_referrals_normalize_code($coupon_code);
+                break;
+            }
+        }
+    }
+
     $referrer_id = kangoo_referrals_find_referrer_by_code($code);
     $email = isset($data['billing_email']) ? sanitize_email($data['billing_email']) : sanitize_email($order->get_billing_email());
 
-    if (!$code || !$referrer_id || !kangoo_referrals_can_apply_discount($email)) {
+    if (!$code || !$referrer_id || !kangoo_referrals_can_apply_code($code, $email)) {
         return;
     }
 
