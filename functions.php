@@ -92,6 +92,16 @@ function kangoo_get_url_coupon_code() {
     return $coupon_code;
 }
 
+function kangoo_get_removed_coupon_code() {
+    if (empty($_GET['remove_coupon'])) {
+        return '';
+    }
+
+    $coupon_code = sanitize_text_field(wp_unslash($_GET['remove_coupon']));
+
+    return function_exists('wc_format_coupon_code') ? wc_format_coupon_code($coupon_code) : strtolower($coupon_code);
+}
+
 function kangoo_url_coupon_lifetime() {
     return 30 * MINUTE_IN_SECONDS;
 }
@@ -132,6 +142,43 @@ function kangoo_clear_url_coupon_tracking() {
     WC()->session->__unset('kangoo_url_coupon_last_attempted');
     WC()->session->__unset('kangoo_url_coupon_last_attempted_at');
 }
+
+function kangoo_clear_coupon_tracking_for_removed_coupon($coupon_code = '') {
+    $coupon_code = $coupon_code ? $coupon_code : kangoo_get_removed_coupon_code();
+    $coupon_code = $coupon_code && function_exists('wc_format_coupon_code') ? wc_format_coupon_code($coupon_code) : strtolower((string) $coupon_code);
+
+    if (!$coupon_code || !function_exists('WC')) {
+        return;
+    }
+
+    if (function_exists('wc_load_cart') && !WC()->session) {
+        wc_load_cart();
+    }
+
+    if (WC()->session) {
+        $tracked_coupon_keys = array(
+            'kangoo_pending_url_coupon'       => 'kangoo_pending_url_coupon_at',
+            'kangoo_url_coupon_applied'       => 'kangoo_url_coupon_applied_at',
+            'kangoo_url_coupon_last_attempted' => 'kangoo_url_coupon_last_attempted_at',
+        );
+
+        foreach ($tracked_coupon_keys as $coupon_key => $timestamp_key) {
+            $tracked_coupon = (string) WC()->session->get($coupon_key);
+            $tracked_coupon = $tracked_coupon && function_exists('wc_format_coupon_code') ? wc_format_coupon_code($tracked_coupon) : strtolower($tracked_coupon);
+
+            if ($tracked_coupon === $coupon_code) {
+                WC()->session->__unset($coupon_key);
+                WC()->session->__unset($timestamp_key);
+            }
+        }
+    }
+
+    if (function_exists('kangoo_referrals_get_active_code') && function_exists('kangoo_referrals_clear_active_code') && $coupon_code === kangoo_referrals_get_active_code()) {
+        kangoo_referrals_clear_active_code();
+    }
+}
+add_action('wp_loaded', 'kangoo_clear_coupon_tracking_for_removed_coupon', 1);
+add_action('woocommerce_removed_coupon', 'kangoo_clear_coupon_tracking_for_removed_coupon', 1);
 
 function kangoo_remove_url_coupon_notices($coupon_code) {
     if (!$coupon_code || !function_exists('wc_get_notices') || !function_exists('wc_set_notices')) {
@@ -263,6 +310,10 @@ function kangoo_apply_url_coupon() {
         return;
     }
 
+    if (kangoo_get_removed_coupon_code()) {
+        return;
+    }
+
     $coupon_code = kangoo_get_url_coupon_code();
 
     if (!$coupon_code) {
@@ -322,6 +373,10 @@ add_action('wp_loaded', 'kangoo_apply_url_coupon', 20);
 
 function kangoo_apply_pending_url_coupon() {
     if (!function_exists('WC') || !WC()->cart || !WC()->session) {
+        return;
+    }
+
+    if (kangoo_get_removed_coupon_code()) {
         return;
     }
 
@@ -4717,6 +4772,10 @@ function kangoo_referrals_friend_discount_percent() {
     return 15;
 }
 
+function kangoo_referrals_friend_discount_minimum_spend() {
+    return 20.0;
+}
+
 function kangoo_referrals_add_account_endpoint() {
     add_rewrite_endpoint(kangoo_referrals_endpoint_slug(), EP_ROOT | EP_PAGES);
     add_rewrite_rule('^r/([A-Za-z0-9]+)/?$', 'index.php?kangoo_referral_code=$matches[1]', 'top');
@@ -5000,7 +5059,7 @@ function kangoo_referrals_virtual_coupon_data($coupon_data, $coupon_code) {
         'id'                         => 0,
         'discount_type'              => 'percent',
         'amount'                     => kangoo_referrals_friend_discount_percent(),
-        'individual_use'             => false,
+        'individual_use'             => true,
         'product_ids'                => array(),
         'exclude_product_ids'        => array(),
         'usage_limit'                => 0,
@@ -5011,8 +5070,8 @@ function kangoo_referrals_virtual_coupon_data($coupon_data, $coupon_code) {
         'free_shipping'              => false,
         'product_categories'         => array(),
         'exclude_product_categories' => array(),
-        'exclude_sale_items'         => false,
-        'minimum_amount'             => '',
+        'exclude_sale_items'         => true,
+        'minimum_amount'             => kangoo_referrals_friend_discount_minimum_spend(),
         'maximum_amount'             => '',
         'customer_email'             => array(),
     );
@@ -5041,6 +5100,20 @@ function kangoo_referrals_coupon_error_message($message, $error_code, $coupon) {
         return $message;
     }
 
+    if (function_exists('WC') && WC()->cart) {
+        foreach (WC()->cart->get_applied_coupons() as $coupon_code) {
+            $coupon_code = kangoo_referrals_normalize_code($coupon_code);
+
+            if ($coupon_code && $coupon_code !== kangoo_referrals_normalize_code($code)) {
+                return __('Referral codes cannot be combined with other discounts.', 'kangoo');
+            }
+        }
+
+        if ((float) WC()->cart->get_subtotal() < kangoo_referrals_friend_discount_minimum_spend()) {
+            return sprintf(__('Referral codes can be used on first orders of %s or more.', 'kangoo'), kangoo_plain_wc_price(kangoo_referrals_friend_discount_minimum_spend()));
+        }
+    }
+
     $email = kangoo_referrals_get_validation_email();
     $referrer_id = kangoo_referrals_find_referrer_by_code($code);
 
@@ -5057,6 +5130,38 @@ function kangoo_referrals_coupon_error_message($message, $error_code, $coupon) {
     return __('This referral code is not eligible for this order.', 'kangoo');
 }
 add_filter('woocommerce_coupon_error', 'kangoo_referrals_coupon_error_message', 10, 3);
+
+function kangoo_referrals_coupon_valid_for_product($valid, $product, $coupon, $values = array()) {
+    $code = is_object($coupon) && method_exists($coupon, 'get_code') ? $coupon->get_code() : (string) $coupon;
+
+    if (!$valid || !kangoo_referrals_is_coupon_code($code) || !function_exists('kangoo_is_99p_product')) {
+        return $valid;
+    }
+
+    $product_ids = array();
+
+    if ($product instanceof WC_Product) {
+        $product_ids[] = $product->get_id();
+
+        if ($product->get_parent_id()) {
+            $product_ids[] = $product->get_parent_id();
+        }
+    }
+
+    if (is_array($values)) {
+        $product_ids[] = isset($values['product_id']) ? absint($values['product_id']) : 0;
+        $product_ids[] = isset($values['variation_id']) ? absint($values['variation_id']) : 0;
+    }
+
+    foreach (array_filter(array_unique($product_ids)) as $product_id) {
+        if (kangoo_is_99p_product($product_id)) {
+            return false;
+        }
+    }
+
+    return $valid;
+}
+add_filter('woocommerce_coupon_is_valid_for_product', 'kangoo_referrals_coupon_valid_for_product', 10, 4);
 
 function kangoo_referrals_coupon_label($label, $coupon) {
     $code = is_object($coupon) && method_exists($coupon, 'get_code') ? $coupon->get_code() : (string) $coupon;
@@ -5087,6 +5192,10 @@ add_action('woocommerce_removed_coupon', 'kangoo_referrals_clear_removed_coupon'
 
 function kangoo_referrals_apply_active_coupon() {
     if ((is_admin() && !wp_doing_ajax()) || !function_exists('WC')) {
+        return;
+    }
+
+    if (function_exists('kangoo_get_removed_coupon_code') && kangoo_get_removed_coupon_code()) {
         return;
     }
 

@@ -27,6 +27,11 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     const params = new URLSearchParams(window.location.search);
+
+    if (params.has('remove_coupon')) {
+      return;
+    }
+
     const coupon = params.get('coupon');
 
     if (!coupon) {
