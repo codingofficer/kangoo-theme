@@ -716,6 +716,10 @@ body {
   font-weight: 700;
 }
 
+.kangoo-helper-mascot__character {
+  background-image: url("../images/kangoo-mascot-sprite.webp") !important;
+}
+
 .kangoo-mega-menu__view-all {
   display: inline-flex;
   margin-top: 1rem;
