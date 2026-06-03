@@ -432,8 +432,11 @@ if (current_user_can('manage_options')) {
                                             <?php
                                             echo kangoo_render_acf_image($image, 'woocommerce_thumbnail', array(
                                                 'alt' => $label,
+                                                'width' => 300,
+                                                'height' => 300,
                                                 'loading' => 'lazy',
                                                 'sizes' => '72px',
+                                                'kangoo_no_srcset' => true,
                                             ));
                                             ?>
                                         <?php endif; ?>
@@ -535,8 +538,11 @@ if (current_user_can('manage_options')) {
                                             <?php
                                             echo kangoo_render_acf_image($icon, 'medium', array(
                                                 'alt' => $label,
+                                                'width' => 200,
+                                                'height' => 300,
                                                 'loading' => 'lazy',
                                                 'sizes' => '76px',
+                                                'kangoo_no_srcset' => true,
                                             ));
                                             ?>
                                         <?php endif; ?>
@@ -579,8 +585,11 @@ if (current_user_can('manage_options')) {
                                             <?php
                                             echo kangoo_render_acf_image($icon, 'medium', array(
                                                 'alt' => $label,
+                                                'width' => 300,
+                                                'height' => 200,
                                                 'loading' => 'lazy',
                                                 'sizes' => '84px',
+                                                'kangoo_no_srcset' => true,
                                             ));
                                             ?>
                                         <?php endif; ?>
@@ -680,8 +689,11 @@ if (current_user_can('manage_options')) {
 													<?php
 													echo kangoo_render_acf_image($card['image'], 'woocommerce_thumbnail', array(
 														'alt' => $card_label,
+														'width' => 300,
+														'height' => 300,
 														'loading' => 'lazy',
 														'sizes' => '64px',
+														'kangoo_no_srcset' => true,
 													));
 													?>
 												<?php endif; ?>
@@ -773,8 +785,11 @@ if (current_user_can('manage_options')) {
                                                     <?php
                                                     echo kangoo_render_acf_image($card_icon, 'medium', array(
                                                         'alt' => $card_label,
+                                                        'width' => 300,
+                                                        'height' => 200,
                                                         'loading' => 'lazy',
                                                         'sizes' => '72px',
+                                                        'kangoo_no_srcset' => true,
                                                     ));
                                                     ?>
                                                 <?php endif; ?>

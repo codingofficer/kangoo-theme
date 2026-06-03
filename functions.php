@@ -588,12 +588,40 @@ function kangoo_get_acf_image_alt($image, $attachment_id = 0) {
 
 function kangoo_render_acf_image($image, $size = 'large', $attr = array()) {
     $attachment_id = kangoo_get_acf_image_id($image);
+    $skip_srcset = !empty($attr['kangoo_no_srcset']);
+    unset($attr['kangoo_no_srcset']);
+
     $attr = wp_parse_args($attr, array(
         'decoding' => 'async',
     ));
 
     if (!array_key_exists('alt', $attr)) {
         $attr['alt'] = kangoo_get_acf_image_alt($image, $attachment_id);
+    }
+
+    if ($attachment_id && $skip_srcset) {
+        $image_src = wp_get_attachment_image_src($attachment_id, $size);
+
+        if ($image_src) {
+            if (empty($attr['width'])) {
+                $attr['width'] = (int) $image_src[1];
+            }
+
+            if (empty($attr['height'])) {
+                $attr['height'] = (int) $image_src[2];
+            }
+
+            $attributes = '';
+            foreach ($attr as $name => $value) {
+                if ($value === false || $value === null || $value === '') {
+                    continue;
+                }
+
+                $attributes .= ' ' . esc_attr($name) . '="' . esc_attr($value) . '"';
+            }
+
+            return '<img src="' . esc_url($image_src[0]) . '"' . $attributes . '>';
+        }
     }
 
     if ($attachment_id) {
