@@ -5037,7 +5037,7 @@ body.kangoo-theme--light.woocommerce-checkout .kangoo-coupon-code-toggle::before
   width: 18px;
   height: 18px;
   border: 1.8px solid #0b1220;
-  border-radius: 12px;
+  border-radius: 4px;
   transform: translateY(-50%) rotate(45deg);
 }
 
