@@ -1012,12 +1012,10 @@
   }
 
   .pack-pricing__option {
-    grid-template-columns: minmax(0, 1fr) auto;
-    grid-template-areas:
-      "name unit"
-      "badge unit";
-    gap: 0.18rem 0.75rem;
-    min-height: 54px;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    grid-template-areas: "name badge unit";
+    gap: 0.35rem;
+    min-height: 50px;
     padding: 0.68rem 0.85rem;
   }
 
@@ -1039,7 +1037,8 @@
 
   .pack-pricing__badge {
     grid-area: badge;
-    justify-self: start;
+    justify-self: end;
+    align-self: center;
     padding: 0.12rem 0.45rem;
     font-size: 0.68rem;
     line-height: 1.1;
