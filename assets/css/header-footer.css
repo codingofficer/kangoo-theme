@@ -821,6 +821,9 @@ body {
   display: none;
   position: fixed;
   inset: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
   z-index: 10000;
   isolation: isolate;
   font-family: inherit;
@@ -833,6 +836,8 @@ body {
   justify-content: center;
   padding: clamp(1rem, 4vw, 3rem);
   overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 .kangoo-age-gate.is-visible {

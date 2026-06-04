@@ -174,3 +174,9 @@ body.no-scroll {
   overflow: hidden;
   touch-action: none;
 }
+
+html.kangoo-age-gate-open,
+body.kangoo-age-gate-open {
+  overflow: hidden;
+  overscroll-behavior: none;
+}

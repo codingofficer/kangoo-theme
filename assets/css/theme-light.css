@@ -1164,6 +1164,20 @@ body.kangoo-theme--light .kangoo-cart-email-capture__message {
   color: #5b6472 !important;
 }
 
+body.kangoo-theme--light .kangoo-cart-email-capture__message.is-error {
+  color: #dc2626 !important;
+  font-weight: 900;
+}
+
+body.kangoo-theme--light.woocommerce-cart .kangoo-checkout-disabled,
+body.kangoo-theme--light.woocommerce-cart .wc-proceed-to-checkout .kangoo-checkout-disabled,
+body.kangoo-theme--light.woocommerce-cart .wc-block-cart__submit-container .kangoo-checkout-disabled {
+  border-color: #d1d5db !important;
+  background: #e5e7eb !important;
+  color: #6b7280 !important;
+  box-shadow: none !important;
+}
+
 body.kangoo-theme--light .kangoo-cart-email-capture__icon {
   border-color: rgba(22, 119, 232, 0.18) !important;
   background: #eef6ff !important;

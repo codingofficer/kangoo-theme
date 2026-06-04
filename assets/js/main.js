@@ -855,6 +855,10 @@ document.addEventListener('DOMContentLoaded', function () {
   const ageGateParams = new URLSearchParams(window.location.search);
   const shouldPreviewAgeGate = ageGateParams.get('age_gate') === 'preview';
   const shouldResetAgeGate = ageGateParams.get('age_gate') === 'reset';
+  let ageGateScrollY = 0;
+  let ageGateScrollLocked = false;
+  let ageGateHadNoScroll = false;
+  let ageGatePreviousBodyStyles = null;
 
   function isAgeGateAccepted() {
     try {
@@ -873,9 +877,9 @@ document.addEventListener('DOMContentLoaded', function () {
       return;
     }
 
+    lockAgeGateScroll();
     ageGate.classList.add('is-visible');
     ageGate.setAttribute('aria-hidden', 'false');
-    body.classList.add('no-scroll');
 
     window.setTimeout(function () {
       if (ageGateAccept) {
@@ -891,7 +895,57 @@ document.addEventListener('DOMContentLoaded', function () {
 
     ageGate.classList.remove('is-visible');
     ageGate.setAttribute('aria-hidden', 'true');
-    body.classList.remove('no-scroll');
+    unlockAgeGateScroll();
+  }
+
+  function lockAgeGateScroll() {
+    if (ageGateScrollLocked) {
+      return;
+    }
+
+    ageGateScrollLocked = true;
+    ageGateHadNoScroll = body.classList.contains('no-scroll');
+    ageGateScrollY = window.scrollY || document.documentElement.scrollTop || 0;
+    ageGatePreviousBodyStyles = {
+      position: body.style.position,
+      top: body.style.top,
+      left: body.style.left,
+      right: body.style.right,
+      width: body.style.width
+    };
+
+    document.documentElement.classList.add('kangoo-age-gate-open');
+    body.classList.add('no-scroll', 'kangoo-age-gate-open');
+    body.style.position = 'fixed';
+    body.style.top = '-' + ageGateScrollY + 'px';
+    body.style.left = '0';
+    body.style.right = '0';
+    body.style.width = '100%';
+  }
+
+  function unlockAgeGateScroll() {
+    if (!ageGateScrollLocked) {
+      return;
+    }
+
+    const restoreY = ageGateScrollY;
+    ageGateScrollLocked = false;
+    document.documentElement.classList.remove('kangoo-age-gate-open');
+    body.classList.remove('kangoo-age-gate-open');
+
+    if (!ageGateHadNoScroll) {
+      body.classList.remove('no-scroll');
+    }
+
+    if (ageGatePreviousBodyStyles) {
+      body.style.position = ageGatePreviousBodyStyles.position;
+      body.style.top = ageGatePreviousBodyStyles.top;
+      body.style.left = ageGatePreviousBodyStyles.left;
+      body.style.right = ageGatePreviousBodyStyles.right;
+      body.style.width = ageGatePreviousBodyStyles.width;
+    }
+
+    window.scrollTo(0, restoreY);
   }
 
   function blockAgeGate() {
@@ -1599,7 +1653,23 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function syncCartCheckoutButton(button, isEnabled) {
-    return Boolean(button) && Boolean(isEnabled);
+    if (!button) {
+      return false;
+    }
+
+    const enabled = Boolean(isEnabled);
+    button.classList.toggle('kangoo-checkout-disabled', !enabled);
+    button.setAttribute('aria-disabled', enabled ? 'false' : 'true');
+
+    if (!enabled) {
+      button.setAttribute('data-kangoo-checkout-disabled', '1');
+      button.setAttribute('title', 'Add your email and date of birth to continue.');
+    } else {
+      button.removeAttribute('data-kangoo-checkout-disabled');
+      button.removeAttribute('title');
+    }
+
+    return enabled;
   }
 
   function setupCartEmailCapture() {
@@ -1835,8 +1905,13 @@ document.addEventListener('DOMContentLoaded', function () {
       }
 
       button.classList.remove('is-loading', 'loading', 'wc-block-components-button--loading');
-      button.removeAttribute('aria-disabled');
       button.removeAttribute('disabled');
+
+      if (button.classList.contains('kangoo-checkout-disabled')) {
+        button.setAttribute('aria-disabled', 'true');
+      } else {
+        button.removeAttribute('aria-disabled');
+      }
 
       const spinner = button.querySelector('.wc-block-components-spinner, .components-spinner, .button-spinner');
 

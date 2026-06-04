@@ -1769,8 +1769,8 @@ body.woocommerce-cart .wc-proceed-to-checkout {
 }
 
 .kangoo-cart-email-capture__message.is-error {
-  color: #ffb36c;
-  font-weight: 800;
+  color: #ff6b6b;
+  font-weight: 900;
 }
 
 .kangoo-cart-email-capture.has-email {
@@ -1818,9 +1818,15 @@ body.woocommerce-cart .wc-proceed-to-checkout {
 
 .kangoo-checkout-disabled,
 .woocommerce-cart .kangoo-checkout-disabled {
-  opacity: 0.46 !important;
+  opacity: 0.64 !important;
+  border-color: rgba(148, 163, 184, 0.65) !important;
+  background: #d1d5db !important;
+  color: #6b7280 !important;
   cursor: not-allowed !important;
-  filter: grayscale(0.2);
+  filter: grayscale(0.35);
+  box-shadow: none !important;
+  pointer-events: auto;
+  transform: none !important;
 }
 
 @media (max-width: 640px) {
