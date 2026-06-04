@@ -436,27 +436,6 @@ body.kangoo-theme--light .kangoo-rewards-cart__info {
   color: #111827 !important;
 }
 
-body.kangoo-theme--light .woocommerce-message,
-body.kangoo-theme--light .woocommerce-info,
-body.kangoo-theme--light .woocommerce-error,
-body.kangoo-theme--light .wc-block-components-notice-banner,
-body.kangoo-theme--light .kangoo-free-shipping-nudge,
-body.kangoo-theme--light .kangoo-checkout-age,
-body.kangoo-theme--light .kangoo-rewards-cart--cart,
-body.kangoo-theme--light .woocommerce-cart-form,
-body.kangoo-theme--light .cart_totals,
-body.kangoo-theme--light .woocommerce-checkout-review-order,
-body.kangoo-theme--light .woocommerce-checkout-payment,
-body.kangoo-theme--light .wc-block-components-sidebar,
-body.kangoo-theme--light .wc-block-cart,
-body.kangoo-theme--light .wc-block-components-totals-wrapper,
-body.kangoo-theme--light .wc-block-components-panel,
-body.kangoo-theme--light .wc-block-components-radio-control {
-  border-color: rgba(17, 24, 39, 0.1) !important;
-  background: #ffffff !important;
-  color: #111827 !important;
-}
-
 body.kangoo-theme--light .woocommerce-error {
   border-color: rgba(220, 38, 38, 0.28) !important;
   background: #fff1f1 !important;

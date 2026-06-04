@@ -583,13 +583,6 @@ body.woocommerce-cart .wc-block-grid__product-add-to-cart .wp-block-button__link
   padding: 0 !important;
 }
 
-.woocommerce-checkout .wc-block-components-radio-control {
-  border: 1px solid rgba(255,255,255,0.2) !important;
-  border-radius: 18px !important;
-  background: rgba(255,255,255,0.025) !important;
-  overflow: visible !important;
-}
-
 .woocommerce-checkout .wc-block-components-radio-control__option,
 .woocommerce-checkout .wc-block-components-radio-control-accordion-option {
   border-radius: 18px !important;
@@ -766,13 +759,6 @@ body.woocommerce-cart .wc-block-grid__product-add-to-cart .wp-block-button__link
   height: auto !important;
   padding: 0 !important;
   background: #ffffff !important;
-}
-
-.woocommerce-checkout #payment-method .wc-block-components-radio-control,
-.woocommerce-checkout .wc-block-checkout__payment-method .wc-block-components-radio-control {
-  border-color: #101216 !important;
-  background: #ffffff !important;
-  color: #101216 !important;
 }
 
 .woocommerce-checkout #payment-method .wc-block-components-radio-control__option,
@@ -3022,8 +3008,6 @@ body.woocommerce-checkout .wc-stripe-blocks-payment-method-content,
 body.woocommerce-checkout .wc-block-components-express-payment,
 body.woocommerce-checkout .wc-block-components-express-payment__event-buttons,
 body.woocommerce-checkout .wc-block-components-express-payment__content {
-  background: #f6f7f9 !important;
-  color: #101216 !important;
   border-color: #d8dde6 !important;
 }
 
@@ -3288,24 +3272,6 @@ body.woocommerce-checkout .wc-block-components-text-input input:focus,
 body.woocommerce-checkout .wc-block-components-combobox-control input:focus {
   border-color: #ff7a00 !important;
   box-shadow: 0 0 0 2px rgba(255, 122, 0, 0.18) !important;
-}
-
-body.woocommerce-checkout #payment-method .wc-block-components-radio-control,
-body.woocommerce-checkout .wc-block-checkout__payment-method .wc-block-components-radio-control,
-body.woocommerce-checkout #payment-method .wc-block-components-radio-control__option,
-body.woocommerce-checkout #payment-method .wc-block-components-radio-control-accordion-option,
-body.woocommerce-checkout .wc-block-checkout__payment-method .wc-block-components-radio-control__option,
-body.woocommerce-checkout .wc-block-checkout__payment-method .wc-block-components-radio-control-accordion-option,
-body.woocommerce-checkout .wc-block-checkout__payment-method .wc-block-components-radio-control-accordion-content,
-body.woocommerce-checkout .wc-stripe-blocks-payment-method-content,
-body.woocommerce-checkout .wc-stripe-blocks-payment-method-content .StripeElement,
-body.woocommerce-checkout .payment_box,
-body.woocommerce-checkout .wc-block-components-card-number-input,
-body.woocommerce-checkout .wc-block-components-card-expiry-input,
-body.woocommerce-checkout .wc-block-components-card-cvc-input {
-  background: #ffffff !important;
-  color: #101216 !important;
-  border-color: #d8dde6 !important;
 }
 
 body.woocommerce-checkout #payment-method .wc-block-components-radio-control__input,
