@@ -5036,7 +5036,6 @@ body.kangoo-theme--light.woocommerce-cart .wc-block-components-totals-coupon,
 body.kangoo-theme--light.woocommerce-checkout .wp-block-woocommerce-checkout-order-summary-coupon-form-block,
 body.kangoo-theme--light.woocommerce-checkout .wc-block-components-totals-coupon {
   border: 1px solid #e5e9f0;
-  border-radius: 12px;
   background: #ffffff;
   overflow: hidden;
 }
@@ -5081,6 +5080,12 @@ body.kangoo-theme--light.woocommerce-checkout .kangoo-coupon-code-toggle::after 
   transform: translate(3px, -7px);
 }
 
+@container (min-width: 700px) {
+  body.kangoo-theme--light.woocommerce-cart .wc-block-cart .wc-block-cart__totals-title {
+    padding: 8px 16px 10px 14px !important;
+  }
+}
+
 body.kangoo-theme--light.woocommerce-cart .cart-collaterals,
 body.kangoo-theme--light.woocommerce-cart .wc-block-cart__sidebar,
 body.kangoo-theme--light.woocommerce-cart .wc-block-components-sidebar {
@@ -5116,16 +5121,6 @@ body.kangoo-theme--light.woocommerce-cart table.wc-block-cart-items {
   border-collapse: separate !important;
   border-spacing: 0 !important;
   background: #ffffff !important;
-}
-
-body.kangoo-theme--light.woocommerce-cart table.wc-block-cart-items thead th:first-child,
-body.kangoo-theme--light.woocommerce-cart table.wc-block-cart-items tbody tr:first-child td:first-child {
-  border-top-left-radius: 16px;
-}
-
-body.kangoo-theme--light.woocommerce-cart table.wc-block-cart-items thead th:last-child,
-body.kangoo-theme--light.woocommerce-cart table.wc-block-cart-items tbody tr:first-child td:last-child {
-  border-top-right-radius: 16px;
 }
 
 body.kangoo-theme--light.woocommerce-cart .wc-block-components-sidebar-layout,
@@ -5185,16 +5180,12 @@ body.kangoo-theme--light.woocommerce-cart .cart-collaterals .cart_totals {
 
 body.kangoo-theme--light.woocommerce-cart .wc-block-components-totals-footer-item,
 body.kangoo-theme--light.woocommerce-cart .wc-block-components-totals-wrapper:last-of-type {
-  border-bottom-right-radius: 16px;
-  border-bottom-left-radius: 16px;
   overflow: hidden;
 }
 
 body.kangoo-theme--light.woocommerce-cart .wc-block-cart__submit-container,
 body.kangoo-theme--light.woocommerce-cart .wp-block-woocommerce-proceed-to-checkout-block,
 body.kangoo-theme--light.woocommerce-cart .wc-proceed-to-checkout {
-  border-bottom-right-radius: 16px;
-  border-bottom-left-radius: 16px;
   overflow: hidden;
 }
 
