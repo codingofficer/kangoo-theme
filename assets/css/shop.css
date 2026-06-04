@@ -825,6 +825,12 @@
   background: #f7f7f7;
 }
 
+.pack-add-modal__image picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 .pack-add-modal__image img {
   width: 100%;
   height: 100%;

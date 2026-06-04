@@ -24,6 +24,10 @@ $card_has_available_pack_tier = false;
 $card_price = (float) $product->get_price();
 $card_regular_price = (float) $product->get_regular_price();
 $card_saving_per_can = max(0, $card_regular_price - $card_price);
+$modal_image_attrs = array(
+    'loading' => 'eager',
+    'sizes'   => '(max-width: 640px) 44vw, 300px',
+);
 $card_strength_label = '';
 $card_strength_mg = function_exists('get_field') ? get_field('strength_mg') : '';
 
@@ -285,7 +289,11 @@ if ($is_quick_add_card && $is_variable) {
 
             <div class="pack-add-modal__top">
                 <div class="pack-add-modal__image">
-                    <?php echo woocommerce_get_product_thumbnail('woocommerce_thumbnail'); ?>
+                    <?php
+                    echo function_exists('kangoo_get_product_card_thumbnail')
+                        ? kangoo_get_product_card_thumbnail($product, $modal_image_attrs)
+                        : woocommerce_get_product_thumbnail('woocommerce_thumbnail');
+                    ?>
                 </div>
                 <div>
                     <div class="pack-add-modal__brand"><?php echo esc_html($product->get_attribute('pa_brand')); ?></div>
@@ -367,7 +375,11 @@ if ($is_quick_add_card && $is_variable) {
 
             <div class="quick-add-modal__top">
                 <div class="quick-add-modal__image">
-                    <?php echo woocommerce_get_product_thumbnail('woocommerce_thumbnail'); ?>
+                    <?php
+                    echo function_exists('kangoo_get_product_card_thumbnail')
+                        ? kangoo_get_product_card_thumbnail($product, $modal_image_attrs)
+                        : woocommerce_get_product_thumbnail('woocommerce_thumbnail');
+                    ?>
                 </div>
 
                 <div class="quick-add-modal__summary">

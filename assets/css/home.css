@@ -609,6 +609,11 @@
   background: rgba(255,255,255,0.03);
 }
 
+.quick-add-modal__image picture {
+  display: block;
+  width: 100%;
+}
+
 .quick-add-modal__image img {
   width: 100%;
   aspect-ratio: 1 / 1;

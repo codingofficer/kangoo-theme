@@ -1907,16 +1907,27 @@ jQuery(function ($) {
     const $cardImage = $card.find('.product-card__media img').first();
     const imageSrc = $modal.attr('data-product-image') || $cardImage.attr('src') || $cardImage.attr('data-src') || '';
     const imageSrcset = $cardImage.attr('srcset') || '';
-    const imageSizes = $cardImage.attr('sizes') || '';
+    const imageSizes = cleanModalImageSizes($cardImage.attr('sizes') || '');
 
     if ($title.length && title) {
       $title.text(title);
     }
 
-    if ($imageWrap.length && !$imageWrap.find('img').length && imageSrc) {
-      const $img = $('<img>', {
+    if ($imageWrap.length && imageSrc) {
+      let $img = $imageWrap.find('img').first();
+
+      if (!$img.length) {
+        $img = $('<img>', {
+          alt: title || ''
+        });
+        $imageWrap.append($img);
+      }
+
+      $img.attr({
         src: imageSrc,
-        alt: title || ''
+        alt: title || '',
+        loading: 'eager',
+        decoding: 'async'
       });
 
       if (imageSrcset) {
@@ -1927,8 +1938,11 @@ jQuery(function ($) {
         $img.attr('sizes', imageSizes);
       }
 
-      $imageWrap.append($img);
     }
+  }
+
+  function cleanModalImageSizes(value) {
+    return String(value || '').replace(/^auto\s*,\s*/i, '').trim();
   }
 
   function relocateCartRecommendations() {
