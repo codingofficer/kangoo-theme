@@ -283,6 +283,16 @@
   flex-wrap: wrap;
 }
 
+.product-thumbs-wrap {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.product-thumbs__arrow {
+  display: none;
+}
+
 .product-thumb {
   width: 72px;
   height: 72px;
@@ -309,6 +319,11 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.product-mobile-summary__toggle,
+.product-mobile-features {
+  display: none;
 }
 
 .product-accordion {
@@ -656,6 +671,10 @@
 }
 
 @media (max-width: 767px) {
+  body.single-product .section {
+    padding-top: 0.75rem;
+  }
+
   body.single-product .site-main {
     padding-bottom: 6rem;
   }
@@ -664,54 +683,297 @@
     display: none !important;
   }
 
+  .product-page {
+    max-width: 390px;
+    margin-inline: auto;
+  }
+
   .product-page__grid {
-    gap: var(--space-4);
+    display: grid;
+    grid-template-columns: minmax(0, 42%) minmax(0, 58%);
+    column-gap: 16px;
+    row-gap: 10px;
+    align-items: start;
   }
 
   .product-page__info {
-    gap: 0.85rem;
+    display: contents;
   }
 
   .product-media {
-    gap: var(--space-2);
+    grid-column: 1;
+    grid-row: 1 / span 7;
+    gap: 8px;
+    min-width: 0;
   }
 
   .product-image {
-    min-height: clamp(260px, 72vw, 360px);
-    padding: 1.1rem;
+    aspect-ratio: 1;
+    min-height: 0;
+    padding: 0.5rem;
+    border-color: #e5e7eb;
     border-radius: 12px;
+    background: #ffffff;
   }
 
   .product-image img {
-    max-height: min(300px, 64vw);
+    max-height: 100%;
+  }
+
+  .product-image__badge {
+    top: 6px;
+    left: 6px;
+    min-height: 20px;
+    padding: 0.18rem 0.4rem;
+    font-size: 0.56rem;
+  }
+
+  .product-image__strength-badge {
+    top: 6px;
+    right: 6px;
+    min-width: 34px;
+    height: 22px;
+    padding: 0 0.42rem;
+    font-size: 0.62rem;
+  }
+
+  .product-thumbs-wrap {
+    display: grid;
+    grid-template-columns: 22px minmax(0, 104px) 22px;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .product-thumbs {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 48px;
+    gap: 8px;
+    width: 104px;
+    overflow: hidden;
+    scroll-behavior: smooth;
+    flex-wrap: nowrap;
+  }
+
+  .product-thumbs__arrow {
+    display: inline-grid;
+    place-items: center;
+    width: 22px;
+    height: 48px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #111827;
+    font-size: 1.45rem;
+    line-height: 1;
+    cursor: pointer;
   }
 
   .product-thumb {
-    width: 64px;
-    height: 64px;
+    width: 48px;
+    height: 48px;
+    border-color: #e5e7eb;
+    background: #ffffff;
+  }
+
+  .product-thumb.is-active {
+    border-color: #135fea;
+    box-shadow: 0 0 0 1px rgba(19, 95, 234, 0.26);
+  }
+
+  .product-title,
+  .product-review-summary,
+  .product-price,
+  .product-saving,
+  .product-stock-note,
+  .product-mobile-summary {
+    grid-column: 2;
+    min-width: 0;
   }
 
   .product-title {
+    order: 1;
     margin-bottom: 0;
-    font-size: clamp(1.8rem, 8vw, 2.15rem);
-    gap: 0.35rem;
+    color: #111827;
+    font-size: clamp(1.05rem, 5vw, 1.32rem);
+    line-height: 1.12;
+    letter-spacing: 0;
+    gap: 0;
+  }
+
+  .product-review-summary {
+    order: 2;
+    gap: 0.28rem;
+    color: #111827;
+    font-size: 0.72rem;
+    line-height: 1.1;
+  }
+
+  .kangoo-review-stars {
+    font-size: 0.86rem;
+  }
+
+  .product-price {
+    order: 3;
+    margin: 0;
+    color: #111827;
+    font-size: clamp(1.15rem, 5.5vw, 1.45rem);
+    line-height: 1.05;
+    font-weight: 900;
+  }
+
+  .product-saving {
+    order: 4;
+    margin: 0;
+    color: #16a34a;
+    font-size: 0.78rem;
+    font-weight: 800;
+    line-height: 1.15;
+  }
+
+  .product-stock-note {
+    order: 5;
+    color: #dc2626;
+    font-size: 0.78rem;
+    font-weight: 900;
+    line-height: 1.15;
+  }
+
+  .product-mobile-summary {
+    order: 6;
+    display: grid;
+    gap: 0.28rem;
+    color: #111827;
   }
 
   .product-subtitle {
-    margin-bottom: 0;
+    margin: 0;
+    color: #111827;
+    font-size: 0.72rem;
+    line-height: 1.35;
+  }
+
+  .product-mobile-summary:not(.is-expanded) .product-subtitle {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
+
+  .product-mobile-summary:not(.is-expanded) .product-highlights--mobile {
+    display: none;
   }
 
   .product-highlights {
     margin-top: 0;
-    gap: 0.25rem;
+    gap: 0.2rem;
   }
 
-  .product-price {
-    margin-top: 0.35rem;
+  .product-highlights li {
+    color: #6b7280;
+    font-size: 0.68rem;
+    line-height: 1.25;
+  }
+
+  .product-mobile-summary__toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    justify-self: start;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #135fea;
+    font-size: 0.74rem;
+    font-weight: 800;
+    line-height: 1.2;
+    cursor: pointer;
+  }
+
+  .product-mobile-summary.is-expanded .product-mobile-summary__toggle span[aria-hidden="true"] {
+    transform: rotate(180deg);
+  }
+
+  .product-mobile-features {
+    order: 7;
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 6px;
+    margin-top: 0.1rem;
+  }
+
+  .product-mobile-feature {
+    display: grid;
+    grid-template-columns: 22px minmax(0, 1fr);
+    align-items: center;
+    gap: 5px;
+    min-height: 58px;
+    padding: 0.45rem 0.42rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    background: #ffffff;
+    color: #111827;
+  }
+
+  .product-mobile-feature__icon {
+    display: inline-grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    color: #135fea;
+  }
+
+  .product-mobile-feature__icon svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .product-mobile-feature--berry .product-mobile-feature__icon,
+  .product-mobile-feature--strength .product-mobile-feature__icon {
+    color: #c0265c;
+  }
+
+  .product-mobile-feature--green .product-mobile-feature__icon {
+    color: #16a34a;
+  }
+
+  .product-mobile-feature--box .product-mobile-feature__icon {
+    color: #111827;
+  }
+
+  .product-mobile-feature__text {
+    color: #111827;
+    font-size: 0.62rem;
+    font-weight: 700;
+    line-height: 1.05;
+  }
+
+  .product-strength-ui,
+  .product-cart,
+  .product-trust {
+    grid-column: 1 / -1;
+  }
+
+  .product-strength-ui {
+    order: 8;
+  }
+
+  .product-cart {
+    order: 9;
+  }
+
+  .product-trust {
+    order: 10;
   }
 
   .product-trust {
     margin-top: var(--space-2);
+  }
+
+  .pack-pricing__price {
+    display: none;
   }
 
   .product-accordion {

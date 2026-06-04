@@ -586,6 +586,31 @@ document.addEventListener('DOMContentLoaded', function () {
     observer.observe(mainBtn);
   }
 
+  const thumbList = Array.prototype.slice.call(thumbs);
+
+  function activateProductThumb(thumb) {
+    if (!thumb || !mainImage) {
+      return;
+    }
+
+    const newSrc = thumb.dataset.image;
+    const newAlt = thumb.dataset.alt || mainImage.getAttribute('alt');
+
+    if (!newSrc) {
+      return;
+    }
+
+    mainImage.setAttribute('src', newSrc);
+    mainImage.setAttribute('alt', newAlt);
+
+    thumbList.forEach(function (item) {
+      item.classList.remove('is-active');
+    });
+
+    thumb.classList.add('is-active');
+    thumb.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
+  }
+
   if (variationForm && mainImage && window.jQuery) {
     const originalSrc = mainImage.getAttribute('src');
     const originalAlt = mainImage.getAttribute('alt');
@@ -598,7 +623,7 @@ document.addEventListener('DOMContentLoaded', function () {
       mainImage.setAttribute('src', variation.image.src);
       mainImage.setAttribute('alt', variation.image.alt || originalAlt);
 
-      thumbs.forEach(function (thumb) {
+      thumbList.forEach(function (thumb) {
         thumb.classList.toggle('is-active', thumb.dataset.image === variation.image.src);
       });
     });
@@ -607,31 +632,46 @@ document.addEventListener('DOMContentLoaded', function () {
       mainImage.setAttribute('src', originalSrc);
       mainImage.setAttribute('alt', originalAlt);
 
-      thumbs.forEach(function (thumb, index) {
+      thumbList.forEach(function (thumb, index) {
         thumb.classList.toggle('is-active', index === 0);
       });
     });
   }
 
-  if (mainImage && thumbs.length) {
-    thumbs.forEach(function (thumb) {
+  if (mainImage && thumbList.length) {
+    thumbList.forEach(function (thumb) {
       thumb.addEventListener('click', function () {
-        const newSrc = this.dataset.image;
-        const newAlt = this.dataset.alt || mainImage.getAttribute('alt');
-
-        if (!newSrc) {
-          return;
-        }
-
-        mainImage.setAttribute('src', newSrc);
-        mainImage.setAttribute('alt', newAlt);
-
-        thumbs.forEach(function (item) {
-          item.classList.remove('is-active');
-        });
-
-        this.classList.add('is-active');
+        activateProductThumb(this);
       });
+    });
+
+    document.querySelectorAll('[data-product-gallery-arrow]').forEach(function (button) {
+      button.addEventListener('click', function () {
+        const direction = button.getAttribute('data-product-gallery-arrow') === 'prev' ? -1 : 1;
+        const activeIndex = Math.max(0, thumbList.findIndex(function (thumb) {
+          return thumb.classList.contains('is-active');
+        }));
+        const nextIndex = (activeIndex + direction + thumbList.length) % thumbList.length;
+
+        activateProductThumb(thumbList[nextIndex]);
+      });
+    });
+  }
+
+  const productMobileSummary = document.querySelector('[data-product-mobile-summary]');
+  const productMobileSummaryToggle = document.querySelector('[data-product-mobile-summary-toggle]');
+
+  if (productMobileSummary && productMobileSummaryToggle) {
+    const productMobileSummaryText = productMobileSummaryToggle.querySelector('[data-product-mobile-summary-toggle-text]');
+
+    productMobileSummaryToggle.addEventListener('click', function () {
+      const expanded = productMobileSummary.classList.toggle('is-expanded');
+
+      productMobileSummaryToggle.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+
+      if (productMobileSummaryText) {
+        productMobileSummaryText.textContent = expanded ? 'Read less' : 'Read more';
+      }
     });
   }
 
