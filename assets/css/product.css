@@ -59,7 +59,6 @@
   gap: 0.4rem;
   width: fit-content;
   color: var(--color-text-soft);
-  font-size: 0.9rem;
   font-weight: 700;
   text-decoration: none;
 }
@@ -72,7 +71,7 @@
   display: inline-flex;
   gap: 0.08rem;
   color: #f59e0b;
-  font-size: 0.95em;
+  font-size: 1.5em;
   line-height: 1;
 }
 
@@ -140,6 +139,12 @@
   cursor: not-allowed;
   opacity: 0.48;
   transform: none;
+}
+
+.pack-pricing__option.is-disabled:hover,
+.pack-pricing__option:disabled:hover {
+  border-color: var(--color-border);
+  background: rgba(255,255,255,0.03);
 }
 
 .pack-pricing__option[hidden] {
@@ -978,8 +983,62 @@
     margin-top: var(--space-2);
   }
 
+  .pack-pricing {
+    gap: 0.55rem;
+    margin: 0.45rem 0 0.85rem;
+  }
+
+  .pack-pricing__options {
+    gap: 0.65rem;
+  }
+
+  .pack-pricing__option {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "name unit"
+      "badge unit";
+    gap: 0.18rem 0.75rem;
+    min-height: 54px;
+    padding: 0.68rem 0.85rem;
+  }
+
+  .pack-pricing__name {
+    grid-area: name;
+  }
+
   .pack-pricing__price {
     display: none;
+  }
+
+  .pack-pricing__unit {
+    grid-area: unit;
+    justify-self: end;
+    align-self: center;
+    font-size: 0.84rem;
+    line-height: 1.1;
+  }
+
+  .pack-pricing__badge {
+    grid-area: badge;
+    justify-self: start;
+    padding: 0.12rem 0.45rem;
+    font-size: 0.68rem;
+    line-height: 1.1;
+  }
+
+  .woocommerce .product-cart .quantity {
+    gap: 0.45rem;
+    padding: 0.28rem;
+  }
+
+  .woocommerce .product-cart .quantity input.qty {
+    width: 40px;
+    height: 36px;
+  }
+
+  .product-cart .qty-btn {
+    width: 34px;
+    height: 34px;
   }
 
   .product-accordion {

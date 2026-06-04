@@ -54,7 +54,33 @@ foreach ($gallery_image_ids as $gallery_image_id) {
     );
 }
 
-$product_flavour_label     = trim(wp_strip_all_tags((string) $product->get_attribute('pa_flavour')));
+if (count($product_gallery_items) < 2) {
+    $attached_image_ids = get_posts(array(
+        'post_parent'    => $product->get_id(),
+        'post_type'      => 'attachment',
+        'post_mime_type' => 'image',
+        'post_status'    => 'inherit',
+        'posts_per_page' => 4,
+        'fields'         => 'ids',
+        'exclude'        => $main_image_id ? array($main_image_id) : array(),
+    ));
+
+    foreach ($attached_image_ids as $attached_image_id) {
+        $attached_large = wp_get_attachment_image_url($attached_image_id, 'large');
+
+        if (!$attached_large) {
+            continue;
+        }
+
+        $product_gallery_items[] = array(
+            'id'    => $attached_image_id,
+            'large' => $attached_large,
+            'alt'   => get_post_meta($attached_image_id, '_wp_attachment_image_alt', true) ?: get_the_title(),
+        );
+    }
+}
+
+$product_flavour_label     = function_exists('kangoo_get_product_flavour_label') ? kangoo_get_product_flavour_label($product) : trim(wp_strip_all_tags((string) $product->get_attribute('pa_flavour')));
 $product_flavour_label     = trim(explode(',', $product_flavour_label)[0]);
 $product_flavour_words     = strtolower($product_flavour_label . ' ' . get_the_title());
 $product_flavour_icon_slug = 'fruit';
@@ -82,15 +108,24 @@ if (preg_match('/tropical|mango|pineapple|passion/i', $product_flavour_words)) {
 }
 
 $product_feature_icon_base_url = trailingslashit(get_theme_file_uri('assets/images/flavour-icons-orange-samples'));
+$product_flavour_icon_url = function_exists('kangoo_get_product_flavour_icon_url') ? kangoo_get_product_flavour_icon_url($product, 'thumbnail') : '';
+
+if ($product_flavour_icon_url === '') {
+    $product_flavour_icon_url = $product_feature_icon_base_url . $product_flavour_icon_slug . '-icon-orange.png';
+}
+
 $product_strength_feature = $product_strength_label !== ''
     ? preg_replace('/\s*MG\b/i', 'mg', $product_strength_label) . ' ' . __('Strength', 'kangoo')
     : __('Strength', 'kangoo');
-$product_pouch_count = preg_match('/\b(\d+)\s*pouches?\b/i', get_the_title(), $pouch_count_match)
-    ? (int) $pouch_count_match[1]
-    : (stripos(get_the_title(), 'mini') !== false ? 10 : 20);
+$product_pouch_count = function_exists('kangoo_get_product_pouch_count') ? kangoo_get_product_pouch_count($product) : 20;
+
+if ($product_pouch_count <= 0) {
+    $product_pouch_count = 20;
+}
+
 $product_mobile_features = array(
     array('key' => 'strength', 'label' => $product_strength_feature),
-    array('key' => 'flavour', 'label' => $product_flavour_label, 'icon' => $product_feature_icon_base_url . $product_flavour_icon_slug . '-icon-orange.png'),
+    array('key' => 'flavour', 'label' => $product_flavour_label, 'icon' => $product_flavour_icon_url),
     array('key' => 'green', 'label' => __('Tobacco Free', 'kangoo'), 'icon' => $product_feature_icon_base_url . 'tobacco-free-icon-orange.png'),
     array('key' => 'box', 'label' => sprintf(_n('%d Pouch', '%d Pouches', $product_pouch_count, 'kangoo'), $product_pouch_count)),
 );

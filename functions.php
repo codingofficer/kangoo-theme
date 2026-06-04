@@ -2196,6 +2196,84 @@ function kangoo_register_pack_pricing_acf_fields() {
 }
 add_action('acf/init', 'kangoo_register_pack_pricing_acf_fields');
 
+function kangoo_register_product_quick_facts_acf_fields() {
+    if (!function_exists('acf_add_local_field_group')) {
+        return;
+    }
+
+    acf_add_local_field_group(array(
+        'key' => 'group_kangoo_product_quick_facts',
+        'title' => __('Product Quick Facts', 'kangoo'),
+        'fields' => array(
+            array(
+                'key' => 'field_kangoo_product_pouch_count',
+                'label' => __('Pouches per Can', 'kangoo'),
+                'name' => 'pouch_count',
+                'type' => 'number',
+                'instructions' => __('Used by compact product facts. Leave blank to use the default of 20.', 'kangoo'),
+                'default_value' => 20,
+                'min' => 1,
+                'step' => 1,
+            ),
+        ),
+        'location' => array(
+            array(
+                array(
+                    'param' => 'post_type',
+                    'operator' => '==',
+                    'value' => 'product',
+                ),
+            ),
+        ),
+        'position' => 'side',
+        'style' => 'default',
+        'label_placement' => 'top',
+        'instruction_placement' => 'label',
+        'active' => true,
+        'show_in_rest' => 1,
+    ));
+}
+add_action('acf/init', 'kangoo_register_product_quick_facts_acf_fields');
+
+function kangoo_register_flavour_term_asset_acf_fields() {
+    if (!function_exists('acf_add_local_field_group')) {
+        return;
+    }
+
+    acf_add_local_field_group(array(
+        'key' => 'group_kangoo_flavour_term_assets',
+        'title' => __('Flavour Assets', 'kangoo'),
+        'fields' => array(
+            array(
+                'key' => 'field_kangoo_flavour_icon',
+                'label' => __('Flavour Icon', 'kangoo'),
+                'name' => 'flavour_icon',
+                'type' => 'image',
+                'instructions' => __('Used by compact product facts on product pages.', 'kangoo'),
+                'return_format' => 'id',
+                'preview_size' => 'thumbnail',
+                'library' => 'all',
+            ),
+        ),
+        'location' => array(
+            array(
+                array(
+                    'param' => 'taxonomy',
+                    'operator' => '==',
+                    'value' => 'pa_flavour',
+                ),
+            ),
+        ),
+        'position' => 'normal',
+        'style' => 'default',
+        'label_placement' => 'top',
+        'instruction_placement' => 'label',
+        'active' => true,
+        'show_in_rest' => 1,
+    ));
+}
+add_action('acf/init', 'kangoo_register_flavour_term_asset_acf_fields');
+
 function kangoo_normalize_product_badge($badge) {
     $badge = strtolower(trim((string) $badge));
     $badge = str_replace(array('-', ' '), '_', $badge);
@@ -3114,7 +3192,8 @@ function kangoo_render_pack_pricing_selector() {
     }
 
     $stock_limit = kangoo_get_product_stock_limit($product);
-    $available_tiers = array();
+    $display_tiers = array();
+    $selectable_tiers = array();
 
     foreach ($tiers as $tier) {
         $quantity = isset($tier['quantity']) ? (int) $tier['quantity'] : 0;
@@ -3123,20 +3202,20 @@ function kangoo_render_pack_pricing_selector() {
             continue;
         }
 
-        if ($stock_limit !== null && $quantity > $stock_limit) {
-            continue;
-        }
+        $display_tiers[] = $tier;
 
-        $available_tiers[] = $tier;
+        if ($stock_limit === null || $quantity <= $stock_limit) {
+            $selectable_tiers[] = $tier;
+        }
     }
 
-    if (empty($available_tiers)) {
+    if (empty($display_tiers)) {
         return;
     }
 
-    $active_quantity = (int) $available_tiers[0]['quantity'];
+    $active_quantity = !empty($selectable_tiers) ? (int) $selectable_tiers[0]['quantity'] : 0;
 
-    foreach ($available_tiers as $tier) {
+    foreach ($selectable_tiers as $tier) {
         if (!empty($tier['default_selected'])) {
             $active_quantity = (int) $tier['quantity'];
             break;
@@ -3148,12 +3227,13 @@ function kangoo_render_pack_pricing_selector() {
     <div class="pack-pricing" data-pack-pricing>
         <span class="pack-pricing__label"><?php esc_html_e('Choose pack size', 'kangoo'); ?></span>
         <div class="pack-pricing__options">
-            <?php foreach ($available_tiers as $tier) : ?>
+            <?php foreach ($display_tiers as $tier) : ?>
                 <?php
                 $quantity = (int) $tier['quantity'];
                 $pack_price = (float) $tier['pack_price'];
                 $unit_price = (float) $tier['unit_price'];
-                $is_active = !$active_set && $quantity === $active_quantity;
+                $is_disabled = $stock_limit !== null && $quantity > $stock_limit;
+                $is_active = !$is_disabled && !$active_set && $quantity === $active_quantity;
 
                 if ($is_active) {
                     $active_set = true;
@@ -3161,11 +3241,13 @@ function kangoo_render_pack_pricing_selector() {
                 ?>
                 <button
                     type="button"
-                    class="pack-pricing__option<?php echo $is_active ? ' is-active' : ''; ?>"
+                    class="pack-pricing__option<?php echo $is_active ? ' is-active' : ''; ?><?php echo $is_disabled ? ' is-disabled' : ''; ?>"
                     data-pack-qty="<?php echo esc_attr($quantity); ?>"
                     data-pack-price="<?php echo esc_attr($pack_price); ?>"
                     data-unit-price="<?php echo esc_attr($unit_price); ?>"
                     aria-pressed="<?php echo $is_active ? 'true' : 'false'; ?>"
+                    <?php disabled($is_disabled); ?>
+                    <?php echo $is_disabled ? 'aria-disabled="true"' : ''; ?>
                 >
                     <span class="pack-pricing__name">
                         <?php
@@ -3590,6 +3672,68 @@ function kangoo_get_product_flavour_label($product) {
     return '';
 }
 
+function kangoo_get_product_flavour_term($product) {
+    if (!class_exists('WC_Product') || !$product instanceof WC_Product || !taxonomy_exists('pa_flavour')) {
+        return null;
+    }
+
+    $product_id = $product->get_id();
+    $terms = wc_get_product_terms($product_id, 'pa_flavour', array('fields' => 'all'));
+
+    if (empty($terms) && $product->is_type('variation')) {
+        $parent_id = $product->get_parent_id();
+        $terms = $parent_id ? wc_get_product_terms($parent_id, 'pa_flavour', array('fields' => 'all')) : array();
+    }
+
+    if (!empty($terms)) {
+        $term = reset($terms);
+        return $term instanceof WP_Term ? $term : null;
+    }
+
+    $flavour = trim((string) $product->get_attribute('pa_flavour'));
+
+    if ($flavour === '') {
+        return null;
+    }
+
+    $first_flavour = trim(explode(',', $flavour)[0]);
+    $term = get_term_by('name', $first_flavour, 'pa_flavour');
+
+    if (!$term instanceof WP_Term || is_wp_error($term)) {
+        $term = get_term_by('slug', sanitize_title($first_flavour), 'pa_flavour');
+    }
+
+    return $term instanceof WP_Term && !is_wp_error($term) ? $term : null;
+}
+
+function kangoo_get_product_flavour_icon_url($product, $size = 'thumbnail') {
+    $term = kangoo_get_product_flavour_term($product);
+
+    if (!$term) {
+        return '';
+    }
+
+    if (function_exists('get_field')) {
+        foreach (array('flavour_icon', 'flavour_image', 'icon', 'image') as $field_name) {
+            $image_url = kangoo_get_image_url_from_acf_value(get_field($field_name, 'pa_flavour_' . $term->term_id), $size);
+
+            if ($image_url !== '') {
+                return $image_url;
+            }
+        }
+    }
+
+    foreach (array('thumbnail_id', 'flavour_icon', 'flavour_image', 'icon', 'image') as $meta_key) {
+        $image_url = kangoo_get_image_url_from_acf_value(get_term_meta($term->term_id, $meta_key, true), $size);
+
+        if ($image_url !== '') {
+            return $image_url;
+        }
+    }
+
+    return '';
+}
+
 function kangoo_get_product_pouch_count($product) {
     if (!class_exists('WC_Product') || !$product instanceof WC_Product) {
         return 0;
@@ -3616,7 +3760,7 @@ function kangoo_get_product_pouch_count($product) {
         return (int) $matches[1];
     }
 
-    return strpos($name, 'mini') !== false ? 10 : 20;
+    return 20;
 }
 
 function kangoo_get_product_best_for_label($product) {
