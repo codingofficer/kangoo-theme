@@ -930,7 +930,13 @@
     height: 22px;
   }
 
-  .product-mobile-feature--berry .product-mobile-feature__icon,
+  .product-mobile-feature__image {
+    display: block;
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+  }
+
   .product-mobile-feature--strength .product-mobile-feature__icon {
     color: #c0265c;
   }

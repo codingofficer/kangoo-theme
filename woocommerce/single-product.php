@@ -54,20 +54,33 @@ foreach ($gallery_image_ids as $gallery_image_id) {
     );
 }
 
-$product_flavour_label = trim(wp_strip_all_tags((string) $product->get_attribute('pa_flavour')));
-$product_flavour_label = trim(explode(',', $product_flavour_label)[0]);
-$product_flavour_words = strtolower($product_flavour_label . ' ' . get_the_title());
+$product_flavour_label     = trim(wp_strip_all_tags((string) $product->get_attribute('pa_flavour')));
+$product_flavour_label     = trim(explode(',', $product_flavour_label)[0]);
+$product_flavour_words     = strtolower($product_flavour_label . ' ' . get_the_title());
+$product_flavour_icon_slug = 'fruit';
 
-if (preg_match('/berry|berries|cherry|fruit|fruits|grape|raspberry|strawberry|blueberry/i', $product_flavour_words)) {
-    $product_flavour_label = __('Sweet Berry', 'kangoo');
+if (preg_match('/tropical|mango|pineapple|passion/i', $product_flavour_words)) {
+    $product_flavour_label     = __('Tropical', 'kangoo');
+    $product_flavour_icon_slug = 'tropical';
+} elseif (preg_match('/coffee|espresso|mocha/i', $product_flavour_words)) {
+    $product_flavour_label     = __('Coffee', 'kangoo');
+    $product_flavour_icon_slug = 'coffee';
+} elseif (preg_match('/cola|soda/i', $product_flavour_words)) {
+    $product_flavour_label     = __('Cola', 'kangoo');
+    $product_flavour_icon_slug = 'cola';
 } elseif (preg_match('/mint|menthol|peppermint|spearmint|ice|freeze/i', $product_flavour_words)) {
-    $product_flavour_label = __('Fresh Mint', 'kangoo');
+    $product_flavour_label     = __('Fresh Mint', 'kangoo');
+    $product_flavour_icon_slug = 'mint';
 } elseif (preg_match('/citrus|lemon|lime|orange|grapefruit/i', $product_flavour_words)) {
-    $product_flavour_label = __('Citrus', 'kangoo');
+    $product_flavour_label     = __('Citrus', 'kangoo');
+    $product_flavour_icon_slug = 'citrus';
+} elseif (preg_match('/berry|berries|cherry|fruit|fruits|grape|raspberry|strawberry|blueberry/i', $product_flavour_words)) {
+    $product_flavour_label = __('Sweet Berry', 'kangoo');
 } elseif ($product_flavour_label === '') {
     $product_flavour_label = __('Flavour', 'kangoo');
 }
 
+$product_feature_icon_base_url = trailingslashit(get_theme_file_uri('assets/images/flavour-icons-orange-samples'));
 $product_strength_feature = $product_strength_label !== ''
     ? preg_replace('/\s*MG\b/i', 'mg', $product_strength_label) . ' ' . __('Strength', 'kangoo')
     : __('Strength', 'kangoo');
@@ -76,8 +89,8 @@ $product_pouch_count = preg_match('/\b(\d+)\s*pouches?\b/i', get_the_title(), $p
     : (stripos(get_the_title(), 'mini') !== false ? 10 : 20);
 $product_mobile_features = array(
     array('key' => 'strength', 'label' => $product_strength_feature),
-    array('key' => 'berry', 'label' => $product_flavour_label),
-    array('key' => 'green', 'label' => __('Tobacco Free', 'kangoo')),
+    array('key' => 'flavour', 'label' => $product_flavour_label, 'icon' => $product_feature_icon_base_url . $product_flavour_icon_slug . '-icon-orange.png'),
+    array('key' => 'green', 'label' => __('Tobacco Free', 'kangoo'), 'icon' => $product_feature_icon_base_url . 'tobacco-free-icon-orange.png'),
     array('key' => 'box', 'label' => sprintf(_n('%d Pouch', '%d Pouches', $product_pouch_count, 'kangoo'), $product_pouch_count)),
 );
 
@@ -296,12 +309,10 @@ foreach ($product_faq_rows as $product_faq_row) {
                         <?php foreach ($product_mobile_features as $feature) : ?>
                             <div class="product-mobile-feature product-mobile-feature--<?php echo esc_attr($feature['key']); ?>">
                                 <span class="product-mobile-feature__icon" aria-hidden="true">
-                                    <?php if ($feature['key'] === 'strength') : ?>
+                                    <?php if (!empty($feature['icon'])) : ?>
+                                        <img class="product-mobile-feature__image" src="<?php echo esc_url($feature['icon']); ?>" alt="" width="22" height="22" loading="lazy" decoding="async">
+                                    <?php elseif ($feature['key'] === 'strength') : ?>
                                         <svg viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="12" r="8.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 13.2h8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-                                    <?php elseif ($feature['key'] === 'berry') : ?>
-                                        <svg viewBox="0 0 24 24" focusable="false"><circle cx="10" cy="10" r="2.6" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="14.5" cy="11.5" r="2.6" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="11.8" cy="15.4" r="2.6" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M13.5 7.2c1.9-2.2 4-2 5.5-.4-1.7 1.4-3.6 1.7-5.5.4Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
-                                    <?php elseif ($feature['key'] === 'green') : ?>
-                                        <svg viewBox="0 0 24 24" focusable="false"><path d="M5 13.4C6.4 7.7 11 4.6 18.6 4.8c.2 7.2-3.5 11.5-9.7 12.6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.3 18.8c2.8-4.4 6.1-7 10-8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
                                     <?php else : ?>
                                         <svg viewBox="0 0 24 24" focusable="false"><path d="m5 8 7-3 7 3-7 3-7-3Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M5 8v8l7 3 7-3V8M12 11v8" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
                                     <?php endif; ?>
