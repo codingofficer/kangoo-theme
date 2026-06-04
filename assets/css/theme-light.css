@@ -338,6 +338,7 @@ body.kangoo-theme--light .category-filter input {
 }
 
 body.kangoo-theme--light .product-card__strength-badge,
+body.kangoo-theme--light .product-image__strength-badge,
 body.kangoo-theme--light .product-title__badge {
   border-color: rgba(22, 119, 232, 0.38);
   background: #eef6ff;

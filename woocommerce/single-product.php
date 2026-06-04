@@ -12,6 +12,23 @@ $gallery_image_ids = $product->get_gallery_image_ids();
 $main_image_url = $main_image_id ? wp_get_attachment_image_url($main_image_id, 'large') : wc_placeholder_img_src('large');
 $main_image_alt = $main_image_id ? get_post_meta($main_image_id, '_wp_attachment_image_alt', true) : get_the_title();
 $is_99p_product = function_exists('kangoo_is_99p_product') && kangoo_is_99p_product($product->get_id());
+$product_badge = function_exists('kangoo_get_product_badge') ? kangoo_get_product_badge($product->get_id()) : null;
+$product_strength_label = '';
+
+if (function_exists('kangoo_get_product_strength_details')) {
+    $product_strength = kangoo_get_product_strength_details($product);
+    $product_strength_label = !empty($product_strength['label']) ? (string) $product_strength['label'] : '';
+} elseif (function_exists('get_field')) {
+    $product_strength_label = (string) get_field('strength_mg');
+
+    if ($product_strength_label !== '') {
+        $product_strength_label = strtoupper($product_strength_label);
+
+        if (strpos($product_strength_label, 'MG') === false) {
+            $product_strength_label .= 'MG';
+        }
+    }
+}
 
 $strength_attribute_name  = '';
 $strength_attribute_label = '';
@@ -89,6 +106,22 @@ foreach ($product_faq_rows as $product_faq_row) {
                             src="<?php echo esc_url($main_image_url); ?>"
                             alt="<?php echo esc_attr($main_image_alt ?: get_the_title()); ?>"
                         >
+
+                        <?php if (!$product->is_in_stock()) : ?>
+                            <span class="product-badge product-badge--out-of-stock product-image__badge">
+                                <?php esc_html_e('Sold Out', 'kangoo'); ?>
+                            </span>
+                        <?php elseif ($product_badge) : ?>
+                            <span class="product-badge product-badge--<?php echo esc_attr(sanitize_html_class($product_badge['key'])); ?> product-image__badge">
+                                <?php echo esc_html($product_badge['label']); ?>
+                            </span>
+                        <?php endif; ?>
+
+                        <?php if ($product_strength_label !== '') : ?>
+                            <span class="product-image__strength-badge">
+                                <?php echo esc_html($product_strength_label); ?>
+                            </span>
+                        <?php endif; ?>
                     </div>
 
                     <?php if ($main_image_id || !empty($gallery_image_ids)) : ?>
@@ -137,23 +170,6 @@ foreach ($product_faq_rows as $product_faq_row) {
                 <div class="product-page__info">
 					<h1 class="product-title">
 						<?php the_title(); ?>
-
-						<?php if (!$product->is_in_stock()) : ?>
-							<span class="product-title__badge product-title__badge--out-of-stock">
-								<?php esc_html_e('Sold Out', 'kangoo'); ?>
-							</span>
-						<?php endif; ?>
-
-						<?php
-						$strength_mg = get_field('strength_mg');
-						if ($strength_mg) :
-							$label = strtoupper($strength_mg);
-							if (strpos($label, 'MG') === false) $label .= 'MG';
-						?>
-							<span class="product-title__badge">
-								<?php echo esc_html($label); ?>
-							</span>
-						<?php endif; ?>
 					</h1>
 
                     <?php

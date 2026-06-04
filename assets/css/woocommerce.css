@@ -5230,6 +5230,7 @@ body.woocommerce-cart .wc-block-components-main > .kangoo-cart-recommendations .
 
 body.woocommerce-cart .kangoo-cart-rec-card {
   display: grid;
+  position: relative;
   grid-template-rows: auto minmax(0, 1fr) auto;
   gap: 0.75rem;
   min-width: 0;
@@ -5293,10 +5294,15 @@ body.woocommerce-cart .kangoo-cart-rec-card__side {
 }
 
 body.woocommerce-cart .kangoo-cart-rec-card__badge {
+  position: absolute;
+  top: 1.35rem;
+  right: 1.35rem;
+  z-index: 1;
   justify-self: end;
   padding: 0.24rem 0.48rem;
   border: 1px solid #1479f5;
   border-radius: 999px;
+  background: #ffffff;
   color: #1479f5;
   font-size: 0.72rem;
   font-weight: 900;
@@ -5416,12 +5422,20 @@ body.woocommerce-cart .kangoo-cart-rec-card__add {
   body.woocommerce-cart .kangoo-cart-rec-card__side {
     grid-template-columns: auto;
     justify-items: end;
+    align-self: stretch;
+    align-content: start;
     gap: 0.36rem;
     min-width: 82px;
   }
 
   body.woocommerce-cart .kangoo-cart-rec-card__badge {
-    display: none;
+    position: static;
+    display: inline-flex;
+    align-items: center;
+    min-height: 22px;
+    padding: 0.16rem 0.42rem;
+    font-size: 0.66rem;
+    line-height: 1;
   }
 
   body.woocommerce-cart .kangoo-cart-rec-card__price {
