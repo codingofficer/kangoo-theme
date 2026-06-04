@@ -75,7 +75,8 @@ if (preg_match('/tropical|mango|pineapple|passion/i', $product_flavour_words)) {
     $product_flavour_label     = __('Citrus', 'kangoo');
     $product_flavour_icon_slug = 'citrus';
 } elseif (preg_match('/berry|berries|cherry|fruit|fruits|grape|raspberry|strawberry|blueberry/i', $product_flavour_words)) {
-    $product_flavour_label = __('Sweet Berry', 'kangoo');
+    $product_flavour_label     = __('Sweet Berry', 'kangoo');
+    $product_flavour_icon_slug = 'berry';
 } elseif ($product_flavour_label === '') {
     $product_flavour_label = __('Flavour', 'kangoo');
 }
