@@ -224,13 +224,19 @@ foreach ($product_faq_rows as $product_faq_row) {
                         <?php endif; ?>
                     </div>
 
-                    <?php if (count($product_gallery_items) > 1) : ?>
-                        <div class="product-thumbs-wrap" data-product-gallery>
-                            <button type="button" class="product-thumbs__arrow product-thumbs__arrow--prev" data-product-gallery-arrow="prev" aria-label="<?php esc_attr_e('Previous product image', 'kangoo'); ?>">
-                                <span aria-hidden="true">&#8249;</span>
-                            </button>
+                    <?php if (!empty($product_gallery_items)) : ?>
+                        <?php
+                        $product_gallery_count = count($product_gallery_items);
+                        $product_visible_thumb_count = min(2, $product_gallery_count);
+                        ?>
+                        <div class="product-thumbs-wrap<?php echo $product_gallery_count > 2 ? ' product-thumbs-wrap--has-arrows' : ''; ?>" data-product-gallery>
+                            <?php if ($product_gallery_count > 2) : ?>
+                                <button type="button" class="product-thumbs__arrow product-thumbs__arrow--prev" data-product-gallery-arrow="prev" aria-label="<?php esc_attr_e('Previous product image', 'kangoo'); ?>">
+                                    <span aria-hidden="true">&#8249;</span>
+                                </button>
+                            <?php endif; ?>
 
-                            <div class="product-thumbs" data-product-gallery-track>
+                            <div class="product-thumbs product-thumbs--count-<?php echo esc_attr($product_visible_thumb_count); ?>" data-product-gallery-track>
                             <?php foreach ($product_gallery_items as $gallery_index => $gallery_item) : ?>
                                 <button
                                     type="button"
@@ -243,9 +249,11 @@ foreach ($product_faq_rows as $product_faq_row) {
                             <?php endforeach; ?>
                             </div>
 
-                            <button type="button" class="product-thumbs__arrow product-thumbs__arrow--next" data-product-gallery-arrow="next" aria-label="<?php esc_attr_e('Next product image', 'kangoo'); ?>">
-                                <span aria-hidden="true">&#8250;</span>
-                            </button>
+                            <?php if ($product_gallery_count > 2) : ?>
+                                <button type="button" class="product-thumbs__arrow product-thumbs__arrow--next" data-product-gallery-arrow="next" aria-label="<?php esc_attr_e('Next product image', 'kangoo'); ?>">
+                                    <span aria-hidden="true">&#8250;</span>
+                                </button>
+                            <?php endif; ?>
                         </div>
                     <?php endif; ?>
 

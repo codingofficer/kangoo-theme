@@ -744,10 +744,14 @@
 
   .product-thumbs-wrap {
     display: grid;
-    grid-template-columns: 22px minmax(0, 104px) 22px;
+    grid-template-columns: minmax(0, 104px);
     justify-content: center;
     align-items: center;
     gap: 4px;
+  }
+
+  .product-thumbs-wrap--has-arrows {
+    grid-template-columns: 22px minmax(0, 104px) 22px;
   }
 
   .product-thumbs {
@@ -759,6 +763,10 @@
     overflow: hidden;
     scroll-behavior: smooth;
     flex-wrap: nowrap;
+  }
+
+  .product-thumbs--count-1 {
+    width: 48px;
   }
 
   .product-thumbs__arrow {
