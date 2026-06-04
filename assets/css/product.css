@@ -371,6 +371,10 @@
   padding: 0 1.25rem 1.25rem;
 }
 
+.product-accordion__item[open] summary::after {
+  content: "-";
+}
+
 .single-product .product-accordion__content h1,
 .single-product .product-accordion__content h2 {
   margin: 0 0 0.85rem;
@@ -426,6 +430,10 @@
 
 .single-product .product-accordion__content .faq-list .wysiwyg {
   padding: 0 1.1rem 1rem;
+}
+
+.single-product .product-accordion__content .faq-list details[open] summary::after {
+  content: "-";
 }
 
 .single-product .product-accordion__content .faq-list details p {
@@ -728,9 +736,12 @@
   .product-image__badge {
     top: 6px;
     left: 6px;
-    min-height: 20px;
-    padding: 0.18rem 0.4rem;
+    display: inline-flex;
+    align-items: center;
+    min-height: 22px;
+    padding: 0 0.48rem;
     font-size: 0.56rem;
+    line-height: 1;
   }
 
   .product-image__strength-badge {
@@ -745,7 +756,7 @@
   .product-thumbs-wrap {
     display: grid;
     grid-template-columns: minmax(0, 104px);
-    justify-content: center;
+    justify-content: start;
     align-items: center;
     gap: 4px;
   }

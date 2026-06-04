@@ -420,7 +420,7 @@ foreach ($product_faq_rows as $product_faq_row) {
 
         <div class="product-accordion">
             <?php if (get_the_content()) : ?>
-                <details class="product-accordion__item" open>
+                <details class="product-accordion__item">
                     <summary>Description</summary>
                     <div class="product-accordion__content wysiwyg">
                         <?php the_content(); ?>
