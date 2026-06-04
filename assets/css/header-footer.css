@@ -250,7 +250,7 @@ body {
   min-height: 52px;
   width: 100%;
   border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 16px;
+  border-radius: 12px;
   background: rgba(255,255,255,0.06);
   color: #fff;
   padding: 0 1rem;
@@ -303,7 +303,7 @@ body {
   margin: 0;
   padding: 1.2rem;
   border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 16px;
+  border-radius: 12px;
   background: rgba(255,255,255,0.035);
   color: var(--color-text-soft);
 }
@@ -333,7 +333,7 @@ body {
 .kangoo-search__guide {
   display: grid;
   border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 16px;
+  border-radius: 12px;
   background: rgba(255,255,255,0.04);
   color: #fff;
   text-decoration: none;
@@ -526,7 +526,7 @@ body {
   min-height: 58px;
   padding: 0 0.95rem;
   border: 1px solid transparent;
-  border-radius: 16px;
+  border-radius: 12px;
   background: rgba(255, 255, 255, 0.02);
   text-align: left;
   cursor: pointer;
@@ -547,7 +547,7 @@ body {
   min-height: 54px;
   padding: 0 1rem;
   border: 1px solid transparent;
-  border-radius: 16px;
+  border-radius: 12px;
   background: rgba(255, 255, 255, 0.02);
   color: #fff;
   text-align: left;
@@ -614,7 +614,7 @@ body {
   gap: 0.6rem;
   min-height: 140px;
   padding: 1rem;
-  border-radius: 18px;
+  border-radius: 12px;
   border: 1px solid var(--color-border);
   background: rgba(255, 255, 255, 0.03);
   color: #fff;
@@ -686,7 +686,7 @@ body {
   gap: 1rem;
   min-height: 156px;
   padding: 1.1rem;
-  border-radius: 18px;
+  border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(255, 255, 255, 0.03);
   color: #fff;
@@ -1012,7 +1012,7 @@ body {
 .kangoo-age-gate__leave {
   min-height: 3.45rem;
   width: min(100%, 22rem);
-  border-radius: 18px;
+  border-radius: 12px;
   margin-top: 0.35rem;
 }
 
@@ -1113,7 +1113,7 @@ body {
   .kangoo-search__form input {
     height: 52px;
     min-height: 0;
-    border-radius: 14px;
+    border-radius: 12px;
     font-size: 0.95rem;
   }
 
@@ -1344,7 +1344,7 @@ body {
 .kangoo-mega-drawer__overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0,0,0,0.75); /* stronger = fixes “see-through” issue */
+  background: rgba(0,0,0,0.75); /* stronger = fixes â€œsee-throughâ€ issue */
   backdrop-filter: blur(4px);
 }
 
@@ -1411,7 +1411,7 @@ body {
 }
 
 .kangoo-mega-drawer__section summary::after {
-  content: "›";
+  content: "â€º";
   position: absolute;
   right: 0;
   transform: rotate(90deg);
@@ -1440,7 +1440,7 @@ body {
 .kangoo-mega-drawer__brand-list a {
   background: rgba(255,255,255,0.05);
   border: 1px solid var(--color-border);
-  border-radius: 14px;
+  border-radius: 12px;
   padding: 0.75rem;
   text-align: center;
   font-size: 0.85rem;
@@ -1462,7 +1462,7 @@ body {
   gap: 0.75rem;
   background: rgba(255,255,255,0.05);
   border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 18px;
+  border-radius: 12px;
   padding: 1rem;
   color: #fff;
   text-decoration: none;
@@ -1531,7 +1531,7 @@ body {
 .kangoo-mega-drawer__flavour-list a {
   background: rgba(255,255,255,0.05);
   border: 1px solid var(--color-border);
-  border-radius: 14px;
+  border-radius: 12px;
   padding: 1rem;
   text-align: center;
   color: #fff;
@@ -1613,7 +1613,7 @@ body {
 .kangoo-mega-drawer__section {
   display: block !important;
   border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 16px;
+  border-radius: 12px;
   background: rgba(255,255,255,0.03);
   overflow: hidden;
 }
@@ -1772,7 +1772,7 @@ body {
 
 .kangoo-mega-drawer__section {
   border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 16px;
+  border-radius: 12px;
   background: rgba(255,255,255,0.03);
   overflow: hidden;
 }
@@ -1815,7 +1815,7 @@ body {
   min-height: 58px;
   padding: 1rem;
   border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 16px;
+  border-radius: 12px;
   background: rgba(255,255,255,0.04);
   color: #fff !important;
   font-weight: 700;
@@ -1861,7 +1861,7 @@ body {
   gap: 0.75rem;
   background: rgba(255,255,255,0.05) !important;
   border: 1px solid rgba(255,255,255,0.12) !important;
-  border-radius: 18px !important;
+  border-radius: 12px !important;
   padding: 1rem !important;
   color: #fff !important;
   text-decoration: none !important;
@@ -1985,7 +1985,7 @@ body {
   gap: 0.72rem;
   padding: 0.75rem 0.95rem;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 14px;
+  border-radius: 12px;
   background: rgba(255, 255, 255, 0.05);
   color: #ffffff;
   font: inherit;

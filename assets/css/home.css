@@ -115,7 +115,7 @@
   gap: 0.25rem;
   padding: 0.95rem 1rem;
   border: 1px solid rgba(77, 163, 255, 0.32);
-  border-radius: 8px;
+  border-radius: 12px;
   background: rgba(77, 163, 255, 0.08);
   text-decoration: none;
   transition: border-color 160ms ease, background 160ms ease;
@@ -155,7 +155,7 @@
   align-items: center;
   padding: var(--space-4);
   border: 1px solid rgba(255, 122, 0, 0.24);
-  border-radius: 8px;
+  border-radius: 12px;
   background:
     linear-gradient(135deg, rgba(255, 122, 0, 0.12), rgba(77, 163, 255, 0.08)),
     rgba(18, 20, 26, 0.92);
@@ -208,7 +208,7 @@
   align-items: center;
   padding: var(--space-4);
   border: 1px solid rgba(77, 163, 255, 0.24);
-  border-radius: 8px;
+  border-radius: 12px;
   background: rgba(77, 163, 255, 0.08);
 }
 
@@ -471,7 +471,7 @@
 .quick-card {
   position: relative;
   display: block;
-  border-radius: 20px;
+  border-radius: 12px;
   overflow: hidden;
   min-height: 260px;
   isolation: isolate;
@@ -604,7 +604,7 @@
 }
 
 .quick-add-modal__image {
-  border-radius: 18px;
+  border-radius: 12px;
   overflow: hidden;
   background: rgba(255,255,255,0.03);
 }
@@ -679,7 +679,7 @@
   gap: 0.5rem;
   padding: 0.35rem;
   border: 1px solid var(--color-border);
-  border-radius: 16px;
+  border-radius: 12px;
   width: fit-content;
 }
 
@@ -830,7 +830,7 @@
     gap: 14px;
 
     border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 18px;
+    border-radius: 12px;
     background: rgba(255, 255, 255, 0.04);
 
     text-decoration: none;

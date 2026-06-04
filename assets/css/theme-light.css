@@ -53,7 +53,7 @@ body.kangoo-theme--light .woocommerce input.button {
   border-color: var(--color-accent) !important;
   color: #ffffff !important;
   min-height: 50px;
-  border-radius: 14px !important;
+  border-radius: 12px !important;
   font-weight: 800 !important;
 }
 
@@ -539,7 +539,7 @@ body.kangoo-theme--light .cart-drawer-summary__reward .amount {
 
 body.kangoo-theme--light .account-tabs__button.is-active {
   border-bottom-color: #0f5ed1 !important;
-  border-radius: 10px 10px 0 0 !important;
+  border-radius: 12px 12px 0 0 !important;
   background: #eef6ff !important;
   color: #0f5ed1 !important;
 }
@@ -820,7 +820,7 @@ body.kangoo-theme--light .product-cart input.qty {
 
 body.kangoo-theme--light .product-cart .quantity {
   padding: 0.35rem !important;
-  border-radius: 16px !important;
+  border-radius: 12px !important;
   box-shadow: 0 8px 22px rgba(17, 24, 39, 0.06);
 }
 
@@ -1120,7 +1120,6 @@ body.kangoo-theme--light.woocommerce-cart .kangoo-cart-email-capture {
   border-color: rgba(17, 24, 39, 0.1) !important;
   background: #ffffff !important;
   color: #111827 !important;
-  box-shadow: 0 12px 34px rgba(17, 24, 39, 0.06) !important;
 }
 
 body.kangoo-theme--light .kangoo-cart-email-capture__summary,
@@ -1347,27 +1346,9 @@ body.kangoo-theme--light.woocommerce-checkout .wc-block-components-sidebar {
   box-sizing: border-box !important;
   padding: clamp(0.72rem, 2.4vw, 1rem) !important;
   border: 1px solid rgba(17, 24, 39, 0.08) !important;
-  border-radius: 18px !important;
+  border-radius: 12px !important;
   background: #ffffff !important;
-  box-shadow: 0 12px 34px rgba(17, 24, 39, 0.06) !important;
   overflow: hidden !important;
-}
-
-body.kangoo-theme--light.woocommerce-cart .wc-block-components-totals-wrapper,
-body.kangoo-theme--light.woocommerce-cart .wc-block-components-panel,
-body.kangoo-theme--light.woocommerce-cart .wp-block-woocommerce-cart-order-summary-block,
-body.kangoo-theme--light.woocommerce-cart .wp-block-woocommerce-cart-order-summary-coupon-form-block,
-body.kangoo-theme--light.woocommerce-cart .wp-block-woocommerce-cart-order-summary-totals-block,
-body.kangoo-theme--light.woocommerce-checkout .wc-block-components-totals-wrapper,
-body.kangoo-theme--light.woocommerce-checkout .wc-block-components-panel,
-body.kangoo-theme--light.woocommerce-checkout .wp-block-woocommerce-checkout-order-summary-block,
-body.kangoo-theme--light.woocommerce-checkout .wc-block-components-order-summary {
-  box-sizing: border-box !important;
-  width: 100% !important;
-  margin-inline: 0 !important;
-  border-color: rgba(17, 24, 39, 0.1) !important;
-  background: #ffffff !important;
-  color: #111827 !important;
 }
 
 body.kangoo-theme--light.woocommerce-cart .wc-block-components-totals-wrapper,
@@ -1380,12 +1361,13 @@ body.kangoo-theme--light.woocommerce-checkout .wc-block-components-totals-coupon
 body.kangoo-theme--light.woocommerce-checkout .wc-block-components-order-summary,
 body.kangoo-theme--light.woocommerce-checkout .wp-block-woocommerce-checkout-order-summary-block {
   overflow: hidden !important;
+  border: 1px solid #e5e9f0;
+  border-radius: 12px;
 }
 
 body.kangoo-theme--light.woocommerce-cart .cart-collaterals .kangoo-cart-secure-checkout img {
   border-color: rgba(17, 24, 39, 0.1) !important;
   background: #ffffff !important;
-  box-shadow: 0 12px 30px rgba(17, 24, 39, 0.06) !important;
 }
 
 @media (max-width: 782px) {
@@ -2274,7 +2256,7 @@ body.kangoo-theme--light .home-app-cta__button {
   min-height: 50px !important;
   height: auto !important;
   border: 1px solid rgba(17, 24, 39, 0.16) !important;
-  border-radius: 14px !important;
+  border-radius: 12px !important;
   box-shadow: none !important;
   font-weight: 800 !important;
 }
@@ -2390,4 +2372,10 @@ body.kangoo-theme--light .strength-level__best {
 
 body.kangoo-theme--light .home-app-cta__button.btn--secondary {
   border-color: rgba(22, 119, 232, 0.32) !important;
+}
+
+body.kangoo-theme--light.woocommerce-cart *,
+body.kangoo-theme--light.woocommerce-cart *::before,
+body.kangoo-theme--light.woocommerce-cart *::after {
+  box-shadow: none !important;
 }

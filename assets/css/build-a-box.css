@@ -54,7 +54,7 @@
 .build-box__main,
 .build-box__summary {
   border: 1px solid var(--color-border);
-  border-radius: 8px;
+  border-radius: 12px;
   background: rgba(255,255,255,0.035);
 }
 
@@ -110,7 +110,7 @@
   min-height: 50px;
   padding: 0.85rem 1rem;
   border: 1px solid var(--color-border);
-  border-radius: 8px;
+  border-radius: 12px;
   background: rgba(255,255,255,0.04);
   color: #fff;
   font: inherit;
@@ -171,7 +171,7 @@
   gap: var(--space-3);
   padding: var(--space-3);
   border: 1px solid var(--color-border);
-  border-radius: 8px;
+  border-radius: 12px;
   background: rgba(255,255,255,0.03);
 }
 
@@ -182,7 +182,7 @@
 
 .box-product__image {
   align-self: start;
-  border-radius: 8px;
+  border-radius: 12px;
   background: rgba(255,255,255,0.04);
   overflow: hidden;
 }

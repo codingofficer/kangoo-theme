@@ -263,7 +263,7 @@
   height: 72px;
   padding: 0;
   border: 1px solid var(--color-border);
-  border-radius: 14px;
+  border-radius: 12px;
   background: rgba(255,255,255,0.03);
   overflow: hidden;
   cursor: pointer;
@@ -320,7 +320,7 @@
   color: var(--color-text-soft);
 }
 
-.product-accordion__item[open] summary::after { content: "−"; }
+.product-accordion__item[open] summary::after { content: "âˆ’"; }
 
 .product-accordion__content {
   padding: 0 1.25rem 1.25rem;
@@ -376,7 +376,7 @@
 }
 
 .single-product .product-accordion__content .faq-list details[open] summary::after {
-  content: "−";
+  content: "âˆ’";
 }
 
 .single-product .product-accordion__content .faq-list .wysiwyg {
@@ -544,7 +544,7 @@
   min-height: 36px;
   padding: 0 1.45rem 0 0.55rem;
   border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 7px;
+  border-radius: 12px;
   background: #11151c;
   color: #fff;
   font-size: 0.74rem;
@@ -578,7 +578,7 @@
   align-items: center;
   min-height: 20px;
   padding: 0.18rem 0.38rem;
-  border-radius: 5px;
+  border-radius: 12px;
   background: rgba(34, 197, 94, 0.12);
   color: #5ff08a;
   font-size: 0.58rem;
@@ -601,7 +601,7 @@
   width: 100%;
   min-height: 42px;
   padding-inline: 0.75rem;
-  border-radius: 13px;
+  border-radius: 12px;
   font-size: 0.72rem;
   line-height: 1.15;
   white-space: nowrap;
@@ -654,7 +654,7 @@
   .product-image {
     min-height: clamp(260px, 72vw, 360px);
     padding: 1.1rem;
-    border-radius: 20px;
+    border-radius: 12px;
   }
 
   .product-image img {
@@ -814,7 +814,7 @@
     gap: 0.5rem;
     padding: 0.85rem;
     border: 1px solid var(--color-border);
-    border-radius: 8px;
+    border-radius: 12px;
     background: rgba(255,255,255,0.03);
   }
 
@@ -846,12 +846,12 @@
   }
 
   .single-product .related-products .product-card {
-    border-radius: 8px;
+    border-radius: 12px;
   }
 
   .single-product .related-products .product-card__media {
     aspect-ratio: 1 / 0.82;
-    border-radius: 8px;
+    border-radius: 12px;
   }
 
   .single-product .related-products .product-card__media img {

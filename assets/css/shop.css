@@ -99,7 +99,7 @@
   gap: var(--space-3);
   padding: 1rem;
   border: 1px solid rgba(77, 163, 255, 0.24);
-  border-radius: 8px;
+  border-radius: 12px;
   background: rgba(77, 163, 255, 0.08);
 }
 
@@ -146,7 +146,7 @@
 
 .category-choice-tools__actions .btn {
   min-height: 50px;
-  border-radius: 14px;
+  border-radius: 12px;
   font-size: 0.9rem;
 }
 
@@ -169,7 +169,7 @@
   scroll-snap-align: start;
   padding: 0.72rem 0.9rem;
   border: 1px solid var(--color-border);
-  border-radius: 8px;
+  border-radius: 12px;
   background: rgba(255,255,255,0.04);
   color: var(--color-text);
   font-size: 0.9rem;
@@ -230,7 +230,7 @@
     margin-bottom: 32px;
     padding: 20px;
     border: 1px solid var(--color-border);
-    border-radius: 20px;
+    border-radius: 12px;
     background: rgba(255,255,255,0.03);
 }
 
@@ -268,7 +268,7 @@
     width: 100%;
     min-height: 48px;
     padding: 0 16px;
-    border-radius: 14px;
+    border-radius: 12px;
     border: 1px solid var(--color-border);
     background: #121319;
     color: #fff;
@@ -341,7 +341,7 @@
         margin: 0;
         padding: max(1.1rem, env(safe-area-inset-top)) 1rem max(1rem, env(safe-area-inset-bottom));
         border-width: 0 0 0 1px;
-        border-radius: 18px 0 0 18px;
+        border-radius: 12px 0 0 12px;
         background: #101219;
         box-shadow: -18px 0 60px rgba(0, 0, 0, 0.38);
         transform: translateX(105%);
@@ -490,7 +490,7 @@
   align-items: center;
   justify-content: center;
   padding: 0 1.15rem;
-  border-radius: 14px;
+  border-radius: 12px;
   background: rgba(77, 163, 255, 0.16);
   color: #8dc8ff;
   font-weight: 900;
@@ -538,7 +538,7 @@
 @media (min-width: 1024px) {
   .product-card__media {
     aspect-ratio: 1 / 0.86;
-    border-radius: 8px;
+    border-radius: 12px;
   }
 
   .product-card__media img {
@@ -659,7 +659,7 @@
 .product-card__add,
 .product-card__actions .btn {
   min-height: 50px;
-  border-radius: 14px;
+  border-radius: 12px;
   font-size: 14px;
   font-weight: 800;
 }
@@ -943,7 +943,7 @@
 .seo-guide-grid article,
 .kangoo-seo-strip__inner {
   border: 1px solid var(--color-border);
-  border-radius: 8px;
+  border-radius: 12px;
   background: var(--color-panel);
 }
 
@@ -1211,7 +1211,7 @@
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-inline: contain;
   border: 1px solid var(--color-border);
-  border-radius: 8px;
+  border-radius: 12px;
 }
 
 .seo-scroll-table table {
@@ -1286,7 +1286,7 @@
 
 .seo-faq-list details {
   border: 1px solid var(--color-border);
-  border-radius: 8px;
+  border-radius: 12px;
   background: rgba(255,255,255,0.03);
 }
 
@@ -1456,7 +1456,7 @@
     width: 100%;
     min-height: 50px;
     padding: 0 1.15rem;
-    border-radius: 14px;
+    border-radius: 12px;
     justify-content: center;
     white-space: normal;
     overflow-wrap: anywhere;

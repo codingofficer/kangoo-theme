@@ -44,13 +44,13 @@
   align-content: end;
   padding: var(--space-4);
   border: 1px solid var(--color-border);
-  border-radius: 8px;
+  border-radius: 12px;
   background: rgba(255,255,255,0.035);
 }
 
 .pouch-finder__summary div {
   padding: var(--space-4);
-  border-radius: 8px;
+  border-radius: 12px;
   background: rgba(255,255,255,0.04);
 }
 
@@ -79,7 +79,7 @@
   display: grid;
   gap: var(--space-5);
   border: 1px solid var(--color-border);
-  border-radius: 8px;
+  border-radius: 12px;
   background: rgba(255,255,255,0.035);
   overflow: hidden;
 }
@@ -154,7 +154,7 @@
   min-height: 86px;
   padding: var(--space-4);
   border: 1px solid var(--color-border);
-  border-radius: 8px;
+  border-radius: 12px;
   background: rgba(255,255,255,0.03);
   cursor: pointer;
   transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
@@ -210,7 +210,7 @@
   margin-top: var(--space-6);
   padding: clamp(1.25rem, 4vw, 2rem);
   border: 1px solid var(--color-border);
-  border-radius: 8px;
+  border-radius: 12px;
   background: rgba(255,255,255,0.035);
 }
 
@@ -251,7 +251,7 @@
 .pouch-finder-card {
   display: grid;
   border: 1px solid var(--color-border);
-  border-radius: 8px;
+  border-radius: 12px;
   background: rgba(255,255,255,0.03);
   overflow: hidden;
 }
