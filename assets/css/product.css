@@ -164,11 +164,13 @@
   justify-self: end;
   width: fit-content;
   padding: 0.2rem 0.55rem;
+  border: 1px solid rgba(19, 95, 234, 0.16);
   border-radius: 999px;
-  background: #fff;
-  color: #0d0d0f;
+  background: rgba(19, 95, 234, 0.08);
+  color: #135fea;
   font-size: 0.75rem;
   font-weight: 800;
+  line-height: 1;
 }
 
 .pack-pricing__badge--muted {
@@ -952,6 +954,7 @@
 
 .product-fact--strength {
   grid-template-columns: 1fr;
+  align-content: center;
   justify-items: center;
   text-align: center;
 }
@@ -996,8 +999,8 @@
 }
 
 .product-strength-meter__dots span {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
   border: 1px solid rgba(17, 24, 39, 0.32);
   border-radius: 999px;
   background: transparent;
@@ -1005,7 +1008,7 @@
 
 .product-strength-meter__label {
   color: #c0265c;
-  font-size: 0.56rem;
+  font-size: 0.68rem;
   font-weight: 900;
   line-height: 1;
   white-space: nowrap;
@@ -1033,6 +1036,10 @@
   font-size: 0.82rem;
   font-weight: 800;
   text-decoration: none;
+}
+
+.product-read-more span[aria-hidden="true"] {
+  transform: translateY(-2px);
 }
 
 .product-read-more:hover {
@@ -1223,6 +1230,11 @@ body.kangoo-theme--light.single-product .product-read-more {
     padding: 0.42rem 0.36rem;
   }
 
+  .product-fact--strength {
+    grid-template-columns: 1fr;
+    place-items: center;
+  }
+
   .product-fact__icon {
     width: 30px;
     min-height: 24px;
@@ -1230,6 +1242,7 @@ body.kangoo-theme--light.single-product .product-read-more {
 
   .product-fact--strength .product-fact__icon {
     width: auto;
+    min-height: 0;
   }
 
   .product-fact__mg {
@@ -1287,6 +1300,11 @@ body.kangoo-theme--light.single-product .product-read-more {
     background: rgba(255, 255, 255, 0.035);
   }
 
+  .product-fact--strength {
+    grid-template-columns: 1fr;
+    place-items: center;
+  }
+
   .product-fact__icon {
     width: 42px;
     min-height: 38px;
@@ -1294,6 +1312,7 @@ body.kangoo-theme--light.single-product .product-read-more {
 
   .product-fact--strength .product-fact__icon {
     width: auto;
+    min-height: 0;
   }
 
   .product-fact__icon img,
@@ -1318,12 +1337,12 @@ body.kangoo-theme--light.single-product .product-read-more {
   }
 
   .product-strength-meter__dots span {
-    width: 8px;
-    height: 8px;
+    width: 10px;
+    height: 10px;
   }
 
   .product-strength-meter__label {
-    font-size: 0.68rem;
+    font-size: 0.82rem;
   }
 
   .product-read-more {
