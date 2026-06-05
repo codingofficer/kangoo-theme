@@ -971,6 +971,12 @@
   object-fit: contain;
 }
 
+.product-fact--pouches .product-fact__icon img,
+.product-fact--pouches .product-fact__icon svg {
+  width: 30px;
+  height: 30px;
+}
+
 .product-fact__mg {
   display: inline-grid;
   place-items: center;
