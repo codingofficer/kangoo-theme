@@ -98,7 +98,7 @@ if ($product_pouch_count <= 0) {
 }
 
 $product_facts = array(
-    array('key' => 'strength', 'label' => __('Strength', 'kangoo'), 'strength_dots' => $product_strength_dot_count, 'strength_color' => $product_strength_dot_color, 'strength_label' => $product_strength_fact),
+    array('key' => 'strength', 'label' => '', 'screen_label' => $product_strength_fact !== '' ? sprintf(__('%s strength', 'kangoo'), $product_strength_fact) : __('Strength', 'kangoo'), 'strength_dots' => $product_strength_dot_count, 'strength_color' => $product_strength_dot_color, 'strength_label' => $product_strength_fact),
     array('key' => 'flavour', 'label' => $product_flavour_display_label, 'icon' => $product_flavour_icon_url),
     array('key' => 'pouches', 'label' => sprintf(_n('%d Pouch', '%d Pouches', $product_pouch_count, 'kangoo'), $product_pouch_count), 'icon' => get_theme_file_uri('assets/images/pouch-icons/nicotine-pouch-icon-purple.svg')),
 );
@@ -197,7 +197,7 @@ foreach ($product_faq_rows as $product_faq_row) {
 
                     <div class="product-facts product-facts--desktop" aria-label="<?php esc_attr_e('Product quick facts', 'kangoo'); ?>">
                         <?php foreach ($product_facts as $product_fact) : ?>
-                            <div class="product-fact product-fact--<?php echo esc_attr($product_fact['key']); ?>">
+                            <div class="product-fact product-fact--<?php echo esc_attr($product_fact['key']); ?>"<?php echo empty($product_fact['label']) && !empty($product_fact['screen_label']) ? ' aria-label="' . esc_attr($product_fact['screen_label']) . '"' : ''; ?>>
                                 <span class="product-fact__icon" aria-hidden="true">
                                     <?php if (array_key_exists('strength_dots', $product_fact)) : ?>
                                         <span class="product-strength-meter">
@@ -219,7 +219,9 @@ foreach ($product_faq_rows as $product_faq_row) {
                                         </svg>
                                     <?php endif; ?>
                                 </span>
-                                <span class="product-fact__label"><?php echo esc_html($product_fact['label']); ?></span>
+                                <?php if (!empty($product_fact['label'])) : ?>
+                                    <span class="product-fact__label"><?php echo esc_html($product_fact['label']); ?></span>
+                                <?php endif; ?>
                             </div>
                         <?php endforeach; ?>
                     </div>
@@ -345,7 +347,7 @@ foreach ($product_faq_rows as $product_faq_row) {
 
                     <div class="product-facts product-facts--mobile" aria-label="<?php esc_attr_e('Product quick facts', 'kangoo'); ?>">
                         <?php foreach ($product_facts as $product_fact) : ?>
-                            <div class="product-fact product-fact--<?php echo esc_attr($product_fact['key']); ?>">
+                            <div class="product-fact product-fact--<?php echo esc_attr($product_fact['key']); ?>"<?php echo empty($product_fact['label']) && !empty($product_fact['screen_label']) ? ' aria-label="' . esc_attr($product_fact['screen_label']) . '"' : ''; ?>>
                                 <span class="product-fact__icon" aria-hidden="true">
                                     <?php if (array_key_exists('strength_dots', $product_fact)) : ?>
                                         <span class="product-strength-meter">
@@ -367,7 +369,9 @@ foreach ($product_faq_rows as $product_faq_row) {
                                         </svg>
                                     <?php endif; ?>
                                 </span>
-                                <span class="product-fact__label"><?php echo esc_html($product_fact['label']); ?></span>
+                                <?php if (!empty($product_fact['label'])) : ?>
+                                    <span class="product-fact__label"><?php echo esc_html($product_fact['label']); ?></span>
+                                <?php endif; ?>
                             </div>
                         <?php endforeach; ?>
                     </div>
