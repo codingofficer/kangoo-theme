@@ -635,6 +635,16 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  document.querySelectorAll('[data-product-read-more]').forEach(function (link) {
+    link.addEventListener('click', function () {
+      const target = document.querySelector(link.getAttribute('href'));
+
+      if (target && target.tagName.toLowerCase() === 'details') {
+        target.open = true;
+      }
+    });
+  });
+
   const searchOverlay = document.getElementById('kangoo-search-overlay');
   const searchOpenButtons = document.querySelectorAll('[data-search-open]');
   const searchCloseButtons = document.querySelectorAll('[data-search-close]');

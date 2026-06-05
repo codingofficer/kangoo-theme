@@ -3759,6 +3759,121 @@ function kangoo_get_product_pouch_count($product) {
     return 20;
 }
 
+function kangoo_get_product_strength_family_key($product) {
+    if (!class_exists('WC_Product') || !$product instanceof WC_Product) {
+        return '';
+    }
+
+    $name = html_entity_decode(wp_strip_all_tags($product->get_name()), ENT_QUOTES, 'UTF-8');
+    $name = preg_replace('/\b\d+(?:\.\d+)?\s*mg\b/i', ' ', $name);
+    $name = preg_replace('/\b\d+\s*pouches?\b/i', ' ', $name);
+    $name = preg_replace('/\bnicotine\s+pouches?\b/i', ' ', $name);
+    $name = preg_replace('/\s+/', ' ', trim((string) $name));
+
+    return sanitize_title($name);
+}
+
+function kangoo_get_product_strength_siblings($product) {
+    if (!class_exists('WC_Product') || !$product instanceof WC_Product || !function_exists('wc_get_products')) {
+        return array();
+    }
+
+    if (!$product->is_type('simple')) {
+        return array();
+    }
+
+    $family_key = kangoo_get_product_strength_family_key($product);
+
+    if ($family_key === '') {
+        return array();
+    }
+
+    $product_id = $product->get_id();
+    $tax_query = array();
+
+    if (taxonomy_exists('pa_brand')) {
+        $brand_terms = wp_get_post_terms($product_id, 'pa_brand', array('fields' => 'ids'));
+
+        if (!is_wp_error($brand_terms) && !empty($brand_terms)) {
+            $tax_query[] = array(
+                'taxonomy' => 'pa_brand',
+                'field'    => 'term_id',
+                'terms'    => array_map('absint', $brand_terms),
+            );
+        }
+    }
+
+    if (empty($tax_query) && taxonomy_exists('product_cat')) {
+        $category_terms = wp_get_post_terms($product_id, 'product_cat', array('fields' => 'ids'));
+
+        if (!is_wp_error($category_terms) && !empty($category_terms)) {
+            $tax_query[] = array(
+                'taxonomy' => 'product_cat',
+                'field'    => 'term_id',
+                'terms'    => array_map('absint', $category_terms),
+            );
+        }
+    }
+
+    $args = array(
+        'limit'        => 36,
+        'status'       => 'publish',
+        'type'         => 'simple',
+        'stock_status' => 'instock',
+        'return'       => 'objects',
+        'orderby'      => 'title',
+        'order'        => 'ASC',
+    );
+
+    if (!empty($tax_query)) {
+        $args['tax_query'] = $tax_query;
+    }
+
+    $current_is_99p = function_exists('kangoo_is_99p_product') && kangoo_is_99p_product($product_id);
+    $siblings = array();
+
+    foreach (wc_get_products($args) as $candidate) {
+        if (!$candidate instanceof WC_Product || !$candidate->is_in_stock()) {
+            continue;
+        }
+
+        $candidate_id = $candidate->get_id();
+
+        if (function_exists('kangoo_is_99p_product') && kangoo_is_99p_product($candidate_id) !== $current_is_99p) {
+            continue;
+        }
+
+        if (kangoo_get_product_strength_family_key($candidate) !== $family_key) {
+            continue;
+        }
+
+        $strength = kangoo_get_product_strength_details($candidate);
+
+        if (empty($strength['label']) || empty($strength['mg'])) {
+            continue;
+        }
+
+        $siblings[$candidate_id] = array(
+            'id'      => $candidate_id,
+            'label'   => $strength['label'],
+            'mg'      => (float) $strength['mg'],
+            'url'     => get_permalink($candidate_id),
+            'active'  => $candidate_id === $product_id,
+            'product' => $candidate,
+        );
+    }
+
+    uasort($siblings, static function ($a, $b) {
+        if ((float) $a['mg'] === (float) $b['mg']) {
+            return strnatcasecmp((string) $a['label'], (string) $b['label']);
+        }
+
+        return (float) $a['mg'] <=> (float) $b['mg'];
+    });
+
+    return array_values($siblings);
+}
+
 function kangoo_get_product_best_for_label($product) {
     $strength = kangoo_get_product_strength_details($product);
     $flavour = strtolower($product->get_name() . ' ' . kangoo_get_product_flavour_label($product));
