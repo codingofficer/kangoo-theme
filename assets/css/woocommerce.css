@@ -5359,6 +5359,31 @@ body.woocommerce-cart .kangoo-cart-rec-card__add {
 }
 
 @media (max-width: 782px) {
+  body.kangoo-theme--light.woocommerce-cart .wc-block-cart,
+  body.kangoo-theme--light.woocommerce-cart .wp-block-woocommerce-cart {
+    padding-inline: 0 !important;
+  }
+
+  body.kangoo-theme--light.woocommerce-cart .wc-block-cart__main,
+  body.kangoo-theme--light.woocommerce-cart .wc-block-components-main.wc-block-cart__main,
+  body.kangoo-theme--light.woocommerce-cart .wc-block-cart__main.wp-block-woocommerce-cart-items-block {
+    margin-inline: 0 !important;
+    padding-inline: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  body.kangoo-theme--light.woocommerce-cart .wc-block-cart-items,
+  body.kangoo-theme--light.woocommerce-cart table.wc-block-cart-items {
+    width: 100% !important;
+    margin-inline: 0 !important;
+  }
+
+  body.kangoo-theme--light.woocommerce-cart table.wc-block-cart-items .wc-block-cart-item__total,
+  body.kangoo-theme--light.woocommerce-cart table.wc-block-cart-items .wc-block-cart-items__header-total {
+    padding-right: 14px !important;
+  }
+
   body.woocommerce-cart .kangoo-cart-recommendations,
   body.woocommerce-cart .wc-block-cart__main > .kangoo-cart-recommendations,
   body.woocommerce-cart .wc-block-components-main > .kangoo-cart-recommendations {
@@ -5404,7 +5429,7 @@ body.woocommerce-cart .kangoo-cart-rec-card__add {
     grid-template-columns: 54px minmax(0, 1fr) auto;
     grid-template-rows: auto;
     gap: 0.72rem;
-    align-items: center;
+    align-items: start;
     padding: 0.72rem 0;
     border: 0;
     border-radius: 0;
@@ -5424,6 +5449,7 @@ body.woocommerce-cart .kangoo-cart-rec-card__add {
 
   body.woocommerce-cart .kangoo-cart-rec-card__body {
     gap: 0.12rem;
+    padding-top: 0.02rem;
   }
 
   body.woocommerce-cart .kangoo-cart-rec-card h3 {
@@ -5440,7 +5466,7 @@ body.woocommerce-cart .kangoo-cart-rec-card__add {
     justify-items: end;
     align-self: stretch;
     align-content: start;
-    gap: 0.36rem;
+    gap: 0.44rem;
     min-width: 82px;
   }
 
