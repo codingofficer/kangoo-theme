@@ -389,9 +389,9 @@ foreach ($product_faq_rows as $product_faq_row) {
 					<?php endif; ?>
 
                     <ul class="product-trust">
-                        <li>Discreet Packaging</li>
-                        <li>18+ Only</li>
-                        <li>Earn Kangoo Rewards</li>
+                        <li>Discreet</li>
+                        <li>18+</li>
+                        <li>Rewards</li>
                     </ul>
                 </div>
             </div>
