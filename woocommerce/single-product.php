@@ -98,7 +98,7 @@ if ($product_pouch_count <= 0) {
 }
 
 $product_facts = array(
-    array('key' => 'strength', 'label' => $product_strength_label !== '' ? sprintf(__('%s Strength', 'kangoo'), $product_strength_fact) : __('Strength', 'kangoo'), 'strength_dots' => $product_strength_dot_count, 'strength_color' => $product_strength_dot_color, 'strength_label' => $product_strength_fact),
+    array('key' => 'strength', 'label' => __('Strength', 'kangoo'), 'strength_dots' => $product_strength_dot_count, 'strength_color' => $product_strength_dot_color, 'strength_label' => $product_strength_fact),
     array('key' => 'flavour', 'label' => $product_flavour_display_label, 'icon' => $product_flavour_icon_url),
     array('key' => 'pouches', 'label' => sprintf(_n('%d Pouch', '%d Pouches', $product_pouch_count, 'kangoo'), $product_pouch_count), 'icon' => get_theme_file_uri('assets/images/pouch-icons/nicotine-pouch-icon-purple.svg')),
 );

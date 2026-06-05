@@ -975,12 +975,14 @@
 .product-strength-meter {
   display: grid;
   justify-items: center;
-  gap: 3px;
+  gap: 4px;
+  width: max-content;
 }
 
 .product-strength-meter__dots {
   display: flex;
   gap: 3px;
+  justify-content: center;
 }
 
 .product-strength-meter__dots span {
@@ -1211,9 +1213,17 @@ body.kangoo-theme--light.single-product .product-read-more {
     padding: 0.42rem 0.36rem;
   }
 
+  .product-fact--strength {
+    grid-template-columns: 36px minmax(0, 1fr);
+  }
+
   .product-fact__icon {
     width: 30px;
     min-height: 24px;
+  }
+
+  .product-fact--strength .product-fact__icon {
+    width: 36px;
   }
 
   .product-fact__mg {
@@ -1271,9 +1281,17 @@ body.kangoo-theme--light.single-product .product-read-more {
     background: rgba(255, 255, 255, 0.035);
   }
 
+  .product-fact--strength {
+    grid-template-columns: 50px minmax(0, 1fr);
+  }
+
   .product-fact__icon {
     width: 42px;
     min-height: 38px;
+  }
+
+  .product-fact--strength .product-fact__icon {
+    width: 50px;
   }
 
   .product-fact__icon img,
