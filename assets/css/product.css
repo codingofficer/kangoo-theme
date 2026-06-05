@@ -920,7 +920,7 @@
 
 .product-facts {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.6rem;
   margin: 0.25rem 0;
 }
@@ -945,8 +945,8 @@
 .product-fact__icon {
   display: inline-grid;
   place-items: center;
-  width: 26px;
-  height: 26px;
+  width: 30px;
+  min-height: 26px;
   color: #135fea;
 }
 
@@ -965,6 +965,33 @@
   height: 26px;
   border: 1px solid #c0265c;
   border-radius: 999px;
+  color: #c0265c;
+  font-size: 0.56rem;
+  font-weight: 900;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.product-strength-meter {
+  display: grid;
+  justify-items: center;
+  gap: 3px;
+}
+
+.product-strength-meter__dots {
+  display: flex;
+  gap: 3px;
+}
+
+.product-strength-meter__dots span {
+  width: 6px;
+  height: 6px;
+  border: 1px solid rgba(17, 24, 39, 0.32);
+  border-radius: 999px;
+  background: transparent;
+}
+
+.product-strength-meter__label {
   color: #c0265c;
   font-size: 0.56rem;
   font-weight: 900;
@@ -1178,15 +1205,15 @@ body.kangoo-theme--light.single-product .product-read-more {
   }
 
   .product-fact {
-    grid-template-columns: 24px minmax(0, 1fr);
+    grid-template-columns: 30px minmax(0, 1fr);
     gap: 0.34rem;
     min-height: 58px;
     padding: 0.42rem 0.36rem;
   }
 
   .product-fact__icon {
-    width: 24px;
-    height: 24px;
+    width: 30px;
+    min-height: 24px;
   }
 
   .product-fact__mg {
@@ -1196,7 +1223,7 @@ body.kangoo-theme--light.single-product .product-read-more {
   }
 
   .product-fact__label {
-    font-size: clamp(0.58rem, 2.45vw, 0.68rem);
+    font-size: clamp(0.62rem, 2.7vw, 0.72rem);
     line-height: 1.05;
   }
 
@@ -1228,7 +1255,7 @@ body.kangoo-theme--light.single-product .product-read-more {
 @media (min-width: 768px) {
   .product-facts--desktop {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 0.75rem;
     margin-top: 0.9rem;
   }
@@ -1238,15 +1265,15 @@ body.kangoo-theme--light.single-product .product-read-more {
   }
 
   .product-fact {
-    grid-template-columns: 38px minmax(0, 1fr);
+    grid-template-columns: 42px minmax(0, 1fr);
     min-height: 82px;
-    padding: 0.85rem 0.95rem;
+    padding: 0.78rem 0.72rem;
     background: rgba(255, 255, 255, 0.035);
   }
 
   .product-fact__icon {
-    width: 38px;
-    height: 38px;
+    width: 42px;
+    min-height: 38px;
   }
 
   .product-fact__icon img,
@@ -1262,8 +1289,21 @@ body.kangoo-theme--light.single-product .product-read-more {
   }
 
   .product-fact__label {
-    font-size: 0.92rem;
+    font-size: 0.82rem;
     line-height: 1.16;
+  }
+
+  .product-strength-meter__dots {
+    gap: 4px;
+  }
+
+  .product-strength-meter__dots span {
+    width: 8px;
+    height: 8px;
+  }
+
+  .product-strength-meter__label {
+    font-size: 0.68rem;
   }
 
   .product-read-more {

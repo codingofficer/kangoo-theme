@@ -32,32 +32,38 @@ if (function_exists('kangoo_get_product_strength_details')) {
 
 $product_flavour_label = function_exists('kangoo_get_product_flavour_label') ? kangoo_get_product_flavour_label($product) : trim((string) $product->get_attribute('pa_flavour'));
 $product_flavour_label = trim(explode(',', $product_flavour_label)[0]);
+$product_flavour_display_label = $product_flavour_label;
 $product_flavour_words = strtolower($product_flavour_label . ' ' . get_the_title());
 $product_flavour_icon_slug = 'fruit';
 
 if (preg_match('/tropical|mango|pineapple|passion/i', $product_flavour_words)) {
-    $product_flavour_label = __('Tropical', 'kangoo');
     $product_flavour_icon_slug = 'tropical';
 } elseif (preg_match('/coffee|espresso|mocha/i', $product_flavour_words)) {
-    $product_flavour_label = __('Coffee', 'kangoo');
     $product_flavour_icon_slug = 'coffee';
 } elseif (preg_match('/cola|soda/i', $product_flavour_words)) {
-    $product_flavour_label = __('Cola', 'kangoo');
     $product_flavour_icon_slug = 'cola';
 } elseif (preg_match('/sweet|candy|bubblegum|strawberry/i', $product_flavour_words)) {
-    $product_flavour_label = __('Sweet', 'kangoo');
     $product_flavour_icon_slug = 'sweets';
 } elseif (preg_match('/mint|menthol|peppermint|spearmint|ice|freeze/i', $product_flavour_words)) {
-    $product_flavour_label = __('Mint', 'kangoo');
     $product_flavour_icon_slug = 'mint';
 } elseif (preg_match('/citrus|lemon|lime|orange|grapefruit/i', $product_flavour_words)) {
-    $product_flavour_label = __('Citrus', 'kangoo');
     $product_flavour_icon_slug = 'citrus';
 } elseif (preg_match('/berry|berries|cherry|fruit|fruits|grape|raspberry|blueberry/i', $product_flavour_words)) {
-    $product_flavour_label = preg_match('/black cherry|cherry/i', $product_flavour_words) ? __('Black Cherry', 'kangoo') : __('Berry', 'kangoo');
     $product_flavour_icon_slug = 'berry';
-} elseif ($product_flavour_label === '') {
-    $product_flavour_label = __('Flavour', 'kangoo');
+}
+
+if ($product_flavour_display_label === '') {
+    $fallback_flavour_labels = array(
+        'tropical' => __('Tropical', 'kangoo'),
+        'coffee'   => __('Coffee', 'kangoo'),
+        'cola'     => __('Cola', 'kangoo'),
+        'sweets'   => __('Sweet', 'kangoo'),
+        'mint'     => __('Mint', 'kangoo'),
+        'citrus'   => __('Citrus', 'kangoo'),
+        'berry'    => preg_match('/black cherry|cherry/i', $product_flavour_words) ? __('Black Cherry', 'kangoo') : __('Berry', 'kangoo'),
+        'fruit'    => __('Flavour', 'kangoo'),
+    );
+    $product_flavour_display_label = $fallback_flavour_labels[$product_flavour_icon_slug] ?? __('Flavour', 'kangoo');
 }
 
 $product_feature_icon_base_url = trailingslashit(get_theme_file_uri('assets/images/flavour-icons-orange-samples'));
@@ -70,6 +76,21 @@ if ($product_flavour_icon_url === '') {
 $product_strength_fact = $product_strength_label !== ''
     ? preg_replace('/\s*MG\b/i', 'mg', $product_strength_label)
     : __('Strength', 'kangoo');
+$product_strength_dot_count = 0;
+
+if (!empty($product_strength['mg'])) {
+    if ((float) $product_strength['mg'] >= 15) {
+        $product_strength_dot_count = 4;
+    } elseif ((float) $product_strength['mg'] >= 10) {
+        $product_strength_dot_count = 3;
+    } elseif ((float) $product_strength['mg'] >= 5) {
+        $product_strength_dot_count = 2;
+    } else {
+        $product_strength_dot_count = 1;
+    }
+}
+
+$product_strength_dot_color = '#c0265c';
 $product_pouch_count = function_exists('kangoo_get_product_pouch_count') ? kangoo_get_product_pouch_count($product) : 20;
 
 if ($product_pouch_count <= 0) {
@@ -77,10 +98,9 @@ if ($product_pouch_count <= 0) {
 }
 
 $product_facts = array(
-    array('key' => 'strength', 'label' => sprintf(__('%s Strength', 'kangoo'), $product_strength_fact), 'icon_text' => $product_strength_fact),
-    array('key' => 'flavour', 'label' => sprintf(__('%s Flavour', 'kangoo'), $product_flavour_label), 'icon' => $product_flavour_icon_url),
-    array('key' => 'pouches', 'label' => sprintf(_n('%d Pouch', '%d Pouches', $product_pouch_count, 'kangoo'), $product_pouch_count)),
-    array('key' => 'tobacco', 'label' => __('Tobacco Free', 'kangoo'), 'icon' => $product_feature_icon_base_url . 'tobacco-free-icon-orange.png'),
+    array('key' => 'strength', 'label' => $product_strength_label !== '' ? sprintf(__('%s Strength', 'kangoo'), $product_strength_fact) : __('Strength', 'kangoo'), 'strength_dots' => $product_strength_dot_count, 'strength_color' => $product_strength_dot_color, 'strength_label' => $product_strength_fact),
+    array('key' => 'flavour', 'label' => $product_flavour_display_label, 'icon' => $product_flavour_icon_url),
+    array('key' => 'pouches', 'label' => sprintf(_n('%d Pouch', '%d Pouches', $product_pouch_count, 'kangoo'), $product_pouch_count), 'icon' => get_theme_file_uri('assets/images/pouch-icons/nicotine-pouch-icon-purple.svg')),
 );
 
 $strength_siblings = function_exists('kangoo_get_product_strength_siblings') ? kangoo_get_product_strength_siblings($product) : array();
@@ -179,7 +199,16 @@ foreach ($product_faq_rows as $product_faq_row) {
                         <?php foreach ($product_facts as $product_fact) : ?>
                             <div class="product-fact product-fact--<?php echo esc_attr($product_fact['key']); ?>">
                                 <span class="product-fact__icon" aria-hidden="true">
-                                    <?php if (!empty($product_fact['icon'])) : ?>
+                                    <?php if (array_key_exists('strength_dots', $product_fact)) : ?>
+                                        <span class="product-strength-meter">
+                                            <span class="product-strength-meter__dots">
+                                                <?php for ($i = 1; $i <= 4; $i++) : ?>
+                                                    <span<?php echo $i <= (int) $product_fact['strength_dots'] ? ' style="background:' . esc_attr($product_fact['strength_color']) . ';border-color:' . esc_attr($product_fact['strength_color']) . ';"' : ''; ?>></span>
+                                                <?php endfor; ?>
+                                            </span>
+                                            <span class="product-strength-meter__label"><?php echo esc_html($product_fact['strength_label']); ?></span>
+                                        </span>
+                                    <?php elseif (!empty($product_fact['icon'])) : ?>
                                         <img src="<?php echo esc_url($product_fact['icon']); ?>" alt="" width="24" height="24" loading="lazy" decoding="async">
                                     <?php elseif (!empty($product_fact['icon_text'])) : ?>
                                         <span class="product-fact__mg"><?php echo esc_html($product_fact['icon_text']); ?></span>
@@ -318,7 +347,16 @@ foreach ($product_faq_rows as $product_faq_row) {
                         <?php foreach ($product_facts as $product_fact) : ?>
                             <div class="product-fact product-fact--<?php echo esc_attr($product_fact['key']); ?>">
                                 <span class="product-fact__icon" aria-hidden="true">
-                                    <?php if (!empty($product_fact['icon'])) : ?>
+                                    <?php if (array_key_exists('strength_dots', $product_fact)) : ?>
+                                        <span class="product-strength-meter">
+                                            <span class="product-strength-meter__dots">
+                                                <?php for ($i = 1; $i <= 4; $i++) : ?>
+                                                    <span<?php echo $i <= (int) $product_fact['strength_dots'] ? ' style="background:' . esc_attr($product_fact['strength_color']) . ';border-color:' . esc_attr($product_fact['strength_color']) . ';"' : ''; ?>></span>
+                                                <?php endfor; ?>
+                                            </span>
+                                            <span class="product-strength-meter__label"><?php echo esc_html($product_fact['strength_label']); ?></span>
+                                        </span>
+                                    <?php elseif (!empty($product_fact['icon'])) : ?>
                                         <img src="<?php echo esc_url($product_fact['icon']); ?>" alt="" width="24" height="24" loading="lazy" decoding="async">
                                     <?php elseif (!empty($product_fact['icon_text'])) : ?>
                                         <span class="product-fact__mg"><?php echo esc_html($product_fact['icon_text']); ?></span>

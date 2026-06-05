@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="Nicotine pouch icon">
+  <title>Nicotine pouch icon</title>
+  <g fill="none" stroke="#7c3f98" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke-width="24" d="M141 200c-12 10-14 29-3 43l82 105c12 15 33 18 48 6l151-120c15-12 18-33 6-48l-82-105c-12-15-33-18-48-6z"/>
+    <path stroke-width="18" d="M194 207l71-56"/>
+    <path stroke-width="18" d="M255 293l82-65"/>
+    <path stroke-width="16" d="M190 266l23-18"/>
+    <path stroke-width="16" d="M243 226l23-18"/>
+    <path stroke-width="16" d="M297 185l23-18"/>
+    <path stroke-width="16" d="M213 304l28-22"/>
+  </g>
+</svg>
