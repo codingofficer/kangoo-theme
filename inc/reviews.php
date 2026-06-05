@@ -34,10 +34,18 @@ function kangoo_reviews_theme_render_summary_link($product_id) {
     $count = absint($summary['count']);
     $average = number_format_i18n((float) $summary['average'], 1);
     ?>
-    <a class="product-review-summary" href="#kangoo-customer-reviews" aria-label="<?php echo esc_attr(sprintf(__('%1$s out of 5 from %2$s reviews', 'kangoo'), $average, number_format_i18n($count))); ?>">
-        <span class="product-review-summary__score"><?php echo esc_html($average); ?></span>
+    <a class="product-review-summary" href="#kangoo-customer-reviews">
         <?php echo wp_kses_post(kangoo_reviews_theme_render_stars((float) $summary['average'])); ?>
-        <span class="product-review-summary__count">(<?php echo esc_html(number_format_i18n($count)); ?>)</span>
+        <span><?php echo esc_html($average); ?></span>
+        <span aria-hidden="true">|</span>
+        <span>
+            <?php
+            echo esc_html(sprintf(
+                _n('%s verified review', '%s verified reviews', $count, 'kangoo'),
+                number_format_i18n($count)
+            ));
+            ?>
+        </span>
     </a>
     <?php
 }
@@ -52,10 +60,18 @@ function kangoo_reviews_theme_render_card_summary($product_id) {
     $count = absint($summary['count']);
     $average = number_format_i18n((float) $summary['average'], 1);
     ?>
-    <a class="product-review-summary product-card__review-summary" href="<?php echo esc_url(get_permalink($product_id) . '#kangoo-customer-reviews'); ?>" aria-label="<?php echo esc_attr(sprintf(__('%1$s out of 5 from %2$s reviews', 'kangoo'), $average, number_format_i18n($count))); ?>">
-        <span class="product-review-summary__score"><?php echo esc_html($average); ?></span>
+    <a class="product-review-summary product-card__review-summary" href="<?php echo esc_url(get_permalink($product_id) . '#kangoo-customer-reviews'); ?>">
         <?php echo wp_kses_post(kangoo_reviews_theme_render_stars((float) $summary['average'])); ?>
-        <span class="product-review-summary__count">(<?php echo esc_html(number_format_i18n($count)); ?>)</span>
+        <span><?php echo esc_html($average); ?></span>
+        <span aria-hidden="true">|</span>
+        <span>
+            <?php
+            echo esc_html(sprintf(
+                _n('%s verified review', '%s verified reviews', $count, 'kangoo'),
+                number_format_i18n($count)
+            ));
+            ?>
+        </span>
     </a>
     <?php
 }

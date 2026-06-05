@@ -30,106 +30,6 @@ if (function_exists('kangoo_get_product_strength_details')) {
     }
 }
 
-$product_gallery_items = array();
-
-if ($main_image_id) {
-    $product_gallery_items[] = array(
-        'id'    => $main_image_id,
-        'large' => $main_image_url,
-        'alt'   => $main_image_alt ?: get_the_title(),
-    );
-}
-
-foreach ($gallery_image_ids as $gallery_image_id) {
-    $thumb_large = wp_get_attachment_image_url($gallery_image_id, 'large');
-
-    if (!$thumb_large) {
-        continue;
-    }
-
-    $product_gallery_items[] = array(
-        'id'    => $gallery_image_id,
-        'large' => $thumb_large,
-        'alt'   => get_post_meta($gallery_image_id, '_wp_attachment_image_alt', true) ?: get_the_title(),
-    );
-}
-
-if (count($product_gallery_items) < 2) {
-    $attached_image_ids = get_posts(array(
-        'post_parent'    => $product->get_id(),
-        'post_type'      => 'attachment',
-        'post_mime_type' => 'image',
-        'post_status'    => 'inherit',
-        'posts_per_page' => 4,
-        'fields'         => 'ids',
-        'exclude'        => $main_image_id ? array($main_image_id) : array(),
-    ));
-
-    foreach ($attached_image_ids as $attached_image_id) {
-        $attached_large = wp_get_attachment_image_url($attached_image_id, 'large');
-
-        if (!$attached_large) {
-            continue;
-        }
-
-        $product_gallery_items[] = array(
-            'id'    => $attached_image_id,
-            'large' => $attached_large,
-            'alt'   => get_post_meta($attached_image_id, '_wp_attachment_image_alt', true) ?: get_the_title(),
-        );
-    }
-}
-
-$product_flavour_label     = function_exists('kangoo_get_product_flavour_label') ? kangoo_get_product_flavour_label($product) : trim(wp_strip_all_tags((string) $product->get_attribute('pa_flavour')));
-$product_flavour_label     = trim(explode(',', $product_flavour_label)[0]);
-$product_flavour_words     = strtolower($product_flavour_label . ' ' . get_the_title());
-$product_flavour_icon_slug = 'fruit';
-
-if (preg_match('/tropical|mango|pineapple|passion/i', $product_flavour_words)) {
-    $product_flavour_label     = __('Tropical', 'kangoo');
-    $product_flavour_icon_slug = 'tropical';
-} elseif (preg_match('/coffee|espresso|mocha/i', $product_flavour_words)) {
-    $product_flavour_label     = __('Coffee', 'kangoo');
-    $product_flavour_icon_slug = 'coffee';
-} elseif (preg_match('/cola|soda/i', $product_flavour_words)) {
-    $product_flavour_label     = __('Cola', 'kangoo');
-    $product_flavour_icon_slug = 'cola';
-} elseif (preg_match('/mint|menthol|peppermint|spearmint|ice|freeze/i', $product_flavour_words)) {
-    $product_flavour_label     = __('Fresh Mint', 'kangoo');
-    $product_flavour_icon_slug = 'mint';
-} elseif (preg_match('/citrus|lemon|lime|orange|grapefruit/i', $product_flavour_words)) {
-    $product_flavour_label     = __('Citrus', 'kangoo');
-    $product_flavour_icon_slug = 'citrus';
-} elseif (preg_match('/berry|berries|cherry|fruit|fruits|grape|raspberry|strawberry|blueberry/i', $product_flavour_words)) {
-    $product_flavour_label     = __('Sweet Berry', 'kangoo');
-    $product_flavour_icon_slug = 'berry';
-} elseif ($product_flavour_label === '') {
-    $product_flavour_label = __('Flavour', 'kangoo');
-}
-
-$product_feature_icon_base_url = trailingslashit(get_theme_file_uri('assets/images/flavour-icons-orange-samples'));
-$product_flavour_icon_url = function_exists('kangoo_get_product_flavour_icon_url') ? kangoo_get_product_flavour_icon_url($product, 'thumbnail') : '';
-
-if ($product_flavour_icon_url === '') {
-    $product_flavour_icon_url = $product_feature_icon_base_url . $product_flavour_icon_slug . '-icon-orange.png';
-}
-
-$product_strength_feature = $product_strength_label !== ''
-    ? preg_replace('/\s*MG\b/i', 'mg', $product_strength_label) . ' ' . __('Strength', 'kangoo')
-    : __('Strength', 'kangoo');
-$product_pouch_count = function_exists('kangoo_get_product_pouch_count') ? kangoo_get_product_pouch_count($product) : 20;
-
-if ($product_pouch_count <= 0) {
-    $product_pouch_count = 20;
-}
-
-$product_mobile_features = array(
-    array('key' => 'strength', 'label' => $product_strength_feature),
-    array('key' => 'flavour', 'label' => $product_flavour_label, 'icon' => $product_flavour_icon_url),
-    array('key' => 'green', 'label' => __('Tobacco Free', 'kangoo'), 'icon' => $product_feature_icon_base_url . 'tobacco-free-icon-orange.png'),
-    array('key' => 'box', 'label' => sprintf(_n('%d Pouch', '%d Pouches', $product_pouch_count, 'kangoo'), $product_pouch_count)),
-);
-
 $strength_attribute_name  = '';
 $strength_attribute_label = '';
 $strength_options         = array();
@@ -224,36 +124,32 @@ foreach ($product_faq_rows as $product_faq_row) {
                         <?php endif; ?>
                     </div>
 
-                    <?php if (!empty($product_gallery_items)) : ?>
-                        <?php
-                        $product_gallery_count = count($product_gallery_items);
-                        $product_visible_thumb_count = min(2, $product_gallery_count);
-                        ?>
-                        <div class="product-thumbs-wrap<?php echo $product_gallery_count > 2 ? ' product-thumbs-wrap--has-arrows' : ''; ?>" data-product-gallery>
-                            <?php if ($product_gallery_count > 2) : ?>
-                                <button type="button" class="product-thumbs__arrow product-thumbs__arrow--prev" data-product-gallery-arrow="prev" aria-label="<?php esc_attr_e('Previous product image', 'kangoo'); ?>">
-                                    <span aria-hidden="true">&#8249;</span>
-                                </button>
-                            <?php endif; ?>
-
-                            <div class="product-thumbs product-thumbs--count-<?php echo esc_attr($product_visible_thumb_count); ?>" data-product-gallery-track>
-                            <?php foreach ($product_gallery_items as $gallery_index => $gallery_item) : ?>
+                    <?php if ($main_image_id || !empty($gallery_image_ids)) : ?>
+                        <div class="product-thumbs">
+                            <?php if ($main_image_id) : ?>
                                 <button
                                     type="button"
-                                    class="product-thumb<?php echo $gallery_index === 0 ? ' is-active' : ''; ?>"
-                                    data-image="<?php echo esc_url($gallery_item['large']); ?>"
-                                    data-alt="<?php echo esc_attr($gallery_item['alt']); ?>"
+                                    class="product-thumb is-active"
+                                    data-image="<?php echo esc_url($main_image_url); ?>"
+                                    data-alt="<?php echo esc_attr($main_image_alt ?: get_the_title()); ?>"
                                 >
-                                    <?php echo wp_get_attachment_image($gallery_item['id'], 'thumbnail'); ?>
-                                </button>
-                            <?php endforeach; ?>
-                            </div>
-
-                            <?php if ($product_gallery_count > 2) : ?>
-                                <button type="button" class="product-thumbs__arrow product-thumbs__arrow--next" data-product-gallery-arrow="next" aria-label="<?php esc_attr_e('Next product image', 'kangoo'); ?>">
-                                    <span aria-hidden="true">&#8250;</span>
+                                    <?php echo wp_get_attachment_image($main_image_id, 'thumbnail'); ?>
                                 </button>
                             <?php endif; ?>
+
+                            <?php foreach ($gallery_image_ids as $gallery_image_id) :
+                                $thumb_large = wp_get_attachment_image_url($gallery_image_id, 'large');
+                                $thumb_alt   = get_post_meta($gallery_image_id, '_wp_attachment_image_alt', true);
+                            ?>
+                                <button
+                                    type="button"
+                                    class="product-thumb"
+                                    data-image="<?php echo esc_url($thumb_large); ?>"
+                                    data-alt="<?php echo esc_attr($thumb_alt ?: get_the_title()); ?>"
+                                >
+                                    <?php echo wp_get_attachment_image($gallery_image_id, 'thumbnail'); ?>
+                                </button>
+                            <?php endforeach; ?>
                         </div>
                     <?php endif; ?>
 
@@ -282,26 +178,19 @@ foreach ($product_faq_rows as $product_faq_row) {
                     }
                     ?>
 
-                    <div class="product-mobile-summary" data-product-mobile-summary>
-                        <p class="product-subtitle">
-                            <?php echo get_the_excerpt(); ?>
-                        </p>
+                    <p class="product-subtitle">
+                        <?php echo get_the_excerpt(); ?>
+                    </p>
 
-                        <?php if (!empty($product_highlights)) : ?>
-                            <ul class="product-highlights product-highlights--mobile">
-                                <?php foreach ($product_highlights as $highlight) : ?>
-                                    <?php if (!empty($highlight['text'])) : ?>
-                                        <li><?php echo esc_html($highlight['text']); ?></li>
-                                    <?php endif; ?>
-                                <?php endforeach; ?>
-                            </ul>
-                        <?php endif; ?>
-
-                        <button type="button" class="product-mobile-summary__toggle" data-product-mobile-summary-toggle aria-expanded="false">
-                            <span data-product-mobile-summary-toggle-text><?php esc_html_e('Read more', 'kangoo'); ?></span>
-                            <span aria-hidden="true">&#8964;</span>
-                        </button>
-                    </div>
+                    <?php if (!empty($product_highlights)) : ?>
+                        <ul class="product-highlights product-highlights--mobile">
+                            <?php foreach ($product_highlights as $highlight) : ?>
+                                <?php if (!empty($highlight['text'])) : ?>
+                                    <li><?php echo esc_html($highlight['text']); ?></li>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php endif; ?>
 
 					<div
 						class="product-price"
@@ -347,23 +236,6 @@ foreach ($product_faq_rows as $product_faq_row) {
 
                     <div class="product-stock-note<?php echo $low_stock_message ? ' product-stock-note--low' : ''; ?>" data-product-stock-note data-suppress-stock-note="<?php echo $suppress_stock_note ? '1' : '0'; ?>"<?php echo $low_stock_message ? '' : ' hidden'; ?>>
                         <?php echo esc_html($low_stock_message); ?>
-                    </div>
-
-                    <div class="product-mobile-features" aria-label="<?php esc_attr_e('Product quick facts', 'kangoo'); ?>">
-                        <?php foreach ($product_mobile_features as $feature) : ?>
-                            <div class="product-mobile-feature product-mobile-feature--<?php echo esc_attr($feature['key']); ?>">
-                                <span class="product-mobile-feature__icon" aria-hidden="true">
-                                    <?php if (!empty($feature['icon'])) : ?>
-                                        <img class="product-mobile-feature__image" src="<?php echo esc_url($feature['icon']); ?>" alt="" width="22" height="22" loading="lazy" decoding="async">
-                                    <?php elseif ($feature['key'] === 'strength') : ?>
-                                        <svg viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="12" r="8.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 13.2h8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-                                    <?php else : ?>
-                                        <svg viewBox="0 0 24 24" focusable="false"><path d="m5 8 7-3 7 3-7 3-7-3Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M5 8v8l7 3 7-3V8M12 11v8" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
-                                    <?php endif; ?>
-                                </span>
-                                <span class="product-mobile-feature__text"><?php echo esc_html($feature['label']); ?></span>
-                            </div>
-                        <?php endforeach; ?>
                     </div>
 
                     <?php if (!empty($strength_options) && !empty($strength_attribute_name)) : ?>
@@ -420,7 +292,7 @@ foreach ($product_faq_rows as $product_faq_row) {
 
         <div class="product-accordion">
             <?php if (get_the_content()) : ?>
-                <details class="product-accordion__item">
+                <details class="product-accordion__item" open>
                     <summary>Description</summary>
                     <div class="product-accordion__content wysiwyg">
                         <?php the_content(); ?>

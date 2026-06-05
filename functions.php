@@ -2210,7 +2210,7 @@ function kangoo_register_product_quick_facts_acf_fields() {
                 'label' => __('Pouches per Can', 'kangoo'),
                 'name' => 'pouch_count',
                 'type' => 'number',
-                'instructions' => __('Used by compact product facts. Leave blank to use the default of 20.', 'kangoo'),
+                'instructions' => __('Used by product fact badges. Leave blank to use the default of 20.', 'kangoo'),
                 'default_value' => 20,
                 'min' => 1,
                 'step' => 1,
@@ -2249,7 +2249,7 @@ function kangoo_register_flavour_term_asset_acf_fields() {
                 'label' => __('Flavour Icon', 'kangoo'),
                 'name' => 'flavour_icon',
                 'type' => 'image',
-                'instructions' => __('Used by compact product facts on product pages.', 'kangoo'),
+                'instructions' => __('Used by product fact badges on product pages.', 'kangoo'),
                 'return_format' => 'id',
                 'preview_size' => 'thumbnail',
                 'library' => 'all',
@@ -3192,8 +3192,7 @@ function kangoo_render_pack_pricing_selector() {
     }
 
     $stock_limit = kangoo_get_product_stock_limit($product);
-    $display_tiers = array();
-    $selectable_tiers = array();
+    $available_tiers = array();
 
     foreach ($tiers as $tier) {
         $quantity = isset($tier['quantity']) ? (int) $tier['quantity'] : 0;
@@ -3202,20 +3201,20 @@ function kangoo_render_pack_pricing_selector() {
             continue;
         }
 
-        $display_tiers[] = $tier;
-
-        if ($stock_limit === null || $quantity <= $stock_limit) {
-            $selectable_tiers[] = $tier;
+        if ($stock_limit !== null && $quantity > $stock_limit) {
+            continue;
         }
+
+        $available_tiers[] = $tier;
     }
 
-    if (empty($display_tiers)) {
+    if (empty($available_tiers)) {
         return;
     }
 
-    $active_quantity = !empty($selectable_tiers) ? (int) $selectable_tiers[0]['quantity'] : 0;
+    $active_quantity = (int) $available_tiers[0]['quantity'];
 
-    foreach ($selectable_tiers as $tier) {
+    foreach ($available_tiers as $tier) {
         if (!empty($tier['default_selected'])) {
             $active_quantity = (int) $tier['quantity'];
             break;
@@ -3227,13 +3226,12 @@ function kangoo_render_pack_pricing_selector() {
     <div class="pack-pricing" data-pack-pricing>
         <span class="pack-pricing__label"><?php esc_html_e('Choose pack size', 'kangoo'); ?></span>
         <div class="pack-pricing__options">
-            <?php foreach ($display_tiers as $tier) : ?>
+            <?php foreach ($available_tiers as $tier) : ?>
                 <?php
                 $quantity = (int) $tier['quantity'];
                 $pack_price = (float) $tier['pack_price'];
                 $unit_price = (float) $tier['unit_price'];
-                $is_disabled = $stock_limit !== null && $quantity > $stock_limit;
-                $is_active = !$is_disabled && !$active_set && $quantity === $active_quantity;
+                $is_active = !$active_set && $quantity === $active_quantity;
 
                 if ($is_active) {
                     $active_set = true;
@@ -3241,13 +3239,11 @@ function kangoo_render_pack_pricing_selector() {
                 ?>
                 <button
                     type="button"
-                    class="pack-pricing__option<?php echo $is_active ? ' is-active' : ''; ?><?php echo $is_disabled ? ' is-disabled' : ''; ?>"
+                    class="pack-pricing__option<?php echo $is_active ? ' is-active' : ''; ?>"
                     data-pack-qty="<?php echo esc_attr($quantity); ?>"
                     data-pack-price="<?php echo esc_attr($pack_price); ?>"
                     data-unit-price="<?php echo esc_attr($unit_price); ?>"
                     aria-pressed="<?php echo $is_active ? 'true' : 'false'; ?>"
-                    <?php disabled($is_disabled); ?>
-                    <?php echo $is_disabled ? 'aria-disabled="true"' : ''; ?>
                 >
                     <span class="pack-pricing__name">
                         <?php

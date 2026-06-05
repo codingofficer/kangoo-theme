@@ -2209,8 +2209,7 @@ jQuery(function ($) {
 
       $option
         .prop('disabled', isUnavailable)
-        .prop('hidden', false)
-        .removeAttr('hidden')
+        .prop('hidden', isUnavailable)
         .toggleClass('is-disabled', isUnavailable);
 
       const $badge = $option.find('.pack-pricing__badge');
