@@ -40,6 +40,7 @@
 
 .product-trust {
   display: flex;
+  justify-content: center;
   gap: var(--space-2);
   flex-wrap: wrap;
   margin-top: var(--space-4);
