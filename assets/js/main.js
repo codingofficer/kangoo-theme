@@ -1381,26 +1381,26 @@ document.addEventListener('DOMContentLoaded', function () {
       tracked48: {
         key: 'tracked48',
         title: 'Royal Mail Tracked 48',
-        estimate: 'Delivered in 2\u20133 working days',
+        estimate: 'Delivered in 2-3 working days',
         promo: 'FREE over ' + getCheckoutDeliveryThresholdLabel(),
         badge: 'Most Popular'
       },
       tracked24: {
         key: 'tracked24',
         title: 'Royal Mail Tracked 24',
-        estimate: 'Delivered in 1\u20132 working days'
+        estimate: 'Delivered in 1-2 working days'
       },
       special: {
         key: 'special',
         title: 'Royal Mail Special Delivery',
         estimate: 'Next working day delivery',
-        subtext: 'Order before 1pm Mon\u2013Fri'
+        subtext: 'Order before 1pm Mon-Fri'
       },
       special1pm: {
         key: 'special1pm',
         title: 'Royal Mail Special Delivery by 1pm',
         estimate: 'Next working day before 1pm',
-        subtext: 'Order before 1pm Mon\u2013Fri'
+        subtext: 'Order before 1pm Mon-Fri'
       }
     };
   }
@@ -1408,6 +1408,10 @@ document.addEventListener('DOMContentLoaded', function () {
   function getDeliveryOptionConfig(text) {
     const cleanText = String(text || '').toLowerCase();
     const configs = getDeliveryCardConfigs();
+
+    if (/free\s*shipping/.test(cleanText)) {
+      return configs.tracked48;
+    }
 
     if (!/(royal mail|tracked|special|next day|guaranteed)/i.test(cleanText)) {
       return null;
@@ -1499,16 +1503,6 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function getDeliveryPriceText(row, config) {
-    const freeShippingThreshold = getConfiguredFreeShippingThreshold('standard_free_shipping_threshold', 14.95);
-    const subtotal = getCartOrCheckoutSubtotal();
-
-    if (config && config.key === 'tracked48' && subtotal !== null && subtotal >= freeShippingThreshold) {
-      return {
-        amount: 'FREE',
-        note: 'on orders over ' + getCheckoutDeliveryThresholdLabel()
-      };
-    }
-
     const clone = row.cloneNode(true);
     clone.querySelectorAll('.kp-delivery-card-body, .kp-delivery-heading, .kp-delivery-assurance').forEach(function (node) {
       node.remove();
@@ -1536,6 +1530,17 @@ document.addEventListener('DOMContentLoaded', function () {
       amount: rawPrice,
       note: ''
     };
+  }
+
+  function isFreeDeliveryOption(row, config) {
+    if (!row || !config || config.key !== 'tracked48') {
+      return false;
+    }
+
+    const text = getDeliveryOriginalText(row);
+    const price = getDeliveryPriceText(row, config);
+
+    return /free\s*shipping/i.test(text) || price.amount === 'FREE';
   }
 
   function getDeliveryHeadingHtml() {
@@ -1664,6 +1669,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     const enhancedOptions = [];
+    const deliveryOptions = [];
     const groups = new Set();
 
     getDeliveryShippingInputs().forEach(function (input) {
@@ -1682,6 +1688,33 @@ document.addEventListener('DOMContentLoaded', function () {
 
       const group = getDeliveryOptionsGroup(row);
       const section = row.closest('.wp-block-woocommerce-checkout-shipping-method-block, .wc-block-checkout__shipping-option, .woocommerce-shipping-methods, #shipping_method');
+      const isFreeTracked48 = isFreeDeliveryOption(row, config);
+
+      deliveryOptions.push({
+        input: input,
+        row: row,
+        config: config,
+        group: group,
+        section: section,
+        isFreeTracked48: isFreeTracked48
+      });
+    });
+
+    const freeTracked48Option = deliveryOptions.find(function (option) {
+      return option.isFreeTracked48;
+    });
+
+    deliveryOptions.forEach(function (option) {
+      const input = option.input;
+      const row = option.row;
+      const config = option.config;
+      const group = option.group;
+      const section = option.section;
+      const shouldHidePaidTracked48 = Boolean(
+        freeTracked48Option
+        && config.key === 'tracked48'
+        && !option.isFreeTracked48
+      );
 
       if (section) {
         section.classList.add('kp-delivery-enhanced-section');
@@ -1692,6 +1725,17 @@ document.addEventListener('DOMContentLoaded', function () {
         groups.add(group);
       }
 
+      if (shouldHidePaidTracked48) {
+        row.classList.add('kp-delivery-card-hidden');
+
+        if (input.checked && !freeTracked48Option.input.checked && !freeTracked48Option.input.disabled) {
+          freeTracked48Option.input.click();
+        }
+
+        return;
+      }
+
+      row.classList.remove('kp-delivery-card-hidden');
       renderDeliveryCard(row, input, config);
       enhancedOptions.push({ input: input, config: config });
     });
