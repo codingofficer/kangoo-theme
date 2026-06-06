@@ -772,7 +772,7 @@ body.woocommerce-checkout .kp-delivery-options .kp-delivery-card.wc-block-compon
   padding: 0 !important;
   overflow: hidden !important;
   border: 1px solid #e5e7eb !important;
-  border-radius: 18px !important;
+  border-radius: 12px !important;
   background: #ffffff !important;
   color: #111827 !important;
   box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06) !important;
@@ -864,7 +864,7 @@ body.woocommerce-checkout .kp-delivery-logo {
   align-items: center;
   justify-content: center;
   padding: 1rem;
-  border-radius: 16px;
+  border-radius: 12px;
   background: linear-gradient(135deg, #fff3ec, #fff8f3);
 }
 
@@ -964,7 +964,7 @@ body.woocommerce-checkout .kp-delivery-assurance {
   gap: 0.95rem;
   margin-top: 0.25rem;
   padding: clamp(0.9rem, 2.6vw, 1.15rem);
-  border-radius: 16px;
+  border-radius: 12px;
   background: linear-gradient(135deg, #fff7ed, #fff2e7);
   color: #111827;
 }
@@ -1036,7 +1036,7 @@ body.woocommerce-checkout .kp-delivery-assurance small {
   }
 
   body.woocommerce-checkout .kp-delivery-card {
-    border-radius: 14px !important;
+    border-radius: 12px !important;
   }
 
   body.woocommerce-checkout .kp-delivery-card-body {
