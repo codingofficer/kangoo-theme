@@ -1093,6 +1093,7 @@ function kangoo_enqueue_assets() {
         'ajax_url'        => admin_url('admin-ajax.php'),
         'ajax_nonce'      => wp_create_nonce('kangoo_rewards_ajax'),
         'url_coupon_nonce' => wp_create_nonce('kangoo_url_coupon'),
+        'theme_url'       => get_template_directory_uri(),
         'store_api_url'   => esc_url_raw(rest_url('wc/store/v1/cart')),
         'store_api_nonce' => wp_create_nonce('wc_store_api'),
         'coupon_code'     => kangoo_rewards_coupon_code(),

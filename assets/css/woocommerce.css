@@ -698,6 +698,422 @@ body.woocommerce-cart .wc-block-grid__product-add-to-cart .wp-block-button__link
   font-weight: 800 !important;
 }
 
+body.woocommerce-checkout .kp-delivery-enhanced-section > h2,
+body.woocommerce-checkout .kp-delivery-enhanced-section > .wc-block-components-title,
+body.woocommerce-checkout .kp-delivery-enhanced-section > .wc-block-components-checkout-step__heading,
+body.woocommerce-checkout .kp-delivery-enhanced-section > .wc-block-components-checkout-step__heading-content {
+  display: none !important;
+}
+
+body.woocommerce-checkout .kp-delivery-options {
+  display: grid !important;
+  gap: 0.9rem !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  color: #111827 !important;
+  list-style: none !important;
+}
+
+body.woocommerce-checkout .kp-delivery-heading {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 0.85rem;
+  margin: 0 0 0.35rem;
+  color: #111827;
+}
+
+body.woocommerce-checkout .kp-delivery-heading__icon {
+  display: inline-flex;
+  width: 42px;
+  height: 42px;
+  align-items: center;
+  justify-content: center;
+  color: #111827;
+}
+
+body.woocommerce-checkout .kp-delivery-heading__icon svg {
+  width: 34px;
+  height: 34px;
+  display: block;
+}
+
+body.woocommerce-checkout .kp-delivery-heading__copy {
+  display: grid;
+  gap: 0.18rem;
+  min-width: 0;
+}
+
+body.woocommerce-checkout .kp-delivery-heading__copy strong {
+  color: #050816;
+  font-size: clamp(1.7rem, 5vw, 2.5rem);
+  font-weight: 900;
+  letter-spacing: 0;
+  line-height: 1.05;
+}
+
+body.woocommerce-checkout .kp-delivery-heading__copy small {
+  color: #5f6673;
+  font-size: clamp(0.98rem, 2.7vw, 1.32rem);
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+body.woocommerce-checkout .kp-delivery-card,
+body.woocommerce-checkout .kp-delivery-options .kp-delivery-card.wc-block-components-radio-control__option,
+body.woocommerce-checkout .kp-delivery-options .kp-delivery-card.wc-block-components-radio-control-accordion-option {
+  position: relative !important;
+  display: block !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 18px !important;
+  background: #ffffff !important;
+  color: #111827 !important;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06) !important;
+  cursor: pointer;
+  transition: border-color 160ms ease, background-color 160ms ease, box-shadow 160ms ease;
+}
+
+body.woocommerce-checkout .kp-delivery-card:hover {
+  border-color: #fed7aa !important;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08) !important;
+}
+
+body.woocommerce-checkout .kp-delivery-card.is-selected {
+  border-color: #f97316 !important;
+  background: #fff7ed !important;
+  box-shadow: 0 12px 32px rgba(249, 115, 22, 0.1) !important;
+}
+
+body.woocommerce-checkout .kp-delivery-card-body {
+  display: grid;
+  grid-template-columns: 38px 116px minmax(0, 1fr) minmax(92px, auto);
+  align-items: center;
+  gap: clamp(0.85rem, 2.4vw, 1.45rem);
+  width: 100%;
+  min-height: 122px;
+  padding: clamp(0.9rem, 2.5vw, 1.35rem);
+}
+
+body.woocommerce-checkout .kp-delivery-card input[type="radio"].kp-delivery-input,
+body.woocommerce-checkout .kp-delivery-card .wc-block-components-radio-control__input.kp-delivery-input {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  clip: rect(0 0 0 0) !important;
+  clip-path: inset(50%) !important;
+}
+
+body.woocommerce-checkout .kp-delivery-card .wc-block-components-radio-control__option-layout,
+body.woocommerce-checkout .kp-delivery-card .wc-block-components-radio-control__label-group,
+body.woocommerce-checkout .kp-delivery-card .wc-block-components-radio-control__label,
+body.woocommerce-checkout .kp-delivery-card .wc-block-components-radio-control__secondary-label,
+body.woocommerce-checkout .kp-delivery-card > label {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: -1px !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+  clip: rect(0 0 0 0) !important;
+  clip-path: inset(50%) !important;
+}
+
+body.woocommerce-checkout .kp-delivery-radio {
+  display: inline-flex;
+  width: 30px;
+  height: 30px;
+  align-items: center;
+  justify-content: center;
+  justify-self: center;
+  border: 2px solid #8a929e;
+  border-radius: 999px;
+  background: #ffffff;
+}
+
+body.woocommerce-checkout .kp-delivery-card.is-selected .kp-delivery-radio {
+  border-color: #f97316;
+  background: #ffffff;
+  box-shadow: 0 0 0 5px rgba(249, 115, 22, 0.16);
+}
+
+body.woocommerce-checkout .kp-delivery-card.is-selected .kp-delivery-radio::before {
+  content: "";
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  background: #f97316;
+}
+
+body.woocommerce-checkout .kp-delivery-logo {
+  display: inline-flex;
+  width: 116px;
+  height: 90px;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #fff3ec, #fff8f3);
+}
+
+body.woocommerce-checkout .kp-delivery-logo img {
+  display: block;
+  max-width: 82px;
+  width: 100%;
+  height: auto;
+}
+
+body.woocommerce-checkout .kp-delivery-content {
+  display: grid;
+  gap: 0.28rem;
+  min-width: 0;
+}
+
+body.woocommerce-checkout .kp-delivery-title {
+  display: block;
+  color: #050816;
+  font-size: clamp(1.05rem, 2.4vw, 1.45rem);
+  font-weight: 900;
+  letter-spacing: 0;
+  line-height: 1.15;
+}
+
+body.woocommerce-checkout .kp-delivery-estimate,
+body.woocommerce-checkout .kp-delivery-subtext {
+  display: block;
+  color: #5f6673;
+  font-size: clamp(0.9rem, 2vw, 1.08rem);
+  font-weight: 500;
+  line-height: 1.28;
+}
+
+body.woocommerce-checkout .kp-delivery-subtext {
+  color: #8a929e;
+}
+
+body.woocommerce-checkout .kp-delivery-promo {
+  display: block;
+  color: #16a34a;
+  font-size: clamp(0.9rem, 2vw, 1.08rem);
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+body.woocommerce-checkout .kp-delivery-badge {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  gap: 0.38rem;
+  margin-top: 0.28rem;
+  padding: 0.36rem 0.7rem;
+  border: 1px solid #fed7aa;
+  border-radius: 999px;
+  background: #fff7ed;
+  color: #f97316;
+  font-size: clamp(0.82rem, 1.8vw, 0.98rem);
+  font-weight: 900;
+  line-height: 1;
+}
+
+body.woocommerce-checkout .kp-delivery-price {
+  display: grid;
+  justify-items: end;
+  align-self: center;
+  gap: 0.18rem;
+  min-width: 0;
+  color: #050816;
+  text-align: right;
+}
+
+body.woocommerce-checkout .kp-delivery-price strong {
+  color: #050816;
+  font-size: clamp(1.18rem, 3vw, 1.85rem);
+  font-weight: 950;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+body.woocommerce-checkout .kp-delivery-card.is-selected .kp-delivery-price strong {
+  color: #f97316;
+}
+
+body.woocommerce-checkout .kp-delivery-price small {
+  max-width: 7.5rem;
+  color: #5f6673;
+  font-size: clamp(0.82rem, 1.7vw, 1rem);
+  font-weight: 650;
+  line-height: 1.25;
+}
+
+body.woocommerce-checkout .kp-delivery-assurance {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 0.95rem;
+  margin-top: 0.25rem;
+  padding: clamp(0.9rem, 2.6vw, 1.15rem);
+  border-radius: 16px;
+  background: linear-gradient(135deg, #fff7ed, #fff2e7);
+  color: #111827;
+}
+
+body.woocommerce-checkout .kp-delivery-assurance__icon {
+  display: inline-flex;
+  width: 46px;
+  height: 46px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: #fed7aa;
+  color: #f97316;
+}
+
+body.woocommerce-checkout .kp-delivery-assurance__icon svg {
+  width: 26px;
+  height: 26px;
+  display: block;
+}
+
+body.woocommerce-checkout .kp-delivery-assurance span:last-child {
+  display: grid;
+  gap: 0.22rem;
+  min-width: 0;
+}
+
+body.woocommerce-checkout .kp-delivery-assurance strong {
+  color: #111827;
+  font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+  font-weight: 850;
+  line-height: 1.2;
+}
+
+body.woocommerce-checkout .kp-delivery-assurance small {
+  color: #5f6673;
+  font-size: clamp(0.82rem, 1.8vw, 0.98rem);
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+@media (max-width: 700px) {
+  body.woocommerce-checkout .kp-delivery-options {
+    gap: 0.72rem !important;
+  }
+
+  body.woocommerce-checkout .kp-delivery-heading {
+    grid-template-columns: 34px minmax(0, 1fr);
+    gap: 0.65rem;
+    margin-bottom: 0.2rem;
+  }
+
+  body.woocommerce-checkout .kp-delivery-heading__icon {
+    width: 34px;
+    height: 34px;
+  }
+
+  body.woocommerce-checkout .kp-delivery-heading__icon svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  body.woocommerce-checkout .kp-delivery-heading__copy strong {
+    font-size: 1.65rem;
+  }
+
+  body.woocommerce-checkout .kp-delivery-heading__copy small {
+    font-size: 1rem;
+  }
+
+  body.woocommerce-checkout .kp-delivery-card {
+    border-radius: 14px !important;
+  }
+
+  body.woocommerce-checkout .kp-delivery-card-body {
+    grid-template-columns: 28px 70px minmax(0, 1fr) minmax(58px, auto);
+    gap: 0.62rem;
+    min-height: 92px;
+    padding: 0.72rem;
+  }
+
+  body.woocommerce-checkout .kp-delivery-radio {
+    width: 24px;
+    height: 24px;
+    border-width: 1.8px;
+  }
+
+  body.woocommerce-checkout .kp-delivery-card.is-selected .kp-delivery-radio {
+    box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.14);
+  }
+
+  body.woocommerce-checkout .kp-delivery-card.is-selected .kp-delivery-radio::before {
+    width: 12px;
+    height: 12px;
+  }
+
+  body.woocommerce-checkout .kp-delivery-logo {
+    width: 70px;
+    height: 64px;
+    padding: 0.55rem;
+    border-radius: 12px;
+  }
+
+  body.woocommerce-checkout .kp-delivery-logo img {
+    max-width: 54px;
+  }
+
+  body.woocommerce-checkout .kp-delivery-title {
+    font-size: 0.95rem;
+  }
+
+  body.woocommerce-checkout .kp-delivery-estimate,
+  body.woocommerce-checkout .kp-delivery-subtext,
+  body.woocommerce-checkout .kp-delivery-promo {
+    font-size: 0.78rem;
+  }
+
+  body.woocommerce-checkout .kp-delivery-badge {
+    padding: 0.28rem 0.5rem;
+    font-size: 0.74rem;
+  }
+
+  body.woocommerce-checkout .kp-delivery-price strong {
+    font-size: 1rem;
+  }
+
+  body.woocommerce-checkout .kp-delivery-price small {
+    max-width: 4.2rem;
+    font-size: 0.72rem;
+  }
+
+  body.woocommerce-checkout .kp-delivery-assurance {
+    grid-template-columns: 38px minmax(0, 1fr);
+    gap: 0.7rem;
+    padding: 0.8rem;
+    border-radius: 12px;
+  }
+
+  body.woocommerce-checkout .kp-delivery-assurance__icon {
+    width: 38px;
+    height: 38px;
+  }
+
+  body.woocommerce-checkout .kp-delivery-assurance__icon svg {
+    width: 22px;
+    height: 22px;
+  }
+}
+
 .kangoo-free-shipping-nudge {
   display: grid;
   gap: 0.75rem;

@@ -1363,6 +1363,428 @@ document.addEventListener('DOMContentLoaded', function () {
     ].join('');
   }
 
+  function getCheckoutDeliveryThresholdLabel() {
+    const threshold = getConfiguredFreeShippingThreshold('standard_free_shipping_threshold', 14.95);
+    return formatCheckoutMoney(threshold).replace(/\.00$/, '');
+  }
+
+  function getThemeAssetUrl(path) {
+    const baseUrl = window.kangooRewards && window.kangooRewards.theme_url
+      ? String(window.kangooRewards.theme_url)
+      : '/wp-content/themes/kangoo-theme';
+
+    return baseUrl.replace(/\/$/, '') + '/' + String(path || '').replace(/^\//, '');
+  }
+
+  function getDeliveryCardConfigs() {
+    return {
+      tracked48: {
+        key: 'tracked48',
+        title: 'Royal Mail Tracked 48',
+        estimate: 'Delivered in 2\u20133 working days',
+        promo: 'FREE over ' + getCheckoutDeliveryThresholdLabel(),
+        badge: 'Most Popular'
+      },
+      tracked24: {
+        key: 'tracked24',
+        title: 'Royal Mail Tracked 24',
+        estimate: 'Delivered in 1\u20132 working days'
+      },
+      special: {
+        key: 'special',
+        title: 'Royal Mail Special Delivery',
+        estimate: 'Next working day delivery',
+        subtext: 'Order before 1pm Mon\u2013Fri'
+      },
+      special1pm: {
+        key: 'special1pm',
+        title: 'Royal Mail Special Delivery by 1pm',
+        estimate: 'Next working day before 1pm',
+        subtext: 'Order before 1pm Mon\u2013Fri'
+      }
+    };
+  }
+
+  function getDeliveryOptionConfig(text) {
+    const cleanText = String(text || '').toLowerCase();
+    const configs = getDeliveryCardConfigs();
+
+    if (!/(royal mail|tracked|special|next day|guaranteed)/i.test(cleanText)) {
+      return null;
+    }
+
+    if (/tracked\s*48|\b48\b/.test(cleanText)) {
+      return configs.tracked48;
+    }
+
+    if (/tracked\s*24|\b24\b/.test(cleanText)) {
+      return configs.tracked24;
+    }
+
+    if (/1\s*pm|1pm|by\s*1|guaranteed/.test(cleanText)) {
+      return configs.special1pm;
+    }
+
+    if (/special|next\s*day/.test(cleanText)) {
+      return configs.special;
+    }
+
+    return null;
+  }
+
+  function getDeliveryShippingInputs() {
+    const checkout = document.querySelector('.woocommerce-checkout');
+
+    if (!checkout) {
+      return [];
+    }
+
+    return Array.from(checkout.querySelectorAll([
+      'input[type="radio"][name^="shipping_method"]',
+      'input[type="radio"][name*="shipping_method"]',
+      'input[type="radio"][name*="shipping-method"]',
+      'input[type="radio"][name*="wc-shipping-method"]',
+      'input[type="radio"][name*="radio-control-wc-shipping"]',
+      'input[type="radio"][id*="shipping_method"]',
+      'input[type="radio"][id*="shipping-rate"]'
+    ].join(', '))).filter(function (input) {
+      return !input.closest('.wc-block-checkout__payment-method, .woocommerce-checkout-payment, #payment, .payment_box');
+    });
+  }
+
+  function getDeliveryOptionRow(input) {
+    return input.closest([
+      '.wc-block-components-radio-control__option',
+      '.wc-block-checkout__shipping-option',
+      '.woocommerce-shipping-methods li',
+      '#shipping_method li',
+      'li',
+      'label'
+    ].join(', ')) || input.parentElement;
+  }
+
+  function getDeliveryOptionsGroup(row) {
+    return row.closest([
+      '.wc-block-components-shipping-rates-control',
+      '.woocommerce-shipping-methods',
+      '#shipping_method',
+      '.wc-block-components-radio-control'
+    ].join(', ')) || row.parentElement;
+  }
+
+  function getDeliveryOriginalText(row) {
+    if (!row) {
+      return '';
+    }
+
+    if (row.dataset.kpDeliveryOriginalText) {
+      return row.dataset.kpDeliveryOriginalText;
+    }
+
+    const clone = row.cloneNode(true);
+    clone.querySelectorAll('.kp-delivery-card-body, .kp-delivery-heading, .kp-delivery-assurance').forEach(function (node) {
+      node.remove();
+    });
+
+    const text = (clone.textContent || '').replace(/\s+/g, ' ').trim();
+    row.dataset.kpDeliveryOriginalText = text;
+
+    return text;
+  }
+
+  function getDeliveryPriceText(row, config) {
+    const freeShippingThreshold = getConfiguredFreeShippingThreshold('standard_free_shipping_threshold', 14.95);
+    const subtotal = getCartOrCheckoutSubtotal();
+
+    if (config && config.key === 'tracked48' && subtotal !== null && subtotal >= freeShippingThreshold) {
+      return {
+        amount: 'FREE',
+        note: 'on orders over ' + getCheckoutDeliveryThresholdLabel()
+      };
+    }
+
+    const clone = row.cloneNode(true);
+    clone.querySelectorAll('.kp-delivery-card-body, .kp-delivery-heading, .kp-delivery-assurance').forEach(function (node) {
+      node.remove();
+    });
+
+    const priceNode = clone.querySelector([
+      '.wc-block-components-radio-control__secondary-label',
+      '.woocommerce-Price-amount',
+      '.amount',
+      '[class*="price"]'
+    ].join(', '));
+    const priceSource = priceNode ? priceNode.textContent : getDeliveryOriginalText(row);
+    const matches = String(priceSource || '').match(/free|\u00a3\s?\d+(?:\.\d{1,2})?/ig);
+    const rawPrice = matches && matches.length ? matches[matches.length - 1].replace(/\s+/g, '') : '';
+    const isFree = /free|\u00a30(?:\.00)?/i.test(rawPrice);
+
+    if (isFree) {
+      return {
+        amount: 'FREE',
+        note: config && config.key === 'tracked48' ? 'on orders over ' + getCheckoutDeliveryThresholdLabel() : ''
+      };
+    }
+
+    return {
+      amount: rawPrice,
+      note: ''
+    };
+  }
+
+  function getDeliveryHeadingHtml() {
+    return [
+      '<div class="kp-delivery-heading" data-kp-delivery-heading>',
+      '<span class="kp-delivery-heading__icon" aria-hidden="true">',
+      '<svg viewBox="0 0 24 24" focusable="false">',
+      '<path d="M3 7h11v10H3zM14 11h3.5l2.5 3v3h-6z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>',
+      '<path d="M6.5 19a1.7 1.7 0 1 0 0-3.4 1.7 1.7 0 0 0 0 3.4ZM17.5 19a1.7 1.7 0 1 0 0-3.4 1.7 1.7 0 0 0 0 3.4Z" fill="none" stroke="currentColor" stroke-width="1.8"/>',
+      '</svg>',
+      '</span>',
+      '<span class="kp-delivery-heading__copy">',
+      '<strong>Delivery Options</strong>',
+      '<small>Choose your preferred delivery method</small>',
+      '</span>',
+      '</div>'
+    ].join('');
+  }
+
+  function getDeliveryAssuranceHtml() {
+    return [
+      '<div class="kp-delivery-assurance" data-kp-delivery-assurance>',
+      '<span class="kp-delivery-assurance__icon" aria-hidden="true">',
+      '<svg viewBox="0 0 24 24" focusable="false">',
+      '<path d="M12 3.5 18 6v5.3c0 3.9-2.4 7.2-6 8.2-3.6-1-6-4.3-6-8.2V6l6-2.5Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>',
+      '<path d="m9.2 11.8 1.8 1.8 3.8-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>',
+      '</svg>',
+      '</span>',
+      '<span>',
+      '<strong>Dispatched fast. Delivered reliably.</strong>',
+      '<small>All orders are sent with tracking so you can follow your order every step of the way.</small>',
+      '</span>',
+      '</div>'
+    ].join('');
+  }
+
+  function renderDeliveryCard(row, input, config) {
+    const price = getDeliveryPriceText(row, config);
+    const logoUrl = getThemeAssetUrl('assets/images/icons8-royal-mail.svg');
+    const stateKey = [config.key, price.amount, price.note, config.promo || ''].join('|');
+    let shell = row.querySelector('.kp-delivery-card-body');
+
+    if (!row.classList.contains('kp-delivery-card')) {
+      row.classList.add('kp-delivery-card');
+    }
+
+    if (row.dataset.kpDeliveryOption !== config.key) {
+      row.dataset.kpDeliveryOption = config.key;
+    }
+    if (row.getAttribute('role') !== 'radio') {
+      row.setAttribute('role', 'radio');
+    }
+
+    const checkedValue = input.checked ? 'true' : 'false';
+    if (row.getAttribute('aria-checked') !== checkedValue) {
+      row.setAttribute('aria-checked', checkedValue);
+    }
+
+    const tabIndexValue = input.disabled ? '-1' : '0';
+    if (row.getAttribute('tabindex') !== tabIndexValue) {
+      row.setAttribute('tabindex', tabIndexValue);
+    }
+
+    if (!input.classList.contains('kp-delivery-input')) {
+      input.classList.add('kp-delivery-input');
+    }
+
+    if (!shell) {
+      shell = document.createElement('span');
+      shell.className = 'kp-delivery-card-body';
+      row.appendChild(shell);
+    }
+
+    if (shell.dataset.kpDeliveryCardState === stateKey) {
+      return;
+    }
+
+    shell.dataset.kpDeliveryCardState = stateKey;
+    shell.innerHTML = [
+      '<span class="kp-delivery-radio" aria-hidden="true"></span>',
+      '<span class="kp-delivery-logo" aria-hidden="true"><img src="', escapeHtml(logoUrl), '" alt=""></span>',
+      '<span class="kp-delivery-content">',
+      '<strong class="kp-delivery-title">', escapeHtml(config.title), '</strong>',
+      '<span class="kp-delivery-estimate">', escapeHtml(config.estimate), '</span>',
+      config.subtext ? '<span class="kp-delivery-subtext">' + escapeHtml(config.subtext) + '</span>' : '',
+      config.promo ? '<span class="kp-delivery-promo">' + escapeHtml(config.promo) + '</span>' : '',
+      config.badge ? '<span class="kp-delivery-badge"><span aria-hidden="true">&#9733;</span>' + escapeHtml(config.badge) + '</span>' : '',
+      '</span>',
+      '<span class="kp-delivery-price">',
+      price.amount ? '<strong>' + escapeHtml(price.amount) + '</strong>' : '',
+      price.note ? '<small>' + escapeHtml(price.note) + '</small>' : '',
+      '</span>'
+    ].join('');
+  }
+
+  function syncDeliveryCards() {
+    getDeliveryShippingInputs().forEach(function (input) {
+      const row = getDeliveryOptionRow(input);
+
+      if (!row || !row.classList.contains('kp-delivery-card')) {
+        return;
+      }
+
+      const isSelected = Boolean(input.checked);
+      const checkedValue = isSelected ? 'true' : 'false';
+
+      row.classList.toggle('is-selected', isSelected);
+
+      if (row.getAttribute('aria-checked') !== checkedValue) {
+        row.setAttribute('aria-checked', checkedValue);
+      }
+    });
+  }
+
+  function triggerDeliveryCheckoutUpdate() {
+    if (window.jQuery) {
+      window.jQuery(document.body).trigger('update_checkout');
+    }
+  }
+
+  function setupCheckoutDeliveryOptions() {
+    const checkout = document.querySelector('.woocommerce-checkout');
+
+    if (!checkout) {
+      return;
+    }
+
+    const enhancedOptions = [];
+    const groups = new Set();
+
+    getDeliveryShippingInputs().forEach(function (input) {
+      const row = getDeliveryOptionRow(input);
+
+      if (!row) {
+        return;
+      }
+
+      const originalText = getDeliveryOriginalText(row);
+      const config = getDeliveryOptionConfig(originalText);
+
+      if (!config) {
+        return;
+      }
+
+      const group = getDeliveryOptionsGroup(row);
+      const section = row.closest('.wp-block-woocommerce-checkout-shipping-method-block, .wc-block-checkout__shipping-option, .woocommerce-shipping-methods, #shipping_method');
+
+      if (section) {
+        section.classList.add('kp-delivery-enhanced-section');
+      }
+
+      if (group) {
+        group.classList.add('kp-delivery-options');
+        groups.add(group);
+      }
+
+      renderDeliveryCard(row, input, config);
+      enhancedOptions.push({ input: input, config: config });
+    });
+
+    groups.forEach(function (group) {
+      const isListGroup = group.matches && group.matches('ul, ol');
+      const deliveryRoot = isListGroup ? group.parentElement : group;
+
+      if (!deliveryRoot) {
+        return;
+      }
+
+      if (!deliveryRoot.querySelector('[data-kp-delivery-heading]')) {
+        if (isListGroup) {
+          group.insertAdjacentHTML('beforebegin', getDeliveryHeadingHtml());
+        } else {
+          group.insertAdjacentHTML('afterbegin', getDeliveryHeadingHtml());
+        }
+      }
+
+      if (!deliveryRoot.querySelector('[data-kp-delivery-assurance]')) {
+        if (isListGroup) {
+          group.insertAdjacentHTML('afterend', getDeliveryAssuranceHtml());
+        } else {
+          group.insertAdjacentHTML('beforeend', getDeliveryAssuranceHtml());
+        }
+      }
+    });
+
+    if (enhancedOptions.length && !enhancedOptions.some(function (option) { return option.input.checked; })) {
+      const preferredOption = enhancedOptions.find(function (option) {
+        return option.config.key === 'tracked48' && !option.input.disabled;
+      }) || enhancedOptions.find(function (option) {
+        return !option.input.disabled;
+      });
+
+      if (preferredOption) {
+        preferredOption.input.click();
+      }
+    }
+
+    syncDeliveryCards();
+  }
+
+  function setupDeliveryOptionsInteractions() {
+    if (body.dataset.kpDeliveryInteractionsReady === '1') {
+      return;
+    }
+
+    body.dataset.kpDeliveryInteractionsReady = '1';
+
+    document.addEventListener('click', function (event) {
+      const card = event.target.closest('.kp-delivery-card');
+
+      if (!card || !document.body.contains(card)) {
+        return;
+      }
+
+      const input = card.querySelector('input[type="radio"]');
+
+      if (!input || input.disabled) {
+        return;
+      }
+
+      if (!input.checked) {
+        event.preventDefault();
+        input.click();
+      }
+
+      window.setTimeout(syncDeliveryCards, 20);
+    });
+
+    document.addEventListener('keydown', function (event) {
+      const card = event.target.closest('.kp-delivery-card');
+
+      if (!card || ![' ', 'Enter'].includes(event.key)) {
+        return;
+      }
+
+      event.preventDefault();
+      card.click();
+    });
+
+    document.addEventListener('change', function (event) {
+      if (!event.target.matches('.kp-delivery-input')) {
+        return;
+      }
+
+      syncDeliveryCards();
+      triggerDeliveryCheckoutUpdate();
+    });
+
+    if (window.jQuery) {
+      window.jQuery(document.body).on('updated_checkout updated_wc_div wc_fragments_refreshed', function () {
+        setupCheckoutDeliveryOptions();
+      });
+    }
+  }
+
   function isValidEmail(email) {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email || '').trim());
   }
@@ -2519,6 +2941,8 @@ document.addEventListener('DOMContentLoaded', function () {
   setupCheckoutAgeVerificationRow();
   linkCheckoutTermsText();
   setupFreeShippingNudge();
+  setupDeliveryOptionsInteractions();
+  setupCheckoutDeliveryOptions();
   setupCartEmailCapture();
   setupCartSidebarPanels();
   setupCartSummaryLabels();
@@ -2534,6 +2958,7 @@ document.addEventListener('DOMContentLoaded', function () {
       setupCheckoutAgeVerificationRow();
       linkCheckoutTermsText();
       setupFreeShippingNudge();
+      setupCheckoutDeliveryOptions();
       setupCartEmailCapture();
       setupCartSidebarPanels();
       setupCartSummaryLabels();
