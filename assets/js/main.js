@@ -1381,26 +1381,26 @@ document.addEventListener('DOMContentLoaded', function () {
       tracked48: {
         key: 'tracked48',
         title: 'Royal Mail Tracked 48',
-        estimate: 'Delivered in 2-3 working days',
+        estimate: 'Delivered in 2 working days aim',
         promo: 'FREE over ' + getCheckoutDeliveryThresholdLabel(),
         badge: 'Most Popular'
       },
       tracked24: {
         key: 'tracked24',
         title: 'Royal Mail Tracked 24',
-        estimate: 'Delivered in 1-2 working days'
+        estimate: 'Delivered in 1 working day aim'
       },
       special: {
         key: 'special',
-        title: 'Royal Mail Special Delivery',
+        title: 'Next Day Delivery',
         estimate: 'Next working day delivery',
-        subtext: 'Order before 1pm Mon-Fri'
+        subtext: 'Order before 2pm Mon-Fri'
       },
       special1pm: {
         key: 'special1pm',
-        title: 'Royal Mail Special Delivery by 1pm',
+        title: 'Next Day by 1pm',
         estimate: 'Next working day before 1pm',
-        subtext: 'Order before 1pm Mon-Fri'
+        subtext: 'Order before 2pm Mon-Fri'
       }
     };
   }
@@ -2988,9 +2988,65 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
+  function formatDispatchCountdown(milliseconds) {
+    const totalSeconds = Math.max(0, Math.floor(milliseconds / 1000));
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+
+    return [hours, minutes, seconds].map(function (part) {
+      return String(part).padStart(2, '0');
+    }).join(':');
+  }
+
+  function setupProductDispatchTimers() {
+    document.querySelectorAll('[data-product-dispatch-timer]').forEach(function (timer) {
+      if (timer.dataset.dispatchTimerReady === '1') {
+        return;
+      }
+
+      const countdown = timer.querySelector('[data-dispatch-countdown]');
+      const label = timer.querySelector('[data-dispatch-label]');
+      const target = parseInt(timer.getAttribute('data-dispatch-target') || '', 10);
+      const activeLabel = timer.getAttribute('data-dispatch-label') || '';
+      const completeLabel = timer.getAttribute('data-dispatch-complete-label') || '';
+
+      if (!countdown || !target) {
+        return;
+      }
+
+      timer.dataset.dispatchTimerReady = '1';
+
+      function updateTimer() {
+        const remaining = target - Date.now();
+
+        if (remaining <= 0) {
+          if (label && completeLabel) {
+            label.textContent = completeLabel;
+          }
+
+          countdown.textContent = '00:00:00';
+          timer.classList.add('is-ended');
+          return;
+        }
+
+        if (label && activeLabel) {
+          label.textContent = activeLabel;
+        }
+
+        countdown.textContent = formatDispatchCountdown(remaining);
+        timer.classList.remove('is-ended');
+        window.setTimeout(updateTimer, 1000);
+      }
+
+      updateTimer();
+    });
+  }
+
   setupCheckoutAgeVerificationRow();
   linkCheckoutTermsText();
   setupFreeShippingNudge();
+  setupProductDispatchTimers();
   setupDeliveryOptionsInteractions();
   setupCheckoutDeliveryOptions();
   setupCartEmailCapture();

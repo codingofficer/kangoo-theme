@@ -105,6 +105,24 @@ $product_facts = array(
 
 $strength_siblings = function_exists('kangoo_get_product_strength_siblings') ? kangoo_get_product_strength_siblings($product) : array();
 $product_excerpt = trim((string) get_the_excerpt());
+$dispatch_now = current_datetime();
+$dispatch_today_cutoff = $dispatch_now->setTime(14, 0, 0);
+$dispatch_weekday = (int) $dispatch_now->format('N');
+$dispatch_timer_active = $dispatch_weekday <= 5 && $dispatch_now < $dispatch_today_cutoff;
+$dispatch_timer_target = $dispatch_today_cutoff;
+$dispatch_timer_label = __("Today's dispatch ends in", 'kangoo');
+$dispatch_timer_complete_label = __("Today's dispatch has ended", 'kangoo');
+
+if (!$dispatch_timer_active) {
+    $dispatch_timer_target = $dispatch_now->modify('+1 day')->setTime(0, 0, 0);
+
+    while ((int) $dispatch_timer_target->format('N') > 5) {
+        $dispatch_timer_target = $dispatch_timer_target->modify('+1 day');
+    }
+
+    $dispatch_timer_label = __('Next dispatch window opens in', 'kangoo');
+    $dispatch_timer_complete_label = __('Dispatch window open', 'kangoo');
+}
 
 $strength_attribute_name  = '';
 $strength_attribute_label = '';
@@ -275,6 +293,27 @@ foreach ($product_faq_rows as $product_faq_row) {
 						</div>
 					<?php endif; ?>
 
+					<div
+						class="product-dispatch-timer"
+						data-product-dispatch-timer
+						data-dispatch-target="<?php echo esc_attr($dispatch_timer_target->getTimestamp() * 1000); ?>"
+						data-dispatch-label="<?php echo esc_attr($dispatch_timer_label); ?>"
+						data-dispatch-complete-label="<?php echo esc_attr($dispatch_timer_complete_label); ?>"
+					>
+						<span class="product-dispatch-timer__icon" aria-hidden="true">
+							<svg viewBox="0 0 24 24" focusable="false">
+								<path d="M3 7h11v9H3z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+								<path d="M14 10h3.7l2.3 2.7V16h-6z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+								<circle cx="7" cy="18" r="1.8" fill="none" stroke="currentColor" stroke-width="1.8"/>
+								<circle cx="17" cy="18" r="1.8" fill="none" stroke="currentColor" stroke-width="1.8"/>
+							</svg>
+						</span>
+						<span class="product-dispatch-timer__copy">
+							<span data-dispatch-label><?php echo esc_html($dispatch_timer_label); ?></span>
+							<strong data-dispatch-countdown>--:--:--</strong>
+						</span>
+					</div>
+
                     <?php
                     $low_stock_message = function_exists('kangoo_get_low_stock_message') ? kangoo_get_low_stock_message($product) : '';
                     $suppress_stock_note = $is_99p_product;
@@ -422,8 +461,9 @@ foreach ($product_faq_rows as $product_faq_row) {
 
 			$delivery_info = '
 			<p><strong>Free UK Delivery over &pound;14.95</strong></p>
+			<p>Order before 2pm Monday-Friday for same-day dispatch.</p>
 			<ul>
-				<li>Same-day dispatch on orders placed before 10am</li>
+				<li>Orders placed before 2pm Monday-Friday are dispatched the same day. Orders placed after 2pm, on weekends, or on bank holidays will be dispatched on the next working day.</li>
 				<li>Free standard UK delivery on orders over &pound;14.95</li>
 				<li>Shipped with Royal Mail</li>
 				<li>UK delivery only</li>
