@@ -1440,6 +1440,12 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     return Array.from(checkout.querySelectorAll([
+      '.wp-block-woocommerce-checkout-shipping-method-block input[type="radio"]',
+      '.wc-block-checkout__shipping-option input[type="radio"]',
+      '.wc-block-components-shipping-rates-control input[type="radio"]',
+      '.wc-block-components-shipping-methods input[type="radio"]',
+      '.woocommerce-shipping-methods input[type="radio"]',
+      '#shipping_method input[type="radio"]',
       'input[type="radio"][name^="shipping_method"]',
       'input[type="radio"][name*="shipping_method"]',
       'input[type="radio"][name*="shipping-method"]',
