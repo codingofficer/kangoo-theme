@@ -1811,7 +1811,9 @@ jQuery(function ($) {
     }
 
     if ($packUnit.length) {
-      $packUnit.text(formatCardPrice(unitPrice) + '/unit');
+      $packUnit
+        .prop('hidden', qty <= 1)
+        .text(qty > 1 ? formatCardPrice(unitPrice) + '/unit' : '');
     }
 
     $input.val(qty);
