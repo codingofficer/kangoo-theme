@@ -2281,10 +2281,11 @@ jQuery(function ($) {
         ? '<del aria-hidden="true">' + formatPackCurrency(regularTotal) + '</del> <ins><span class="pack-pricing-price">' + formatPackCurrency(total) + '</span></ins>'
         : '<span class="pack-pricing-price">' + formatPackCurrency(total) + '</span>';
 
-      $price.html(
-        totalPriceHtml +
-        '<span class="pack-pricing-price__unit">' + formatPackCurrency(tier.unitPrice) + '/unit</span>'
-      );
+      const unitPriceHtml = quantity > 1
+        ? '<span class="pack-pricing-price__unit">' + formatPackCurrency(tier.unitPrice) + '/unit</span>'
+        : '';
+
+      $price.html(totalPriceHtml + unitPriceHtml);
     }
 
     const $button = $form.find('.single_add_to_cart_button').first();

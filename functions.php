@@ -1904,6 +1904,21 @@ function kangoo_no_cache_cart_pages() {
 }
 add_action('template_redirect', 'kangoo_no_cache_cart_pages', 0);
 
+function kangoo_redirect_legacy_product_urls() {
+    if (empty($_SERVER['REQUEST_URI'])) {
+        return;
+    }
+
+    $path = wp_parse_url(esc_url_raw(wp_unslash($_SERVER['REQUEST_URI'])), PHP_URL_PATH);
+    $path = untrailingslashit((string) $path);
+
+    if ($path === '/product/velo/freezing-peppermint-11mg') {
+        wp_safe_redirect(home_url('/product/velo/freezing-peppermint-10-9mg/'), 301);
+        exit;
+    }
+}
+add_action('template_redirect', 'kangoo_redirect_legacy_product_urls', 1);
+
 /* =========================================================================
 BLOG
 ========================================================================= */
@@ -3322,7 +3337,9 @@ function kangoo_render_pack_pricing_selector() {
                         ?>
                     </span>
                     <span class="pack-pricing__price"><?php echo wp_kses_post(wc_price($pack_price)); ?></span>
-                    <span class="pack-pricing__unit"><?php echo wp_kses_post(wc_price($unit_price)); ?><?php esc_html_e('/unit', 'kangoo'); ?></span>
+                    <?php if ($quantity > 1) : ?>
+                        <span class="pack-pricing__unit"><?php echo wp_kses_post(wc_price($unit_price)); ?><?php esc_html_e('/unit', 'kangoo'); ?></span>
+                    <?php endif; ?>
                     <?php if (!empty($tier['badge'])) : ?>
                         <span class="pack-pricing__badge"><?php echo esc_html($tier['badge']); ?></span>
                     <?php endif; ?>
