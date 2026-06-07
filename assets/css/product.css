@@ -174,8 +174,8 @@ body.single-product .product-price-row .product-price {
 
 .pack-pricing__option {
   display: grid;
-  grid-template-columns: minmax(84px, 1fr) auto;
-  gap: 0.35rem var(--space-3);
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--space-3);
   align-items: center;
   width: 100%;
   padding: 0.9rem 1rem;
@@ -210,9 +210,26 @@ body.single-product .product-price-row .product-price {
   display: none !important;
 }
 
+.pack-pricing__details {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.8rem;
+  min-width: 0;
+}
+
 .pack-pricing__name,
 .pack-pricing__price {
   font-weight: 800;
+}
+
+.pack-pricing__price-group {
+  display: flex;
+  align-items: center;
+  justify-self: end;
+  gap: 0.5rem;
+  min-width: 0;
+  white-space: nowrap;
 }
 
 .pack-pricing__price {
@@ -222,10 +239,10 @@ body.single-product .product-price-row .product-price {
 .pack-pricing__unit {
   color: var(--color-text-soft);
   font-size: 0.9rem;
+  white-space: nowrap;
 }
 
 .pack-pricing__badge {
-  justify-self: end;
   width: fit-content;
   padding: 0.2rem 0.55rem;
   border: 1px solid rgba(19, 95, 234, 0.16);
@@ -235,6 +252,7 @@ body.single-product .product-price-row .product-price {
   font-size: 0.75rem;
   font-weight: 800;
   line-height: 1;
+  white-space: nowrap;
 }
 
 .pack-pricing__badge--muted {

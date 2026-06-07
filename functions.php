@@ -3328,21 +3328,25 @@ function kangoo_render_pack_pricing_selector() {
                     data-unit-price="<?php echo esc_attr($unit_price); ?>"
                     aria-pressed="<?php echo $is_active ? 'true' : 'false'; ?>"
                 >
-                    <span class="pack-pricing__name">
-                        <?php
-                        printf(
-                            esc_html(_n('%d-pack', '%d-pack', $quantity, 'kangoo')),
-                            $quantity
-                        );
-                        ?>
+                    <span class="pack-pricing__details">
+                        <span class="pack-pricing__name">
+                            <?php
+                            printf(
+                                esc_html(_n('%d-pack', '%d-pack', $quantity, 'kangoo')),
+                                $quantity
+                            );
+                            ?>
+                        </span>
+                        <?php if ($quantity > 1) : ?>
+                            <span class="pack-pricing__unit"><?php echo wp_kses_post(wc_price($unit_price)); ?><?php esc_html_e('/unit', 'kangoo'); ?></span>
+                        <?php endif; ?>
                     </span>
-                    <span class="pack-pricing__price"><?php echo wp_kses_post(wc_price($pack_price)); ?></span>
-                    <?php if ($quantity > 1) : ?>
-                        <span class="pack-pricing__unit"><?php echo wp_kses_post(wc_price($unit_price)); ?><?php esc_html_e('/unit', 'kangoo'); ?></span>
-                    <?php endif; ?>
-                    <?php if (!empty($tier['badge'])) : ?>
-                        <span class="pack-pricing__badge"><?php echo esc_html($tier['badge']); ?></span>
-                    <?php endif; ?>
+                    <span class="pack-pricing__price-group">
+                        <?php if (!empty($tier['badge'])) : ?>
+                            <span class="pack-pricing__badge"><?php echo esc_html($tier['badge']); ?></span>
+                        <?php endif; ?>
+                        <span class="pack-pricing__price"><?php echo wp_kses_post(wc_price($pack_price)); ?></span>
+                    </span>
                 </button>
             <?php endforeach; ?>
         </div>
