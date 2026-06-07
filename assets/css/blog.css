@@ -192,6 +192,16 @@
   margin-top: var(--space-7);
 }
 
+.blog-article__content h2 {
+  font-size: clamp(1.75rem, 5vw, 2rem);
+  line-height: 1.16;
+}
+
+.blog-article__content h3 {
+  font-size: clamp(1.25rem, 4vw, 1.45rem);
+  line-height: 1.2;
+}
+
 .blog-article__content a {
   color: var(--color-accent);
   text-decoration: underline;
@@ -224,6 +234,38 @@
   color: var(--color-text);
 }
 
+.blog-article__content table {
+  width: 100%;
+  max-width: 760px;
+  margin: var(--space-5) 0;
+  border: 1px solid var(--color-border);
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.03);
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+.blog-article__content th,
+.blog-article__content td {
+  padding: 0.8rem 0.9rem;
+  border-bottom: 1px solid var(--color-border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.blog-article__content th {
+  background: rgba(77, 163, 255, 0.08);
+  color: var(--color-text);
+  font-weight: 800;
+}
+
+.blog-article__content tr:last-child td {
+  border-bottom: 0;
+}
+
 .blog-article__aside {
   display: grid;
   align-content: start;
@@ -246,8 +288,25 @@
 
 .blog-aside-card dl {
   display: grid;
-  gap: var(--space-3);
+  gap: 0;
   margin: 0;
+}
+
+.blog-aside-card dl > div {
+  display: grid;
+  grid-template-columns: minmax(86px, auto) minmax(0, 1fr);
+  gap: 0.8rem;
+  padding: 0.72rem 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.blog-aside-card dl > div:first-child {
+  padding-top: 0;
+}
+
+.blog-aside-card dl > div:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
 }
 
 .blog-aside-card dt {
@@ -261,6 +320,7 @@
   flex-wrap: wrap;
   gap: var(--space-2);
   margin: 0;
+  min-width: 0;
 }
 
 .blog-aside-card dd a {
@@ -296,6 +356,24 @@
 
   .blog-article__standfirst {
     font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .blog-article__content table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .blog-article__content th,
+  .blog-article__content td {
+    padding: 0.72rem 0.78rem;
+  }
+
+  .blog-aside-card dl > div {
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
   }
 }
 

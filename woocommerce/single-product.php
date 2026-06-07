@@ -272,30 +272,32 @@ foreach ($product_faq_rows as $product_faq_row) {
                         </div>
                     <?php endif; ?>
 
-					<div
-						class="product-price"
-						id="product-price"
-						data-product-price="<?php echo esc_attr(wc_get_price_to_display($product)); ?>"
-						data-product-regular-price="<?php echo esc_attr((float) $product->get_regular_price()); ?>"
-					>
-						<?php echo wp_kses_post(function_exists('kangoo_get_product_price_html') ? kangoo_get_product_price_html($product) : $product->get_price_html()); ?>
-					</div>
-					
 					<?php
 					$regular_price = (float) $product->get_regular_price();
 					$current_price = (float) $product->get_price();
 					$saving        = max(0, $regular_price - $current_price);
 					?>
 
-					<?php if ($saving > 0) : ?>
+					<div class="product-price-row">
 						<div
-							class="product-saving"
-							data-single-saving
-							data-saving-per-item="<?php echo esc_attr($saving); ?>"
+							class="product-price"
+							id="product-price"
+							data-product-price="<?php echo esc_attr(wc_get_price_to_display($product)); ?>"
+							data-product-regular-price="<?php echo esc_attr((float) $product->get_regular_price()); ?>"
 						>
-							You save <?php echo wp_kses_post(wc_price($saving)); ?>
+							<?php echo wp_kses_post(function_exists('kangoo_get_product_price_html') ? kangoo_get_product_price_html($product) : $product->get_price_html()); ?>
 						</div>
-					<?php endif; ?>
+
+						<?php if ($saving > 0) : ?>
+							<div
+								class="product-saving"
+								data-single-saving
+								data-saving-per-item="<?php echo esc_attr($saving); ?>"
+							>
+								You save <?php echo wp_kses_post(wc_price($saving)); ?>
+							</div>
+						<?php endif; ?>
+					</div>
 
 					<div
 						class="product-dispatch-timer"
