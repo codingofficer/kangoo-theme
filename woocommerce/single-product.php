@@ -1,6 +1,10 @@
 <?php
 defined('ABSPATH') || exit;
 get_header();
+
+if (function_exists('kangoo_breadcrumbs')) {
+    kangoo_breadcrumbs();
+}
 ?>
 
 <?php while (have_posts()) : the_post(); global $product; ?>

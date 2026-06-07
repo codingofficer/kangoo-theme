@@ -3,6 +3,10 @@ defined('ABSPATH') || exit;
 
 get_header();
 
+if (function_exists('kangoo_breadcrumbs')) {
+    kangoo_breadcrumbs();
+}
+
 $term = get_queried_object();
 $term_id = $term instanceof WP_Term ? $term->term_id : 0;
 $term_taxonomy = $term instanceof WP_Term ? $term->taxonomy : '';

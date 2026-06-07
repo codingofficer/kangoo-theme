@@ -2717,28 +2717,22 @@ function kangoo_site_identity_schema() {
 }
 add_action('wp_head', 'kangoo_site_identity_schema', 18);
 
-function kangoo_schema_breadcrumb_item($position, $name, $url) {
-    return array(
-        '@type' => 'ListItem',
-        'position' => (int) $position,
-        'name' => wp_strip_all_tags($name),
-        'item' => kangoo_schema_url($url),
-    );
-}
-
-function kangoo_breadcrumb_schema() {
+function kangoo_get_breadcrumb_items() {
     if (is_front_page()) {
-        return;
+        return array();
     }
 
     $items = array(
-        kangoo_schema_breadcrumb_item(1, __('Home', 'kangoo'), home_url('/')),
+        array(
+            'name' => __('Home', 'kangoo'),
+            'url'  => home_url('/'),
+        ),
     );
 
     if (function_exists('is_product') && is_product()) {
         global $product;
 
-        if (!$product instanceof WC_Product) {
+        if (!$product instanceof WC_Product && function_exists('wc_get_product')) {
             $product = wc_get_product(get_the_ID());
         }
 
@@ -2753,14 +2747,23 @@ function kangoo_breadcrumb_schema() {
                     $ancestor = get_term($ancestor_id, 'product_cat');
 
                     if ($ancestor instanceof WP_Term && !is_wp_error($ancestor)) {
-                        $items[] = kangoo_schema_breadcrumb_item(count($items) + 1, $ancestor->name, get_term_link($ancestor));
+                        $items[] = array(
+                            'name' => $ancestor->name,
+                            'url'  => get_term_link($ancestor),
+                        );
                     }
                 }
 
-                $items[] = kangoo_schema_breadcrumb_item(count($items) + 1, $term->name, get_term_link($term));
+                $items[] = array(
+                    'name' => $term->name,
+                    'url'  => get_term_link($term),
+                );
             }
 
-            $items[] = kangoo_schema_breadcrumb_item(count($items) + 1, get_the_title($product->get_id()), get_permalink($product->get_id()));
+            $items[] = array(
+                'name' => get_the_title($product->get_id()),
+                'url'  => get_permalink($product->get_id()),
+            );
         }
     } elseif (is_product_category() || is_product_taxonomy() || is_category() || is_tax()) {
         $term = get_queried_object();
@@ -2772,22 +2775,60 @@ function kangoo_breadcrumb_schema() {
                 $ancestor = get_term($ancestor_id, $term->taxonomy);
 
                 if ($ancestor instanceof WP_Term && !is_wp_error($ancestor)) {
-                    $items[] = kangoo_schema_breadcrumb_item(count($items) + 1, $ancestor->name, get_term_link($ancestor));
+                    $items[] = array(
+                        'name' => $ancestor->name,
+                        'url'  => get_term_link($ancestor),
+                    );
                 }
             }
 
-            $items[] = kangoo_schema_breadcrumb_item(count($items) + 1, single_term_title('', false), get_term_link($term));
+            $items[] = array(
+                'name' => single_term_title('', false),
+                'url'  => get_term_link($term),
+            );
         }
     } elseif (is_singular()) {
-        $items[] = kangoo_schema_breadcrumb_item(count($items) + 1, get_the_title(), get_permalink());
+        $items[] = array(
+            'name' => get_the_title(),
+            'url'  => get_permalink(),
+        );
     } elseif (is_post_type_archive('kangoo_blog')) {
-        $items[] = kangoo_schema_breadcrumb_item(count($items) + 1, __('Blog', 'kangoo'), get_post_type_archive_link('kangoo_blog'));
+        $items[] = array(
+            'name' => __('Blog', 'kangoo'),
+            'url'  => get_post_type_archive_link('kangoo_blog'),
+        );
     } elseif (function_exists('is_shop') && is_shop()) {
-        $items[] = kangoo_schema_breadcrumb_item(count($items) + 1, __('Shop', 'kangoo'), get_permalink(wc_get_page_id('shop')));
+        $items[] = array(
+            'name' => __('Shop', 'kangoo'),
+            'url'  => get_permalink(wc_get_page_id('shop')),
+        );
     }
 
-    if (count($items) < 2) {
+    return array_values(array_filter($items, static function ($item) {
+        return !empty($item['name']) && !empty($item['url']) && !is_wp_error($item['url']);
+    }));
+}
+
+function kangoo_schema_breadcrumb_item($position, $name, $url) {
+    return array(
+        '@type' => 'ListItem',
+        'position' => (int) $position,
+        'name' => wp_strip_all_tags($name),
+        'item' => kangoo_schema_url($url),
+    );
+}
+
+function kangoo_breadcrumb_schema() {
+    $breadcrumb_items = kangoo_get_breadcrumb_items();
+
+    if (count($breadcrumb_items) < 2) {
         return;
+    }
+
+    $items = array();
+
+    foreach ($breadcrumb_items as $index => $item) {
+        $items[] = kangoo_schema_breadcrumb_item($index + 1, $item['name'], $item['url']);
     }
 
     kangoo_print_json_ld(array(
@@ -2797,6 +2838,32 @@ function kangoo_breadcrumb_schema() {
     ));
 }
 add_action('wp_head', 'kangoo_breadcrumb_schema', 19);
+
+function kangoo_breadcrumbs() {
+    $items = kangoo_get_breadcrumb_items();
+
+    if (count($items) < 2) {
+        return;
+    }
+    ?>
+    <nav class="kangoo-breadcrumbs" aria-label="<?php esc_attr_e('Breadcrumb', 'kangoo'); ?>">
+        <div class="container">
+            <ol class="kangoo-breadcrumbs__list">
+                <?php foreach ($items as $index => $item) : ?>
+                    <?php $is_current = $index === count($items) - 1; ?>
+                    <li>
+                        <?php if ($is_current) : ?>
+                            <span aria-current="page"><?php echo esc_html($item['name']); ?></span>
+                        <?php else : ?>
+                            <a href="<?php echo esc_url($item['url']); ?>"><?php echo esc_html($item['name']); ?></a>
+                        <?php endif; ?>
+                    </li>
+                <?php endforeach; ?>
+            </ol>
+        </div>
+    </nav>
+    <?php
+}
 
 function kangoo_product_schema() {
     if (!function_exists('is_product') || !is_product() || !function_exists('wc_get_product')) {

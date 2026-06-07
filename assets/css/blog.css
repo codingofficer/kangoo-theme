@@ -2,6 +2,11 @@
 ****************************BLOG********************************
 ****************************************************************/
 
+.blog-archive,
+.blog-single {
+  padding-top: 20px;
+}
+
 .blog-hero {
   padding: calc(var(--space-10) + 1rem) 0 var(--space-8);
   background:
