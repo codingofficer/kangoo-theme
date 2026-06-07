@@ -4,11 +4,15 @@
 
 .blog-archive,
 .blog-single {
-  padding-top: 20px;
+  padding-top: 32px;
+}
+
+.blog-hero,
+.blog-article__hero {
+  margin-top: 0;
 }
 
 .blog-hero {
-  margin-top: 20px;
   padding: calc(var(--space-10) + 1rem) 0 var(--space-8);
   background:
     linear-gradient(135deg, rgba(77, 163, 255, 0.14), transparent 34%),
@@ -17,6 +21,10 @@
 }
 
 .blog-archive .blog-hero {
+  padding-top: calc(var(--space-10) + 2rem);
+}
+
+.blog-single .blog-article__hero {
   padding-top: calc(var(--space-10) + 2rem);
 }
 
