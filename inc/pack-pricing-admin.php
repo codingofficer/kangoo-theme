@@ -19,7 +19,7 @@ function kangoo_pack_pricing_presets() {
             'label' => __('Standard', 'kangoo'),
             'regular_price' => '3.99',
             'tiers' => array(
-                array('quantity' => 1, 'pack_price' => '3.99', 'badge' => '', 'default_selected' => 1),
+                array('quantity' => 1, 'pack_price' => '2.99', 'badge' => '', 'default_selected' => 1),
                 array('quantity' => 3, 'pack_price' => '10.99', 'badge' => 'Popular', 'default_selected' => 0),
                 array('quantity' => 5, 'pack_price' => '17.99', 'badge' => 'Save more', 'default_selected' => 0),
                 array('quantity' => 10, 'pack_price' => '31.90', 'badge' => 'Best value', 'default_selected' => 0),
@@ -27,9 +27,9 @@ function kangoo_pack_pricing_presets() {
         ),
         'premium' => array(
             'label' => __('Premium / VELO', 'kangoo'),
-            'regular_price' => '4.49',
+            'regular_price' => '3.99',
             'tiers' => array(
-                array('quantity' => 1, 'pack_price' => '4.49', 'badge' => '', 'default_selected' => 1),
+                array('quantity' => 1, 'pack_price' => '2.99', 'badge' => '', 'default_selected' => 1),
                 array('quantity' => 3, 'pack_price' => '11.99', 'badge' => 'Popular', 'default_selected' => 0),
                 array('quantity' => 5, 'pack_price' => '19.95', 'badge' => 'Save more', 'default_selected' => 0),
                 array('quantity' => 10, 'pack_price' => '38.90', 'badge' => 'Best value', 'default_selected' => 0),
@@ -37,7 +37,7 @@ function kangoo_pack_pricing_presets() {
         ),
         'trial_99p' => array(
             'label' => __('99p Trial', 'kangoo'),
-            'regular_price' => '0.99',
+            'regular_price' => '3.99',
             'tiers' => array(),
         ),
     );
@@ -172,8 +172,8 @@ function kangoo_pack_pricing_apply_row($product_id, $regular_price, $tiers, $is_
 
     if ($regular_price !== '') {
         $product->set_regular_price($regular_price);
-        $product->set_sale_price('');
-        $product->set_price($regular_price);
+        $product->set_sale_price($is_99p ? kangoo_99p_price() : '2.99');
+        $product->set_price($is_99p ? kangoo_99p_price() : '2.99');
         $product->save();
     }
 
