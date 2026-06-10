@@ -3383,7 +3383,7 @@ function kangoo_apply_pack_pricing_to_cart($cart) {
 add_action('woocommerce_before_calculate_totals', 'kangoo_apply_pack_pricing_to_cart', 20);
 
 function kangoo_99p_price() {
-    return 0.99;
+    return 0.89;
 }
 
 function kangoo_99p_term_slugs() {
