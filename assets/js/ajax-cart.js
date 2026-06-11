@@ -1830,7 +1830,7 @@ jQuery(function ($) {
 
     if (!$button.hasClass('is-loading') && !$button.hasClass('is-added')) {
       $button.html($button.attr('data-card-compact-label') === '1'
-        ? 'Add to cart'
+        ? '+ Add'
         : 'Add to cart \u00b7 ' + formatCardPrice(total));
     }
   }

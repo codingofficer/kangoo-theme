@@ -464,6 +464,10 @@
   color: var(--color-accent);
 }
 
+.product-card .product-card__review-summary--empty {
+  display: none;
+}
+
 .kangoo-review-stars {
   display: inline-flex;
   gap: 0.08rem;
@@ -795,22 +799,47 @@
 
   .category-page .product-card__review-summary {
     min-height: 1em;
+    align-items: center;
     gap: 0.18rem;
     font-size: 0.63rem;
+    margin: 0;
   }
 
   .category-page .product-card__review-summary--empty .kangoo-review-stars {
-    color: #111827;
+    gap: 0.08rem;
+    color: #aeb5c0;
     letter-spacing: 0;
+  }
+
+  .category-page .product-card__review-summary--empty {
+    display: inline-flex;
+  }
+
+  .category-page .product-card__review-summary--empty .kangoo-review-stars .is-empty {
+    color: #aeb5c0;
   }
 
   .category-page .product-card__price,
   .category-page .price {
+    display: flex;
+    align-items: baseline;
+    gap: 0.3rem;
+    margin: 0;
     font-size: 0.92rem;
+  }
+
+  .category-page .product-card__price ins,
+  .category-page .price ins {
+    order: 1;
+    color: var(--color-text);
+    font-weight: 900;
+    text-decoration: none;
   }
 
   .category-page .product-card__price del,
   .category-page .price del {
+    order: 2;
+    color: var(--color-text-soft);
     font-size: 0.68rem;
   }
 
@@ -850,10 +879,19 @@
   }
 
   .category-page .product-card__actions {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
     margin-top: auto;
+  }
+
+  .category-page .product-card__actions:has(> .product-card__qty--pack) {
+    display: grid;
+    grid-template-columns: minmax(0, 42fr) minmax(0, 58fr);
+    gap: 0.4rem;
+    align-items: end;
+  }
+
+  .category-page .product-card__actions:has(> .product-card__qty--pack) .product-card__qty--pack {
+    width: 100%;
+    min-width: 0;
   }
 
   .category-page .product-card__pack-trigger span:first-child {
@@ -885,15 +923,15 @@
 
   .category-page .product-card__add,
   .category-page .product-card__actions .btn {
-    flex: 0 0 18px !important;
+    flex: none !important;
     width: 100%;
-    height: 18px !important;
-    min-height: 18px !important;
-    max-height: 18px !important;
-    margin-top: auto;
-    padding: 0 0.25rem !important;
-    border-radius: 6px;
-    font-size: 0.58rem;
+    height: 30px !important;
+    min-height: 30px !important;
+    max-height: 30px !important;
+    margin: 0 !important;
+    padding: 0 0.35rem !important;
+    border-radius: 8px;
+    font-size: 0.68rem;
     line-height: 1;
   }
 

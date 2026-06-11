@@ -274,7 +274,7 @@ if ($is_quick_add_card && $is_variable) {
 					rel="nofollow"
 				>
 					<?php if ($is_category_archive_card) : ?>
-						<?php esc_html_e('Add to cart', 'kangoo'); ?>
+						<?php esc_html_e('+ Add', 'kangoo'); ?>
 					<?php else : ?>
 						Add to cart &middot; <?php echo wp_kses_post(wc_price($default_total)); ?>
 					<?php endif; ?>
