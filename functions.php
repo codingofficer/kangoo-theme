@@ -3383,7 +3383,7 @@ function kangoo_apply_pack_pricing_to_cart($cart) {
 add_action('woocommerce_before_calculate_totals', 'kangoo_apply_pack_pricing_to_cart', 20);
 
 function kangoo_99p_price() {
-    return 0.89;
+    return 0.79;
 }
 
 function kangoo_99p_term_slugs() {
@@ -4398,7 +4398,7 @@ function kangoo_validate_99p_add_to_cart($passed, $product_id, $quantity, $varia
     }
 
     if ((int) $quantity > 1 || kangoo_get_cart_99p_quantity() >= 1) {
-        wc_add_notice(__('99p trial pouches are limited to 1 per order. You can still add any other products to your basket.', 'kangoo'), 'error');
+        wc_add_notice(__('79p trial pouches are limited to 1 per order. You can still add any other products to your basket.', 'kangoo'), 'error');
         return false;
     }
 
@@ -4414,7 +4414,7 @@ function kangoo_validate_99p_cart_update($passed, $cart_item_key, $values, $quan
     }
 
     if ((int) $quantity > 1 || ((int) $quantity > 0 && kangoo_get_cart_99p_quantity($cart_item_key) >= 1)) {
-        wc_add_notice(__('99p trial pouches are limited to 1 per order.', 'kangoo'), 'error');
+        wc_add_notice(__('79p trial pouches are limited to 1 per order.', 'kangoo'), 'error');
         return false;
     }
 
@@ -7904,7 +7904,7 @@ function kangoo_ajax_update_mini_cart_quantity() {
 
         if ($quantity > 0 && function_exists('kangoo_get_cart_99p_quantity') && kangoo_get_cart_99p_quantity($cart_item_key) >= 1) {
             wp_send_json_error(array(
-                'message' => __('99p trial pouches are limited to 1 per order.', 'kangoo'),
+                'message' => __('79p trial pouches are limited to 1 per order.', 'kangoo'),
             ), 400);
         }
     }
@@ -8057,7 +8057,7 @@ function kangoo_ajax_add_to_cart() {
 
         if ($quantity > 1 || $existing_quantity >= 1 || $other_99p_quantity >= 1) {
             wp_send_json_error(array(
-                'message' => __('99p trial pouches are limited to 1 per order. You can still add any other products to your basket.', 'kangoo'),
+                'message' => __('79p trial pouches are limited to 1 per order. You can still add any other products to your basket.', 'kangoo'),
             ), 409);
         }
 
