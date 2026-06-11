@@ -63,15 +63,7 @@ function kangoo_reviews_theme_render_card_summary($product_id) {
     <a class="product-review-summary product-card__review-summary" href="<?php echo esc_url(get_permalink($product_id) . '#kangoo-customer-reviews'); ?>">
         <?php echo wp_kses_post(kangoo_reviews_theme_render_stars((float) $summary['average'])); ?>
         <span><?php echo esc_html($average); ?></span>
-        <span aria-hidden="true">|</span>
-        <span>
-            <?php
-            echo esc_html(sprintf(
-                _n('%s verified review', '%s verified reviews', $count, 'kangoo'),
-                number_format_i18n($count)
-            ));
-            ?>
-        </span>
+        <span>(<?php echo esc_html(number_format_i18n($count)); ?>)</span>
     </a>
     <?php
 }
