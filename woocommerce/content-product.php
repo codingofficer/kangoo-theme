@@ -90,10 +90,10 @@ if ($is_quick_add_card && $is_variable) {
         <div class="product-badge product-badge--out-of-stock">
             <?php esc_html_e('Sold Out', 'kangoo'); ?>
         </div>
-    <?php elseif ($badge) : ?>
-        <div class="product-badge product-badge--<?php echo esc_attr(sanitize_html_class($badge['key'])); ?>">
+    <?php if ($badge) : ?>
+        <span class="product-badge product-badge--<?php echo esc_attr($badge['key']); ?>">
             <?php echo esc_html($badge['label']); ?>
-        </div>
+        </span>
     <?php endif; ?>
 
     <a href="<?php the_permalink(); ?>" class="product-card__media">
