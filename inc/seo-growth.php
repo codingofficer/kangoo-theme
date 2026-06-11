@@ -217,3 +217,71 @@ function kangoo_seo_serve_ai_files() {
     exit;
 }
 add_action('template_redirect', 'kangoo_seo_serve_ai_files', -100);
+
+function kangoo_seo_write_ai_files() {
+    if (!is_writable(ABSPATH)) {
+        return false;
+    }
+
+    $files = array(
+        ABSPATH . 'llms.txt' => kangoo_seo_render_llms_summary(),
+        ABSPATH . 'llms-full.txt' => kangoo_seo_render_llms_full(),
+    );
+
+    foreach ($files as $path => $content) {
+        $temporary = $path . '.tmp';
+        file_put_contents($temporary, $content, LOCK_EX);
+        rename($temporary, $path);
+    }
+
+    update_option('kangoo_ai_discovery_files_version', '2026-06-11-1', false);
+    return true;
+}
+
+function kangoo_seo_write_robots_file() {
+    if (!is_writable(ABSPATH)) {
+        return false;
+    }
+
+    $content = implode("\n", array(
+        'User-agent: *',
+        'Disallow: /wp-admin/',
+        'Allow: /wp-admin/admin-ajax.php',
+        'Disallow: /cart/',
+        'Disallow: /checkout/',
+        'Disallow: /my-account/',
+        'Disallow: /search/',
+        'Disallow: /*?s=',
+        'Disallow: /*?add-to-cart=',
+        'Disallow: /*?*add-to-cart=',
+        'Disallow: /*?orderby=',
+        'Disallow: /*?filter_',
+        '',
+        'Sitemap: ' . home_url('/sitemap_index.xml'),
+        '',
+    ));
+
+    file_put_contents(ABSPATH . 'robots.txt', $content, LOCK_EX);
+    return true;
+}
+
+function kangoo_seo_sync_discovery_files() {
+    if (get_option('kangoo_ai_discovery_files_version') === '2026-06-11-1') {
+        return;
+    }
+
+    kangoo_seo_write_ai_files();
+    kangoo_seo_write_robots_file();
+}
+add_action('init', 'kangoo_seo_sync_discovery_files', 99);
+
+function kangoo_seo_refresh_ai_catalogue($product_id = 0) {
+    if ($product_id && get_post_type($product_id) !== 'product') {
+        return;
+    }
+
+    delete_option('kangoo_ai_discovery_files_version');
+    kangoo_seo_write_ai_files();
+}
+add_action('save_post_product', 'kangoo_seo_refresh_ai_catalogue', 30);
+add_action('woocommerce_update_product', 'kangoo_seo_refresh_ai_catalogue', 30);

@@ -156,6 +156,48 @@ foreach ($categories as $slug => $data) {
         'wpseo_noindex' => 'default',
     ));
 }
+
+$facet_groups = array(
+    'pa_flavour' => array(
+        'berry' => array('Berry Nicotine Pouches UK', 'Shop berry nicotine pouches in the UK and compare stocked sweet, mixed-fruit and cooling berry profiles.', 'Berry nicotine pouches range from sweeter fruit-led flavours to sharper or cooling blends. Compare the exact brand, strength and live stock on each product rather than assuming every berry pouch tastes or feels the same.', 'Berry Nicotine Pouches UK | Compare Flavours', 'Shop berry nicotine pouches in the UK. Compare stocked brands, nicotine strengths, pouch formats and live prices for adults aged 18 and over.', 'berry nicotine pouches'),
+        'mint' => array('Mint Nicotine Pouches UK', 'Compare mint nicotine pouches including peppermint, spearmint, ice and cooling profiles from stocked brands.', 'Mint nicotine pouches are available in several flavour directions, from clean spearmint to sharper peppermint and colder ice profiles. Check strength per pouch and current availability before ordering.', 'Mint Nicotine Pouches UK | Peppermint & Spearmint', 'Shop mint nicotine pouches in the UK, including peppermint, spearmint and cooling options. Compare strength, format, stock and current prices.', 'mint nicotine pouches'),
+        'citrus' => array('Citrus Nicotine Pouches UK', 'Shop citrus nicotine pouches and compare lemon, orange and mixed citrus profiles currently in stock.', 'Citrus profiles can range from bright lemon to sweeter orange and mixed fruit blends. Product pages show the exact strength, pouch count and current pack pricing.', 'Citrus Nicotine Pouches UK | Compare Brands', 'Compare citrus nicotine pouches in the UK by brand, strength, pouch count and live price. Tobacco-free products for adults aged 18 and over.', 'citrus nicotine pouches'),
+        'coffee' => array('Coffee Nicotine Pouches UK', 'Compare coffee nicotine pouches and current coffee-led flavours from stocked brands.', 'Coffee nicotine pouches offer a different flavour direction from mint and fruit products. Check the nicotine amount and pouch format on each product before choosing.', 'Coffee Nicotine Pouches UK | Shop Online', 'Shop coffee nicotine pouches in the UK. Compare current brands, nicotine strengths, formats, pouch counts and live stock.', 'coffee nicotine pouches'),
+        'fruit' => array('Fruit Nicotine Pouches UK', 'Browse fruit nicotine pouches across berry, citrus, tropical and mixed-fruit profiles.', 'Fruit nicotine pouches cover a broad flavour group, so use the filters and product descriptions to compare the actual flavour, nicotine strength and format.', 'Fruit Nicotine Pouches UK | Compare Flavours', 'Shop fruit nicotine pouches in the UK. Compare berry, citrus, tropical and mixed-fruit profiles, strengths and current prices.', 'fruit nicotine pouches'),
+        'ice' => array('Ice Nicotine Pouches UK', 'Compare ice nicotine pouches with cooling mint, fruit and menthol-style profiles.', 'Ice describes a cooling flavour direction, not a nicotine strength. Always check the amount per pouch separately, particularly with stronger products.', 'Ice Nicotine Pouches UK | Cooling Flavours', 'Compare cooling ice nicotine pouches in the UK by brand, flavour, strength, pouch count and current live price.', 'ice nicotine pouches'),
+        'sweet' => array('Sweet Nicotine Pouches UK', 'Browse sweet nicotine pouches across stocked berry, fruit and mixed-flavour profiles.', 'Sweet flavour descriptions are subjective and can include berry, fruit or confectionery-style notes. Compare the exact product description and nicotine strength.', 'Sweet Nicotine Pouches UK | Compare Flavours', 'Shop sweet nicotine pouches in the UK. Compare stocked fruit and berry profiles, strengths, pouch formats and live prices.', 'sweet nicotine pouches'),
+        'tropical' => array('Tropical Nicotine Pouches UK', 'Compare tropical nicotine pouches with mango, citrus and mixed-fruit flavour directions.', 'Tropical ranges can combine mango, citrus and other fruit notes. The live product page confirms the flavour, strength, pouch count and available pack options.', 'Tropical Nicotine Pouches UK | Shop Online', 'Compare tropical nicotine pouches in the UK by brand, flavour, nicotine strength, pouch format and live price.', 'tropical nicotine pouches'),
+    ),
+    'pa_strength' => array(
+        'light' => array('Low-Strength Nicotine Pouches UK', 'Compare lower-strength nicotine pouches currently in stock for adults looking for lighter nicotine options.', 'Lower-strength nicotine pouches may suit adults who want to avoid the stronger end of the range. Compare the exact milligrams per pouch because brand strength labels are not always directly equivalent.', 'Low-Strength Nicotine Pouches UK | Compare Options', 'Compare low-strength nicotine pouches in the UK by milligrams per pouch, brand, flavour, format, stock and live price.', 'low strength nicotine pouches'),
+        'medium' => array('Medium-Strength Nicotine Pouches UK', 'Compare medium-strength nicotine pouches across stocked brands and flavours.', 'Medium is a useful browsing band, but the exact nicotine amount per pouch remains the important figure. Check every product before ordering.', 'Medium-Strength Nicotine Pouches UK', 'Shop medium-strength nicotine pouches in the UK. Compare exact nicotine levels, flavours, pouch formats, stock and live prices.', 'medium strength nicotine pouches'),
+        'strong' => array('Strong Nicotine Pouches UK', 'Compare strong nicotine pouches intended for experienced adult nicotine users.', 'Strong nicotine pouches should be selected by the exact milligrams per pouch, not flavour or price alone. If you are unsure, compare a lower-strength range first.', 'Strong Nicotine Pouches UK | Compare Brands', 'Compare strong nicotine pouches in the UK by exact strength, brand, flavour, pouch format, stock and current price. Adults 18+ only.', 'strong nicotine pouches'),
+        'extra-strong' => array('Extra-Strong Nicotine Pouches UK', 'Browse extra-strong nicotine pouches for experienced adult nicotine users and compare exact strengths carefully.', 'Extra-strong products sit at the highest end of the catalogue. Nicotine is addictive, and these options are not appropriate for inexperienced users.', 'Extra-Strong Nicotine Pouches UK | Adults 18+', 'Compare extra-strong nicotine pouches in the UK by exact nicotine level, brand, flavour, pouch count and live price.', 'extra strong nicotine pouches'),
+        '4mg' => array('4mg Nicotine Pouches UK', 'Shop 4mg nicotine pouches and compare current flavours, brands and pouch formats.', 'A 4mg pouch can sit within a lower or medium range depending on the brand system. Compare the exact product details and pouch count alongside price.', '4mg Nicotine Pouches UK | Shop Online', 'Compare 4mg nicotine pouches in the UK by brand, flavour, pouch count, format, live stock and current price.', '4mg nicotine pouches'),
+    ),
+);
+
+foreach ($facet_groups as $taxonomy => $terms) {
+    $yoast[$taxonomy] = isset($yoast[$taxonomy]) && is_array($yoast[$taxonomy]) ? $yoast[$taxonomy] : array();
+
+    foreach ($terms as $slug => $data) {
+        $term = get_term_by('slug', $slug, $taxonomy);
+
+        if (!$term instanceof WP_Term || (int) $term->count < 2) {
+            continue;
+        }
+
+        update_term_meta($term->term_id, 'category_seo_title', $data[0]);
+        update_term_meta($term->term_id, 'category_intro', $data[1]);
+        update_term_meta($term->term_id, 'category_seo_content', '<h2>' . esc_html($data[0]) . '</h2><p>' . esc_html($data[2]) . '</p><h2>Compare current products</h2><p>Use the product cards to compare brand, exact nicotine strength, flavour, pouch count, price and availability. Nicotine is addictive and every product is for adults aged 18 and over. Kangoo sells tobacco-free nicotine pouches, not traditional tobacco snus.</p>');
+        $yoast[$taxonomy][$term->term_id] = array_merge(isset($yoast[$taxonomy][$term->term_id]) ? $yoast[$taxonomy][$term->term_id] : array(), array(
+            'wpseo_title' => $data[3],
+            'wpseo_desc' => $data[4],
+            'wpseo_focuskw' => $data[5],
+            'wpseo_noindex' => 'default',
+        ));
+    }
+}
 update_option('wpseo_taxonomy_meta', $yoast, false);
 
 function kangoo_seo_growth_merge_post($target_id, $source_id, $new_slug = '') {
@@ -278,4 +320,3 @@ if ($product) {
 
 flush_rewrite_rules(false);
 WP_CLI::success('SEO growth migration complete. Backup: ' . $backup_file);
-
