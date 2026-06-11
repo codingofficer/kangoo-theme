@@ -710,7 +710,7 @@
 
   .category-page .woo-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.65rem;
+    gap: 0.5rem;
   }
 
   .category-page .product-card {
@@ -746,7 +746,7 @@
 
   .category-page .product-card__content {
     flex: 1;
-    padding: 0.55rem;
+    padding: 0;
     gap: 0.3rem;
   }
 
@@ -808,8 +808,10 @@
   }
 
   .category-page .product-card__pack-trigger {
-    min-height: 34px;
-    padding: 0.35rem 0.45rem;
+    height: 30px;
+    min-height: 30px;
+    max-height: 30px;
+    padding: 0.2rem 0.4rem;
   }
 
   .category-page .product-card__actions {
@@ -848,11 +850,15 @@
 
   .category-page .product-card__add,
   .category-page .product-card__actions .btn {
+    flex: 0 0 30px;
     width: 100%;
-    min-height: 38px;
+    height: 30px;
+    min-height: 30px;
+    max-height: 30px;
     margin-top: auto;
-    padding-inline: 0.35rem;
+    padding: 0 0.35rem;
     font-size: 0.7rem;
+    line-height: 1;
   }
 
   .product-card__add,
