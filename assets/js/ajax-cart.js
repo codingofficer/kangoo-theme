@@ -1829,9 +1829,12 @@ jQuery(function ($) {
     $button.attr('data-quantity', qty);
 
     if (!$button.hasClass('is-loading') && !$button.hasClass('is-added')) {
-      $button.html($button.attr('data-card-compact-label') === '1'
-        ? '+ Add'
-        : 'Add to cart \u00b7 ' + formatCardPrice(total));
+      const compactLabel = $button.attr('data-card-compact-label');
+      $button.html(compactLabel === 'trial'
+        ? 'Add to cart'
+        : compactLabel === 'compact'
+          ? '+ Add'
+          : 'Add to cart \u00b7 ' + formatCardPrice(total));
     }
   }
 

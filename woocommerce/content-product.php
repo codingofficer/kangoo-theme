@@ -198,7 +198,7 @@ if ($is_quick_add_card && $is_variable) {
 				?>
 
 				<div
-					class="product-card__qty<?php echo ($has_visible_pack_options || ($card_is_99p && $is_category_archive_card)) ? ' product-card__qty--pack' : ''; ?><?php echo ($card_is_99p && !$is_category_archive_card) ? ' product-card__qty--hidden' : ''; ?>"
+					class="product-card__qty<?php echo $has_visible_pack_options ? ' product-card__qty--pack' : ''; ?><?php echo $card_is_99p ? ' product-card__qty--hidden' : ''; ?>"
 					data-card-qty
 					data-price="<?php echo esc_attr($price); ?>"
 					data-regular-price="<?php echo esc_attr($regular_price); ?>"
@@ -215,10 +215,6 @@ if ($is_quick_add_card && $is_variable) {
                             max="1"
                             data-card-qty-input
                         >
-                        <button type="button" class="product-card__pack-trigger product-card__pack-trigger--unavailable" disabled>
-                            <span><?php esc_html_e('Trial tin', 'kangoo'); ?></span>
-                            <span><?php esc_html_e('One per order', 'kangoo'); ?></span>
-                        </button>
                     <?php elseif ($has_visible_pack_options) : ?>
                         <input
                             type="hidden"
@@ -269,12 +265,12 @@ if ($is_quick_add_card && $is_variable) {
 					data-product_id="<?php echo esc_attr($product_id); ?>"
 					data-product_sku="<?php echo esc_attr($product->get_sku()); ?>"
 					data-is-99p="<?php echo $card_is_99p ? '1' : '0'; ?>"
-					data-card-compact-label="<?php echo $is_category_archive_card ? '1' : '0'; ?>"
+					data-card-compact-label="<?php echo $is_category_archive_card ? ($card_is_99p ? 'trial' : 'compact') : ''; ?>"
 					data-card-add
 					rel="nofollow"
 				>
 					<?php if ($is_category_archive_card) : ?>
-						<?php esc_html_e('+ Add', 'kangoo'); ?>
+						<?php echo esc_html($card_is_99p ? __('Add to cart', 'kangoo') : __('+ Add', 'kangoo')); ?>
 					<?php else : ?>
 						Add to cart &middot; <?php echo wp_kses_post(wc_price($default_total)); ?>
 					<?php endif; ?>

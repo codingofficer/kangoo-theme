@@ -884,8 +884,8 @@
 
   .category-page .product-card__actions:has(> .product-card__qty--pack) {
     display: grid;
-    grid-template-columns: minmax(0, 42fr) minmax(0, 58fr);
-    gap: 0.4rem;
+    grid-template-columns: minmax(0, 58fr) minmax(0, 42fr);
+    gap: 0.25rem;
     align-items: end;
   }
 
@@ -896,10 +896,15 @@
 
   .category-page .product-card__pack-trigger span:first-child {
     font-size: 0.72rem;
+    white-space: nowrap;
   }
 
   .category-page .product-card__pack-trigger span:last-child {
     font-size: 0.62rem;
+  }
+
+  .category-page .product-card__pack-trigger--unavailable span:last-child {
+    display: none;
   }
 
   .product-card__saving {
@@ -929,7 +934,7 @@
     min-height: 30px !important;
     max-height: 30px !important;
     margin: 0 !important;
-    padding: 0 0.35rem !important;
+    padding: 0 0.2rem !important;
     border-radius: 8px;
     font-size: 0.68rem;
     line-height: 1;
