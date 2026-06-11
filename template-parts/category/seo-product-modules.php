@@ -136,7 +136,7 @@ $trial_products = function_exists('kangoo_get_trial_products') ? kangoo_get_tria
             ?>
             <section class="seo-proof-grid" aria-label="<?php esc_attr_e('Kangoo nicotine pouch buying proof', 'kangoo'); ?>">
                 <article>
-                    <strong><?php esc_html_e('99p trials', 'kangoo'); ?></strong>
+                    <strong><?php esc_html_e('79p trials', 'kangoo'); ?></strong>
                     <span><?php esc_html_e('Selected trial pouches while stock lasts.', 'kangoo'); ?></span>
                 </article>
                 <article>
@@ -278,7 +278,7 @@ $trial_products = function_exists('kangoo_get_trial_products') ? kangoo_get_tria
         <?php elseif ($context_type === 'trial') : ?>
             <section class="seo-module seo-module--intro">
                 <div class="seo-module__head">
-                    <h2><?php esc_html_e('Try nicotine pouches from 99p', 'kangoo'); ?></h2>
+                    <h2><?php esc_html_e('Try nicotine pouches from 79p', 'kangoo'); ?></h2>
                     <p><?php esc_html_e('The 99p pouch range is built for adult nicotine users who want to sample selected flavours and strengths before choosing a regular can or multi-buy pack.', 'kangoo'); ?></p>
                 </div>
                 <div class="seo-guide-grid">

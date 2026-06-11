@@ -98,7 +98,7 @@ $finder_seo_links = array(
                 <div>
                     <span class="eyebrow"><?php esc_html_e('Find, compare, then shop', 'kangoo'); ?></span>
                     <h2><?php esc_html_e('Find nicotine pouches by strength, flavour and price', 'kangoo'); ?></h2>
-                    <p><?php esc_html_e('Use the finder for a quick recommendation, then compare live products, 99p trials and brand pages before choosing your pouch.', 'kangoo'); ?></p>
+                    <p><?php esc_html_e('Use the finder for a quick recommendation, then compare live products, 79p trials and brand pages before choosing your pouch.', 'kangoo'); ?></p>
                 </div>
                 <div class="kangoo-seo-strip__links">
                     <?php foreach ($finder_seo_links as $finder_seo_link) : ?>

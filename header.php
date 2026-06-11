@@ -384,7 +384,7 @@ if (current_user_can('manage_options')) {
                             href="<?php echo esc_url($kangoo_99p_pouches_url); ?>"
                             class="kangoo-mega-menu__sidebar-link kangoo-mega-menu__sidebar-link--99p"
                         >
-                            <?php esc_html_e('99p Pouches', 'kangoo'); ?>
+                            <?php esc_html_e('79p Pouches', 'kangoo'); ?>
                         </a>
                         <a
                             href="<?php echo esc_url(home_url('/kangoo-app/')); ?>"
@@ -807,7 +807,7 @@ if (current_user_can('manage_options')) {
                         href="<?php echo esc_url($kangoo_99p_pouches_url); ?>"
                         class="kangoo-mega-drawer__direct-link"
                     >
-                        <?php esc_html_e('99p Pouches', 'kangoo'); ?>
+                        <?php esc_html_e('79p Pouches', 'kangoo'); ?>
                     </a>
                     <a
                         href="<?php echo esc_url(home_url('/kangoo-app/')); ?>"

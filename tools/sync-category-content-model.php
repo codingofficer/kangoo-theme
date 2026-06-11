@@ -106,7 +106,7 @@ $trial_term = get_term_by('slug', '99p-pouches', 'product_cat');
 
 if ($trial_term instanceof WP_Term) {
     wp_update_term($trial_term->term_id, 'product_cat', array('name' => '79p Pouches'));
-    update_term_meta($trial_term->term_id, 'category_intro', 'Trial nicotine pouches from just 79p. Explore selected nicotine pouch trials from leading brands including ZYN, VELO, FUMi and XQS. Limited stock available.');
+    update_term_meta($trial_term->term_id, 'category_intro', 'Looking for 99p nicotine pouches? Kangoo trial pouches now start from just 79p. Explore selected trials from ZYN, VELO, FUMi and XQS while limited stock is available.');
     update_term_meta($trial_term->term_id, 'category_seo_title', '79p Nicotine Pouches UK');
 }
 
@@ -123,7 +123,7 @@ if (!empty($yoast_meta['product_cat']) && is_array($yoast_meta['product_cat'])) 
 
     if ($trial_term instanceof WP_Term) {
         $yoast_meta['product_cat'][$trial_term->term_id]['wpseo_title'] = '79p Nicotine Pouches UK | Cheap Trial Pouches | Kangoo';
-        $yoast_meta['product_cat'][$trial_term->term_id]['wpseo_desc'] = 'Pick and mix selected nicotine pouches from just 79p each. Browse ZYN, VELO, FUMi and XQS trial pouches while limited stock is available.';
+        $yoast_meta['product_cat'][$trial_term->term_id]['wpseo_desc'] = 'Searching for 99p nicotine pouches? Pick and mix selected ZYN, VELO, FUMi and XQS trial pouches from just 79p each while limited stock is available.';
         $yoast_meta['product_cat'][$trial_term->term_id]['wpseo_focuskw'] = '79p nicotine pouches';
     }
 
