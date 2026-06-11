@@ -258,6 +258,10 @@ if ($is_quick_add_card && $is_variable) {
                     <?php endif; ?>
 				</div>
 
+				<?php if ($card_is_99p && $is_category_archive_card) : ?>
+					<span class="product-card__trial-limit"><?php esc_html_e('1 tin per order', 'kangoo'); ?></span>
+				<?php endif; ?>
+
 				<a
 					href="#"
 					data-quantity="<?php echo esc_attr($default_qty); ?>"

@@ -424,10 +424,6 @@ body {
   transition: transform 0.25s ease;
 }
 
-.site-header--hidden {
-  transform: translateY(-100%);
-}
-
 .cart-icon {
   width: 22px;
   height: 22px;
@@ -2059,10 +2055,6 @@ body {
   transform: translateX(0);
   opacity: 1;
   pointer-events: auto;
-}
-
-body.site-header-is-hidden .kangoo-theme-preference.is-visible {
-  transform: translateY(calc(-100% - 76px));
 }
 
 .kangoo-theme-preference__icon {

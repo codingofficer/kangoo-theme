@@ -988,7 +988,7 @@ body.kangoo-theme--light .kangoo-mega-drawer__dots span:not([style]) {
     border-color: rgba(17, 24, 39, 0.12) !important;
     background: #ffffff !important;
     color: #111827 !important;
-    box-shadow: 0 4px 14px rgba(17, 24, 39, 0.05);
+    box-shadow: none;
   }
 
   body.kangoo-theme--light .category-filter {

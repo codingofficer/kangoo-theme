@@ -522,36 +522,6 @@ document.addEventListener('DOMContentLoaded', function () {
     closeDesktopMegaMenu();
   });
 	
-	/* HEADER HIDE / SHOW ON SCROLL */
-	const siteHeader = document.querySelector('.site-header');
-	let lastScrollY = window.scrollY;
-
-  function setSiteHeaderHidden(isHidden) {
-    if (!siteHeader) {
-      return;
-    }
-
-    siteHeader.classList.toggle('site-header--hidden', isHidden);
-    body.classList.toggle('site-header-is-hidden', isHidden);
-  }
-
-	window.addEventListener('scroll', function () {
-	  if (!siteHeader || body.classList.contains('no-scroll')) return;
-
-	  const currentScrollY = window.scrollY;
-
-	  if (currentScrollY <= 80 || currentScrollY < lastScrollY) {
-		setSiteHeaderHidden(false);
-	  }
-
-	  if (currentScrollY > lastScrollY && currentScrollY > 120) {
-		setSiteHeaderHidden(true);
-		closeDesktopMegaMenu();
-	  }
-
-	  lastScrollY = Math.max(currentScrollY, 0);
-	}, { passive: true });
-
   if (mainBtn && stickyBtn) {
     const setStickyButtonText = function (text) {
       const label = stickyBtn.querySelector('[data-sticky-button-text]');

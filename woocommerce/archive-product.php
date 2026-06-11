@@ -55,6 +55,14 @@ if ($term_taxonomy === 'product_cat') {
 } elseif ($term_taxonomy === 'pa_flavour') {
     $archive_eyebrow = __('Flavour', 'kangoo');
 }
+
+$category_display_heading = $category_page_heading
+    ? $category_page_heading
+    : woocommerce_page_title(false);
+
+if ($term_taxonomy === 'product_cat') {
+    $category_display_heading = preg_replace('/\s+UK$/i', '', $category_display_heading);
+}
 ?>
 
 <main class="category-page">
@@ -62,22 +70,12 @@ if ($term_taxonomy === 'product_cat') {
         <div class="container">
             <div class="category-page__hero-inner">
                 <header class="category-page__header">
-                    <span class="eyebrow"><?php echo esc_html($archive_eyebrow); ?></span>
-                    <h1>
-                        <?php
-                        echo esc_html(
-                            $category_page_heading
-                                ? $category_page_heading
-                                : woocommerce_page_title(false)
-                        );
-                        ?>
-                    </h1>
-
-                    <?php if ($product_count > 0) : ?>
-                        <span class="category-page__count">
-                            <?php echo esc_html($product_count); ?> <?php esc_html_e('products', 'kangoo'); ?>
-                        </span>
+                    <?php if ($term_taxonomy !== 'product_cat') : ?>
+                        <span class="eyebrow"><?php echo esc_html($archive_eyebrow); ?></span>
                     <?php endif; ?>
+                    <h1>
+                        <?php echo esc_html($category_display_heading); ?>
+                    </h1>
 
                     <?php if ($category_hero_copy) : ?>
                         <div class="category-page__copy" data-category-readmore>
