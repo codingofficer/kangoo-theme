@@ -36,8 +36,8 @@ function kangoo_pack_pricing_presets() {
             ),
         ),
         'trial_99p' => array(
-            'label' => __('99p Trial', 'kangoo'),
-            'regular_price' => '0.99',
+        'label' => __('79p Trial', 'kangoo'),
+        'regular_price' => '0.79',
             'tiers' => array(),
         ),
     );
@@ -200,7 +200,7 @@ function kangoo_pack_pricing_export_csv() {
     header('Content-Disposition: attachment; filename=kangoo-pack-pricing-' . gmdate('Y-m-d-His') . '.csv');
 
     $output = fopen('php://output', 'w');
-    fputcsv($output, array('ID', 'SKU', 'Name', 'Brand', 'Pricing preset', 'Regular price', 'Pack tiers', '99p product'));
+        fputcsv($output, array('ID', 'SKU', 'Name', 'Brand', 'Pricing preset', 'Regular price', 'Pack tiers', 'Trial product'));
 
     foreach (kangoo_pack_pricing_product_rows() as $row) {
         fputcsv($output, array(
@@ -380,8 +380,8 @@ function kangoo_render_pack_pricing_admin_page() {
                                 <strong><a href="<?php echo esc_url(get_edit_post_link($row['id'])); ?>"><?php echo esc_html($row['name']); ?></a></strong>
                                 <br><code><?php echo esc_html($row['sku'] ?: ('#' . $row['id'])); ?></code>
                                 <?php if ($row['is_99p']) : ?>
-                                    <span class="dashicons dashicons-tag" title="<?php esc_attr_e('99p trial product', 'kangoo'); ?>"></span>
-                                    <strong><?php esc_html_e('99p', 'kangoo'); ?></strong>
+                                <span class="dashicons dashicons-tag" title="<?php esc_attr_e('79p trial product', 'kangoo'); ?>"></span>
+                                <strong><?php esc_html_e('79p', 'kangoo'); ?></strong>
                                 <?php endif; ?>
                             </td>
                             <td><?php echo esc_html($row['brand']); ?></td>

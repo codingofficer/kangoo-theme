@@ -13,7 +13,7 @@ $term_taxonomy = $term instanceof WP_Term ? $term->taxonomy : '';
 $term_acf_key = $term_id && $term_taxonomy ? $term_taxonomy . '_' . $term_id : '';
 
 $category_intro = $term_acf_key ? get_field('category_intro', $term_acf_key) : '';
-$category_seo_title = $term_acf_key ? get_field('category_seo_title', $term_acf_key) : '';
+$category_page_heading = $term_acf_key ? get_field('category_seo_title', $term_acf_key) : '';
 $category_seo_content = $term_acf_key ? get_field('category_seo_content', $term_acf_key) : '';
 $category_faq_rows = $term_acf_key ? get_field('category_faq', $term_acf_key) : array();
 
@@ -46,6 +46,9 @@ if ($term instanceof WP_Term) {
     $term_description = term_description($term, $term_taxonomy);
 }
 
+$category_hero_copy = $category_intro ? $category_intro : $term_description;
+$category_hero_uses_description = !$category_intro && $term_description;
+
 $archive_eyebrow = __('Shop', 'kangoo');
 
 if ($term_taxonomy === 'product_cat') {
@@ -63,24 +66,30 @@ if ($term_taxonomy === 'product_cat') {
             <div class="category-page__hero-inner">
                 <header class="category-page__header">
                     <span class="eyebrow"><?php echo esc_html($archive_eyebrow); ?></span>
-                    <h1><?php woocommerce_page_title(); ?></h1>
+                    <h1>
+                        <?php
+                        echo esc_html(
+                            $category_page_heading
+                                ? $category_page_heading
+                                : woocommerce_page_title(false)
+                        );
+                        ?>
+                    </h1>
 
-                    <?php if ($category_intro || $term_description) : ?>
+                    <?php if ($category_hero_copy) : ?>
                         <div class="category-page__copy" data-category-readmore>
                             <?php if ($category_intro) : ?>
                                 <p class="category-page__intro">
                                     <?php echo esc_html($category_intro); ?>
                                 </p>
-                            <?php endif; ?>
-
-                            <?php if ($term_description) : ?>
+                            <?php else : ?>
                                 <div class="category-page__description wysiwyg">
                                     <?php echo wp_kses_post($term_description); ?>
                                 </div>
                             <?php endif; ?>
                         </div>
 
-                        <?php if ($term_description) : ?>
+                        <?php if ($category_hero_uses_description) : ?>
                             <button type="button" class="category-page__read-more" data-category-readmore-toggle>
                                 <?php esc_html_e('Read more', 'kangoo'); ?>
                             </button>
@@ -350,13 +359,18 @@ if ($term_taxonomy === 'product_cat') {
         </section>
     <?php endif; ?>
 
-    <?php if ($category_seo_title || $category_seo_content) : ?>
+    <?php if ($category_seo_content) : ?>
         <section class="section category-page__seo">
             <div class="container container--narrow">
                 <header class="section-header section-header--left">
-                    <?php if ($category_seo_title) : ?>
-                        <h2><?php echo esc_html($category_seo_title); ?></h2>
-                    <?php endif; ?>
+                    <h2>
+                        <?php
+                        printf(
+                            esc_html__('More about %s', 'kangoo'),
+                            esc_html($term instanceof WP_Term ? $term->name : woocommerce_page_title(false))
+                        );
+                        ?>
+                    </h2>
                 </header>
 
                 <?php if ($category_seo_content) : ?>

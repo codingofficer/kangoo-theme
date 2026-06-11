@@ -4001,7 +4001,7 @@ function kangoo_get_product_pack_summary($product) {
     if (function_exists('kangoo_is_99p_product') && kangoo_is_99p_product($product->get_id())) {
         return array(
             'label' => __('Trial price', 'kangoo'),
-            'value' => __('99p trial pouch', 'kangoo'),
+        'value' => __('79p trial pouch', 'kangoo'),
         );
     }
 
@@ -4185,7 +4185,7 @@ function kangoo_get_retailer_value_comparison_rows() {
     return array(
         array(
             'label'       => __('Starting price', 'kangoo'),
-            'kangoo'      => __('99p trial pouches when available; main range from £3.99', 'kangoo'),
+        'kangoo'      => __('79p trial pouches when available; main range from £3.99', 'kangoo'),
             'supermarket' => __('Often limited to shelf range and current in-store pricing', 'kangoo'),
             'corner'      => __('Varies by store and local availability', 'kangoo'),
         ),
@@ -4215,7 +4215,7 @@ function kangoo_get_retailer_value_comparison_rows() {
         ),
         array(
             'label'       => __('Trial options', 'kangoo'),
-            'kangoo'      => __('99p trial pouches are limited to one per order while stock lasts', 'kangoo'),
+        'kangoo'      => __('79p trial pouches are limited to one per order while stock lasts', 'kangoo'),
             'supermarket' => __('Trial pricing is not always available', 'kangoo'),
             'corner'      => __('Trial pricing is not always available', 'kangoo'),
         ),
@@ -4282,11 +4282,11 @@ function kangoo_archive_seo_data() {
     $description = '';
 
     if ($context['type'] === 'nicotine') {
-        $title = __('Nicotine Pouches UK From 99p', 'kangoo');
-        $description = __('Shop nicotine pouches in the UK from Kangoo, including ZYN, VELO, KILLA and PABLO, 99p trial pouches, pack pricing and discreet UK delivery.', 'kangoo');
+        $title = __('Nicotine Pouches UK From 79p', 'kangoo');
+        $description = __('Shop nicotine pouches in the UK from Kangoo, including ZYN, VELO, KILLA and PABLO, 79p trial pouches, pack pricing and discreet UK delivery.', 'kangoo');
     } elseif ($context['type'] === 'trial') {
-        $title = __('99p Nicotine Pouches UK', 'kangoo');
-        $description = __('Try selected nicotine pouches from 99p at Kangoo. Trial pouches are limited to one per order while stock lasts and are for adult nicotine users only.', 'kangoo');
+        $title = __('79p Nicotine Pouches UK', 'kangoo');
+        $description = __('Try selected nicotine pouches from 79p at Kangoo. Trial pouches are limited to one per order while stock lasts and are for adult nicotine users only.', 'kangoo');
     } elseif ($context['type'] === 'brand') {
         $brand = strtoupper($term->name);
         $title = sprintf(__('%s Nicotine Pouches UK', 'kangoo'), $brand);
@@ -4322,6 +4322,10 @@ function kangoo_archive_seo_data() {
 }
 
 function kangoo_archive_document_title_parts($parts) {
+    if (defined('WPSEO_VERSION')) {
+        return $parts;
+    }
+
     $seo = kangoo_archive_seo_data();
 
     if (!empty($seo['title'])) {
@@ -4333,6 +4337,10 @@ function kangoo_archive_document_title_parts($parts) {
 add_filter('document_title_parts', 'kangoo_archive_document_title_parts', 20);
 
 function kangoo_archive_head_meta() {
+    if (defined('WPSEO_VERSION')) {
+        return;
+    }
+
     $seo = kangoo_archive_seo_data();
 
     if (empty($seo)) {
@@ -4367,6 +4375,71 @@ function kangoo_filtered_archive_robots($robots) {
     return $robots;
 }
 add_filter('wp_robots', 'kangoo_filtered_archive_robots');
+
+function kangoo_category_content_field_group_label($field_group) {
+    if (!empty($field_group['key']) && $field_group['key'] === 'group_69dcff4b1da4a') {
+        $field_group['title'] = __('Category Page Content', 'kangoo');
+    }
+
+    return $field_group;
+}
+add_filter('acf/load_field_group', 'kangoo_category_content_field_group_label');
+
+function kangoo_category_intro_field_guidance($field) {
+    $field['label'] = __('Hero Intro (below H1)', 'kangoo');
+    $field['instructions'] = __('Short visible introduction shown once below the category page heading. If empty, the WordPress Description is used as a fallback.', 'kangoo');
+
+    return $field;
+}
+add_filter('acf/load_field/name=category_intro', 'kangoo_category_intro_field_guidance');
+
+function kangoo_category_heading_field_guidance($field) {
+    $field['label'] = __('Category Page Heading (H1)', 'kangoo');
+    $field['instructions'] = __('Visible page heading only, for example "VELO Nicotine Pouches UK". This does not overwrite the Yoast SEO title used by Google.', 'kangoo');
+
+    return $field;
+}
+add_filter('acf/load_field/name=category_seo_title', 'kangoo_category_heading_field_guidance');
+
+function kangoo_category_seo_content_field_guidance($field) {
+    $field['label'] = __('Lower-page SEO Content', 'kangoo');
+    $field['instructions'] = __('Rich on-page content displayed below the product grid. Yoast separately controls the search title and meta description.', 'kangoo');
+
+    return $field;
+}
+add_filter('acf/load_field/name=category_seo_content', 'kangoo_category_seo_content_field_guidance');
+
+function kangoo_product_category_description_admin_guidance() {
+    $screen = function_exists('get_current_screen') ? get_current_screen() : null;
+
+    if (!$screen || $screen->taxonomy !== 'product_cat') {
+        return;
+    }
+    ?>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var wrapper = document.querySelector('.term-description-wrap');
+
+            if (!wrapper) {
+                return;
+            }
+
+            var label = wrapper.querySelector('label[for="description"]');
+            var help = wrapper.querySelector('.description');
+
+            if (label) {
+                label.textContent = <?php echo wp_json_encode(__('Legacy Description (fallback only)', 'kangoo')); ?>;
+            }
+
+            if (help) {
+                help.textContent = <?php echo wp_json_encode(__('Only shown in the category hero when Hero Intro is empty. Use Yoast for Google titles and meta descriptions.', 'kangoo')); ?>;
+            }
+        });
+    </script>
+    <?php
+}
+add_action('admin_footer-edit-tags.php', 'kangoo_product_category_description_admin_guidance');
+add_action('admin_footer-term.php', 'kangoo_product_category_description_admin_guidance');
 
 function kangoo_get_cart_99p_quantity($exclude_cart_item_key = '') {
     if (!function_exists('WC') || !WC()->cart) {
@@ -4876,7 +4949,7 @@ function kangoo_rewards_apply_requested_discount($requested, $requested_discount
     $max_discount = kangoo_rewards_points_to_money($max_points);
 
     if (kangoo_rewards_get_redemption_eligible_cart_subtotal() <= 0) {
-        return new WP_Error('kangoo_rewards_99p_only', __('Kangoo Rewards cannot be redeemed against 99p trial pouches. Add an eligible product to use points.', 'kangoo'));
+        return new WP_Error('kangoo_rewards_99p_only', __('Kangoo Rewards cannot be redeemed against 79p trial pouches. Add an eligible product to use points.', 'kangoo'));
     }
 
     if ($requested_discount > 0) {
@@ -5600,7 +5673,7 @@ function kangoo_rewards_account_endpoint_content_modern() {
                 <article>
                     <span aria-hidden="true"></span>
                     <strong><?php esc_html_e('Redeem', 'kangoo'); ?></strong>
-                    <p><?php echo wp_kses_post(__('100 points equals &pound;1 off. Rewards can cover up to 20% of eligible cart value. 99p trial pouches are excluded from redemption.', 'kangoo')); ?></p>
+        <p><?php echo wp_kses_post(__('100 points equals &pound;1 off. Rewards can cover up to 20% of eligible cart value. 79p trial pouches are excluded from redemption.', 'kangoo')); ?></p>
                 </article>
                 <article>
                     <span aria-hidden="true"></span>
@@ -8907,7 +8980,7 @@ function kangoo_acf_add_home_product_sources($field) {
     }
 
     $field['choices']['summer_collection'] = __('Summer collection', 'kangoo');
-    $field['choices']['pouches_99p'] = __('99p Pouches', 'kangoo');
+    $field['choices']['pouches_99p'] = __('79p Pouches', 'kangoo');
 
     return $field;
 }
