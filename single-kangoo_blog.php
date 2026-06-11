@@ -7,6 +7,8 @@
     $read_time = kangoo_blog_estimated_read_time();
     $topics = get_the_terms(get_the_ID(), 'blog_topic');
     $featured_product = kangoo_blog_get_field('blog_featured_product');
+    $author_name = get_the_author_meta('display_name') ?: get_bloginfo('name');
+    $was_updated = get_the_modified_time('U') > get_the_time('U') + DAY_IN_SECONDS;
     ?>
 
     <main class="blog-single">
@@ -23,6 +25,10 @@
 
                     <div class="blog-article__meta">
                         <span><?php echo esc_html(get_the_date()); ?></span>
+                        <span><?php echo esc_html(sprintf(__('By %s', 'kangoo'), $author_name)); ?></span>
+                        <?php if ($was_updated) : ?>
+                            <span><?php echo esc_html(sprintf(__('Updated %s', 'kangoo'), get_the_modified_date())); ?></span>
+                        <?php endif; ?>
                         <span><?php echo esc_html($read_time); ?> <?php esc_html_e('min read', 'kangoo'); ?></span>
                         <?php if (!empty($topics) && !is_wp_error($topics)) : ?>
                             <span>
@@ -53,6 +59,20 @@
                             <div>
                                 <dt><?php esc_html_e('Published', 'kangoo'); ?></dt>
                                 <dd><?php echo esc_html(get_the_date()); ?></dd>
+                            </div>
+                            <div>
+                                <dt><?php esc_html_e('Author', 'kangoo'); ?></dt>
+                                <dd><?php echo esc_html($author_name); ?></dd>
+                            </div>
+                            <?php if ($was_updated) : ?>
+                                <div>
+                                    <dt><?php esc_html_e('Last Updated', 'kangoo'); ?></dt>
+                                    <dd><?php echo esc_html(get_the_modified_date()); ?></dd>
+                                </div>
+                            <?php endif; ?>
+                            <div>
+                                <dt><?php esc_html_e('Editorial Review', 'kangoo'); ?></dt>
+                                <dd><?php esc_html_e('Kangoo Pouches content team', 'kangoo'); ?></dd>
                             </div>
                             <div>
                                 <dt><?php esc_html_e('Read Time', 'kangoo'); ?></dt>

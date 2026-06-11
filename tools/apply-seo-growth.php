@@ -264,6 +264,18 @@ function kangoo_seo_growth_article($data) {
 
 $articles = array(
     array(
+        'slug' => '3mg-nicotine-pouches', 'title' => '3mg Nicotine Pouches: A UK Guide to Lower-Strength Options', 'topic' => 'Strength Guides', 'focus' => '3mg nicotine pouches',
+        'seo_title' => '3mg Nicotine Pouches UK | Lower-Strength Guide', 'seo_desc' => 'Compare 3mg nicotine pouches in the UK, including stocked brands, flavours, pouch formats and practical strength considerations for adults.',
+        'excerpt' => 'A practical guide to 3mg nicotine pouches, current UK options and how to compare lower strengths.',
+        'content' => '<p>3mg nicotine pouches sit toward the lower end of many adult nicotine pouch ranges. They may appeal to people looking for a lighter option, but the number should still be compared with the exact pouch format and manufacturer information.</p><h2>What does 3mg mean?</h2><p>On products listed as 3mg per pouch, each individual pouch contains the stated nicotine amount. Do not confuse this with a figure measured per gram or per tin. Kangoo product pages use the manufacturer information available for the exact product.</p><h2>Which brands offer 3mg pouches?</h2><p>Current stock can include lower-strength mini products from brands such as ZYN. Availability changes, so use the live catalogue rather than assuming every flavour is always stocked.</p><h2>Flavours and formats</h2><p>Lower-strength products can still appear in mint, berry, citrus or other flavour profiles. Mini pouches may feel more discreet under the lip, but pouch size does not replace the need to check nicotine strength.</p><h2>Are 3mg pouches suitable for beginners?</h2><p>Nicotine is addictive, and people who do not already use nicotine should not start. For existing adult nicotine users comparing strengths, 3mg is lower than many strong and extra-strong products. Individual response varies, so stop using a product if it causes unwanted effects.</p><h2>Compare price and pouch count</h2><p>Look at pouch count, current single-tin price and any multi-buy options alongside strength. A cheaper tin is not automatically better value if it contains a different number of pouches or does not match the strength you want.</p><h2>Shop current lower-strength options</h2><p>Use the strength filters and product pages to compare live stock. Kangoo sells tobacco-free nicotine pouches to adults aged 18 and over, not traditional tobacco snus.</p>',
+    ),
+    array(
+        'slug' => 'low-strength-nicotine-pouches', 'title' => 'Low-Strength Nicotine Pouches: UK Brands and Strengths', 'topic' => 'Strength Guides', 'focus' => 'low strength nicotine pouches',
+        'seo_title' => 'Low-Strength Nicotine Pouches UK | Compare', 'seo_desc' => 'Compare low-strength nicotine pouches in the UK by milligrams per pouch, brand, flavour, format and current stock. Adults 18+ only.',
+        'excerpt' => 'How to compare lower-strength nicotine pouches by milligrams per pouch, format, flavour and live stock.',
+        'content' => '<p>Low-strength nicotine pouches give existing adult nicotine users an alternative to the strong and extra-strong end of the market. There is no single industry-wide colour or label that means low strength, so compare the actual milligrams per pouch.</p><h2>Understanding lower strengths</h2><p>Products around 1.5mg, 3mg, 4mg or similar levels may be presented as low, light or mini options depending on the brand. Those labels are useful for browsing, but the numeric amount is the more reliable comparison.</p><h2>Brands and flavours</h2><p>Lower-strength options can appear across ZYN, VELO, FUMi and other stocked ranges. Mint, berry, citrus and coffee flavours do not determine nicotine strength. Check both details independently.</p><h2>Mini and slim pouch formats</h2><p>Some lower-strength products use mini pouches, which may feel smaller under the lip. Slim and regular products can also appear at moderate levels. The product page confirms format and pouch count where that information is available.</p><h2>Who should consider a lower strength?</h2><p>People who do not use nicotine should not begin. Existing adult users may compare lower strengths when a strong pouch feels excessive or when they prefer a lighter option. Nicotine is addictive and individual response varies.</p><h2>Price comparison</h2><p>Compare the full product rather than strength alone: pouch count, flavour, format, current price and multi-buy quantities all matter. Promotional 79p products are separate from standard pack pricing and may be limited per order.</p><h2>Browse the live catalogue</h2><p>Kangoo shows current stock and prices on the product and category pages. All products are tobacco-free nicotine pouches for adults aged 18 and over, not traditional tobacco snus.</p>',
+    ),
+    array(
         'slug' => 'velo-vs-nordic-spirit', 'title' => 'VELO vs Nordic Spirit: Which Nicotine Pouch Brand Suits You?', 'topic' => 'Comparisons', 'focus' => 'VELO vs Nordic Spirit',
         'seo_title' => 'VELO vs Nordic Spirit | UK Brand Comparison', 'seo_desc' => 'Compare VELO and Nordic Spirit nicotine pouches by flavour, strength, format and current UK availability. An adult-only, stock-aware guide.',
         'excerpt' => 'A practical comparison of VELO and Nordic Spirit nicotine pouches available in the UK.',
@@ -367,6 +379,16 @@ foreach (get_posts(array('post_type' => 'kangoo_blog', 'post_status' => 'publish
             'ID' => $article->ID,
             'post_content' => preg_replace(array('/<h1\b/i', '/<\/h1>/i'), array('<h2', '</h2>'), $article->post_content),
         ));
+    }
+}
+
+$source_section = '<h2>Sources and further reading</h2><ul><li><a href="https://www.legislation.gov.uk/uksi/2016/507/contents/made" rel="nofollow noopener">The Tobacco and Related Products Regulations 2016</a></li><li><a href="https://www.gov.uk/government/publications/tobacco-and-vapes-bill-2024-factsheets" rel="nofollow noopener">UK Government: Tobacco and Vapes Bill factsheets</a></li><li><a href="https://www.bfr.bund.de/cm/349/health-risk-assessment-of-nicotine-pouches.pdf" rel="nofollow noopener">German Federal Institute for Risk Assessment: Health risk assessment of nicotine pouches</a></li></ul><p><small>Sources are provided for context. This article is not medical advice.</small></p>';
+
+foreach (array(857, 831, 859, 822, 823) as $source_post_id) {
+    $source_post = get_post($source_post_id);
+
+    if ($source_post instanceof WP_Post && stripos($source_post->post_content, 'Sources and further reading') === false) {
+        wp_update_post(array('ID' => $source_post_id, 'post_content' => rtrim($source_post->post_content) . $source_section));
     }
 }
 
