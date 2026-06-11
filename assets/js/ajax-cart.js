@@ -1829,7 +1829,9 @@ jQuery(function ($) {
     $button.attr('data-quantity', qty);
 
     if (!$button.hasClass('is-loading') && !$button.hasClass('is-added')) {
-      $button.html('Add to cart \u00b7 ' + formatCardPrice(total));
+      $button.html($button.attr('data-card-compact-label') === '1'
+        ? 'Add to cart'
+        : 'Add to cart \u00b7 ' + formatCardPrice(total));
     }
   }
 

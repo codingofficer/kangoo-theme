@@ -33,6 +33,7 @@
 }
 
 .product-card__media {
+  position: relative;
   aspect-ratio: 1 / 1;
   display: block;
   overflow: hidden;
@@ -50,6 +51,24 @@
   height: 100%;
   object-fit: contain;
   padding: 1rem;
+}
+
+.product-card__image-strength {
+  position: absolute;
+  right: 0.45rem;
+  bottom: 0.45rem;
+  z-index: 2;
+  display: inline-flex;
+  min-height: 24px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0.45rem;
+  border: 1px solid rgba(19, 95, 234, 0.55);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.94);
+  color: #135fea;
+  font-size: 0.64rem;
+  font-weight: 900;
 }
 
 .product-card__content {
@@ -627,6 +646,15 @@
   font-size: 0.78rem;
 }
 
+.product-card__pack-trigger--unavailable {
+  opacity: 0.72;
+  cursor: default;
+}
+
+.product-card__pack-trigger--unavailable::after {
+  content: "";
+}
+
 .product-card__saving {
   font-size: 11px;
   font-weight: 600;
@@ -670,13 +698,19 @@
 
 /* Mobile compact mode */
 @media (max-width: 640px) {
+  .category-page > .section > .container,
+  .category-page .category-link-rail > .container {
+    width: min(calc(100% - 1rem), 420px);
+  }
+
   .category-page__products > .container {
-    padding-inline: 0.75rem;
+    width: min(calc(100% - 1rem), 420px);
+    padding-inline: 0;
   }
 
   .category-page .woo-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.55rem;
+    gap: 0.65rem;
   }
 
   .category-page .product-card {
@@ -711,15 +745,13 @@
   }
 
   .category-page .product-card__content {
+    flex: 1;
     padding: 0.55rem;
     gap: 0.3rem;
   }
 
   .category-page .product-card__heading {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 0.25rem;
-    align-items: start;
+    display: block;
   }
 
   .category-page .product-card__title {
@@ -730,6 +762,14 @@
 
   .category-page .product-card__strength-badges {
     gap: 0;
+  }
+
+  .category-page .product-card__image-strength {
+    right: 0.35rem;
+    bottom: 0.35rem;
+    min-height: 22px;
+    padding-inline: 0.38rem;
+    font-size: 0.58rem;
   }
 
   .category-page .product-card__strength-badge {
@@ -772,6 +812,13 @@
     padding: 0.35rem 0.45rem;
   }
 
+  .category-page .product-card__actions {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    margin-top: auto;
+  }
+
   .category-page .product-card__pack-trigger span:first-child {
     font-size: 0.72rem;
   }
@@ -801,8 +848,9 @@
 
   .category-page .product-card__add,
   .category-page .product-card__actions .btn {
+    width: 100%;
     min-height: 38px;
-    margin-top: 0.35rem;
+    margin-top: auto;
     padding-inline: 0.35rem;
     font-size: 0.7rem;
   }
