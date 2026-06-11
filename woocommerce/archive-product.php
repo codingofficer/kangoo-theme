@@ -41,13 +41,10 @@ foreach ($category_faq_rows as $faq_row) {
     );
 }
 
-$term_description = '';
-if ($term instanceof WP_Term) {
-    $term_description = term_description($term, $term_taxonomy);
-}
-
-$category_hero_copy = $category_intro ? $category_intro : $term_description;
-$category_hero_uses_description = !$category_intro && $term_description;
+$category_hero_copy = $category_intro;
+$product_count = isset($GLOBALS['wp_query']->found_posts)
+    ? (int) $GLOBALS['wp_query']->found_posts
+    : (int) wp_count_posts('product')->publish;
 
 $archive_eyebrow = __('Shop', 'kangoo');
 
@@ -76,24 +73,27 @@ if ($term_taxonomy === 'product_cat') {
                         ?>
                     </h1>
 
+                    <?php if ($product_count > 0) : ?>
+                        <span class="category-page__count">
+                            <?php echo esc_html($product_count); ?> <?php esc_html_e('products', 'kangoo'); ?>
+                        </span>
+                    <?php endif; ?>
+
                     <?php if ($category_hero_copy) : ?>
                         <div class="category-page__copy" data-category-readmore>
-                            <?php if ($category_intro) : ?>
-                                <p class="category-page__intro">
-                                    <?php echo esc_html($category_intro); ?>
-                                </p>
-                            <?php else : ?>
-                                <div class="category-page__description wysiwyg">
-                                    <?php echo wp_kses_post($term_description); ?>
-                                </div>
-                            <?php endif; ?>
+                            <p class="category-page__intro">
+                                <?php echo esc_html($category_intro); ?>
+                            </p>
                         </div>
 
-                        <?php if ($category_hero_uses_description) : ?>
-                            <button type="button" class="category-page__read-more" data-category-readmore-toggle>
+                        <button
+                            type="button"
+                            class="category-page__read-more"
+                            data-category-readmore-toggle
+                            aria-expanded="false"
+                        >
                                 <?php esc_html_e('Read more', 'kangoo'); ?>
-                            </button>
-                        <?php endif; ?>
+                        </button>
                     <?php endif; ?>
                 </header>
             </div>
@@ -199,14 +199,35 @@ if ($term_taxonomy === 'product_cat') {
                 $filter_reset_url = $nicotine_pouches_url;
             }
 
-            $product_count = isset($GLOBALS['wp_query']->found_posts) ? (int) $GLOBALS['wp_query']->found_posts : (int) wp_count_posts('product')->publish;
 			?>
 
             <div class="category-products-toolbar">
-                <span><?php echo esc_html($product_count); ?> <?php esc_html_e('products', 'kangoo'); ?></span>
                 <button type="button" class="category-products-toolbar__filter" data-category-filter-open>
-                    <?php esc_html_e('Filter', 'kangoo'); ?>
+                    <?php esc_html_e('Filter & Sort', 'kangoo'); ?>
                 </button>
+
+                <form class="category-products-toolbar__sort" method="get" action="<?php echo esc_url($base_url); ?>">
+                    <?php if ($current_brand !== '' && !$is_brand_category_filter_context) : ?>
+                        <input type="hidden" name="filter_brand" value="<?php echo esc_attr($current_brand); ?>">
+                    <?php endif; ?>
+                    <?php if ($current_flavour !== '') : ?>
+                        <input type="hidden" name="filter_flavour" value="<?php echo esc_attr($current_flavour); ?>">
+                    <?php endif; ?>
+                    <?php if ($current_strength !== '') : ?>
+                        <input type="hidden" name="filter_strength" value="<?php echo esc_attr($current_strength); ?>">
+                    <?php endif; ?>
+
+                    <label class="screen-reader-text" for="category-mobile-sort">
+                        <?php esc_html_e('Sort products', 'kangoo'); ?>
+                    </label>
+                    <select id="category-mobile-sort" name="orderby" onchange="this.form.submit()">
+                        <option value="" <?php selected($current_orderby, ''); ?>><?php esc_html_e('Sort by: Popular', 'kangoo'); ?></option>
+                        <option value="date" <?php selected($current_orderby, 'date'); ?>><?php esc_html_e('Sort by: Newest', 'kangoo'); ?></option>
+                        <option value="price" <?php selected($current_orderby, 'price'); ?>><?php esc_html_e('Price: Low to high', 'kangoo'); ?></option>
+                        <option value="price-desc" <?php selected($current_orderby, 'price-desc'); ?>><?php esc_html_e('Price: High to low', 'kangoo'); ?></option>
+                        <option value="title" <?php selected($current_orderby, 'title'); ?>><?php esc_html_e('Sort by: A-Z', 'kangoo'); ?></option>
+                    </select>
+                </form>
             </div>
 
             <div class="category-filter-backdrop" data-category-filter-close></div>

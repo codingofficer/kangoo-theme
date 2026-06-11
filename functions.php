@@ -4387,7 +4387,7 @@ add_filter('acf/load_field_group', 'kangoo_category_content_field_group_label');
 
 function kangoo_category_intro_field_guidance($field) {
     $field['label'] = __('Hero Intro (below H1)', 'kangoo');
-    $field['instructions'] = __('Short visible introduction shown once below the category page heading. If empty, the WordPress Description is used as a fallback.', 'kangoo');
+    $field['instructions'] = __('Short visible introduction shown once below the category page heading.', 'kangoo');
 
     return $field;
 }
@@ -4419,20 +4419,15 @@ function kangoo_product_category_description_admin_guidance() {
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             var wrapper = document.querySelector('.term-description-wrap');
+            var heading = document.querySelector('.acf-field[data-name="category_seo_title"]');
+            var intro = document.querySelector('.acf-field[data-name="category_intro"]');
 
-            if (!wrapper) {
-                return;
+            if (heading && intro && heading.parentNode === intro.parentNode) {
+                heading.parentNode.insertBefore(heading, intro);
             }
 
-            var label = wrapper.querySelector('label[for="description"]');
-            var help = wrapper.querySelector('.description');
-
-            if (label) {
-                label.textContent = <?php echo wp_json_encode(__('Legacy Description (fallback only)', 'kangoo')); ?>;
-            }
-
-            if (help) {
-                help.textContent = <?php echo wp_json_encode(__('Only shown in the category hero when Hero Intro is empty. Use Yoast for Google titles and meta descriptions.', 'kangoo')); ?>;
+            if (wrapper) {
+                wrapper.hidden = true;
             }
         });
     </script>

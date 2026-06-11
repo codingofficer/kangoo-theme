@@ -48,18 +48,15 @@ foreach ($term_ids as $term_id) {
         continue;
     }
 
-    $description = str_replace('99p', '79p', $term->description);
+    $intro = get_term_meta($term_id, 'category_intro', true);
 
-    if ($term->slug === 'velo') {
-        $description = str_replace(
-            'Regular VELO single tins are £3.99 where available, while selected 79p trial pouches are separate and limited.',
-            'Current VELO prices and pack offers are shown live, while selected 79p trial pouches are separate and limited.',
-            $description
-        );
+    if (trim((string) $intro) === '' && trim(wp_strip_all_tags($term->description)) !== '') {
+        $intro = preg_replace('/\s+/', ' ', wp_strip_all_tags($term->description));
+        update_term_meta($term_id, 'category_intro', trim($intro));
     }
 
-    if ($description !== $term->description) {
-        wp_update_term($term_id, 'product_cat', array('description' => $description));
+    if ($term->description !== '') {
+        wp_update_term($term_id, 'product_cat', array('description' => ''));
     }
 
     foreach (array('category_intro', 'category_seo_title', 'category_seo_content') as $meta_key) {

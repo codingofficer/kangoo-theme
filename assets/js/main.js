@@ -2837,6 +2837,7 @@ document.addEventListener('DOMContentLoaded', function () {
       readMoreToggle.addEventListener('click', function () {
         const expanded = readMore.classList.toggle('is-expanded');
         readMoreToggle.textContent = expanded ? 'Read less' : 'Read more';
+        readMoreToggle.setAttribute('aria-expanded', expanded ? 'true' : 'false');
       });
     }
 
