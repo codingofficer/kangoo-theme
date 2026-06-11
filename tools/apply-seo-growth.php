@@ -316,7 +316,61 @@ if ($product) {
     }
 
     update_post_meta($product_id, 'strength_mg', '10.9');
+    update_post_meta($product_id, '_yoast_wpseo_title', 'VELO Freezing Peppermint 10.9mg Pouches | Kangoo');
 }
+
+foreach (wc_get_products(array('status' => 'publish', 'limit' => -1, 'return' => 'objects')) as $catalogue_product) {
+    if (!$catalogue_product instanceof WC_Product) {
+        continue;
+    }
+
+    $catalogue_id = $catalogue_product->get_id();
+
+    if (trim((string) get_post_meta($catalogue_id, '_yoast_wpseo_metadesc', true)) === '') {
+        $description = sprintf(
+            'Shop %s online. Compare live stock, pouch count, pack prices and UK delivery options. Adults 18+ only.',
+            $catalogue_product->get_name()
+        );
+        update_post_meta($catalogue_id, '_yoast_wpseo_metadesc', mb_substr($description, 0, 155));
+    }
+
+    if (trim((string) get_post_meta($catalogue_id, '_yoast_wpseo_focuskw', true)) === '') {
+        update_post_meta($catalogue_id, '_yoast_wpseo_focuskw', $catalogue_product->get_name());
+    }
+}
+
+$page_descriptions = array(
+    'privacy-policy' => 'Read the Kangoo Pouches privacy policy, including how personal information is collected, used, stored and protected when you use our website.',
+    'returns-and-refunds' => 'Read the Kangoo Pouches returns and refunds policy, including eligibility, time limits, exclusions and how to contact us about an order.',
+    'cookie-policy' => 'Learn how Kangoo Pouches uses cookies and similar technologies, what they do and how you can manage your preferences.',
+    '18-plus-policy' => 'Read the Kangoo Pouches adults-only policy and the measures used to restrict nicotine pouch sales to customers aged 18 and over.',
+    'compare-pouches' => 'Compare stocked nicotine pouches by brand, flavour, strength, format and current price to find a suitable adult-only option.',
+    'kangoo-app' => 'Download the Kangoo Pouches app for convenient access to the latest nicotine pouch catalogue, account features and current offers.',
+    'contact' => 'Contact Kangoo Pouches for help with products, orders, delivery, returns, rewards or your online account.',
+    'kangoo-rewards' => 'Learn how Kangoo Rewards works, how points are earned and how eligible customers can use rewards on future purchases.',
+    'terms-and-conditions' => 'Read the Kangoo Pouches website and sales terms, including ordering, payment, delivery, account and product conditions.',
+    'referral-program' => 'Learn how the Kangoo Pouches referral programme works, including eligibility, referral rewards and programme conditions.',
+    'faq' => 'Find answers to common Kangoo Pouches questions about products, strength, ordering, delivery, returns, rewards and adult-only sales.',
+);
+
+foreach ($page_descriptions as $slug => $description) {
+    $page = get_page_by_path($slug, OBJECT, 'page');
+
+    if ($page instanceof WP_Post) {
+        update_post_meta($page->ID, '_yoast_wpseo_metadesc', $description);
+    }
+}
+
+foreach (get_posts(array('post_type' => 'kangoo_blog', 'post_status' => 'publish', 'posts_per_page' => -1)) as $article) {
+    if (stripos($article->post_content, '<h1') !== false) {
+        wp_update_post(array(
+            'ID' => $article->ID,
+            'post_content' => preg_replace(array('/<h1\b/i', '/<\/h1>/i'), array('<h2', '</h2>'), $article->post_content),
+        ));
+    }
+}
+
+update_post_meta(474, '_yoast_wpseo_title', 'Best Nicotine Pouches UK (2026) | Top Picks');
 
 flush_rewrite_rules(false);
 WP_CLI::success('SEO growth migration complete. Backup: ' . $backup_file);

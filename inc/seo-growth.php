@@ -29,6 +29,12 @@ function kangoo_seo_exclude_brand_taxonomy_sitemap($excluded, $taxonomy) {
 add_filter('wpseo_sitemap_exclude_taxonomy', 'kangoo_seo_exclude_brand_taxonomy_sitemap', 10, 2);
 
 function kangoo_seo_noindex_thin_facets($robots) {
+    if ((function_exists('is_shop') && is_shop()) || is_search() || is_404()) {
+        $robots['index'] = 'noindex';
+        $robots['follow'] = 'follow';
+        return $robots;
+    }
+
     if (!is_tax(array('pa_flavour', 'pa_strength'))) {
         return $robots;
     }
@@ -43,6 +49,40 @@ function kangoo_seo_noindex_thin_facets($robots) {
     return $robots;
 }
 add_filter('wpseo_robots_array', 'kangoo_seo_noindex_thin_facets');
+
+function kangoo_seo_exclude_utility_pages_from_sitemap($post_ids) {
+    $utility_ids = array_filter(array(
+        function_exists('wc_get_page_id') ? wc_get_page_id('cart') : 0,
+        function_exists('wc_get_page_id') ? wc_get_page_id('checkout') : 0,
+        function_exists('wc_get_page_id') ? wc_get_page_id('myaccount') : 0,
+        function_exists('wc_get_page_id') ? wc_get_page_id('shop') : 0,
+    ));
+
+    return array_values(array_unique(array_merge((array) $post_ids, array_map('absint', $utility_ids))));
+}
+add_filter('wpseo_exclude_from_sitemap_by_post_ids', 'kangoo_seo_exclude_utility_pages_from_sitemap');
+
+function kangoo_seo_exclude_thin_facets_from_sitemap($term_ids) {
+    $thin_ids = get_terms(array(
+        'taxonomy' => array('pa_flavour', 'pa_strength'),
+        'hide_empty' => false,
+        'fields' => 'ids',
+        'number' => 0,
+        'meta_query' => array(),
+    ));
+
+    if (is_wp_error($thin_ids)) {
+        return $term_ids;
+    }
+
+    $thin_ids = array_filter($thin_ids, static function ($term_id) {
+        $term = get_term($term_id);
+        return $term instanceof WP_Term && (int) $term->count < 2;
+    });
+
+    return array_values(array_unique(array_merge((array) $term_ids, array_map('absint', $thin_ids))));
+}
+add_filter('wpseo_exclude_from_sitemap_by_term_ids', 'kangoo_seo_exclude_thin_facets_from_sitemap');
 
 function kangoo_seo_redirect_legacy_urls() {
     if (is_admin() || wp_doing_ajax() || wp_doing_cron()) {
