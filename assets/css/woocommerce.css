@@ -5888,3 +5888,8 @@ body.woocommerce-cart *::before,
 body.woocommerce-cart *::after {
   box-shadow: none !important;
 }
+
+.product-badge--sale {
+    background: #e63946;
+    color: #fff;
+}
