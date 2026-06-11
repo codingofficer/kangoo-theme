@@ -5,9 +5,9 @@ $cta_primary_link = get_sub_field('cta_primary_link');
 $cta_primary_text = get_sub_field('cta_primary_text');
 $cta_secondary_link = get_sub_field('cta_secondary_link');
 $cta_secondary_text = get_sub_field('cta_secondary_text');
-$finder_url = function_exists('kangoo_get_page_url_by_template') ? kangoo_get_page_url_by_template('page-templates/template-pouch-finder.php', '/pouch-finder/') : home_url('/pouch-finder/');
-$cta_secondary_link = $finder_url;
-$cta_secondary_text = __('Nicotine Pouch Finder', 'kangoo');
+$trial_url = function_exists('kangoo_get_term_url_by_slug') ? kangoo_get_term_url_by_slug('product_cat', '99p-pouches', '/product-category/99p-pouches/') : home_url('/product-category/99p-pouches/');
+$cta_secondary_link = $trial_url;
+$cta_secondary_text = __('99p Nicotine Pouches', 'kangoo');
 ?>
 
 <section class="hero section section--hero">

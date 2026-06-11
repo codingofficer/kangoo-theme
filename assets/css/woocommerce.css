@@ -3068,7 +3068,7 @@ body.woocommerce-cart {
     display: grid;
     grid-template-columns: 42px 1fr 42px;
     gap: 8px;
-    margin-bottom: 8px;
+    margin: 0;
 }
 
 .product-card__qty .qty-btn,

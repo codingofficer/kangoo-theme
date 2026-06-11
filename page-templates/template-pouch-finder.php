@@ -45,19 +45,6 @@ if (function_exists('wc_get_products')) {
     }
 }
 
-$finder_nicotine_url = function_exists('kangoo_get_term_url_by_slug') ? kangoo_get_term_url_by_slug('product_cat', 'nicotine-pouches', '/product-category/nicotine-pouches/') : home_url('/product-category/nicotine-pouches/');
-$finder_trial_url = function_exists('kangoo_get_term_url_by_slug') ? kangoo_get_term_url_by_slug('product_cat', '99p-pouches', '/product-category/99p-pouches/') : home_url('/product-category/99p-pouches/');
-$finder_compare_url = function_exists('kangoo_get_page_url_by_template') ? kangoo_get_page_url_by_template('page-templates/template-pouch-comparison.php', '/compare-pouches/') : home_url('/compare-pouches/');
-$finder_strength_url = function_exists('kangoo_get_page_url_by_template') ? kangoo_get_page_url_by_template('page-templates/template-strength-ladder.php', '/strength-ladder/') : home_url('/strength-ladder/');
-$finder_flavour_url = function_exists('kangoo_get_page_url_by_template') ? kangoo_get_page_url_by_template('page-templates/template-flavour-explorer.php', '/flavour-explorer/') : home_url('/flavour-explorer/');
-
-$finder_seo_links = array(
-    array('label' => __('Shop all nicotine pouches', 'kangoo'), 'url' => $finder_nicotine_url),
-    array('label' => __('99p pouch trials', 'kangoo'), 'url' => $finder_trial_url),
-    array('label' => __('Compare pouches', 'kangoo'), 'url' => $finder_compare_url),
-    array('label' => __('Strength ladder', 'kangoo'), 'url' => $finder_strength_url),
-    array('label' => __('Flavour explorer', 'kangoo'), 'url' => $finder_flavour_url),
-);
 ?>
 
 <main id="site-main" class="pouch-finder">
@@ -68,10 +55,6 @@ $finder_seo_links = array(
                     <span class="eyebrow"><?php esc_html_e('Kangoo Pouch Finder', 'kangoo'); ?></span>
                     <h1><?php esc_html_e('Find your pouch match', 'kangoo'); ?></h1>
                     <p><?php esc_html_e('Answer a few quick questions and get a strength, flavour, and product direction that suits how you want your pouch to feel.', 'kangoo'); ?></p>
-                    <div class="pouch-finder__hero-actions">
-                        <a class="btn btn--primary" href="#pouch-finder-tool"><?php esc_html_e('Start finder', 'kangoo'); ?></a>
-                        <a class="btn btn--secondary" href="<?php echo esc_url(function_exists('wc_get_page_permalink') ? wc_get_page_permalink('shop') : home_url('/shop/')); ?>"><?php esc_html_e('Browse all pouches', 'kangoo'); ?></a>
-                    </div>
                 </div>
 
                 <div class="pouch-finder__summary" aria-label="<?php esc_attr_e('Finder benefits', 'kangoo'); ?>">
@@ -87,23 +70,6 @@ $finder_seo_links = array(
                         <span><?php esc_html_e('Result', 'kangoo'); ?></span>
                         <strong><?php esc_html_e('Best match plus alternatives', 'kangoo'); ?></strong>
                     </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="kangoo-seo-strip section" aria-label="<?php esc_attr_e('Pouch finder buying links', 'kangoo'); ?>">
-        <div class="container">
-            <div class="kangoo-seo-strip__inner">
-                <div>
-                    <span class="eyebrow"><?php esc_html_e('Find, compare, then shop', 'kangoo'); ?></span>
-                    <h2><?php esc_html_e('Find nicotine pouches by strength, flavour and price', 'kangoo'); ?></h2>
-                    <p><?php esc_html_e('Use the finder for a quick recommendation, then compare live products, 79p trials and brand pages before choosing your pouch.', 'kangoo'); ?></p>
-                </div>
-                <div class="kangoo-seo-strip__links">
-                    <?php foreach ($finder_seo_links as $finder_seo_link) : ?>
-                        <a href="<?php echo esc_url($finder_seo_link['url']); ?>"><?php echo esc_html($finder_seo_link['label']); ?></a>
-                    <?php endforeach; ?>
                 </div>
             </div>
         </div>

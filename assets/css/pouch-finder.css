@@ -20,8 +20,8 @@
 }
 
 .pouch-finder__hero-copy h1 {
-  max-width: 11ch;
   margin-top: var(--space-3);
+  font-size: clamp(2rem, 3vw, 2.75rem);
   letter-spacing: 0;
 }
 
@@ -296,6 +296,10 @@
 }
 
 @media (max-width: 640px) {
+  .pouch-finder__summary {
+    display: none;
+  }
+
   .pouch-finder__hero-actions .btn,
   .pouch-finder__actions .btn,
   .pouch-finder__result > .btn {

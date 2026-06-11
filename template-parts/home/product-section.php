@@ -11,6 +11,10 @@
             <?php 
             $products = get_sub_field('products');
             if ($products):
+                if (function_exists('kangoo_sort_product_posts_by_badge')) {
+                    $products = kangoo_sort_product_posts_by_badge($products);
+                }
+
                 foreach ($products as $post):
                     setup_postdata($post);
                     wc_get_template_part('content', 'product');

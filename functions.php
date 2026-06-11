@@ -2472,6 +2472,52 @@ function kangoo_get_product_badge_key($product_id = null) {
     return $badge && isset($badge['key']) ? $badge['key'] : '';
 }
 
+function kangoo_sort_product_posts_by_badge($posts) {
+    if (count($posts) < 2) {
+        return $posts;
+    }
+
+    $priority = array(
+        'limited_edition' => 1,
+        'sale'            => 2,
+        'best_seller'     => 3,
+        'new'             => 4,
+        ''                => 9,
+    );
+    $ranked = array();
+
+    foreach ($posts as $index => $post_value) {
+        $post = get_post($post_value);
+
+        if (!$post instanceof WP_Post) {
+            continue;
+        }
+
+        $product = function_exists('wc_get_product') ? wc_get_product($post->ID) : null;
+        $badge_key = kangoo_get_product_badge_key($post->ID);
+        $ranked[] = array(
+            'post'     => $post,
+            'index'    => $index,
+            'stock'    => $product && $product->is_in_stock() ? 0 : 1,
+            'priority' => isset($priority[$badge_key]) ? $priority[$badge_key] : 8,
+        );
+    }
+
+    usort($ranked, function ($a, $b) {
+        if ($a['stock'] !== $b['stock']) {
+            return $a['stock'] <=> $b['stock'];
+        }
+
+        if ($a['priority'] !== $b['priority']) {
+            return $a['priority'] <=> $b['priority'];
+        }
+
+        return $a['index'] <=> $b['index'];
+    });
+
+    return array_column($ranked, 'post');
+}
+
 function kangoo_blog_get_field($name, $post_id = null, $default = '') {
     $post_id = $post_id ? $post_id : get_the_ID();
 
@@ -9681,6 +9727,25 @@ function kangoo_filter_product_category_query($query) {
     }
 }
 add_action('pre_get_posts', 'kangoo_filter_product_category_query');
+
+function kangoo_badged_archive_products_first($posts, $query) {
+    if (is_admin() || !$query->is_main_query()) {
+        return $posts;
+    }
+
+    if (!is_product_category() && !is_shop() && !is_product_taxonomy()) {
+        return $posts;
+    }
+
+    $orderby = isset($_GET['orderby']) ? sanitize_text_field(wp_unslash($_GET['orderby'])) : '';
+
+    if ($orderby !== '' && $orderby !== 'popularity') {
+        return $posts;
+    }
+
+    return kangoo_sort_product_posts_by_badge($posts);
+}
+add_filter('the_posts', 'kangoo_badged_archive_products_first', 20, 2);
 
 function kangoo_product_archive_stock_order_clauses($clauses, $query) {
     if (is_admin() || !$query->is_main_query()) {

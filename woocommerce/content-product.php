@@ -11,6 +11,7 @@ $badge = function_exists('kangoo_get_product_badge') ? kangoo_get_product_badge(
 
 $is_quick_add_card = is_front_page() || is_product_category() || is_shop() || is_product_taxonomy() || (function_exists('is_cart') && is_cart());
 $is_category_archive_card = is_shop() || is_product_category() || is_product_taxonomy();
+$is_compact_mobile_card = $is_category_archive_card || is_front_page();
 $is_variable = $product->is_type('variable');
 $card_unique_suffix = function_exists('wp_unique_id') ? wp_unique_id() : uniqid('', false);
 $modal_id = 'quick-add-' . $product->get_id() . '-' . $card_unique_suffix;
@@ -82,7 +83,7 @@ if ($is_quick_add_card && $is_variable) {
 }
 ?>
 
-<article <?php wc_product_class('product-card', $product); ?> data-product-card-id="<?php echo esc_attr($product->get_id()); ?>">
+<article <?php wc_product_class($is_compact_mobile_card ? 'product-card product-card--compact-mobile' : 'product-card', $product); ?> data-product-card-id="<?php echo esc_attr($product->get_id()); ?>">
     <?php if (function_exists('kangoo_render_product_card_event_decoration')) : ?>
         <?php kangoo_render_product_card_event_decoration(); ?>
     <?php endif; ?>
@@ -113,7 +114,7 @@ if ($is_quick_add_card && $is_variable) {
             : woocommerce_get_product_thumbnail('woocommerce_thumbnail');
         ?>
 
-        <?php if ($is_category_archive_card && $card_strength_label) : ?>
+        <?php if ($is_compact_mobile_card && $card_strength_label) : ?>
             <span class="product-card__image-strength"><?php echo esc_html($card_strength_label); ?></span>
         <?php endif; ?>
     </a>
@@ -126,7 +127,7 @@ if ($is_quick_add_card && $is_variable) {
                 </a>
             </h3>
 
-            <?php if (!$is_category_archive_card && $card_strength_label) : ?>
+            <?php if (!$is_compact_mobile_card && $card_strength_label) : ?>
                 <div class="product-card__strength-badges">
                     <span class="product-card__strength-badge">
                         <?php echo esc_html($card_strength_label); ?>
@@ -258,7 +259,7 @@ if ($is_quick_add_card && $is_variable) {
                     <?php endif; ?>
 				</div>
 
-				<?php if ($card_is_99p && $is_category_archive_card) : ?>
+				<?php if ($card_is_99p && $is_compact_mobile_card) : ?>
 					<span class="product-card__trial-limit"><?php esc_html_e('1 tin per order', 'kangoo'); ?></span>
 				<?php endif; ?>
 
@@ -269,11 +270,11 @@ if ($is_quick_add_card && $is_variable) {
 					data-product_id="<?php echo esc_attr($product_id); ?>"
 					data-product_sku="<?php echo esc_attr($product->get_sku()); ?>"
 					data-is-99p="<?php echo $card_is_99p ? '1' : '0'; ?>"
-					data-card-compact-label="<?php echo $is_category_archive_card ? ($card_is_99p ? 'trial' : 'compact') : ''; ?>"
+					data-card-compact-label="<?php echo $is_compact_mobile_card ? ($card_is_99p ? 'trial' : 'compact') : ''; ?>"
 					data-card-add
 					rel="nofollow"
 				>
-					<?php if ($is_category_archive_card) : ?>
+					<?php if ($is_compact_mobile_card) : ?>
 						<?php echo esc_html($card_is_99p ? __('Add to cart', 'kangoo') : __('+ Add', 'kangoo')); ?>
 					<?php else : ?>
 						Add to cart &middot; <?php echo wp_kses_post(wc_price($default_total)); ?>
