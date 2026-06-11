@@ -382,13 +382,25 @@ foreach (get_posts(array('post_type' => 'kangoo_blog', 'post_status' => 'publish
     }
 }
 
-$source_section = '<h2>Sources and further reading</h2><ul><li><a href="https://www.legislation.gov.uk/uksi/2016/507/contents/made" rel="nofollow noopener">The Tobacco and Related Products Regulations 2016</a></li><li><a href="https://www.gov.uk/government/publications/tobacco-and-vapes-bill-2024-factsheets" rel="nofollow noopener">UK Government: Tobacco and Vapes Bill factsheets</a></li><li><a href="https://www.bfr.bund.de/cm/349/health-risk-assessment-of-nicotine-pouches.pdf" rel="nofollow noopener">German Federal Institute for Risk Assessment: Health risk assessment of nicotine pouches</a></li></ul><p><small>Sources are provided for context. This article is not medical advice.</small></p>';
+$source_section = '<h2>Sources and further reading</h2><ul><li><a href="https://www.legislation.gov.uk/uksi/2016/507/contents/made" rel="nofollow noopener">The Tobacco and Related Products Regulations 2016</a></li><li><a href="https://cot.food.gov.uk/Statement%20on%20the%20bioavailability%20of%20nicotine%20from%20the%20use%20of%20oral%20nicotine%20pouches%20and%20assessment%20of%20the%20potential%20toxicological%20risk%20to%20users" rel="nofollow noopener">UK Committee on Toxicity: oral nicotine pouch risk statement</a></li><li><a href="https://www.bfr.bund.de/cm/349/health-risk-assessment-of-nicotine-pouches.pdf" rel="nofollow noopener">German Federal Institute for Risk Assessment: Health risk assessment of nicotine pouches</a></li></ul><p><small>Sources are provided for context. This article is not medical advice.</small></p>';
 
 foreach (array(857, 831, 859, 822, 823) as $source_post_id) {
     $source_post = get_post($source_post_id);
 
-    if ($source_post instanceof WP_Post && stripos($source_post->post_content, 'Sources and further reading') === false) {
-        wp_update_post(array('ID' => $source_post_id, 'post_content' => rtrim($source_post->post_content) . $source_section));
+    if ($source_post instanceof WP_Post) {
+        $source_content = str_replace(
+            'https://www.gov.uk/government/publications/tobacco-and-vapes-bill-2024-factsheets',
+            'https://cot.food.gov.uk/Statement%20on%20the%20bioavailability%20of%20nicotine%20from%20the%20use%20of%20oral%20nicotine%20pouches%20and%20assessment%20of%20the%20potential%20toxicological%20risk%20to%20users',
+            $source_post->post_content
+        );
+
+        if (stripos($source_content, 'Sources and further reading') === false) {
+            $source_content = rtrim($source_content) . $source_section;
+        }
+
+        if ($source_content !== $source_post->post_content) {
+            wp_update_post(array('ID' => $source_post_id, 'post_content' => $source_content));
+        }
     }
 }
 
