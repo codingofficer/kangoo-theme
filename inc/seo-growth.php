@@ -159,7 +159,8 @@ function kangoo_seo_plain_price($product) {
         return '';
     }
 
-    return html_entity_decode(wp_strip_all_tags(wc_price(wc_get_price_to_display($product))), ENT_QUOTES, 'UTF-8');
+    $price = html_entity_decode(wp_strip_all_tags(wc_price(wc_get_price_to_display($product))), ENT_QUOTES, 'UTF-8');
+    return preg_replace('/£\s*/u', 'GBP ', $price);
 }
 
 function kangoo_seo_key_links() {
@@ -188,7 +189,7 @@ function kangoo_seo_render_llms_summary() {
         '',
         '- Market: United Kingdom',
         '- Audience: adults aged 18+',
-        '- Free delivery threshold: £' . number_format($threshold, 2),
+        '- Free delivery threshold: GBP ' . number_format($threshold, 2),
         '- Dispatch: orders placed before 2pm Monday-Friday are dispatched the same day, excluding bank holidays',
         '- Catalogue: live prices and stock are authoritative on canonical product pages',
         '',
@@ -274,7 +275,7 @@ function kangoo_seo_write_ai_files() {
         rename($temporary, $path);
     }
 
-    update_option('kangoo_ai_discovery_files_version', '2026-06-11-1', false);
+    update_option('kangoo_ai_discovery_files_version', '2026-06-11-2', false);
     return true;
 }
 
@@ -306,7 +307,7 @@ function kangoo_seo_write_robots_file() {
 }
 
 function kangoo_seo_sync_discovery_files() {
-    if (get_option('kangoo_ai_discovery_files_version') === '2026-06-11-1') {
+    if (get_option('kangoo_ai_discovery_files_version') === '2026-06-11-2') {
         return;
     }
 
