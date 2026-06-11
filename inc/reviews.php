@@ -28,6 +28,11 @@ function kangoo_reviews_theme_render_summary_link($product_id) {
     $summary = kangoo_reviews_theme_summary($product_id);
 
     if (empty($summary['count'])) {
+        ?>
+        <span class="product-review-summary product-card__review-summary product-card__review-summary--empty" aria-label="<?php esc_attr_e('No reviews yet', 'kangoo'); ?>">
+            <span class="kangoo-review-stars" aria-hidden="true">★★★★★</span>
+        </span>
+        <?php
         return;
     }
 
