@@ -365,6 +365,21 @@ $page_descriptions = array(
     'faq' => 'Find answers to common Kangoo Pouches questions about products, strength, ordering, delivery, returns, rewards and adult-only sales.',
 );
 
+$front_page_id = (int) get_option('page_on_front');
+
+if ($front_page_id > 0) {
+    $home_title = 'Kangoo Pouches UK | Nicotine Pouches from 79p';
+    $home_description = 'Shop nicotine pouches from VELO, ZYN, Nordic Spirit, KILLA and more. Compare flavours, strengths and live UK prices from 79p. Adults 18+ only.';
+
+    update_post_meta($front_page_id, '_yoast_wpseo_title', $home_title);
+    update_post_meta($front_page_id, '_yoast_wpseo_metadesc', $home_description);
+    update_post_meta($front_page_id, '_yoast_wpseo_focuskw', 'Kangoo Pouches');
+    update_post_meta($front_page_id, '_yoast_wpseo_opengraph-title', $home_title);
+    update_post_meta($front_page_id, '_yoast_wpseo_opengraph-description', $home_description);
+    update_post_meta($front_page_id, '_yoast_wpseo_twitter-title', $home_title);
+    update_post_meta($front_page_id, '_yoast_wpseo_twitter-description', $home_description);
+}
+
 foreach ($page_descriptions as $slug => $description) {
     $page = get_page_by_path($slug, OBJECT, 'page');
 
