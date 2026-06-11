@@ -2742,6 +2742,10 @@ function kangoo_site_logo_url() {
 }
 
 function kangoo_site_identity_schema() {
+    if (defined('WPSEO_VERSION')) {
+        return;
+    }
+
     $home_url = home_url('/');
     $organization_id = trailingslashit($home_url) . '#organization';
     $website_id = trailingslashit($home_url) . '#website';
@@ -2880,6 +2884,10 @@ function kangoo_schema_breadcrumb_item($position, $name, $url) {
 }
 
 function kangoo_breadcrumb_schema() {
+    if (defined('WPSEO_VERSION')) {
+        return;
+    }
+
     $breadcrumb_items = kangoo_get_breadcrumb_items();
 
     if (count($breadcrumb_items) < 2) {
@@ -2964,7 +2972,9 @@ function kangoo_product_schema() {
         'image' => array_values(array_unique($images)),
         'brand' => array(
             '@type' => 'Brand',
-            'name' => $product->get_attribute('pa_brand') ?: get_bloginfo('name'),
+            'name' => function_exists('kangoo_get_product_brand_label')
+                ? kangoo_get_product_brand_label($product)
+                : ($product->get_attribute('pa_brand') ?: get_bloginfo('name')),
         ),
         'offers' => array(
             '@type' => 'Offer',
@@ -2977,11 +2987,56 @@ function kangoo_product_schema() {
                 '@type' => 'Organization',
                 'name' => get_bloginfo('name'),
             ),
+            'hasMerchantReturnPolicy' => array(
+                '@type' => 'MerchantReturnPolicy',
+                'applicableCountry' => 'GB',
+                'returnPolicyCategory' => 'https://schema.org/MerchantReturnFiniteReturnWindow',
+                'merchantReturnDays' => 14,
+                'returnMethod' => 'https://schema.org/ReturnByMail',
+                'returnFees' => 'https://schema.org/ReturnShippingFees',
+                'merchantReturnLink' => home_url('/returns-and-refunds/'),
+            ),
         ),
     );
 
     if ($product->get_sku()) {
         $schema['sku'] = $product->get_sku();
+    }
+
+    if (method_exists($product, 'get_global_unique_id')) {
+        $global_id = preg_replace('/[^0-9]/', '', (string) $product->get_global_unique_id());
+        $gtin_key = 'gtin' . strlen($global_id);
+
+        if ($global_id !== '' && in_array($gtin_key, array('gtin8', 'gtin12', 'gtin13', 'gtin14'), true)) {
+            $schema[$gtin_key] = $global_id;
+        }
+    }
+
+    $mpn = trim((string) get_post_meta($product_id, '_mpn', true));
+
+    if ($mpn !== '') {
+        $schema['mpn'] = $mpn;
+    }
+
+    $additional_properties = array();
+    $strength = function_exists('kangoo_get_product_strength_details') ? kangoo_get_product_strength_details($product) : array();
+    $flavour = function_exists('kangoo_get_product_flavour_label') ? kangoo_get_product_flavour_label($product) : '';
+    $pouch_count = function_exists('kangoo_get_product_pouch_count') ? kangoo_get_product_pouch_count($product) : 0;
+
+    if (!empty($strength['label'])) {
+        $additional_properties[] = array('@type' => 'PropertyValue', 'name' => 'Nicotine strength', 'value' => $strength['label']);
+    }
+
+    if ($flavour !== '') {
+        $additional_properties[] = array('@type' => 'PropertyValue', 'name' => 'Flavour', 'value' => $flavour);
+    }
+
+    if ($pouch_count > 0) {
+        $additional_properties[] = array('@type' => 'PropertyValue', 'name' => 'Pouches per tin', 'value' => (string) $pouch_count);
+    }
+
+    if (!empty($additional_properties)) {
+        $schema['additionalProperty'] = $additional_properties;
     }
 
     $kangoo_review_summary = function_exists('kangoo_reviews_get_summary') ? kangoo_reviews_get_summary($product_id) : array();
@@ -9005,6 +9060,7 @@ require_once get_template_directory() . '/inc/shipping-operations.php';
 require_once get_template_directory() . '/inc/cart-recommendations.php';
 require_once get_template_directory() . '/inc/event-themes.php';
 require_once get_template_directory() . '/inc/reviews.php';
+require_once get_template_directory() . '/inc/seo-growth.php';
 
 function kangoo_acf_add_types_panel_choice($field) {
     if (!empty($field['choices']) && !array_key_exists('types', $field['choices'])) {

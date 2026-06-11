@@ -1,0 +1,281 @@
+<?php
+
+defined('ABSPATH') || exit;
+
+if (!defined('WP_CLI') || !WP_CLI) {
+    exit('Run this file with wp eval-file.');
+}
+
+$backup_dir = WP_CONTENT_DIR . '/uploads/kangoo-seo-backups';
+wp_mkdir_p($backup_dir);
+$stamp = gmdate('Ymd-His');
+
+$backup = array(
+    'created_at' => gmdate('c'),
+    'wpseo_taxonomy_meta' => get_option('wpseo_taxonomy_meta', array()),
+    'terms' => array(),
+    'posts' => array(),
+);
+
+foreach (get_terms(array('taxonomy' => 'product_cat', 'hide_empty' => false)) as $term) {
+    $backup['terms'][$term->term_id] = array(
+        'name' => $term->name,
+        'slug' => $term->slug,
+        'description' => $term->description,
+        'meta' => get_term_meta($term->term_id),
+    );
+}
+
+foreach (get_posts(array('post_type' => 'kangoo_blog', 'post_status' => 'any', 'posts_per_page' => -1)) as $post) {
+    $backup['posts'][$post->ID] = array(
+        'post_title' => $post->post_title,
+        'post_name' => $post->post_name,
+        'post_status' => $post->post_status,
+        'post_content' => $post->post_content,
+        'post_excerpt' => $post->post_excerpt,
+        'meta' => get_post_meta($post->ID),
+    );
+}
+
+$backup_file = trailingslashit($backup_dir) . 'seo-growth-before-migration-' . $stamp . '.json';
+file_put_contents($backup_file, wp_json_encode($backup, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+
+function kangoo_seo_growth_update_term($slug, $data) {
+    $term = get_term_by('slug', $slug, 'product_cat');
+
+    if (!$term instanceof WP_Term) {
+        WP_CLI::warning('Missing product category: ' . $slug);
+        return 0;
+    }
+
+    $term_update = array('description' => '');
+
+    if (!empty($data['name'])) {
+        $term_update['name'] = $data['name'];
+    }
+
+    wp_update_term($term->term_id, 'product_cat', $term_update);
+    update_term_meta($term->term_id, 'category_seo_title', $data['heading']);
+    update_term_meta($term->term_id, 'category_intro', $data['intro']);
+    update_term_meta($term->term_id, 'category_seo_content', $data['content']);
+
+    if (function_exists('update_field')) {
+        update_field('category_faq', $data['faq'], 'product_cat_' . $term->term_id);
+    }
+
+    return $term->term_id;
+}
+
+function kangoo_seo_growth_brand_content($brand, $intro, $flavours, $strengths, $format, $extra = '') {
+    return '<h2>Shop ' . esc_html($brand) . ' nicotine pouches in the UK</h2>'
+        . '<p>' . esc_html($intro) . ' This page shows the ' . esc_html($brand) . ' products currently available from Kangoo Pouches, with live stock and current single-tin or multi-buy pricing on each product card.</p>'
+        . '<h2>' . esc_html($brand) . ' flavours and strengths</h2>'
+        . '<p>Available flavours can include ' . esc_html($flavours) . ', depending on current stock. Strength options can include ' . esc_html($strengths) . '. Check the strength shown on each product before ordering rather than relying on colour or flavour alone.</p>'
+        . '<h2>Compare the range</h2>'
+        . '<p>' . esc_html($format) . ' Use the filters to compare flavour and strength, then open a product page for pouch count, current price, pack options and delivery information. Products that are unavailable are not presented as in-stock choices.</p>'
+        . ($extra ? '<p>' . esc_html($extra) . '</p>' : '')
+        . '<h2>Buying nicotine pouches responsibly</h2>'
+        . '<p>Nicotine is addictive. These tobacco-free nicotine pouches are intended only for adults aged 18 and over. They are not traditional tobacco snus. If you are new to nicotine, avoid choosing a high-strength pouch simply because it offers a flavour you recognise.</p>'
+        . '<h2>Delivery and current prices</h2>'
+        . '<p>Prices, promotions and availability can change, so the product and basket totals are the authoritative source. Orders placed before 2pm Monday-Friday are dispatched the same day, excluding bank holidays. Free delivery is available when the qualifying basket threshold shown at checkout is reached.</p>';
+}
+
+$categories = array(
+    'nicotine-pouches' => array(
+        'heading' => 'Nicotine Pouches UK',
+        'intro' => 'Buy nicotine pouches online in the UK from stocked brands, with mint, berry, citrus, fruit and stronger tobacco-free options available for adults aged 18 and over.',
+        'content' => '<h2>Buy nicotine pouches online in the UK</h2><p>Compare tobacco-free nicotine pouches from stocked brands including VELO, ZYN, Nordic Spirit, KILLA, PABLO, FUMi, Ubbs and XQS. The catalogue brings together flavour, strength, pouch count, current price and availability so you can compare real products rather than broad claims.</p><h2>Choose by brand, flavour or strength</h2><p>Use the brand, flavour and strength filters to narrow the range. Mint and ice profiles are common choices for a cooling taste, while berry, citrus, fruit, coffee and tropical options offer different flavour directions. Strength is measured per pouch and should be checked on the individual product page.</p><h2>Low, medium and strong nicotine pouches</h2><p>Lower-strength pouches may suit adults looking for a lighter option, while strong and extra-strong products are intended for experienced nicotine users. A higher number is not automatically a better choice. Product titles, strength badges and descriptions provide the current manufacturer information available to Kangoo.</p><h2>Nicotine pouches and snus are not the same</h2><p>Kangoo sells tobacco-free nicotine pouches, not traditional tobacco snus. Our snus guides explain the UK legal position and the differences between tobacco snus and legal tobacco-free alternatives.</p><h2>Prices, delivery and stock</h2><p>Current prices and pack options appear on each product page. Selected products in the established 99p collection may be reduced to 79p during the current promotion. Orders placed before 2pm Monday-Friday are dispatched the same day, excluding bank holidays, and the checkout shows every available delivery service and live total.</p>',
+        'faq' => array(
+            array('question' => 'Can I buy nicotine pouches online in the UK?', 'answer' => 'Yes. Kangoo Pouches sells tobacco-free nicotine pouches online to adults aged 18 and over in the UK.'),
+            array('question' => 'Are nicotine pouches the same as snus?', 'answer' => 'No. Nicotine pouches are tobacco-free. Traditional snus contains tobacco and is not what Kangoo sells.'),
+            array('question' => 'How do I compare nicotine pouch strengths?', 'answer' => 'Check the nicotine amount shown for each pouch on the product page and choose a level appropriate for your experience.'),
+        ),
+        'yoast_title' => 'Nicotine Pouches UK | Buy Online from 79p | Kangoo',
+        'yoast_desc' => 'Buy nicotine pouches online in the UK from VELO, ZYN, Nordic Spirit, KILLA and more. Compare flavours, strengths and live prices from 79p.',
+        'focus' => 'nicotine pouches UK',
+    ),
+    '99p-pouches' => array(
+        'name' => '99p Nicotine Pouches',
+        'heading' => '99p Nicotine Pouches - Now from 79p',
+        'intro' => 'Shop the established 99p nicotine pouch collection, with selected stocked pouches temporarily reduced to 79p while promotional stock lasts.',
+        'content' => '<h2>99p nicotine pouches, now from 79p</h2><p>This is Kangoo Pouches’ established 99p nicotine pouch collection. Selected products are currently reduced further to 79p as a temporary promotion. The collection name and URL remain centred on the searched 99p nicotine pouches term, while the live product price shows the current offer.</p><h2>What is included?</h2><p>The available selection can include products from brands such as ZYN, VELO, FUMi, Nordic Spirit and XQS. Stock changes, so only products shown as available can be purchased. Each promotional product is limited to the quantity rules displayed on the product card or basket.</p><h2>Compare before you buy</h2><p>Check the brand, flavour and nicotine strength on every product. Promotional pricing does not make a strong pouch suitable for a new user. Use the product page and filters to find the most appropriate option rather than choosing by price alone.</p><h2>Separate from normal pack pricing</h2><p>The promotional collection is separate from standard single-tin and multi-buy pricing. Products outside this collection keep their normal product and pack prices. Basket totals, stock controls and delivery thresholds continue to apply.</p><h2>Adults only</h2><p>Nicotine is addictive and every product is for adults aged 18 and over. Kangoo sells tobacco-free nicotine pouches, not traditional tobacco snus.</p>',
+        'faq' => array(
+            array('question' => 'Are these still 99p nicotine pouches?', 'answer' => 'Yes. This is the established 99p collection, with selected products temporarily reduced to 79p while promotional stock lasts.'),
+            array('question' => 'Is there a purchase limit?', 'answer' => 'Some promotional pouches are limited per order. The product card and basket show the current limit.'),
+            array('question' => 'Are all nicotine pouches 79p?', 'answer' => 'No. The 79p promotion applies only to selected products in this collection. Standard products and pack offers use their normal live prices.'),
+        ),
+        'yoast_title' => '99p Nicotine Pouches - Now from 79p | Kangoo',
+        'yoast_desc' => 'Shop 99p nicotine pouches with selected stocked products now reduced to 79p. Compare brands, flavours and strengths while promotional stock lasts.',
+        'focus' => '99p nicotine pouches',
+    ),
+);
+
+$brand_specs = array(
+    'velo' => array('VELO', 'Shop VELO nicotine pouches online in the UK, with live stock across cooling, fruit and citrus profiles.', 'peppermint, spearmint, berry, grape, mango, lemon, orange and watermelon', 'lighter 6mg products through stronger 10mg and 10.9mg options', 'VELO products use slim, tobacco-free pouch formats, with pouch count confirmed on each product page.'),
+    'zyn' => array('ZYN', 'Compare ZYN nicotine pouches available in the UK, including mini and regular formats across fruit, mint and coffee profiles.', 'black cherry, red fruits, citrus, mint, coffee and other stocked profiles', 'lower mini strengths and stronger regular options', 'ZYN formats and pouch counts vary by product, so check the individual product details.'),
+    'nordic-spirit' => array('Nordic Spirit', 'Browse stocked Nordic Spirit nicotine pouches in fresh mint and berry-style flavours.', 'mint, spearmint, berry and other available profiles', 'the strengths shown on current product cards', 'Nordic Spirit products are tobacco-free and the live product page confirms the exact format.'),
+    'killa' => array('KILLA', 'Shop KILLA nicotine pouches for experienced adult users looking for strong flavour and nicotine options.', 'mint, fruit, berry, cola and other stocked profiles', 'strong and extra-strong options', 'KILLA products are nicotine pouches, sometimes searched for as KILLA snus, but they are sold here as tobacco-free alternatives.'),
+    'pablo' => array('PABLO', 'Compare stocked PABLO nicotine pouches for experienced adult nicotine users.', 'mint, ice, fruit and other available profiles', 'strong and extra-strong options', 'Strength should be checked carefully because PABLO products can sit at the stronger end of the range.'),
+    'fumi' => array('FUMi', 'Browse FUMi nicotine pouches in distinctive fruit, mint and mixed flavour profiles.', 'fruit, berry, mint and other stocked flavours', 'the nicotine levels shown on each live product', 'FUMi availability changes, and the product page is the source for pouch count and format.'),
+    'ubbs' => array('Ubbs', 'Shop available Ubbs nicotine pouches and compare current flavours, strengths and pack pricing.', 'berry and other stocked profiles', 'the strength choices currently available', 'Use live product cards to compare the exact strength and pouch count before ordering.'),
+    'xqs' => array('XQS', 'Compare stocked XQS nicotine pouches across cooling and fruit-led flavour profiles.', 'mint, citrus, fruit and other available profiles', 'the strengths shown in the current catalogue', 'XQS stock can change, so unavailable flavours are not presented as purchasable choices.'),
+);
+
+foreach ($brand_specs as $slug => $spec) {
+    list($brand, $intro, $flavours, $strengths, $format) = $spec;
+    $categories[$slug] = array(
+        'heading' => $brand . ' Nicotine Pouches UK',
+        'intro' => $intro,
+        'content' => kangoo_seo_growth_brand_content($brand, $intro, $flavours, $strengths, $format),
+        'faq' => array(
+            array('question' => 'Can I buy ' . $brand . ' nicotine pouches in the UK?', 'answer' => 'Yes. Available ' . $brand . ' nicotine pouches can be ordered online from Kangoo Pouches by adults aged 18 and over.'),
+            array('question' => 'Which ' . $brand . ' strength should I choose?', 'answer' => 'Compare the nicotine strength shown on each product and choose an option appropriate for your experience. Stronger is not automatically better.'),
+            array('question' => 'Does Kangoo sell ' . $brand . ' snus?', 'answer' => 'Kangoo sells tobacco-free ' . $brand . ' nicotine pouches, not traditional tobacco snus.'),
+        ),
+        'yoast_title' => $brand . ' Nicotine Pouches UK | Flavours & Strengths',
+        'yoast_desc' => 'Shop ' . $brand . ' nicotine pouches in the UK. Compare stocked flavours, strengths, pouch formats, live prices and multi-buy options. Adults 18+ only.',
+        'focus' => $brand . ' nicotine pouches',
+    );
+}
+
+$yoast = get_option('wpseo_taxonomy_meta', array());
+$yoast['product_cat'] = isset($yoast['product_cat']) && is_array($yoast['product_cat']) ? $yoast['product_cat'] : array();
+
+foreach ($categories as $slug => $data) {
+    $term_id = kangoo_seo_growth_update_term($slug, $data);
+
+    if (!$term_id) {
+        continue;
+    }
+
+    $yoast['product_cat'][$term_id] = array_merge(isset($yoast['product_cat'][$term_id]) ? $yoast['product_cat'][$term_id] : array(), array(
+        'wpseo_title' => $data['yoast_title'],
+        'wpseo_desc' => $data['yoast_desc'],
+        'wpseo_focuskw' => $data['focus'],
+        'wpseo_canonical' => '',
+        'wpseo_noindex' => 'default',
+    ));
+}
+update_option('wpseo_taxonomy_meta', $yoast, false);
+
+function kangoo_seo_growth_merge_post($target_id, $source_id, $new_slug = '') {
+    $target = get_post($target_id);
+    $source = get_post($source_id);
+
+    if (!$target || !$source) {
+        return;
+    }
+
+    $update = array('ID' => $target_id);
+
+    if (strlen(wp_strip_all_tags($source->post_content)) > strlen(wp_strip_all_tags($target->post_content))) {
+        $update['post_content'] = $source->post_content;
+        $update['post_excerpt'] = $source->post_excerpt;
+    }
+
+    if ($new_slug !== '') {
+        $update['post_name'] = $new_slug;
+    }
+
+    wp_update_post($update);
+    wp_trash_post($source_id);
+}
+
+kangoo_seo_growth_merge_post(474, 818);
+kangoo_seo_growth_merge_post(821, 492);
+kangoo_seo_growth_merge_post(485, 826);
+kangoo_seo_growth_merge_post(820, 480);
+kangoo_seo_growth_merge_post(822, 858, 'what-is-snus');
+kangoo_seo_growth_merge_post(856, 483, 'what-are-nicotine-pouches');
+
+foreach (array(859 => 'snus-uk', 1138 => 'nicotine-pouches-from-3-99-kangoo-single-tin-prices') as $post_id => $slug) {
+    if (get_post($post_id)) {
+        wp_update_post(array('ID' => $post_id, 'post_name' => $slug));
+    }
+}
+
+function kangoo_seo_growth_article($data) {
+    $existing = get_page_by_path($data['slug'], OBJECT, 'kangoo_blog');
+    $post_id = $existing ? $existing->ID : wp_insert_post(array(
+        'post_type' => 'kangoo_blog',
+        'post_status' => 'publish',
+        'post_title' => $data['title'],
+        'post_name' => $data['slug'],
+        'post_excerpt' => $data['excerpt'],
+        'post_content' => $data['content'],
+    ));
+
+    if (is_wp_error($post_id)) {
+        WP_CLI::warning($post_id->get_error_message());
+        return;
+    }
+
+    if ($existing) {
+        wp_update_post(array('ID' => $post_id, 'post_title' => $data['title'], 'post_excerpt' => $data['excerpt'], 'post_content' => $data['content']));
+    }
+
+    update_post_meta($post_id, '_yoast_wpseo_title', $data['seo_title']);
+    update_post_meta($post_id, '_yoast_wpseo_metadesc', $data['seo_desc']);
+    update_post_meta($post_id, '_yoast_wpseo_focuskw', $data['focus']);
+    wp_set_object_terms($post_id, array($data['topic']), 'blog_topic', false);
+}
+
+$articles = array(
+    array(
+        'slug' => 'velo-vs-nordic-spirit', 'title' => 'VELO vs Nordic Spirit: Which Nicotine Pouch Brand Suits You?', 'topic' => 'Comparisons', 'focus' => 'VELO vs Nordic Spirit',
+        'seo_title' => 'VELO vs Nordic Spirit | UK Brand Comparison', 'seo_desc' => 'Compare VELO and Nordic Spirit nicotine pouches by flavour, strength, format and current UK availability. An adult-only, stock-aware guide.',
+        'excerpt' => 'A practical comparison of VELO and Nordic Spirit nicotine pouches available in the UK.',
+        'content' => '<p>VELO and Nordic Spirit are two established tobacco-free nicotine pouch brands available to UK adults. The better choice depends on the flavour, strength and pouch format you prefer, not on a single universal winner.</p><h2>Range and availability</h2><p>VELO currently offers Kangoo shoppers a broader mix of cooling, fruit and citrus-led profiles. Nordic Spirit has a more focused range, often centred on mint and berry-style products. Live category pages are the reliable source because individual flavours can sell out or change.</p><h2>Flavour comparison</h2><p>VELO is useful if you want to compare peppermint, spearmint, berry, grape, tropical or citrus directions. Nordic Spirit may suit shoppers who prefer a smaller, familiar flavour set. Taste is subjective, so product descriptions should be treated as guidance rather than a guarantee.</p><h2>Strength and pouch feel</h2><p>Both brands offer products at different nicotine levels. Read the amount per pouch on the exact product page. Do not assume two tins with similar colours or names have the same strength. Adults with less nicotine experience should avoid jumping directly to a high-strength option.</p><h2>Price and pack options</h2><p>Kangoo shows the current single-tin price and available multi-buy tiers beside each product. Compare the total and per-tin value for the quantity you actually need. Promotional products are separate from normal pack pricing and may carry per-order limits.</p><h2>Which should you choose?</h2><p>Choose VELO when breadth of flavour and strength is the priority. Choose Nordic Spirit when one of its current mint or berry products closely matches your preference. If neither range fits, compare ZYN or another stocked brand rather than choosing only by logo.</p><h2>Important information</h2><p>Both ranges sold by Kangoo are tobacco-free nicotine pouches for adults aged 18 and over. Nicotine is addictive. They are not traditional tobacco snus.</p>',
+    ),
+    array(
+        'slug' => 'zyn-vs-nordic-spirit', 'title' => 'ZYN vs Nordic Spirit: UK Nicotine Pouch Comparison', 'topic' => 'Comparisons', 'focus' => 'ZYN vs Nordic Spirit',
+        'seo_title' => 'ZYN vs Nordic Spirit | UK Pouch Comparison', 'seo_desc' => 'Compare ZYN and Nordic Spirit nicotine pouches by flavour, strength, format, price and current UK stock. For adults aged 18 and over.',
+        'excerpt' => 'Compare ZYN and Nordic Spirit across flavour, format, strength and current UK availability.',
+        'content' => '<p>ZYN and Nordic Spirit both make tobacco-free nicotine pouches, but their current ranges differ in flavour breadth, format and strength. This comparison uses products actually stocked by Kangoo rather than pretending every international product is available in the UK.</p><h2>ZYN range</h2><p>ZYN products can include mini and regular formats with fruit, citrus, coffee and mint profiles. Mini pouches may appeal to adults who prefer a smaller pouch, but the product strength still needs to be checked individually.</p><h2>Nordic Spirit range</h2><p>Nordic Spirit offers a more concentrated selection on Kangoo, including fresh mint and berry-style choices when stocked. A smaller range can make comparison simpler, although it offers fewer flavour directions than ZYN.</p><h2>Strength comparison</h2><p>Brand name is not a strength guide. Compare the nicotine amount per pouch shown on the product page. If you are unsure, choose a lower level rather than assuming a stronger pouch provides better value.</p><h2>Price and availability</h2><p>Current prices, pack options and stock appear live on the relevant category and product pages. Selected promotional tins may be limited per order. Normal multi-buy prices remain separate.</p><h2>ZYN or Nordic Spirit?</h2><p>ZYN may suit shoppers who value a wider choice of flavour and format. Nordic Spirit may suit those who already know they prefer one of its mint or berry products. Both are adult-only, tobacco-free nicotine pouch ranges rather than traditional snus.</p>',
+    ),
+    array(
+        'slug' => 'nordic-spirit-reviews', 'title' => 'Nordic Spirit Review: Flavours, Strengths and UK Options', 'topic' => 'Brand Guides', 'focus' => 'Nordic Spirit reviews',
+        'seo_title' => 'Nordic Spirit Review | Flavours & Strengths UK', 'seo_desc' => 'Read a stock-aware Nordic Spirit review covering flavours, strengths, pouch format and UK buying considerations. No fabricated customer claims.',
+        'excerpt' => 'An evidence-led look at Nordic Spirit flavours, strengths and current UK buying options.',
+        'content' => '<p>This Nordic Spirit review focuses on product facts and current availability rather than inventing a universal taste score. Flavour preference and pouch feel are personal, so the useful comparison is between the options you can actually buy.</p><h2>What is Nordic Spirit?</h2><p>Nordic Spirit is a tobacco-free nicotine pouch brand. The pouch sits under the lip and releases nicotine and flavour without smoke. Products are intended only for adults aged 18 and over.</p><h2>Flavours</h2><p>Kangoo stock can include fresh mint, spearmint and berry-style Nordic Spirit products. The live category page shows what is currently available. Product descriptions explain the intended flavour direction but cannot guarantee how an individual shopper will perceive it.</p><h2>Strengths</h2><p>Check the nicotine amount per pouch rather than relying on a product colour. Stronger products are intended for experienced adult nicotine users. If you are moving from a lower-strength pouch, compare the numbers carefully.</p><h2>Pouch format and count</h2><p>The exact pouch count and format appear on each product page. These details matter when comparing price because a tin price alone does not explain pouch count or nicotine strength.</p><h2>Value and delivery</h2><p>Kangoo displays live prices and any available pack tiers. Orders placed before 2pm Monday-Friday are dispatched the same day, excluding bank holidays. Checkout shows the delivery methods available for the basket.</p><h2>Verdict</h2><p>Nordic Spirit is worth considering if its focused flavour range and available strengths match your preferences. Compare it with VELO or ZYN if you want a broader flavour choice. This is not medical advice and nicotine is addictive.</p>',
+    ),
+    array(
+        'slug' => 'velo-reviews', 'title' => 'VELO Review: Flavours, Strengths and UK Prices', 'topic' => 'Brand Guides', 'focus' => 'VELO reviews',
+        'seo_title' => 'VELO Review | Flavours, Strengths & UK Prices', 'seo_desc' => 'Review the VELO nicotine pouch range by flavour, strength, format and current UK pricing. Stock-aware guidance for adults aged 18 and over.',
+        'excerpt' => 'A practical review of VELO flavours, strengths, formats and live UK buying options.',
+        'content' => '<p>VELO has one of the broader tobacco-free nicotine pouch ranges available through Kangoo. This review explains the differences shoppers can verify: flavour, nicotine strength, pouch format, pouch count, price and stock.</p><h2>VELO flavour range</h2><p>Depending on current availability, VELO flavours can include peppermint, spearmint, berry, grape, mango, lemon, orange and watermelon. Cooling mint products and sweeter fruit products provide distinctly different directions, so there is no single best VELO flavour for everyone.</p><h2>Strength options</h2><p>VELO products on Kangoo span lighter and stronger nicotine levels. Read the exact amount per pouch on each product. A flavour you enjoy is not a reason to select a strength above your experience.</p><h2>Format and pouch count</h2><p>Many VELO products use slim pouch formats, but the exact format and count should be confirmed on the individual product page. These details help make a fair price comparison between tins.</p><h2>Current prices and multi-buys</h2><p>Single-tin prices and pack tiers are shown live. Some VELO products also appear in the established 99p promotional collection when allocated stock is available. Promotional limits and normal multi-buy ladders are separate.</p><h2>How VELO compares</h2><p>VELO generally offers broader flavour choice than Nordic Spirit in the current Kangoo catalogue. ZYN adds different mini and regular formats. Compare the categories directly if format matters as much as flavour.</p><h2>Verdict</h2><p>VELO is a strong range for adults who want to compare several flavour and strength combinations from one brand. The best choice is the product that matches your preferred flavour and suitable nicotine level. Nicotine is addictive and these products are for adults aged 18 and over.</p>',
+    ),
+);
+
+foreach ($articles as $article) {
+    kangoo_seo_growth_article($article);
+}
+
+$product_id = 306;
+$product = get_post($product_id);
+
+if ($product) {
+    wp_update_post(array(
+        'ID' => $product_id,
+        'post_title' => str_ireplace('11mg', '10.9mg', $product->post_title),
+        'post_name' => 'freezing-peppermint-10-9mg',
+        'post_content' => str_ireplace('11mg', '10.9mg', $product->post_content),
+        'post_excerpt' => str_ireplace('11mg', '10.9mg', $product->post_excerpt),
+    ));
+
+    foreach (get_post_meta($product_id) as $key => $values) {
+        foreach ($values as $value) {
+            $decoded = maybe_unserialize($value);
+
+            if (is_string($decoded) && stripos($decoded, '11mg') !== false) {
+                update_post_meta($product_id, $key, str_ireplace('11mg', '10.9mg', $decoded));
+            }
+        }
+    }
+
+    update_post_meta($product_id, 'strength_mg', '10.9');
+}
+
+flush_rewrite_rules(false);
+WP_CLI::success('SEO growth migration complete. Backup: ' . $backup_file);
+
