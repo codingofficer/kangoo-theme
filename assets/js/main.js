@@ -2125,6 +2125,10 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function setupCartEmailCapture() {
+    if (window.kangooAgeVerification && window.kangooAgeVerification.replacesDobGate) {
+      return;
+    }
+
     const cartPage = document.querySelector('.woocommerce-cart');
 
     if (!cartPage) {
