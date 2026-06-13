@@ -595,7 +595,7 @@
   .grid--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .grid--3,
   .grid--products,
-  .woo-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .woo-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .tile { min-height: 190px; }
 
   .category-page__hero {

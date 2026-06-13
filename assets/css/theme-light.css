@@ -247,6 +247,7 @@ body.kangoo-theme--light .kangoo-rewards-cart__locked strong {
 }
 
 body.kangoo-theme--light .brand-card,
+body.kangoo-theme--light .flavour-card,
 body.kangoo-theme--light .faq-list details,
 body.kangoo-theme--light .category-filter,
 body.kangoo-theme--light .seo-product-card,
@@ -259,6 +260,7 @@ body.kangoo-theme--light .quick-add-modal__panel {
 }
 
 body.kangoo-theme--light .brand-card:hover,
+body.kangoo-theme--light .flavour-card:hover,
 body.kangoo-theme--light .faq-list details[open],
 body.kangoo-theme--light .seo-faq-list details[open] {
   border-color: rgba(22, 119, 232, 0.25);
@@ -266,6 +268,7 @@ body.kangoo-theme--light .seo-faq-list details[open] {
 }
 
 body.kangoo-theme--light .brand-card__title,
+body.kangoo-theme--light .flavour-card__title,
 body.kangoo-theme--light .quick-add-modal__close,
 body.kangoo-theme--light .quick-add-pill,
 body.kangoo-theme--light .quick-add-qty__input,
@@ -585,24 +588,21 @@ body.kangoo-theme--light .site-footer__bottom {
 }
 
 body.kangoo-theme--light .kangoo-age-gate {
-  color: #ffffff;
+  color: #111827;
 }
 
 body.kangoo-theme--light .kangoo-age-gate__panel {
-  background:
-    radial-gradient(circle at 15% 10%, rgba(255, 122, 0, 0.18), transparent 34%),
-    radial-gradient(circle at 90% 20%, rgba(77, 163, 255, 0.16), transparent 38%),
-    #0d0d0f;
+  background: #ffffff;
 }
 
 body.kangoo-theme--light .kangoo-age-gate__title,
 body.kangoo-theme--light .kangoo-age-gate__button--secondary {
-  color: #ffffff;
+  color: #111827;
 }
 
 body.kangoo-theme--light .kangoo-age-gate__copy,
 body.kangoo-theme--light .kangoo-age-gate__smallprint {
-  color: rgba(243, 244, 246, 0.76);
+  color: #667085;
 }
 
 @media (max-width: 768px) {

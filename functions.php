@@ -2290,6 +2290,87 @@ function kangoo_register_flavour_term_asset_acf_fields() {
 }
 add_action('acf/init', 'kangoo_register_flavour_term_asset_acf_fields');
 
+function kangoo_add_homepage_flavour_grid_layout($field) {
+    if (empty($field['layouts']) || !is_array($field['layouts'])) {
+        $field['layouts'] = array();
+    }
+
+    foreach ($field['layouts'] as $layout) {
+        if (isset($layout['name']) && 'flavour_grid' === $layout['name']) {
+            return $field;
+        }
+    }
+
+    $field['layouts']['layout_kangoo_flavour_grid'] = array(
+        'key' => 'layout_kangoo_flavour_grid',
+        'name' => 'flavour_grid',
+        'label' => __('Flavour Grid', 'kangoo'),
+        'display' => 'block',
+        'sub_fields' => array(
+            array(
+                'key' => 'field_kangoo_flavour_grid_show',
+                'label' => __('Show Section', 'kangoo'),
+                'name' => 'show_section',
+                'type' => 'true_false',
+                'default_value' => 1,
+                'ui' => 1,
+            ),
+            array(
+                'key' => 'field_kangoo_flavour_grid_eyebrow',
+                'label' => __('Eyebrow', 'kangoo'),
+                'name' => 'eyebrow',
+                'type' => 'text',
+                'default_value' => __('Flavours', 'kangoo'),
+            ),
+            array(
+                'key' => 'field_kangoo_flavour_grid_heading',
+                'label' => __('Heading', 'kangoo'),
+                'name' => 'heading',
+                'type' => 'text',
+                'default_value' => __('Shop nicotine pouches by flavour', 'kangoo'),
+            ),
+            array(
+                'key' => 'field_kangoo_flavour_grid_subheading',
+                'label' => __('Subheading', 'kangoo'),
+                'name' => 'subheading',
+                'type' => 'textarea',
+                'rows' => 3,
+                'default_value' => __('Browse mint, berry, citrus, fruit and other nicotine pouch flavours.', 'kangoo'),
+            ),
+            array(
+                'key' => 'field_kangoo_flavour_grid_cards',
+                'label' => __('Flavour Cards', 'kangoo'),
+                'name' => 'flavour_cards',
+                'type' => 'repeater',
+                'layout' => 'table',
+                'button_label' => __('Add Flavour', 'kangoo'),
+                'sub_fields' => array(
+                    array(
+                        'key' => 'field_kangoo_flavour_grid_term',
+                        'label' => __('Flavour', 'kangoo'),
+                        'name' => 'flavour_term',
+                        'type' => 'taxonomy',
+                        'instructions' => __('The card title, link and image are pulled from this flavour automatically.', 'kangoo'),
+                        'taxonomy' => 'pa_flavour',
+                        'field_type' => 'select',
+                        'allow_null' => 0,
+                        'add_term' => 0,
+                        'save_terms' => 0,
+                        'load_terms' => 0,
+                        'return_format' => 'id',
+                        'ui' => 1,
+                    ),
+                ),
+            ),
+        ),
+        'min' => '',
+        'max' => '',
+    );
+
+    return $field;
+}
+add_filter('acf/load_field/key=field_homepage_sections', 'kangoo_add_homepage_flavour_grid_layout');
+
 function kangoo_normalize_product_badge($badge) {
     $badge = strtolower(trim((string) $badge));
     $badge = str_replace(array('-', ' '), '_', $badge);
@@ -3890,6 +3971,59 @@ function kangoo_get_product_flavour_term($product) {
     }
 
     return $term instanceof WP_Term && !is_wp_error($term) ? $term : null;
+}
+
+function kangoo_resolve_flavour_term($value) {
+    if ($value instanceof WP_Term && 'pa_flavour' === $value->taxonomy) {
+        return $value;
+    }
+
+    if (is_array($value)) {
+        if (isset($value['term_id'])) {
+            $value = $value['term_id'];
+        } elseif (isset($value['id'])) {
+            $value = $value['id'];
+        } else {
+            $value = reset($value);
+        }
+    }
+
+    if (is_numeric($value)) {
+        $term = get_term((int) $value, 'pa_flavour');
+    } else {
+        $value = trim((string) $value);
+        $term = $value !== '' ? get_term_by('slug', sanitize_title($value), 'pa_flavour') : null;
+    }
+
+    return $term instanceof WP_Term && !is_wp_error($term) ? $term : null;
+}
+
+function kangoo_get_flavour_term_image_url($term, $size = 'thumbnail') {
+    $term = kangoo_resolve_flavour_term($term);
+
+    if (!$term) {
+        return '';
+    }
+
+    if (function_exists('get_field')) {
+        foreach (array('flavour_icon', 'flavour_image', 'icon', 'image') as $field_name) {
+            $image_url = kangoo_get_image_url_from_acf_value(get_field($field_name, 'pa_flavour_' . $term->term_id), $size);
+
+            if ($image_url !== '') {
+                return $image_url;
+            }
+        }
+    }
+
+    foreach (array('thumbnail_id', 'flavour_icon', 'flavour_image', 'icon', 'image') as $meta_key) {
+        $image_url = kangoo_get_image_url_from_acf_value(get_term_meta($term->term_id, $meta_key, true), $size);
+
+        if ($image_url !== '') {
+            return $image_url;
+        }
+    }
+
+    return '';
 }
 
 function kangoo_get_product_flavour_icon_url($product, $size = 'thumbnail') {

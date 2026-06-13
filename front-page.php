@@ -63,6 +63,9 @@
         <?php elseif ($layout == 'brand_grid'): ?>
             <?php get_template_part('template-parts/home/brand-grid'); ?>
 
+        <?php elseif ($layout == 'flavour_grid'): ?>
+            <?php get_template_part('template-parts/home/flavour-grid'); ?>
+
         <?php endif; ?>
 
     <?php endwhile; ?>
