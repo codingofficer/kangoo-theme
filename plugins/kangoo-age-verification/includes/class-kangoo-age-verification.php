@@ -230,11 +230,8 @@ final class Kangoo_Age_Verification {
 
         $token = $this->get_or_create_token();
         $existing = $this->find_current_attempt($token);
-        if ($existing && 'pending' === $existing->status && $this->attempt_is_recent($existing)) {
-            $remote = $this->stripe_request('GET', '/v1/identity/verification_sessions/' . rawurlencode($existing->provider_session_id));
-            if (!is_wp_error($remote) && !empty($remote['client_secret'])) {
-                return rest_ensure_response(array('clientSecret' => $remote['client_secret'], 'verified' => false));
-            }
+        if ($existing && in_array($existing->status, array('pending', 'requires_input'), true)) {
+            $this->update_attempt($existing->provider_session_id, 'superseded', false, 'replaced_by_fresh_session');
         }
 
         $email = sanitize_email((string) $request->get_param('email'));
@@ -671,10 +668,6 @@ final class Kangoo_Age_Verification {
 
     private function is_current_customer_verified() {
         return (bool) $this->current_verified_attempt();
-    }
-
-    private function attempt_is_recent($attempt) {
-        return !empty($attempt->created_at) && strtotime($attempt->created_at . ' UTC') > time() - HOUR_IN_SECONDS;
     }
 
     private function insert_attempt($token, $session) {
