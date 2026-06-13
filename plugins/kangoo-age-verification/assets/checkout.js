@@ -7,6 +7,15 @@
   document.documentElement.classList.add('kangoo-av-enforced');
   document.documentElement.classList.toggle('kangoo-av-verified', Boolean(config.verified));
 
+  function returnToVerification() {
+    if (!config.verified || window.sessionStorage.getItem('kangooAvJustVerified') !== '1') return;
+    window.sessionStorage.removeItem('kangooAvJustVerified');
+    window.requestAnimationFrame(function () {
+      const card = document.querySelector('[data-kangoo-av]');
+      if (card) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }
+
   function api(path, body) {
     return fetch(config.restUrl + path, {
       method: body ? 'POST' : 'GET',
@@ -55,6 +64,7 @@
 
     api('/session', { email: getEmail() }).then(function (session) {
       if (session.verified) {
+        window.sessionStorage.setItem('kangooAvJustVerified', '1');
         window.location.reload();
         return null;
       }
@@ -71,6 +81,7 @@
       if (!status) return;
       if (status.verified) {
         setMessage(card, 'Age verified. Loading secure payment options...', false);
+        window.sessionStorage.setItem('kangooAvJustVerified', '1');
         window.location.reload();
         return;
       }
@@ -91,4 +102,5 @@
   const observer = new MutationObserver(lockPayment);
   observer.observe(document.documentElement, { childList: true, subtree: true });
   lockPayment();
+  returnToVerification();
 }());

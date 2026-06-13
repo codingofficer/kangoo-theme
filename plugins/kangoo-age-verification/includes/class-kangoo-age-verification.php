@@ -10,6 +10,7 @@ final class Kangoo_Age_Verification {
 
     private static $instance;
     private $settings = array();
+    private $checkout_ui_rendered = false;
 
     public static function instance() {
         if (!self::$instance) {
@@ -61,6 +62,7 @@ final class Kangoo_Age_Verification {
         add_action('admin_notices', array($this, 'admin_notice'));
         add_action('rest_api_init', array($this, 'register_rest_routes'));
         add_action('wp_enqueue_scripts', array($this, 'enqueue_checkout_assets'), 40);
+        add_filter('render_block_woocommerce/checkout-express-payment-block', array($this, 'prepend_block_checkout_ui'), 8, 2);
         add_filter('render_block_woocommerce/checkout-payment-block', array($this, 'prepend_block_checkout_ui'), 8, 2);
         add_action('woocommerce_review_order_before_payment', array($this, 'render_classic_checkout_ui'), 4);
         add_filter('woocommerce_available_payment_gateways', array($this, 'gate_payment_methods'), 9999);
@@ -450,10 +452,11 @@ final class Kangoo_Age_Verification {
     }
 
     public function prepend_block_checkout_ui($block_content) {
-        if (!$this->should_enforce()) {
+        if (!$this->should_enforce() || $this->checkout_ui_rendered) {
             return $block_content;
         }
 
+        $this->checkout_ui_rendered = true;
         return $this->checkout_ui() . $block_content;
     }
 
