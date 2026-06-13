@@ -276,6 +276,18 @@ body.kangoo-theme--light .product-highlights-panel > span {
   color: #111827;
 }
 
+body.kangoo-theme--light .taxonomy-slider__arrow {
+  color: #111827;
+  background: #ffffff;
+  border-color: #dce2ea;
+}
+
+body.kangoo-theme--light .taxonomy-slider__arrow:hover:not(:disabled) {
+  color: #ffffff;
+  background: #135fea;
+  border-color: #135fea;
+}
+
 body.kangoo-theme--light .quick-add-modal__image,
 body.kangoo-theme--light .quick-add-pill,
 body.kangoo-theme--light .quick-add-qty {

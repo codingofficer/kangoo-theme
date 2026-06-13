@@ -33,7 +33,16 @@ $subheading = get_sub_field('subheading');
         <?php endif; ?>
 
         <?php if (have_rows('flavour_cards')) : ?>
-            <div class="flavour-grid">
+            <div class="taxonomy-slider" data-taxonomy-slider>
+                <div class="taxonomy-slider__controls" aria-label="<?php esc_attr_e('Flavour slider controls', 'kangoo'); ?>">
+                    <button type="button" class="taxonomy-slider__arrow" data-taxonomy-slider-prev aria-label="<?php esc_attr_e('Previous flavours', 'kangoo'); ?>">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg>
+                    </button>
+                    <button type="button" class="taxonomy-slider__arrow" data-taxonomy-slider-next aria-label="<?php esc_attr_e('Next flavours', 'kangoo'); ?>">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg>
+                    </button>
+                </div>
+            <div class="flavour-grid taxonomy-slider__track" data-taxonomy-slider-track tabindex="0">
                 <?php while (have_rows('flavour_cards')) : the_row(); ?>
                     <?php
                     $term = kangoo_resolve_flavour_term(get_sub_field('flavour_term'));
@@ -60,6 +69,7 @@ $subheading = get_sub_field('subheading');
                         <span class="flavour-card__title"><?php echo esc_html($term->name); ?></span>
                     </a>
                 <?php endwhile; ?>
+            </div>
             </div>
         <?php endif; ?>
     </div>

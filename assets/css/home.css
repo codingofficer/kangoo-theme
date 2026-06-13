@@ -817,9 +817,72 @@
 /* Brand Grid */
 .brand-grid,
 .flavour-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 16px;
+    display: flex;
+    gap: 12px;
+}
+
+.taxonomy-slider {
+    position: relative;
+}
+
+.taxonomy-slider__controls {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin: 0 0 12px;
+}
+
+.taxonomy-slider__arrow {
+    display: inline-grid;
+    width: 40px;
+    height: 40px;
+    flex: 0 0 40px;
+    place-items: center;
+    padding: 0;
+    color: var(--color-text);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+}
+
+.taxonomy-slider__arrow:hover:not(:disabled) {
+    color: #ffffff;
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+}
+
+.taxonomy-slider__arrow:disabled {
+    opacity: 0.32;
+    cursor: default;
+}
+
+.taxonomy-slider__arrow svg {
+    width: 19px;
+    height: 19px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.taxonomy-slider__track {
+    max-width: 100%;
+    padding: 2px 2px 12px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-inline: contain;
+    scroll-behavior: smooth;
+    scroll-padding-inline: 2px;
+    scroll-snap-type: inline mandatory;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+}
+
+.taxonomy-slider__track::-webkit-scrollbar {
+    display: none;
 }
 
 .brand-card,
@@ -840,6 +903,8 @@
 
     text-decoration: none;
     transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    flex: 0 0 calc((100% - 1.2rem) / 2.2);
+    scroll-snap-align: start;
 }
 
 .brand-card:hover,
@@ -882,6 +947,30 @@
 @media (min-width: 768px) {
     .brand-grid,
     .flavour-grid {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 16px;
+    }
+
+    .brand-card,
+    .flavour-card {
+        flex-basis: calc((100% - 3.2rem) / 4.2);
+    }
+}
+
+@media (max-width: 767px) {
+    .taxonomy-slider__controls {
+        margin-bottom: 8px;
+    }
+
+    .taxonomy-slider__arrow {
+        width: 36px;
+        height: 36px;
+        flex-basis: 36px;
+    }
+
+    .brand-card,
+    .flavour-card {
+        min-height: 118px;
+        padding: 16px 12px;
+        gap: 10px;
     }
 }

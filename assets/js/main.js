@@ -825,6 +825,71 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
+  document.querySelectorAll('[data-taxonomy-slider]').forEach(function (slider) {
+    const track = slider.querySelector('[data-taxonomy-slider-track]');
+    const previousButton = slider.querySelector('[data-taxonomy-slider-prev]');
+    const nextButton = slider.querySelector('[data-taxonomy-slider-next]');
+
+    if (!track || !previousButton || !nextButton) {
+      return;
+    }
+
+    function getScrollStep() {
+      const firstCard = track.firstElementChild;
+
+      if (!firstCard) {
+        return Math.max(track.clientWidth * 0.8, 1);
+      }
+
+      const styles = window.getComputedStyle(track);
+      const gap = parseFloat(styles.columnGap || styles.gap) || 0;
+
+      return firstCard.getBoundingClientRect().width + gap;
+    }
+
+    function updateSliderControls() {
+      const maxScrollLeft = Math.max(track.scrollWidth - track.clientWidth, 0);
+      const currentScrollLeft = Math.max(track.scrollLeft, 0);
+      const hasOverflow = maxScrollLeft > 2;
+
+      previousButton.disabled = !hasOverflow || currentScrollLeft <= 2;
+      nextButton.disabled = !hasOverflow || currentScrollLeft >= maxScrollLeft - 2;
+    }
+
+    function moveSlider(direction) {
+      track.scrollBy({
+        left: getScrollStep() * direction,
+        behavior: 'smooth'
+      });
+    }
+
+    previousButton.addEventListener('click', function () {
+      moveSlider(-1);
+    });
+
+    nextButton.addEventListener('click', function () {
+      moveSlider(1);
+    });
+
+    track.addEventListener('keydown', function (event) {
+      if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') {
+        return;
+      }
+
+      event.preventDefault();
+      moveSlider(event.key === 'ArrowLeft' ? -1 : 1);
+    });
+
+    let sliderFrame = 0;
+    track.addEventListener('scroll', function () {
+      window.cancelAnimationFrame(sliderFrame);
+      sliderFrame = window.requestAnimationFrame(updateSliderControls);
+    }, { passive: true });
+
+    window.addEventListener('resize', updateSliderControls);
+    updateSliderControls();
+  });
+
   const ageGate = document.getElementById('kangoo-age-gate');
   const ageGateAccept = document.querySelector('[data-age-gate-accept]');
   const ageGateReject = document.querySelector('[data-age-gate-reject]');
