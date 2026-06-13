@@ -2290,6 +2290,28 @@ function kangoo_register_flavour_term_asset_acf_fields() {
 }
 add_action('acf/init', 'kangoo_register_flavour_term_asset_acf_fields');
 
+function kangoo_flavour_term_select_choices() {
+    $choices = array();
+    $terms = get_terms(array(
+        'taxonomy' => 'pa_flavour',
+        'hide_empty' => false,
+        'orderby' => 'name',
+        'order' => 'ASC',
+    ));
+
+    if (is_wp_error($terms) || !is_array($terms)) {
+        return $choices;
+    }
+
+    foreach ($terms as $term) {
+        if ($term instanceof WP_Term) {
+            $choices[(string) $term->term_id] = $term->name;
+        }
+    }
+
+    return $choices;
+}
+
 function kangoo_add_homepage_flavour_grid_layout($field) {
     if (empty($field['layouts']) || !is_array($field['layouts'])) {
         $field['layouts'] = array();
@@ -2349,16 +2371,13 @@ function kangoo_add_homepage_flavour_grid_layout($field) {
                         'key' => 'field_kangoo_flavour_grid_term',
                         'label' => __('Flavour', 'kangoo'),
                         'name' => 'flavour_term',
-                        'type' => 'taxonomy',
+                        'type' => 'select',
                         'instructions' => __('The card title, link and image are pulled from this flavour automatically.', 'kangoo'),
-                        'taxonomy' => 'pa_flavour',
-                        'field_type' => 'select',
+                        'choices' => kangoo_flavour_term_select_choices(),
                         'allow_null' => 0,
-                        'add_term' => 0,
-                        'save_terms' => 0,
-                        'load_terms' => 0,
-                        'return_format' => 'id',
                         'ui' => 1,
+                        'ajax' => 0,
+                        'placeholder' => __('Select a flavour', 'kangoo'),
                     ),
                 ),
             ),
