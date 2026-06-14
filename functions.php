@@ -2094,6 +2094,47 @@ function kangoo_register_blog_acf_fields() {
                 'return_format' => 'object',
                 'ui' => 1,
             ),
+            array(
+                'key' => 'field_kangoo_blog_reviewer',
+                'label' => __('Editorial Reviewer', 'kangoo'),
+                'name' => 'blog_reviewer',
+                'type' => 'text',
+                'instructions' => __('Optional named reviewer. Leave blank unless a real person or organisation has reviewed the article.', 'kangoo'),
+                'maxlength' => 120,
+            ),
+            array(
+                'key' => 'field_kangoo_blog_reviewer_credentials',
+                'label' => __('Reviewer Credentials', 'kangoo'),
+                'name' => 'blog_reviewer_credentials',
+                'type' => 'text',
+                'instructions' => __('Optional factual credentials or organisation name. Do not add qualifications that cannot be verified.', 'kangoo'),
+                'maxlength' => 160,
+            ),
+            array(
+                'key' => 'field_kangoo_blog_sources',
+                'label' => __('Sources', 'kangoo'),
+                'name' => 'blog_sources',
+                'type' => 'repeater',
+                'instructions' => __('Authoritative sources used for legal, safety or health-related statements.', 'kangoo'),
+                'layout' => 'table',
+                'button_label' => __('Add source', 'kangoo'),
+                'sub_fields' => array(
+                    array(
+                        'key' => 'field_kangoo_blog_source_label',
+                        'label' => __('Source name', 'kangoo'),
+                        'name' => 'label',
+                        'type' => 'text',
+                        'required' => 1,
+                    ),
+                    array(
+                        'key' => 'field_kangoo_blog_source_url',
+                        'label' => __('Source URL', 'kangoo'),
+                        'name' => 'url',
+                        'type' => 'url',
+                        'required' => 1,
+                    ),
+                ),
+            ),
         ),
         'location' => array(
             array(
@@ -2794,6 +2835,9 @@ function kangoo_blog_schema() {
 
     $post_id = get_the_ID();
     $image = kangoo_blog_featured_image_url($post_id, 'large');
+    $reviewer = trim((string) kangoo_blog_get_field('blog_reviewer', $post_id));
+    $reviewer_credentials = trim((string) kangoo_blog_get_field('blog_reviewer_credentials', $post_id));
+    $sources = kangoo_blog_get_field('blog_sources', $post_id, array());
     $schema = array(
         '@context' => 'https://schema.org',
         '@type' => 'BlogPosting',
@@ -2813,6 +2857,27 @@ function kangoo_blog_schema() {
     );
 
     $schema['image'] = $image;
+
+    if ($reviewer !== '') {
+        $schema['reviewedBy'] = array(
+            '@type' => 'Person',
+            'name' => $reviewer,
+        );
+
+        if ($reviewer_credentials !== '') {
+            $schema['reviewedBy']['description'] = $reviewer_credentials;
+        }
+    }
+
+    if (is_array($sources)) {
+        $citations = array_values(array_filter(array_map(static function ($source) {
+            return is_array($source) && !empty($source['url']) ? esc_url_raw($source['url']) : '';
+        }, $sources)));
+
+        if (!empty($citations)) {
+            $schema['citation'] = $citations;
+        }
+    }
 
     echo "\n" . '<script type="application/ld+json">' . wp_json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . '</script>' . "\n";
 }
@@ -9718,8 +9783,20 @@ add_action('template_redirect', 'kangoo_nicotine_brand_filter_redirect', 5);
 
 function kangoo_add_attribute_landing_rewrites() {
     add_rewrite_rule(
+        '^([a-z0-9-]+)-strength-nicotine-pouches/page/([0-9]{1,})/?$',
+        'index.php?pa_strength=$matches[1]&paged=$matches[2]',
+        'top'
+    );
+
+    add_rewrite_rule(
         '^([a-z0-9-]+)-strength-nicotine-pouches/?$',
         'index.php?pa_strength=$matches[1]',
+        'top'
+    );
+
+    add_rewrite_rule(
+        '^([a-z0-9-]+)-nicotine-pouches/page/([0-9]{1,})/?$',
+        'index.php?pa_flavour=$matches[1]&paged=$matches[2]',
         'top'
     );
 

@@ -156,8 +156,8 @@ $trial_products = function_exists('kangoo_get_trial_products') ? kangoo_get_tria
             <?php if (!empty($best_sellers)) : ?>
                 <section class="seo-module seo-module--table">
                     <div class="seo-module__head">
-                        <h2><?php esc_html_e('Best selling nicotine pouches UK', 'kangoo'); ?></h2>
-                        <p><?php esc_html_e('A quick buying view of popular in-stock pouches, with strength, flavour, price and pack value pulled from Kangoo product data.', 'kangoo'); ?></p>
+                        <h2><?php esc_html_e('Popular in-stock nicotine pouches', 'kangoo'); ?></h2>
+                        <p><?php esc_html_e('A quick buying view of currently available pouches, with strength, flavour, price and pack value pulled from live Kangoo product data.', 'kangoo'); ?></p>
                     </div>
                     <div class="seo-scroll-table">
                         <table>

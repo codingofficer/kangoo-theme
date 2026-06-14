@@ -7,6 +7,9 @@
     $read_time = kangoo_blog_estimated_read_time();
     $topics = get_the_terms(get_the_ID(), 'blog_topic');
     $featured_product = kangoo_blog_get_field('blog_featured_product');
+    $reviewer = trim((string) kangoo_blog_get_field('blog_reviewer'));
+    $reviewer_credentials = trim((string) kangoo_blog_get_field('blog_reviewer_credentials'));
+    $sources = kangoo_blog_get_field('blog_sources', get_the_ID(), array());
     $author_name = get_the_author_meta('display_name') ?: get_bloginfo('name');
     $was_updated = get_the_modified_time('U') > get_the_time('U') + DAY_IN_SECONDS;
     ?>
@@ -50,6 +53,19 @@
             <div class="blog-article__layout container">
                 <div class="blog-article__content wysiwyg">
                     <?php the_content(); ?>
+
+                    <?php if (is_array($sources) && !empty($sources)) : ?>
+                        <section class="blog-article__sources" aria-labelledby="blog-sources-title">
+                            <h2 id="blog-sources-title"><?php esc_html_e('Sources', 'kangoo'); ?></h2>
+                            <ul>
+                                <?php foreach ($sources as $source) : ?>
+                                    <?php if (!empty($source['label']) && !empty($source['url'])) : ?>
+                                        <li><a href="<?php echo esc_url($source['url']); ?>" rel="noopener noreferrer"><?php echo esc_html($source['label']); ?></a></li>
+                                    <?php endif; ?>
+                                <?php endforeach; ?>
+                            </ul>
+                        </section>
+                    <?php endif; ?>
                 </div>
 
                 <aside class="blog-article__aside" aria-label="<?php esc_attr_e('Article details', 'kangoo'); ?>">
@@ -70,10 +86,17 @@
                                     <dd><?php echo esc_html(get_the_modified_date()); ?></dd>
                                 </div>
                             <?php endif; ?>
-                            <div>
-                                <dt><?php esc_html_e('Editorial Review', 'kangoo'); ?></dt>
-                                <dd><?php esc_html_e('Kangoo Pouches content team', 'kangoo'); ?></dd>
-                            </div>
+                            <?php if ($reviewer !== '') : ?>
+                                <div>
+                                    <dt><?php esc_html_e('Editorial Review', 'kangoo'); ?></dt>
+                                    <dd>
+                                        <?php echo esc_html($reviewer); ?>
+                                        <?php if ($reviewer_credentials !== '') : ?>
+                                            <small><?php echo esc_html($reviewer_credentials); ?></small>
+                                        <?php endif; ?>
+                                    </dd>
+                                </div>
+                            <?php endif; ?>
                             <div>
                                 <dt><?php esc_html_e('Read Time', 'kangoo'); ?></dt>
                                 <dd><?php echo esc_html($read_time); ?> <?php esc_html_e('minutes', 'kangoo'); ?></dd>
