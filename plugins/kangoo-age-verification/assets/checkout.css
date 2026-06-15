@@ -117,8 +117,6 @@
   color: #b91c1c;
 }
 
-html.kangoo-av-enforced:not(.kangoo-av-verified) .wp-block-woocommerce-checkout-express-payment-block,
-html.kangoo-av-enforced:not(.kangoo-av-verified) .wc-block-components-express-payment,
 html.kangoo-av-enforced:not(.kangoo-av-verified) .wc-block-components-checkout-place-order-button,
 html.kangoo-av-enforced:not(.kangoo-av-verified) #place_order {
   display: none !important;
