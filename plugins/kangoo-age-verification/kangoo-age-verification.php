@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Kangoo Age Verification
  * Description: Mandatory photo-ID and selfie age verification before WooCommerce payment.
- * Version: 0.1.3
+ * Version: 0.1.2
  * Author: Kangoo Pouches
  * Requires Plugins: woocommerce
  * Requires PHP: 8.0
@@ -11,7 +11,7 @@
 
 defined('ABSPATH') || exit;
 
-define('KANGOO_AV_VERSION', '0.1.3');
+define('KANGOO_AV_VERSION', '0.1.2');
 define('KANGOO_AV_FILE', __FILE__);
 define('KANGOO_AV_DIR', plugin_dir_path(__FILE__));
 define('KANGOO_AV_URL', plugin_dir_url(__FILE__));
