@@ -845,6 +845,9 @@ function kangoo_is_commerce_view() {
 function kangoo_is_blog_view() {
     return is_home()
         || is_singular('post')
+        || is_post_type_archive('kangoo_blog')
+        || is_singular('kangoo_blog')
+        || is_tax('blog_topic')
         || is_category()
         || is_tag()
         || is_date()
@@ -1027,8 +1030,17 @@ function kangoo_enqueue_assets() {
     }
 
     if (kangoo_is_blog_view()) {
-        wp_enqueue_style('kangoo-blog', $css_uri . 'blog.css', array('kangoo-header-footer'), $theme_version);
+        $blog_css_path = get_template_directory() . '/assets/css/blog.css';
+        $blog_js_path = get_template_directory() . '/assets/js/blog.js';
+        $blog_css_version = file_exists($blog_css_path) ? (string) filemtime($blog_css_path) : $theme_version;
+        $blog_js_version = file_exists($blog_js_path) ? (string) filemtime($blog_js_path) : $theme_version;
+
+        wp_enqueue_style('kangoo-blog', $css_uri . 'blog.css', array('kangoo-header-footer'), $blog_css_version);
         $critical_style_handle = 'kangoo-blog';
+
+        if (is_singular('kangoo_blog')) {
+            wp_enqueue_script('kangoo-blog', $js_uri . 'blog.js', array(), $blog_js_version, true);
+        }
     }
 
     if (is_page_template('page-templates/template-pouch-finder.php')) {
@@ -2734,6 +2746,16 @@ function kangoo_blog_featured_image_html($post_id = null, $size = 'large') {
 }
 
 function kangoo_blog_document_title_parts($parts) {
+    if (is_post_type_archive('kangoo_blog')) {
+        $parts['title'] = __('Nicotine Pouch Guides & Comparisons', 'kangoo');
+        return $parts;
+    }
+
+    if (function_exists('is_shop') && is_shop()) {
+        $parts['title'] = __('Shop All Pouches & Products', 'kangoo');
+        return $parts;
+    }
+
     if (!is_singular('kangoo_blog')) {
         return $parts;
     }
@@ -2747,6 +2769,32 @@ function kangoo_blog_document_title_parts($parts) {
     return $parts;
 }
 add_filter('document_title_parts', 'kangoo_blog_document_title_parts');
+
+function kangoo_archive_yoast_title($title) {
+    if (is_post_type_archive('kangoo_blog')) {
+		return __('Nicotine Pouch Guides & Comparisons | Kangoo Pouches', 'kangoo');
+    }
+
+    if (function_exists('is_shop') && is_shop()) {
+		return __('Shop All Pouches & Products | Kangoo Pouches', 'kangoo');
+    }
+
+    return $title;
+}
+add_filter('wpseo_title', 'kangoo_archive_yoast_title', 30);
+
+function kangoo_archive_yoast_description($description) {
+    if (is_post_type_archive('kangoo_blog')) {
+        return __('Read UK nicotine pouch guides, brand comparisons, strength explainers and practical product advice from Kangoo Pouches. Adults 18+.', 'kangoo');
+    }
+
+    if (function_exists('is_shop') && is_shop()) {
+        return __('Browse Kangoo products and live stock. For the complete nicotine pouch range, compare brands, flavours and strengths in our main category.', 'kangoo');
+    }
+
+    return $description;
+}
+add_filter('wpseo_metadesc', 'kangoo_archive_yoast_description', 30);
 
 function kangoo_blog_head_meta() {
     if (is_post_type_archive('kangoo_blog')) {

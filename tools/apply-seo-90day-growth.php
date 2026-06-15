@@ -6,7 +6,7 @@ if (!defined('WP_CLI') || !WP_CLI) {
     exit('Run this file with wp eval-file.');
 }
 
-const KANGOO_SEO_90_VERSION = '2026-06-15.2';
+const KANGOO_SEO_90_VERSION = '2026-06-15.3';
 
 function kangoo_seo_90_post($slug, $post_type = 'kangoo_blog') {
     return get_page_by_path($slug, OBJECT, $post_type);
@@ -199,7 +199,7 @@ $categories = array(
             array('question' => 'Can I buy nicotine pouches online in the UK?', 'answer' => 'Yes. Adults aged 18 and over can order stocked nicotine pouches from Kangoo Pouches for UK delivery.'),
             array('question' => 'Does Kangoo sell snus?', 'answer' => 'No. Kangoo sells tobacco-free nicotine pouches, not traditional tobacco snus.'),
         ),
-        'seo_title' => 'Nicotine Pouches UK | Buy Online from 79p | Kangoo',
+		'seo_title' => 'Nicotine Pouches UK | Buy Online from 79p | Kangoo Pouches',
         'seo_desc' => 'Buy nicotine pouches online in the UK. Compare live prices, flavours and strengths from VELO, ZYN, Nordic Spirit, KILLA and more. Adults 18+.',
         'focus' => 'nicotine pouches UK',
     ),
@@ -212,7 +212,7 @@ $categories = array(
             array('question' => 'Is every nicotine pouch 79p?', 'answer' => 'No. The promotion applies only to selected products in this collection. Standard products and pack offers keep their own live prices.'),
             array('question' => 'Is there a purchase limit?', 'answer' => 'Some promotional tins are limited to one per order. The product card and basket show the current rule.'),
         ),
-        'seo_title' => '99p Nicotine Pouches - Now from 79p | Kangoo',
+		'seo_title' => '99p Nicotine Pouches - Now from 79p | Kangoo Pouches',
         'seo_desc' => 'Shop 99p nicotine pouches with selected stocked products now 79p. Compare brands, flavours and strengths while promotional stock lasts. Adults 18+.',
         'focus' => '99p nicotine pouches',
     ),
@@ -259,7 +259,7 @@ $articles = array(
         'title' => 'What Are Nicotine Pouches? UK Guide',
         'excerpt' => 'Nicotine pouches are tobacco-free oral pouches placed between the lip and gum. This source-led UK guide explains what they contain, how they are used, strengths, disposal and current rules.',
         'content' => '<p><strong>Nicotine pouches are small, tobacco-free oral pouches containing nicotine, flavourings, sweeteners and plant-based filling material. An adult user places one between the lip and gum, where nicotine is released through the lining of the mouth. The used pouch is removed and put in a bin.</strong></p><nav aria-label="On this page"><strong>On this page</strong><ul><li><a href="#contents">What is inside a nicotine pouch?</a></li><li><a href="#use">How are nicotine pouches used?</a></li><li><a href="#strength">Strengths and brand labels</a></li><li><a href="#safety">Safety and UK rules</a></li><li><a href="#compare">How to compare products</a></li></ul></nav><h2 id="contents">What is inside a nicotine pouch?</h2><p>A typical pouch contains nicotine, flavouring, sweetener, plant fibre and ingredients that control moisture and pH. It does not contain tobacco leaf. Ingredients vary by manufacturer, so the packaging and product page should be checked rather than treating every brand as identical.</p><h2 id="use">How are nicotine pouches used?</h2><ol><li>Choose a strength appropriate for your existing nicotine experience.</li><li>Place one pouch between the upper or lower lip and gum.</li><li>Leave it in place for the time stated by the manufacturer. A tingling sensation can occur.</li><li>Remove the pouch and dispose of it in general waste. Do not swallow the pouch.</li></ol><p>Pouches create no smoke or vapour. They should still be kept away from children and pets, and nicotine remains addictive.</p><h2 id="strength">Strengths, dots and milligrams</h2><p>The clearest comparison is milligrams of nicotine per pouch. Brand dot scales are internal guides and are not directly equivalent: three dots from one brand may not match three dots from another. Lower-strength products can sit around 2mg to 4mg per pouch, while stronger products can reach 9mg, 12mg or more. The product label is the authority.</p><h2>Popular nicotine pouch brands</h2><p>UK shoppers commonly compare brands such as ZYN, VELO and Nordic Spirit. Kangoo also stocks KILLA, PABLO, FUMi, XQS and Ubbs where available. Each brand differs in pouch size, moisture, flavour and strength range.</p><h2 id="safety">Safety, age and UK rules</h2><p>Nicotine is addictive and can cause unwanted effects. Nicotine pouches are not for children, non-nicotine users, people who are pregnant, or anyone advised to avoid nicotine. Kangoo restricts sales to adults aged 18 and over. UK rules are developing, so this guide links to current government, parliamentary and independent sources rather than making medical or cessation claims.</p><h2>Nicotine pouches and snus</h2><p>Traditional snus contains tobacco. Nicotine pouches sold by Kangoo are tobacco-free. The terms are sometimes mixed in searches, but they describe different product categories.</p><h2 id="compare">How to compare nicotine pouches</h2><table><thead><tr><th>Check</th><th>Why it matters</th></tr></thead><tbody><tr><td>mg per pouch</td><td>The most useful strength comparison.</td></tr><tr><td>Flavour</td><td>Mint, berry, citrus, coffee and other profiles feel different.</td></tr><tr><td>Format</td><td>Mini and slim pouches differ in size and fit.</td></tr><tr><td>Pouch count</td><td>Tin contents vary by product.</td></tr><tr><td>Price and stock</td><td>Use the live product page, not an old guide, for current information.</td></tr></tbody></table><p>Ready to compare current products? Visit the <a href="/product-category/nicotine-pouches/">nicotine pouches UK shop</a>. For practical placement guidance, read <a href="/blog/how-to-use-nicotine-pouches-placement-timing-and-tips/">how to use nicotine pouches</a>.</p>',
-        'seo_title' => 'What Are Nicotine Pouches? UK Guide | Kangoo',
+		'seo_title' => 'What Are Nicotine Pouches? UK Guide | Kangoo Pouches',
         'seo_desc' => 'What are nicotine pouches? Learn what they contain, how adults use and dispose of them, how strengths compare and the current UK context.',
         'focus' => 'what are nicotine pouches',
         'eyebrow' => 'Nicotine pouch basics',

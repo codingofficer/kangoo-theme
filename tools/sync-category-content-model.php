@@ -119,7 +119,7 @@ if (!empty($yoast_meta['product_cat']) && is_array($yoast_meta['product_cat'])) 
     }
 
     if ($trial_term instanceof WP_Term) {
-        $yoast_meta['product_cat'][$trial_term->term_id]['wpseo_title'] = '79p Nicotine Pouches UK | Cheap Trial Pouches | Kangoo';
+		$yoast_meta['product_cat'][$trial_term->term_id]['wpseo_title'] = '79p Nicotine Pouches UK | Cheap Trial Pouches | Kangoo Pouches';
         $yoast_meta['product_cat'][$trial_term->term_id]['wpseo_desc'] = 'Searching for 99p nicotine pouches? Pick and mix selected ZYN, VELO, FUMi and XQS trial pouches from just 79p each while limited stock is available.';
         $yoast_meta['product_cat'][$trial_term->term_id]['wpseo_focuskw'] = '79p nicotine pouches';
     }

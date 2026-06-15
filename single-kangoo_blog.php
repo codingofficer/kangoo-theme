@@ -12,13 +12,19 @@
     $sources = kangoo_blog_get_field('blog_sources', get_the_ID(), array());
     $author_name = get_the_author_meta('display_name') ?: get_bloginfo('name');
     $was_updated = get_the_modified_time('U') > get_the_time('U') + DAY_IN_SECONDS;
+    $article_content = apply_filters('the_content', get_the_content());
+    $article_content = preg_replace('/(<table\b[^>]*>.*?<\/table>)/is', '<div class="blog-table-scroll" tabindex="0">$1</div>', $article_content);
     ?>
 
     <main class="blog-single">
         <article <?php post_class('blog-article'); ?>>
             <header class="blog-article__hero">
                 <div class="container container--narrow">
-                    <a class="blog-article__back" href="<?php echo esc_url(get_post_type_archive_link('kangoo_blog')); ?>"><?php esc_html_e('Blog', 'kangoo'); ?></a>
+                    <nav class="blog-article__breadcrumbs" aria-label="<?php esc_attr_e('Breadcrumb', 'kangoo'); ?>">
+                        <a href="<?php echo esc_url(home_url('/')); ?>"><?php esc_html_e('Home', 'kangoo'); ?></a>
+                        <span aria-hidden="true">/</span>
+                        <a href="<?php echo esc_url(get_post_type_archive_link('kangoo_blog')); ?>"><?php esc_html_e('Blog', 'kangoo'); ?></a>
+                    </nav>
                     <span class="eyebrow"><?php echo esc_html($eyebrow); ?></span>
                     <h1><?php the_title(); ?></h1>
 
@@ -52,7 +58,7 @@
 
             <div class="blog-article__layout container">
                 <div class="blog-article__content wysiwyg">
-                    <?php the_content(); ?>
+                    <?php echo $article_content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 
                     <?php if (is_array($sources) && !empty($sources)) : ?>
                         <section class="blog-article__sources" aria-labelledby="blog-sources-title">
@@ -139,7 +145,7 @@
             $related_guides = new WP_Query(array(
                 'post_type'           => 'kangoo_blog',
                 'post_status'         => 'publish',
-                'posts_per_page'      => -1,
+                'posts_per_page'      => 6,
                 'post__not_in'        => array(get_the_ID()),
                 'orderby'             => 'date',
                 'order'               => 'DESC',
@@ -155,7 +161,12 @@
                             <h2><?php esc_html_e('Related Guides', 'kangoo'); ?></h2>
                         </header>
 
-                        <div class="blog-grid">
+                        <div class="blog-related__controls" aria-label="<?php esc_attr_e('Related guide controls', 'kangoo'); ?>">
+                            <button type="button" class="blog-related__arrow" data-blog-related-prev aria-label="<?php esc_attr_e('Previous guides', 'kangoo'); ?>">&lsaquo;</button>
+                            <button type="button" class="blog-related__arrow" data-blog-related-next aria-label="<?php esc_attr_e('Next guides', 'kangoo'); ?>">&rsaquo;</button>
+                        </div>
+
+                        <div class="blog-related__track" data-blog-related-track>
                             <?php while ($related_guides->have_posts()) : $related_guides->the_post(); ?>
                                 <?php
                                 $related_standfirst = kangoo_blog_get_field('blog_standfirst');

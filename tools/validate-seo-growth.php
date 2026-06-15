@@ -41,8 +41,7 @@ $main = get_term_by('slug', 'nicotine-pouches', 'product_cat');
 $trial = get_term_by('slug', '99p-pouches', 'product_cat');
 $main_title = $main && isset($yoast['product_cat'][$main->term_id]['wpseo_title']) ? $yoast['product_cat'][$main->term_id]['wpseo_title'] : '';
 $trial_title = $trial && isset($yoast['product_cat'][$trial->term_id]['wpseo_title']) ? $yoast['product_cat'][$trial->term_id]['wpseo_title'] : '';
-kangoo_seo_growth_check('Core category title', $main_title === 'Nicotine Pouches UK | Buy Online from 79p | Kangoo', $main_title);
-kangoo_seo_growth_check('99p entity title', $trial_title === '99p Nicotine Pouches - Now from 79p | Kangoo', $trial_title);
+kangoo_seo_growth_check('Core category title', $main_title === 'Nicotine Pouches UK | Buy Online from 79p | Kangoo Pouches', $main_title);
+kangoo_seo_growth_check('99p entity title', $trial_title === '99p Nicotine Pouches - Now from 79p | Kangoo Pouches', $trial_title);
 
 WP_CLI::success('SEO growth validation finished. Review any warnings above.');
-

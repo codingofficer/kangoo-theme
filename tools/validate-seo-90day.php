@@ -85,8 +85,8 @@ $main = get_term_by('slug', 'nicotine-pouches', 'product_cat');
 $trial = get_term_by('slug', '99p-pouches', 'product_cat');
 $main_title = $main && isset($yoast['product_cat'][$main->term_id]['wpseo_title']) ? $yoast['product_cat'][$main->term_id]['wpseo_title'] : '';
 $trial_title = $trial && isset($yoast['product_cat'][$trial->term_id]['wpseo_title']) ? $yoast['product_cat'][$trial->term_id]['wpseo_title'] : '';
-kangoo_seo_90_check('Core Yoast title', $main_title === 'Nicotine Pouches UK | Buy Online from 79p | Kangoo', $main_title);
-kangoo_seo_90_check('99p Yoast title', $trial_title === '99p Nicotine Pouches - Now from 79p | Kangoo', $trial_title);
+kangoo_seo_90_check('Core Yoast title', $main_title === 'Nicotine Pouches UK | Buy Online from 79p | Kangoo Pouches', $main_title);
+kangoo_seo_90_check('99p Yoast title', $trial_title === '99p Nicotine Pouches - Now from 79p | Kangoo Pouches', $trial_title);
 
 foreach (array(
     '/product-category/velo/' => array('What are VELO nicotine pouches?', 'VELO strengths and dots'),
