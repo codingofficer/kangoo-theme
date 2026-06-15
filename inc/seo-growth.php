@@ -35,13 +35,19 @@ function kangoo_seo_noindex_thin_facets($robots) {
         return $robots;
     }
 
+    if (is_tax('product_cat', 'caffeine-pouches')) {
+        $robots['index'] = 'noindex';
+        $robots['follow'] = 'follow';
+        return $robots;
+    }
+
     if (!is_tax(array('pa_flavour', 'pa_strength'))) {
         return $robots;
     }
 
     $term = get_queried_object();
 
-    if ($term instanceof WP_Term && (int) $term->count < 2) {
+    if ($term instanceof WP_Term && (int) $term->count < 3) {
         $robots['index'] = 'noindex';
         $robots['follow'] = 'follow';
     }
@@ -77,8 +83,13 @@ function kangoo_seo_exclude_thin_facets_from_sitemap($term_ids) {
 
     $thin_ids = array_filter($thin_ids, static function ($term_id) {
         $term = get_term($term_id);
-        return $term instanceof WP_Term && (int) $term->count < 2;
+        return $term instanceof WP_Term && (int) $term->count < 3;
     });
+
+    $caffeine = get_term_by('slug', 'caffeine-pouches', 'product_cat');
+    if ($caffeine instanceof WP_Term && (int) $caffeine->count === 0) {
+        $thin_ids[] = $caffeine->term_id;
+    }
 
     return array_values(array_unique(array_merge((array) $term_ids, array_map('absint', $thin_ids))));
 }
@@ -102,15 +113,19 @@ function kangoo_seo_redirect_legacy_urls() {
     $path = trim((string) wp_parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH), '/');
     $redirects = array(
         'blog/best-nicotine-pouches-uk-2026-top-brands-flavours-strengths' => 'blog/best-nicotine-pouches-uk',
-        'blog/how-to-use-nicotine-pouches' => 'blog/how-to-use-nicotine-pouches-placement-timing-mistakes',
+        'blog/how-to-use-nicotine-pouches' => 'blog/how-to-use-nicotine-pouches-placement-timing-and-tips',
         'blog/zyn-vs-velo-nicotine-pouches' => 'blog/zyn-vs-velo',
-        'blog/strongest-nicotine-pouches-uk' => 'blog/strong-nicotine-pouches-uk-strength-guide',
+        'blog/strongest-nicotine-pouches-uk' => 'blog/strongest-nicotine-pouches-uk-strong-and-extra-strong-options-explained',
         'blog/snus-meaning-a-simple-uk-guide' => 'blog/what-is-snus',
         'blog/what-is-snus-a-uk-guide-to-snus-and-nicotine-pouches' => 'blog/what-is-snus',
         'blog/nicotine-pouches-for-beginners' => 'blog/what-are-nicotine-pouches',
         'blog/what-are-nicotine-pouches-a-complete-uk-guide' => 'blog/what-are-nicotine-pouches',
         'blog/snus-uk-legal-alternatives-and-what-to-know' => 'blog/snus-uk',
         'blog/nicotine-pouches-from-2-99-kangoo-single-tin-prices' => 'blog/nicotine-pouches-from-3-99-kangoo-single-tin-prices',
+        'blog/zyn-pouches-guide-flavours-strengths-and-buying-tips' => 'blog/zyn-nicotine-pouches-guide-strengths-flavours-and-best-picks',
+        'blog/velo-reviews' => 'blog/velo-nicotine-pouches-guide-flavours-strengths-and-best-picks',
+        'product/nicotine-pouches/pablo-ice-cold-nicotine-pouches-24mg' => 'product/pablo/ice-cold-24mg',
+        'product/nicotine-pouches/pablo-grape-ice-nicotine-pouches-30mg' => 'product/pablo/grape-ice-30mg',
     );
 
     if (isset($redirects[$path])) {
@@ -172,6 +187,8 @@ function kangoo_seo_key_links() {
         'Nordic Spirit Nicotine Pouches' => home_url('/product-category/nordic-spirit/'),
         'KILLA Nicotine Pouches' => home_url('/product-category/killa/'),
         'What are nicotine pouches?' => home_url('/blog/what-are-nicotine-pouches/'),
+        'How to use nicotine pouches' => home_url('/blog/how-to-use-nicotine-pouches-placement-timing-and-tips/'),
+        'VELO strength dots explained' => home_url('/blog/velo-strength-dots-explained/'),
         'Snus UK guide' => home_url('/blog/snus-uk/'),
         'What is snus?' => home_url('/blog/what-is-snus/'),
         'Sitemap' => home_url('/sitemap_index.xml'),

@@ -823,11 +823,10 @@ body {
   z-index: 10000;
   isolation: isolate;
   font-family: inherit;
-  background:
-    radial-gradient(circle at 18% 18%, rgba(77, 163, 255, 0.18), transparent 28rem),
-    radial-gradient(circle at 82% 20%, rgba(255, 122, 0, 0.12), transparent 24rem),
-    linear-gradient(135deg, rgba(5, 6, 10, 0.96), rgba(13, 13, 15, 0.98));
-  backdrop-filter: blur(18px);
+  color: #111827;
+  background: rgba(248, 250, 252, 0.82);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   align-items: center;
   justify-content: center;
   padding: clamp(1rem, 4vw, 3rem);
@@ -848,33 +847,22 @@ body {
   position: absolute;
   inset: 0;
   z-index: -1;
-  opacity: 0.36;
-  background-image:
-    linear-gradient(rgba(255,255,255,0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.045) 1px, transparent 1px);
-  background-size: 58px 58px;
-  mask-image: radial-gradient(circle at center, #000, transparent 72%);
+  display: none;
 }
 
 .kangoo-age-gate__panel {
   position: relative;
   width: min(100%, 560px);
   padding: clamp(1.1rem, 3vw, 1.55rem);
-  border: 1px solid rgba(77, 163, 255, 0.28);
+  border: 1px solid #e5e9f0;
   border-radius: 12px;
-  background:
-    linear-gradient(145deg, rgba(18, 25, 35, 0.94), rgba(13, 13, 15, 0.98)),
-    rgba(13, 13, 15, 0.96);
-  box-shadow: 0 28px 120px rgba(0, 0, 0, 0.54), 0 0 0 1px rgba(255, 255, 255, 0.035) inset;
+  background: #ffffff;
+  box-shadow: 0 24px 70px rgba(17, 24, 39, 0.16);
   overflow: hidden;
 }
 
 .kangoo-age-gate__panel::before {
-  content: "";
-  position: absolute;
-  inset: 0 0 auto;
-  height: 3px;
-  background: linear-gradient(90deg, var(--color-primary), var(--color-accent), #ff7a00);
+  display: none;
 }
 
 .kangoo-age-gate__brand {
@@ -883,7 +871,7 @@ body {
   justify-content: space-between;
   gap: 1rem;
   margin-bottom: clamp(1.3rem, 4vw, 2.15rem);
-  color: #fff;
+  color: #111827;
   font-size: 0.9rem;
   font-weight: 900;
   letter-spacing: 0.08em;
@@ -899,9 +887,9 @@ body {
   height: 2.55rem;
   border: 1px solid rgba(77, 163, 255, 0.55);
   border-radius: 50%;
-  color: #fff;
-  background: rgba(77, 163, 255, 0.14);
-  box-shadow: 0 0 0 6px rgba(77, 163, 255, 0.08);
+  color: #135fea;
+  background: #f8fbff;
+  box-shadow: 0 0 0 5px rgba(19, 95, 234, 0.06);
   font-size: 0.95rem;
   line-height: 1;
   letter-spacing: 0;
@@ -925,14 +913,14 @@ body {
   justify-self: start;
   width: fit-content;
   padding: 0.55rem 0.8rem;
-  border: 1px solid rgba(255, 255, 255, 0.09);
+  border: 1px solid #dbeafe;
   border-radius: 999px;
   text-transform: uppercase;
   letter-spacing: 0.12em;
   font-size: 0.72rem;
   font-weight: 900;
-  color: var(--color-accent);
-  background: rgba(77, 163, 255, 0.08);
+  color: #135fea;
+  background: #eff6ff;
 }
 
 .kangoo-age-gate__title {
@@ -941,20 +929,20 @@ body {
   font-size: clamp(2.15rem, 5vw, 3.25rem);
   line-height: 1;
   letter-spacing: 0;
-  color: var(--color-text);
+  color: #111827;
 }
 
 .kangoo-age-gate__copy {
   max-width: 34rem;
   margin: 0;
-  color: var(--color-text-soft);
+  color: #667085;
   font-size: 1rem;
   line-height: 1.6;
 }
 
 .kangoo-age-gate__actions {
   display: grid;
-  grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.8rem;
   margin-top: 0.4rem;
 }
@@ -981,20 +969,20 @@ body {
 }
 
 .kangoo-age-gate__button--primary {
-  background: var(--color-accent);
-  box-shadow: 0 16px 46px rgba(77, 163, 255, 0.24);
+  background: #135fea;
+  box-shadow: 0 12px 30px rgba(19, 95, 234, 0.2);
 }
 
 .kangoo-age-gate__button--secondary {
-  background: rgba(255, 255, 255, 0.035);
-  color: var(--color-text);
-  border-color: rgba(255, 255, 255, 0.16);
+  background: #ffffff;
+  color: #111827;
+  border-color: #d6dce5;
 }
 
 .kangoo-age-gate__smallprint {
   max-width: 42rem;
   margin: 0.25rem 0 0;
-  color: rgba(203, 213, 225, 0.72);
+  color: #667085;
   font-size: 0.82rem;
   line-height: 1.55;
 }
@@ -1014,19 +1002,20 @@ body {
 
 @media (max-width: 640px) {
   .kangoo-age-gate {
-    align-items: stretch;
-    padding: 0.75rem;
+    align-items: center;
+    padding: 1rem;
   }
 
   .kangoo-age-gate__panel {
-    min-height: auto;
+    width: min(100%, 390px);
+    min-height: 0;
     display: grid;
     align-content: center;
-    padding: 1.1rem;
+    padding: clamp(1.25rem, 5vw, 1.6rem);
   }
 
   .kangoo-age-gate__brand {
-    margin-bottom: 2rem;
+    margin-bottom: 1.6rem;
     font-size: 0.78rem;
   }
 
@@ -1042,8 +1031,8 @@ body {
 
   .kangoo-age-gate__title {
     max-width: none;
-    font-size: clamp(2rem, 10vw, 2.75rem);
-    white-space: nowrap;
+    font-size: clamp(2rem, 9vw, 2.55rem);
+    white-space: normal;
   }
 
   .kangoo-age-gate__screen--blocked .kangoo-age-gate__title {
@@ -1060,8 +1049,20 @@ body {
   }
 
   .kangoo-age-gate__button {
-    min-height: 3.75rem;
+    min-height: 3.5rem;
   }
+}
+
+#cmplz-cookiebanner-container,
+.cmplz-cookiebanner-container {
+  position: relative !important;
+  z-index: 9999 !important;
+  isolation: isolate;
+}
+
+#cmplz-cookiebanner-container .cmplz-cookiebanner,
+.cmplz-cookiebanner-container .cmplz-cookiebanner {
+  z-index: 9999 !important;
 }
 
 /* =========================
@@ -1914,6 +1915,34 @@ body {
 .kangoo-mega-drawer__custom-links {
   display: grid !important;
   gap: 0.6rem;
+}
+
+@media (max-width: 1023px) {
+  .kangoo-mega-drawer__section--strengths .kangoo-mega-drawer__section-body {
+    max-height: 356px;
+    padding-right: 0.55rem;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    overscroll-behavior: contain;
+    scrollbar-color: #94a3b8 #e5e9f0;
+    scrollbar-gutter: stable;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .kangoo-mega-drawer__section--strengths .kangoo-mega-drawer__section-body::-webkit-scrollbar {
+    width: 7px;
+  }
+
+  .kangoo-mega-drawer__section--strengths .kangoo-mega-drawer__section-body::-webkit-scrollbar-track {
+    background: #e5e9f0;
+    border-radius: 999px;
+  }
+
+  .kangoo-mega-drawer__section--strengths .kangoo-mega-drawer__section-body::-webkit-scrollbar-thumb {
+    background: #94a3b8;
+    border-radius: 999px;
+  }
 }
 
 .kangoo-mega-drawer__flavour-list {

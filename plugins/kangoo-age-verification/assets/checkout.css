@@ -1,0 +1,147 @@
+.kangoo-av,
+.kangoo-av * {
+  box-sizing: border-box;
+}
+
+.kangoo-av {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  gap: 12px;
+  margin: 0 0 18px;
+  padding: 16px;
+  color: #111827;
+  background: #fffaf5;
+  border: 1px solid #fed7aa;
+  border-radius: 12px;
+}
+
+.kangoo-av.is-verified {
+  background: #f0fdf4;
+  border-color: #86efac;
+}
+
+.kangoo-av__icon {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  color: #ea580c;
+  background: #ffedd5;
+  border-radius: 999px;
+}
+
+.kangoo-av.is-verified .kangoo-av__icon {
+  color: #15803d;
+  background: #dcfce7;
+}
+
+.kangoo-av__icon svg {
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.kangoo-av__eyebrow {
+  display: block;
+  margin: 0 0 3px;
+  color: #9a3412;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.kangoo-av.is-verified .kangoo-av__eyebrow {
+  color: #166534;
+}
+
+.kangoo-av h3 {
+  margin: 0 0 5px;
+  font-size: 17px;
+  line-height: 1.25;
+}
+
+.kangoo-av p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.kangoo-av__privacy {
+  margin-top: 6px !important;
+  color: #6b7280;
+  font-size: 11px !important;
+}
+
+.kangoo-av__button {
+  min-height: 42px;
+  margin-top: 12px;
+  padding: 9px 16px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 800;
+  background: #135fea;
+  border: 0;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.kangoo-av__button:hover {
+  background: #0f4fc8;
+}
+
+.kangoo-av__button:disabled {
+  color: #166534;
+  background: #dcfce7;
+  cursor: default;
+}
+
+.kangoo-av__button.is-loading {
+  opacity: .72;
+  cursor: progress;
+}
+
+.kangoo-av__message {
+  min-height: 18px;
+  margin-top: 8px !important;
+  color: #166534;
+  font-size: 12px !important;
+  font-weight: 700;
+}
+
+.kangoo-av__message.is-error {
+  color: #b91c1c;
+}
+
+html.kangoo-av-enforced:not(.kangoo-av-verified) .wp-block-woocommerce-checkout-express-payment-block,
+html.kangoo-av-enforced:not(.kangoo-av-verified) .wc-block-components-express-payment,
+html.kangoo-av-enforced:not(.kangoo-av-verified) .wc-block-components-checkout-place-order-button,
+html.kangoo-av-enforced:not(.kangoo-av-verified) #place_order {
+  display: none !important;
+}
+
+@media (max-width: 640px) {
+  .kangoo-av {
+    grid-template-columns: 36px minmax(0, 1fr);
+    gap: 10px;
+    padding: 13px;
+  }
+
+  .kangoo-av__icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .kangoo-av__icon svg {
+    width: 21px;
+    height: 21px;
+  }
+
+  .kangoo-av h3 {
+    font-size: 16px;
+  }
+}

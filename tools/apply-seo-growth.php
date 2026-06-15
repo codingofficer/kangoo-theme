@@ -90,7 +90,7 @@ $categories = array(
             array('question' => 'Are nicotine pouches the same as snus?', 'answer' => 'No. Nicotine pouches are tobacco-free. Traditional snus contains tobacco and is not what Kangoo sells.'),
             array('question' => 'How do I compare nicotine pouch strengths?', 'answer' => 'Check the nicotine amount shown for each pouch on the product page and choose a level appropriate for your experience.'),
         ),
-        'yoast_title' => 'Nicotine Pouches UK | Buy Online from 79p | Kangoo',
+		'yoast_title' => 'Nicotine Pouches UK | Buy Online from 79p | Kangoo Pouches',
         'yoast_desc' => 'Buy nicotine pouches online in the UK from VELO, ZYN, Nordic Spirit, KILLA and more. Compare flavours, strengths and live prices from 79p.',
         'focus' => 'nicotine pouches UK',
     ),
@@ -104,7 +104,7 @@ $categories = array(
             array('question' => 'Is there a purchase limit?', 'answer' => 'Some promotional pouches are limited per order. The product card and basket show the current limit.'),
             array('question' => 'Are all nicotine pouches 79p?', 'answer' => 'No. The 79p promotion applies only to selected products in this collection. Standard products and pack offers use their normal live prices.'),
         ),
-        'yoast_title' => '99p Nicotine Pouches - Now from 79p | Kangoo',
+		'yoast_title' => '99p Nicotine Pouches - Now from 79p | Kangoo Pouches',
         'yoast_desc' => 'Shop 99p nicotine pouches with selected stocked products now reduced to 79p. Compare brands, flavours and strengths while promotional stock lasts.',
         'focus' => '99p nicotine pouches',
     ),
@@ -328,7 +328,7 @@ if ($product) {
     }
 
     update_post_meta($product_id, 'strength_mg', '10.9');
-    update_post_meta($product_id, '_yoast_wpseo_title', 'VELO Freezing Peppermint 10.9mg Pouches | Kangoo');
+	update_post_meta($product_id, '_yoast_wpseo_title', 'VELO Freezing Peppermint 10.9mg Pouches | Kangoo Pouches');
 }
 
 foreach (wc_get_products(array('status' => 'publish', 'limit' => -1, 'return' => 'objects')) as $catalogue_product) {

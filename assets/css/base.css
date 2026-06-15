@@ -112,14 +112,14 @@ h3 { font-size: clamp(1.1rem, 2.4vw, 1.35rem); }
   width: min(100% - 2rem, var(--container-narrow));
 }
 
-.section { padding: var(--space-9) 0; }
+.section { padding: var(--space-4) 0; }
 .section--hero { padding-top: calc(var(--space-10) + 1rem); }
 
 .section-header {
   display: grid;
   gap: var(--space-2);
   text-align: center;
-  margin-bottom: var(--space-7);
+  margin-bottom: var(--space-2);
 }
 
 .section-header--left { text-align: left; }

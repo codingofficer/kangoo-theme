@@ -23,10 +23,10 @@ $kangoo_age_gate_settings = function_exists('kangoo_get_age_gate_settings') ? ka
                 <span class="kangoo-age-gate__brand-mark" aria-hidden="true">18+</span>
                 <img
                     class="kangoo-age-gate__logo"
-                    src="<?php echo esc_url('https://kangoopouches.co.uk/wp-content/uploads/2026/04/cropped-cropped-kangoo-pouches-logo-orange-white.png'); ?>"
+                    src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/kangoo-logo-black.png'); ?>"
                     alt="<?php echo esc_attr(get_bloginfo('name')); ?>"
-                    width="1212"
-                    height="311"
+                    width="402"
+                    height="117"
                     loading="eager"
                     decoding="async"
                 >
@@ -669,7 +669,7 @@ if (current_user_can('manage_options')) {
                             continue;
                         }
                         ?>
-                        <details class="kangoo-mega-drawer__section"<?php echo $open ? ' open' : ''; ?>>
+                        <details class="kangoo-mega-drawer__section kangoo-mega-drawer__section--<?php echo esc_attr($source); ?>"<?php echo $open ? ' open' : ''; ?>>
                             <summary><?php echo esc_html($label); ?></summary>
 
                             <div class="kangoo-mega-drawer__section-body">

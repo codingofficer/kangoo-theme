@@ -825,6 +825,71 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
+  document.querySelectorAll('[data-taxonomy-slider]').forEach(function (slider) {
+    const track = slider.querySelector('[data-taxonomy-slider-track]');
+    const previousButton = slider.querySelector('[data-taxonomy-slider-prev]');
+    const nextButton = slider.querySelector('[data-taxonomy-slider-next]');
+
+    if (!track || !previousButton || !nextButton) {
+      return;
+    }
+
+    function getScrollStep() {
+      const firstCard = track.firstElementChild;
+
+      if (!firstCard) {
+        return Math.max(track.clientWidth * 0.8, 1);
+      }
+
+      const styles = window.getComputedStyle(track);
+      const gap = parseFloat(styles.columnGap || styles.gap) || 0;
+
+      return firstCard.getBoundingClientRect().width + gap;
+    }
+
+    function updateSliderControls() {
+      const maxScrollLeft = Math.max(track.scrollWidth - track.clientWidth, 0);
+      const currentScrollLeft = Math.max(track.scrollLeft, 0);
+      const hasOverflow = maxScrollLeft > 2;
+
+      previousButton.disabled = !hasOverflow || currentScrollLeft <= 2;
+      nextButton.disabled = !hasOverflow || currentScrollLeft >= maxScrollLeft - 2;
+    }
+
+    function moveSlider(direction) {
+      track.scrollBy({
+        left: getScrollStep() * direction,
+        behavior: 'smooth'
+      });
+    }
+
+    previousButton.addEventListener('click', function () {
+      moveSlider(-1);
+    });
+
+    nextButton.addEventListener('click', function () {
+      moveSlider(1);
+    });
+
+    track.addEventListener('keydown', function (event) {
+      if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') {
+        return;
+      }
+
+      event.preventDefault();
+      moveSlider(event.key === 'ArrowLeft' ? -1 : 1);
+    });
+
+    let sliderFrame = 0;
+    track.addEventListener('scroll', function () {
+      window.cancelAnimationFrame(sliderFrame);
+      sliderFrame = window.requestAnimationFrame(updateSliderControls);
+    }, { passive: true });
+
+    window.addEventListener('resize', updateSliderControls);
+    updateSliderControls();
+  });
+
   const ageGate = document.getElementById('kangoo-age-gate');
   const ageGateAccept = document.querySelector('[data-age-gate-accept]');
   const ageGateReject = document.querySelector('[data-age-gate-reject]');
@@ -2125,6 +2190,10 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function setupCartEmailCapture() {
+    if (window.kangooAgeVerification && window.kangooAgeVerification.replacesDobGate) {
+      return;
+    }
+
     const cartPage = document.querySelector('.woocommerce-cart');
 
     if (!cartPage) {
@@ -2146,7 +2215,7 @@ document.addEventListener('DOMContentLoaded', function () {
       panel.innerHTML = [
         '<div class="kangoo-cart-email-capture__header">',
         '<span class="kangoo-cart-email-capture__status" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M5 12.5l4.2 4.2L19 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>',
-        '<strong>Step 1: Cart details</strong>',
+        '<strong>Checkout Details</strong>',
         '<button type="button" class="kangoo-cart-email-capture__edit" data-kangoo-cart-edit><span>Edit</span><svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path d="M4 20h4l10.5-10.5a2.1 2.1 0 0 0-3-3L5 17v3z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M14 8l2 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>',
         '</div>',
         '<div class="kangoo-cart-email-capture__form">',
@@ -2160,7 +2229,7 @@ document.addEventListener('DOMContentLoaded', function () {
         '</div>',
         '</div>',
         '<p class="kangoo-cart-email-capture__message" data-kangoo-cart-email-message>',
-        isValidEmail(storedEmail) && isValidCheckoutDob(storedDob) ? 'Details saved. Continue to secure checkout.' : 'Enter your email and date of birth to unlock checkout.',
+        isValidEmail(storedEmail) && isValidCheckoutDob(storedDob) ? 'Checkout details saved.' : 'Enter your email and date of birth to unlock checkout.',
         '</p>'
       ].join('');
 
@@ -2331,7 +2400,7 @@ document.addEventListener('DOMContentLoaded', function () {
       panel.classList.remove('needs-email');
       panel.classList.remove('is-editing');
       setDobInputValues(activeDob, true);
-      setMessage('Details saved. Continue to secure checkout.', false);
+      setMessage('Checkout details saved.', false);
       updateSummaryDisplay(email, activeDob);
 
       if (window.kangooRewards) {
@@ -2743,109 +2812,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  function getCheckoutStepDefinitions() {
-    return [
-      { key: 'cart', number: 1, title: 'Cart', subtitle: 'Review your order' },
-      { key: 'details', number: 2, title: 'Details', subtitle: 'Email, DOB and delivery' },
-      { key: 'verify', number: 3, title: 'Verify', subtitle: 'Photo ID and selfie' },
-      { key: 'pay', number: 4, title: 'Pay', subtitle: 'Express checkout or card' }
-    ];
-  }
-
-  function renderCheckoutProgress(activeKey) {
-    const root = document.body.classList.contains('woocommerce-cart')
-      ? document.querySelector('.woocommerce-cart')
-      : document.querySelector('.woocommerce-checkout');
-
-    if (!root) {
-      return;
-    }
-
-    let progress = root.querySelector('[data-kangoo-checkout-progress]');
-    const steps = getCheckoutStepDefinitions();
-
-    if (!progress) {
-      progress = document.createElement('nav');
-      progress.className = 'kangoo-checkout-progress';
-      progress.setAttribute('data-kangoo-checkout-progress', '');
-      progress.setAttribute('aria-label', 'Checkout progress');
-      progress.innerHTML = steps.map(function (step) {
-        return [
-          '<span class="kangoo-checkout-progress__step" data-kangoo-progress-step="', step.key, '">',
-          '<span class="kangoo-checkout-progress__number">', step.number, '</span>',
-          '<span class="kangoo-checkout-progress__copy">',
-          '<strong>', step.title, '</strong>',
-          '<small>', step.subtitle, '</small>',
-          '</span>',
-          '</span>'
-        ].join('');
-      }).join('');
-
-      const heading = root.querySelector('.section-header, .entry-header, h1, .page-title');
-      if (heading && heading.parentElement) {
-        heading.insertAdjacentElement('afterend', progress);
-      } else {
-        root.insertAdjacentElement('afterbegin', progress);
-      }
-    }
-
-    const activeIndex = steps.findIndex(function (step) {
-      return step.key === activeKey;
-    });
-
-    progress.querySelectorAll('[data-kangoo-progress-step]').forEach(function (stepElement) {
-      const stepIndex = steps.findIndex(function (step) {
-        return step.key === stepElement.getAttribute('data-kangoo-progress-step');
-      });
-
-      stepElement.classList.toggle('is-active', stepIndex === activeIndex);
-      stepElement.classList.toggle('is-complete', stepIndex >= 0 && stepIndex < activeIndex);
-      stepElement.setAttribute('aria-current', stepIndex === activeIndex ? 'step' : 'false');
-    });
-  }
-
-  function setupCartCheckoutProgress() {
-    if (!document.body.classList.contains('woocommerce-cart')) {
-      return;
-    }
-
-    renderCheckoutProgress('cart');
-  }
-
-  function setCheckoutStepInputValue(field, value) {
-    if (!field || field.value === value) {
-      return;
-    }
-
-    const setter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
-    setter.call(field, value);
-    field.dispatchEvent(new Event('input', { bubbles: true }));
-    field.dispatchEvent(new Event('change', { bubbles: true }));
-    field.dispatchEvent(new Event('blur', { bubbles: true }));
-  }
-
-  function getCheckoutEmailField(checkout) {
-    return checkout ? checkout.querySelector('#email, #billing_email, input[name="billing_email"], input[type="email"]') : null;
-  }
-
-  function isCheckoutVerificationComplete() {
-    if (window.kangooAgeVerification && window.kangooAgeVerification.enabled) {
-      return Boolean(window.kangooAgeVerification.verified) || document.documentElement.classList.contains('kangoo-av-verified');
-    }
-
-    return true;
-  }
-
-  function setupCheckoutMultistep() {
-    if (!document.body.classList.contains('woocommerce-checkout')) {
-      return;
-    }
-
-    // WooCommerce Blocks re-render their checkout tree frequently. Keep checkout
-    // step UI passive here so the native block flow remains stable.
-    renderCheckoutProgress('details');
-  }
-
   function setupCategoryMobileControls() {
     const filter = document.querySelector('[data-category-filter]');
     const readMore = document.querySelector('[data-category-readmore]');
@@ -3123,41 +3089,28 @@ document.addEventListener('DOMContentLoaded', function () {
   setupProductDispatchTimers();
   setupDeliveryOptionsInteractions();
   setupCheckoutDeliveryOptions();
-  setupCartCheckoutProgress();
   setupCartEmailCapture();
   setupCartSidebarPanels();
   setupCartSummaryLabels();
   setupCheckoutEmailPrefill();
   setupCheckoutGuestNotice();
   setupCheckoutAddressToggle();
-  setupCheckoutMultistep();
   setupCategoryMobileControls();
   setupThemePreferenceControls();
   setupThemePreferencePrompt();
 
   if (document.querySelector('.woocommerce-checkout, .woocommerce-cart')) {
-    let checkoutMutationScheduled = false;
     const checkoutAgeObserver = new MutationObserver(function () {
-      if (checkoutMutationScheduled) {
-        return;
-      }
-
-      checkoutMutationScheduled = true;
-      window.requestAnimationFrame(function () {
-        checkoutMutationScheduled = false;
-        setupCheckoutAgeVerificationRow();
-        linkCheckoutTermsText();
-        setupFreeShippingNudge();
-        setupCheckoutDeliveryOptions();
-        setupCartCheckoutProgress();
-        setupCartEmailCapture();
-        setupCartSidebarPanels();
-        setupCartSummaryLabels();
-        setupCheckoutEmailPrefill();
-        setupCheckoutGuestNotice();
-        setupCheckoutAddressToggle();
-        setupCheckoutMultistep();
-      });
+      setupCheckoutAgeVerificationRow();
+      linkCheckoutTermsText();
+      setupFreeShippingNudge();
+      setupCheckoutDeliveryOptions();
+      setupCartEmailCapture();
+      setupCartSidebarPanels();
+      setupCartSummaryLabels();
+      setupCheckoutEmailPrefill();
+      setupCheckoutGuestNotice();
+      setupCheckoutAddressToggle();
     });
     checkoutAgeObserver.observe(document.body, { childList: true, subtree: true });
   }
