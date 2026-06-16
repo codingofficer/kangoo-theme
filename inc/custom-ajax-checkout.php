@@ -89,6 +89,26 @@ function kangoo_custom_ajax_checkout_active() {
     return kangoo_custom_ajax_checkout_enabled() || kangoo_custom_ajax_checkout_preview_enabled();
 }
 
+function kangoo_custom_ajax_checkout_requested() {
+    if (isset($_GET['classic_checkout'])) {
+        return false;
+    }
+
+    return kangoo_custom_ajax_checkout_enabled() || kangoo_custom_ajax_checkout_preview_enabled();
+}
+
+function kangoo_custom_ajax_checkout_body_class($classes) {
+    $is_cart = function_exists('is_cart') && is_cart();
+    $is_checkout = function_exists('is_checkout') && is_checkout() && !(function_exists('is_order_received_page') && is_order_received_page());
+
+    if (($is_cart || $is_checkout) && kangoo_custom_ajax_checkout_requested()) {
+        $classes[] = 'kangoo-custom-checkout-enabled';
+    }
+
+    return $classes;
+}
+add_filter('body_class', 'kangoo_custom_ajax_checkout_body_class');
+
 function kangoo_custom_ajax_checkout_asset_version($relative_path) {
     $path = get_theme_file_path($relative_path);
 
@@ -98,7 +118,7 @@ function kangoo_custom_ajax_checkout_asset_version($relative_path) {
 function kangoo_custom_ajax_checkout_enqueue_assets() {
     $is_cart = function_exists('is_cart') && is_cart();
     $is_checkout = function_exists('is_checkout') && is_checkout() && !(function_exists('is_order_received_page') && is_order_received_page());
-    $feature_requested = kangoo_custom_ajax_checkout_enabled() || kangoo_custom_ajax_checkout_preview_enabled();
+    $feature_requested = kangoo_custom_ajax_checkout_requested();
 
     if (!$feature_requested || (!$is_cart && !$is_checkout)) {
         return;

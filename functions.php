@@ -5425,6 +5425,10 @@ function kangoo_rewards_get_cart_box_html() {
         return '';
     }
 
+    if (function_exists('is_cart') && is_cart() && function_exists('kangoo_custom_ajax_checkout_requested') && kangoo_custom_ajax_checkout_requested()) {
+        return '';
+    }
+
     ob_start();
 
     if (!is_user_logged_in()) {
