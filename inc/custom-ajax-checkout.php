@@ -41,12 +41,9 @@ function kangoo_custom_ajax_checkout_asset_version($relative_path) {
 function kangoo_custom_ajax_checkout_enqueue_assets() {
     $is_cart = function_exists('is_cart') && is_cart();
     $is_checkout = function_exists('is_checkout') && is_checkout() && !(function_exists('is_order_received_page') && is_order_received_page());
+    $feature_requested = kangoo_custom_ajax_checkout_enabled() || kangoo_custom_ajax_checkout_preview_enabled();
 
-    if (!$is_cart && !$is_checkout) {
-        return;
-    }
-
-    if (!$is_checkout && !kangoo_custom_ajax_checkout_enabled() && !kangoo_custom_ajax_checkout_preview_enabled()) {
+    if (!$feature_requested || (!$is_cart && !$is_checkout)) {
         return;
     }
 
