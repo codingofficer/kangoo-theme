@@ -524,6 +524,46 @@
   background: #ffffff;
 }
 
+.kangoo-custom-checkout__woo-bridge .wp-block-woocommerce-checkout {
+  padding: 18px;
+}
+
+.kangoo-custom-checkout__woo-bridge .wc-block-components-sidebar,
+.kangoo-custom-checkout__woo-bridge .wc-block-checkout__contact-fields,
+.kangoo-custom-checkout__woo-bridge .wc-block-checkout__shipping-fields,
+.kangoo-custom-checkout__woo-bridge .wc-block-checkout__billing-fields,
+.kangoo-custom-checkout__woo-bridge .wc-block-checkout__shipping-option,
+.kangoo-custom-checkout__woo-bridge .wc-block-checkout__pickup-options,
+.kangoo-custom-checkout__woo-bridge .wc-block-checkout__order-notes,
+.kangoo-custom-checkout__woo-bridge .wc-block-checkout__additional-fields,
+.kangoo-custom-checkout__woo-bridge .wp-block-woocommerce-checkout-contact-information-block,
+.kangoo-custom-checkout__woo-bridge .wp-block-woocommerce-checkout-shipping-address-block,
+.kangoo-custom-checkout__woo-bridge .wp-block-woocommerce-checkout-billing-address-block,
+.kangoo-custom-checkout__woo-bridge .wp-block-woocommerce-checkout-shipping-method-block,
+.kangoo-custom-checkout__woo-bridge .wp-block-woocommerce-checkout-order-note-block,
+.kangoo-custom-checkout__woo-bridge .wp-block-woocommerce-checkout-order-summary-block,
+.kangoo-custom-checkout__woo-bridge .wc-block-components-order-summary,
+.kangoo-custom-checkout__woo-bridge .kangoo-rewards-cart,
+.kangoo-custom-checkout__woo-bridge [class*="kangoo-rewards"] {
+  display: none !important;
+}
+
+.kangoo-custom-checkout__woo-bridge .wc-block-components-sidebar-layout,
+.kangoo-custom-checkout__woo-bridge .wc-block-components-main {
+  display: block !important;
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+}
+
+.kangoo-custom-checkout__woo-bridge .wc-block-components-checkout-step,
+.kangoo-custom-checkout__woo-bridge .wc-block-components-express-payment,
+.kangoo-custom-checkout__woo-bridge .wc-block-checkout__payment-method,
+.kangoo-custom-checkout__woo-bridge .wc-block-checkout__terms,
+.kangoo-custom-checkout__woo-bridge .wc-block-checkout__actions {
+  max-width: none !important;
+}
+
 .kangoo-cart-stepper {
   width: min(100%, 760px);
   margin: 0 auto 18px;

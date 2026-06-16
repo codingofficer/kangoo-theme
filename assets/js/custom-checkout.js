@@ -171,7 +171,7 @@
       '<dl>',
       '<dt>Subtotal</dt><dd>', escapeHtml(state.totals && state.totals.subtotal), '</dd>',
       '<dt>Shipping</dt><dd>', escapeHtml(state.totals && state.totals.shipping), '</dd>',
-      '<dt>Total</dt><dd>', escapeHtml(state.totals && state.totals.total), ' GBP</dd>',
+      '<dt>Total</dt><dd>', escapeHtml(state.totals && state.totals.total), '</dd>',
       '</dl>'
     ].join('');
   }
