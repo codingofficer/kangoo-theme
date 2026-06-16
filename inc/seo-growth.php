@@ -182,10 +182,23 @@ function kangoo_seo_key_links() {
     return array(
         'Nicotine Pouches UK' => home_url('/product-category/nicotine-pouches/'),
         '99p Nicotine Pouches - now from 79p' => home_url('/product-category/99p-pouches/'),
-        'VELO Nicotine Pouches' => home_url('/product-category/velo/'),
         'ZYN Nicotine Pouches' => home_url('/product-category/zyn/'),
-        'Nordic Spirit Nicotine Pouches' => home_url('/product-category/nordic-spirit/'),
+        'VELO Nicotine Pouches' => home_url('/product-category/velo/'),
+        'PABLO Nicotine Pouches' => home_url('/product-category/pablo/'),
         'KILLA Nicotine Pouches' => home_url('/product-category/killa/'),
+        'Nordic Spirit Nicotine Pouches' => home_url('/product-category/nordic-spirit/'),
+        'Übbs Nicotine Pouches' => home_url('/product-category/ubbs/'),
+        'FUMi Nicotine Pouches' => home_url('/product-category/fumi/'),
+        'XQS Nicotine Pouches' => home_url('/product-category/xqs/'),
+        'ZYN brand guide' => home_url('/blog/what-is-zyn-uk-guide-to-zyn-nicotine-pouches/'),
+        'VELO brand guide' => home_url('/blog/what-are-velo-nicotine-pouches-uk-guide/'),
+        'PABLO brand guide' => home_url('/blog/what-are-pablo-nicotine-pouches-uk-guide/'),
+        'KILLA brand guide' => home_url('/blog/what-are-killa-nicotine-pouches-uk-guide/'),
+        'Nordic Spirit brand guide' => home_url('/blog/what-are-nordic-spirit-nicotine-pouches-uk-guide/'),
+        'Übbs brand guide' => home_url('/blog/what-are-ubbs-nicotine-pouches-uk-guide/'),
+        'FUMi brand guide' => home_url('/blog/what-are-fumi-nicotine-pouches-uk-guide/'),
+        'XQS brand guide' => home_url('/blog/what-are-xqs-nicotine-pouches-uk-guide/'),
+        'Nicotine pouch brands compared' => home_url('/blog/nicotine-pouch-brands-uk-zyn-velo-pablo-killa-nordic-spirit-ubbs-fumi-and-xqs-compared/'),
         'What are nicotine pouches?' => home_url('/blog/what-are-nicotine-pouches/'),
         'How to use nicotine pouches' => home_url('/blog/how-to-use-nicotine-pouches-placement-timing-and-tips/'),
         'VELO strength dots explained' => home_url('/blog/velo-strength-dots-explained/'),
@@ -202,13 +215,14 @@ function kangoo_seo_render_llms_summary() {
         '',
         '> UK online retailer of tobacco-free nicotine pouches for adults aged 18 and over.',
         '',
-        'Kangoo Pouches sells nicotine pouches from stocked brands including VELO, ZYN, Nordic Spirit, KILLA, PABLO, FUMi, Ubbs and XQS. Traditional tobacco snus is not sold. Educational snus content explains the distinction and legal tobacco-free alternatives in the UK.',
+        'Kangoo Pouches sells nicotine pouches from stocked brands including ZYN, VELO, PABLO, KILLA, Nordic Spirit, Übbs, FUMi and XQS. Traditional tobacco snus is not sold. Educational snus content explains the distinction and legal tobacco-free alternatives in the UK.',
         '',
         '- Market: United Kingdom',
         '- Audience: adults aged 18+',
         '- Free delivery threshold: GBP ' . number_format($threshold, 2),
         '- Dispatch: orders placed before 2pm Monday-Friday are dispatched the same day, excluding bank holidays',
         '- Catalogue: live prices and stock are authoritative on canonical product pages',
+        '- Brand authority pages explain what each pouch brand is, how pouches are used, typical flavours, strength comparisons, tobacco-free positioning and snus wording',
         '',
         '## Key pages',
     );
@@ -224,7 +238,16 @@ function kangoo_seo_render_llms_summary() {
 }
 
 function kangoo_seo_render_llms_full() {
-    $lines = array(rtrim(kangoo_seo_render_llms_summary()), '', '## In-stock product catalogue');
+    $lines = array(
+        rtrim(kangoo_seo_render_llms_summary()),
+        '',
+        '## Brand authority coverage',
+        '- ZYN, VELO, PABLO, KILLA, Nordic Spirit, Übbs, FUMi and XQS each have a live WooCommerce brand category and a dedicated educational brand guide.',
+        '- Brand guides cover what the pouch brand is, what is typically inside the pouches, how pouches are used, common flavour directions, strength and format comparisons, and adult nicotine cautions.',
+        '- Product and category pages remain the source of truth for current price, stock, pouch count, exact strength and pack pricing.',
+        '',
+        '## In-stock product catalogue',
+    );
 
     if (!function_exists('wc_get_products')) {
         return implode("\n", $lines) . "\n";
@@ -292,7 +315,7 @@ function kangoo_seo_write_ai_files() {
         rename($temporary, $path);
     }
 
-    update_option('kangoo_ai_discovery_files_version', '2026-06-11-2', false);
+    update_option('kangoo_ai_discovery_files_version', '2026-06-16-brand-authority-1', false);
     return true;
 }
 
@@ -324,7 +347,7 @@ function kangoo_seo_write_robots_file() {
 }
 
 function kangoo_seo_sync_discovery_files() {
-    if (get_option('kangoo_ai_discovery_files_version') === '2026-06-11-2') {
+    if (get_option('kangoo_ai_discovery_files_version') === '2026-06-16-brand-authority-1') {
         return;
     }
 
