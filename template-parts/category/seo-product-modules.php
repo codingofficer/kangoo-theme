@@ -24,7 +24,7 @@ $target_links = array(
     array('label' => __('Flavour explorer', 'kangoo'), 'url' => $flavour_url),
 );
 
-$brand_links = array(
+$brand_links = function_exists('kangoo_get_brand_authority_links') ? kangoo_get_brand_authority_links() : array(
     array('label' => __('ZYN nicotine pouches', 'kangoo'), 'url' => function_exists('kangoo_get_term_url_by_slug') ? kangoo_get_term_url_by_slug('product_cat', 'zyn', '/product-category/zyn/') : home_url('/product-category/zyn/')),
     array('label' => __('VELO nicotine pouches', 'kangoo'), 'url' => function_exists('kangoo_get_term_url_by_slug') ? kangoo_get_term_url_by_slug('product_cat', 'velo', '/product-category/velo/') : home_url('/product-category/velo/')),
     array('label' => __('PABLO nicotine pouches', 'kangoo'), 'url' => function_exists('kangoo_get_term_url_by_slug') ? kangoo_get_term_url_by_slug('product_cat', 'pablo', '/product-category/pablo/') : home_url('/product-category/pablo/')),
@@ -321,12 +321,23 @@ $trial_products = function_exists('kangoo_get_trial_products') ? kangoo_get_tria
                     <p><?php esc_html_e('Use these internal guides to compare brands, strengths and pouch styles before choosing a product.', 'kangoo'); ?></p>
                 </div>
                 <?php
-                $render_link_chips(array(
+                $brand_profile = function_exists('kangoo_get_brand_authority_profile') ? kangoo_get_brand_authority_profile($term->slug) : array();
+                $brand_guide_url = function_exists('kangoo_get_brand_authority_guide_url') ? kangoo_get_brand_authority_guide_url($brand_profile) : '';
+                $guide_links = array(
                     array('label' => __('Best nicotine pouches UK', 'kangoo'), 'url' => home_url('/blog/best-nicotine-pouches-uk/')),
-                    array('label' => __('ZYN vs VELO', 'kangoo'), 'url' => home_url('/blog/zyn-vs-velo/')),
+                    array('label' => __('Nicotine pouch brands UK', 'kangoo'), 'url' => home_url('/blog/nicotine-pouch-brands-uk-zyn-velo-pablo-killa-nordic-spirit-ubbs-fumi-and-xqs-compared/')),
                     array('label' => __('Strongest nicotine pouches UK', 'kangoo'), 'url' => home_url('/blog/strongest-nicotine-pouches-uk/')),
                     array('label' => __('All nicotine pouches', 'kangoo'), 'url' => $nicotine_url),
-                ));
+                );
+
+                if ($brand_guide_url) {
+                    array_unshift($guide_links, array(
+                        'label' => sprintf(__('%s brand guide', 'kangoo'), $brand_label),
+                        'url'   => $brand_guide_url,
+                    ));
+                }
+
+                $render_link_chips($guide_links);
                 ?>
             </section>
         <?php elseif ($context_type === 'flavour') : ?>

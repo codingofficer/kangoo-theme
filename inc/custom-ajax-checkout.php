@@ -250,22 +250,18 @@ function kangoo_custom_ajax_checkout_shell($checkout_content = '') {
 
                 <section class="kangoo-custom-checkout__panel" data-kangoo-panel="verify" hidden>
                     <h1><?php esc_html_e('Verify your age', 'kangoo'); ?></h1>
-                    <p><?php esc_html_e('We need to verify that you are 18 or over to continue.', 'kangoo'); ?></p>
+                    <p><?php esc_html_e('Enter your date of birth to continue.', 'kangoo'); ?></p>
                     <form class="kangoo-custom-checkout__form" data-kangoo-dob-form novalidate>
                         <label>
                             <span><?php esc_html_e('Date of birth', 'kangoo'); ?></span>
                             <input type="text" name="dob" inputmode="numeric" autocomplete="bday" placeholder="DD / MM / YYYY" required>
                             <small><?php esc_html_e('You must be 18 or over to purchase.', 'kangoo'); ?></small>
                         </label>
-                        <div class="kangoo-custom-checkout__verification" data-kangoo-verification-card>
-                            <span><?php esc_html_e('Required before payment', 'kangoo'); ?></span>
-                            <h2><?php esc_html_e('Verify you are 18 or over', 'kangoo'); ?></h2>
-                            <p><?php esc_html_e('Scan a valid photo ID and take a quick matching selfie.', 'kangoo'); ?></p>
-                            <p><?php esc_html_e('Stripe handles the images securely. Kangoo stores only the verification result and schedules the identity session for deletion.', 'kangoo'); ?></p>
-                            <button type="button" data-kangoo-start-verification><?php esc_html_e('Verify with photo ID', 'kangoo'); ?></button>
-                        </div>
                         <p class="kangoo-custom-checkout__message" data-kangoo-message="verify"></p>
-                        <button type="submit" class="kangoo-custom-checkout__primary"><?php esc_html_e('Continue to payment', 'kangoo'); ?></button>
+                        <button type="submit" class="kangoo-custom-checkout__primary" data-kangoo-dob-submit disabled>
+                            <span><?php esc_html_e('Continue to payment', 'kangoo'); ?></span>
+                            <i class="fa fa-solid fa-arrow-right" aria-hidden="true"></i>
+                        </button>
                         <button type="button" class="kangoo-custom-checkout__back" data-kangoo-step-target="delivery"><?php esc_html_e('Back to delivery details', 'kangoo'); ?></button>
                     </form>
                 </section>
@@ -276,7 +272,11 @@ function kangoo_custom_ajax_checkout_shell($checkout_content = '') {
                     <?php if (!is_user_logged_in()) : ?>
                     <div class="kangoo-checkout-guest-notice" data-kangoo-checkout-guest-notice>
                         <span aria-hidden="true">i</span>
-                        <strong><?php esc_html_e('You are currently checking out as a guest.', 'kangoo'); ?></strong>
+                        <div class="kangoo-checkout-guest-notice__copy">
+                            <?php esc_html_e('You are currently checking out as a guest. Click', 'kangoo'); ?>
+                            <a href="#" data-account-open="login"><?php esc_html_e('here', 'kangoo'); ?></a>
+                            <?php esc_html_e('to sign in.', 'kangoo'); ?>
+                        </div>
                     </div>
                     <?php endif; ?>
                     <?php if (function_exists('kangoo_rewards_get_cart_box_html')) : ?>
@@ -290,7 +290,7 @@ function kangoo_custom_ajax_checkout_shell($checkout_content = '') {
                     <textarea data-kangoo-order-note hidden placeholder="<?php esc_attr_e('Order note', 'kangoo'); ?>"></textarea>
                     <div class="kangoo-custom-checkout__native-bridge">
                         <div class="kangoo-custom-checkout__divider"><?php esc_html_e('Secure payment form', 'kangoo'); ?></div>
-                        <p><?php esc_html_e('Use the secure WooPayments form below to complete payment.', 'kangoo'); ?></p>
+                        <p><?php esc_html_e('Enter your payment details below to complete your order securely.', 'kangoo'); ?></p>
                         <div class="kangoo-custom-checkout__woo-bridge" data-kangoo-woo-bridge>
                             <?php echo $checkout_content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
                         </div>
@@ -298,10 +298,6 @@ function kangoo_custom_ajax_checkout_shell($checkout_content = '') {
                     <button type="button" class="kangoo-custom-checkout__back" data-kangoo-step-target="verify"><?php esc_html_e('Back to age verification', 'kangoo'); ?></button>
                 </section>
             </div>
-
-            <p class="kangoo-custom-checkout__fallback">
-                <a href="<?php echo esc_url(add_query_arg('classic_checkout', '1', wc_get_checkout_url())); ?>"><?php esc_html_e('Use classic checkout', 'kangoo'); ?></a>
-            </p>
         </div>
     </div>
     <?php

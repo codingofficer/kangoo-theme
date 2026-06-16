@@ -21,6 +21,29 @@ if (!is_array($category_faq_rows)) {
     $category_faq_rows = array();
 }
 
+if (
+    $term instanceof WP_Term
+    && $term_taxonomy === 'product_cat'
+    && function_exists('kangoo_get_brand_authority_profile')
+    && !empty(kangoo_get_brand_authority_profile($term->slug))
+) {
+    $brand_authority_profile = kangoo_get_brand_authority_profile($term->slug);
+
+    if (function_exists('kangoo_get_brand_authority_intro')) {
+        $category_intro = kangoo_get_brand_authority_intro($term->slug);
+    }
+
+    $category_page_heading = sprintf(__('%s Nicotine Pouches', 'kangoo'), $brand_authority_profile['label']);
+
+    if (function_exists('kangoo_get_brand_authority_content')) {
+        $category_seo_content = kangoo_get_brand_authority_content($term->slug);
+    }
+
+    if (function_exists('kangoo_get_brand_authority_faq')) {
+        $category_faq_rows = kangoo_get_brand_authority_faq($term->slug);
+    }
+}
+
 $category_faq_schema = array();
 
 foreach ($category_faq_rows as $faq_row) {

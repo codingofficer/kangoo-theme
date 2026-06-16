@@ -207,6 +207,25 @@
       const parts = String(state.dob.value).match(/^(\d{4})-(\d{2})-(\d{2})$/);
       dobForm.elements.dob.value = parts ? [parts[3], parts[2], parts[1]].join(' / ') : '';
     }
+
+    syncDobState(state);
+  }
+
+  function syncDobState(state) {
+    const dobForm = root ? root.querySelector('[data-kangoo-dob-form]') : null;
+    if (!dobForm) {
+      return;
+    }
+
+    const button = dobForm.querySelector('[data-kangoo-dob-submit]');
+    const dobValue = String(dobForm.elements.dob.value || '').trim();
+    const dobValid = Boolean(state && state.dob && state.dob.valid);
+
+    root.dataset.dobValid = dobValid ? 'true' : 'false';
+
+    if (button) {
+      button.disabled = !dobValue;
+    }
   }
 
   function refreshState() {
@@ -426,9 +445,11 @@
       event.preventDefault();
       const step = target.getAttribute('data-kangoo-step-target');
       if (step === 'payment') {
-        setMessage('verify', 'Complete age verification before payment.', true);
-        setStep('verify', true);
-        return;
+        if (root.dataset.dobValid !== 'true') {
+          setMessage('verify', 'Enter a valid date of birth before payment.', true);
+          setStep('verify', true);
+          return;
+        }
       }
       setStep(step, true);
     });
@@ -484,18 +505,30 @@
 
     const dobForm = root.querySelector('[data-kangoo-dob-form]');
     if (dobForm) {
+      const dobInput = dobForm.elements.dob;
+      if (dobInput) {
+        dobInput.addEventListener('input', function () {
+          setMessage('verify', '', false);
+          root.dataset.dobValid = 'false';
+          syncDobState();
+        });
+      }
+
       dobForm.addEventListener('submit', function (event) {
         event.preventDefault();
-        const button = dobForm.querySelector('button[type="submit"]');
+        const button = dobForm.querySelector('[data-kangoo-dob-submit]');
         setMessage('verify', '', false);
         setButtonLoading(button, true);
         api('/dob', { dob: dobForm.elements.dob.value }).then(function (state) {
           renderSummary(state);
+          syncDobState(state);
           setStep('payment', true);
         }).catch(function (error) {
+          root.dataset.dobValid = 'false';
           setMessage('verify', error.message, true);
         }).finally(function () {
           setButtonLoading(button, false);
+          syncDobState();
         });
       });
     }
@@ -510,19 +543,6 @@
         api('/note', { note: noteField.value }).catch(function () {});
       });
     }
-
-    const verifyButton = root.querySelector('[data-kangoo-start-verification]');
-    if (verifyButton) {
-      verifyButton.addEventListener('click', function () {
-        const nativeButton = document.querySelector('[data-kangoo-av-start]');
-        if (nativeButton) {
-          nativeButton.click();
-          return;
-        }
-        setMessage('verify', 'Photo-ID enforcement is currently off. Continue to payment after entering your date of birth.', false);
-      });
-    }
-
     refreshState();
   }
 

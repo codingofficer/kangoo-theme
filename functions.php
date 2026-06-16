@@ -1512,7 +1512,6 @@ add_action('woocommerce_checkout_create_order', 'kangoo_save_checkout_age_verifi
 function kangoo_admin_order_age_verification_meta($order) {
     $dob = $order instanceof WC_Order ? $order->get_meta('_kangoo_age_verified_dob') : '';
     $age = $order instanceof WC_Order ? $order->get_meta('_kangoo_age_verified_age_at_order') : '';
-    $confirmed = $order instanceof WC_Order ? $order->get_meta('_kangoo_age_verification_confirmed') : '';
 
     if (!$dob && $order instanceof WC_Order) {
         $dob = $order->get_meta('_wc_other/kangoo/age-dob');
@@ -1528,12 +1527,7 @@ function kangoo_admin_order_age_verification_meta($order) {
         $age = $dob ? kangoo_calculate_age_from_date((string) $dob) : '';
     }
 
-    if (!$confirmed && $order instanceof WC_Order) {
-        $block_confirmed = $order->get_meta('_wc_other/kangoo/age-confirm');
-        $confirmed = in_array($block_confirmed, array('1', 1, true, 'yes'), true) ? 'yes' : '';
-    }
-
-    if (!$dob && !$confirmed) {
+    if (!$dob) {
         return;
     }
     ?>
@@ -1545,13 +1539,16 @@ function kangoo_admin_order_age_verification_meta($order) {
         <?php if ($age !== '') : ?>
             <p><strong><?php esc_html_e('Age at order:', 'kangoo'); ?></strong> <?php echo esc_html($age); ?></p>
         <?php endif; ?>
-        <p><strong><?php esc_html_e('18+ / photo ID confirmation:', 'kangoo'); ?></strong> <?php echo esc_html($confirmed === 'yes' ? __('Confirmed', 'kangoo') : __('Not confirmed', 'kangoo')); ?></p>
     </div>
     <?php
 }
 add_action('woocommerce_admin_order_data_after_billing_address', 'kangoo_admin_order_age_verification_meta');
 
 function kangoo_register_checkout_block_age_verification_fields() {
+    if (function_exists('kangoo_custom_ajax_checkout_requested') && kangoo_custom_ajax_checkout_requested()) {
+        return;
+    }
+
     if (!function_exists('woocommerce_register_additional_checkout_field')) {
         return;
     }
@@ -1631,6 +1628,31 @@ function kangoo_validate_checkout_block_age_fields($errors, $fields, $group) {
 }
 add_action('woocommerce_blocks_validate_location_other_fields', 'kangoo_validate_checkout_block_age_fields', 10, 3);
 add_action('woocommerce_blocks_validate_location_contact_fields', 'kangoo_validate_checkout_block_age_fields', 10, 3);
+
+function kangoo_admin_hide_legacy_age_checkout_fields() {
+    $screen = function_exists('get_current_screen') ? get_current_screen() : null;
+    if (!$screen || !in_array($screen->id, array('shop_order', 'woocommerce_page_wc-orders'), true)) {
+        return;
+    }
+    ?>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.order_data_column p strong, .order_data_column .form-field label').forEach(function (label) {
+            var text = (label.textContent || '').trim().replace(/\s+/g, ' ');
+            if (['DD:', 'MM:', 'YYYY:', 'DD', 'MM', 'YYYY'].indexOf(text) === -1) {
+                return;
+            }
+
+            var row = label.closest('p, .form-field');
+            if (row) {
+                row.style.display = 'none';
+            }
+        });
+    });
+    </script>
+    <?php
+}
+add_action('admin_footer', 'kangoo_admin_hide_legacy_age_checkout_fields');
 
 function kangoo_email_logo_url() {
     return function_exists('kangoo_email_theme_logo_url')
@@ -3963,6 +3985,7 @@ function kangoo_get_product_brand_label($product) {
         'fumi'          => 'FUMi',
         'nordic-spirit' => 'Nordic Spirit',
         'xqs'           => 'XQS',
+        'ubbs'          => 'Übbs',
     );
 
     foreach ($known_brands as $slug => $label) {
@@ -4591,6 +4614,211 @@ function kangoo_get_retailer_value_comparison_rows() {
     );
 }
 
+function kangoo_get_brand_authority_profiles() {
+    return array(
+        'zyn' => array(
+            'label'       => 'ZYN',
+            'guide_slug'  => 'what-is-zyn-uk-guide-to-zyn-nicotine-pouches',
+            'summary'     => 'ZYN nicotine pouches are tobacco-free oral pouches for adult nicotine users, commonly compared for mini formats, mint flavours and fruit-led options. The most useful way to choose ZYN is to compare exact strength, pouch size, flavour family, price and live stock before adding a product to basket.',
+            'flavours'    => 'mint, citrus, cherry and other fruit-led flavour directions',
+            'strengths'   => 'lower and balanced strengths through to stronger options, depending on the exact can',
+            'formats'     => 'mini and slim-style all-white pouches, depending on the product range',
+            'best_for'    => 'adult users comparing a well-known pouch brand by flavour and strength rather than choosing by brand name alone',
+        ),
+        'velo' => array(
+            'label'       => 'VELO',
+            'guide_slug'  => 'what-are-velo-nicotine-pouches-uk-guide',
+            'summary'     => 'VELO nicotine pouches are tobacco-free pouches searched heavily for mint, peppermint, spearmint, berry and citrus-style options. At Kangoo, the VELO category should work as both a shopping page and a clear explainer for flavours, strengths, pouch format and adult-only nicotine use.',
+            'flavours'    => 'peppermint, spearmint, berry, citrus, tropical and cooling profiles',
+            'strengths'   => 'balanced through stronger products, with the exact mg shown on each product page',
+            'formats'     => 'all-white pouches designed for under-lip use with no smoke or vapour',
+            'best_for'    => 'adult users who already know they want a mainstream brand with broad mint and fruit flavour choice',
+        ),
+        'pablo' => array(
+            'label'       => 'PABLO',
+            'guide_slug'  => 'what-are-pablo-nicotine-pouches-uk-guide',
+            'summary'     => 'PABLO nicotine pouches are usually searched by experienced adult nicotine users comparing stronger pouch options, icy flavours and snus-style terminology. Kangoo content should keep the wording accurate: PABLO products are nicotine pouches, while traditional snus is a different tobacco product.',
+            'flavours'    => 'ice, mint, grape, berry and other bold flavour profiles',
+            'strengths'   => 'strong and extra-strong options; check the exact product page before buying',
+            'formats'     => 'slim all-white pouch styles across selected products',
+            'best_for'    => 'experienced adult nicotine users who already prefer a stronger pouch feel',
+        ),
+        'killa' => array(
+            'label'       => 'KILLA',
+            'guide_slug'  => 'what-are-killa-nicotine-pouches-uk-guide',
+            'summary'     => 'KILLA nicotine pouches are tobacco-free pouch products often searched alongside strong flavours, extra intensity and the word snus. The clearest Kangoo route is to compare KILLA by flavour, exact strength, stock and whether a stronger pouch is appropriate for the adult user.',
+            'flavours'    => 'mint, ice, fruit, coffee-style and sweet flavour directions',
+            'strengths'   => 'often stronger-positioned products, with exact strength varying by can',
+            'formats'     => 'compact pouch formats designed for under-lip use',
+            'best_for'    => 'experienced adult users comparing bold flavours and stronger pouch options',
+        ),
+        'nordic-spirit' => array(
+            'label'       => 'Nordic Spirit',
+            'guide_slug'  => 'what-are-nordic-spirit-nicotine-pouches-uk-guide',
+            'summary'     => 'Nordic Spirit nicotine pouches are tobacco-free and smoke-free pouch products usually compared for mint, menthol, fruit and strength choices. Kangoo should answer what Nordic Spirit is, then help adult users compare the brand against live pouch categories and alternatives without claiming one brand is universally better.',
+            'flavours'    => 'mint, menthol, berry, watermelon, tropical and similar flavour families',
+            'strengths'   => 'normal through stronger ranges, depending on current product availability',
+            'formats'     => 'under-lip nicotine pouches with no combustion or vapour',
+            'best_for'    => 'adult users who know the brand and want to compare flavour family, strength and available alternatives',
+        ),
+        'ubbs' => array(
+            'label'       => 'Übbs',
+            'guide_slug'  => 'what-are-ubbs-nicotine-pouches-uk-guide',
+            'summary'     => 'Übbs nicotine pouches are tobacco-free pouches commonly compared for fruit, mint, cola and moderate-to-strong strength options. The Kangoo page should answer how Übbs pouches are used, what flavours shoppers usually compare, and why the live product page is the source of truth for exact strength.',
+            'flavours'    => 'watermelon, cola, spearmint, berry and other fruit or soda-style profiles',
+            'strengths'   => 'moderate and stronger options such as 6mg, 11mg or 14mg where stocked',
+            'formats'     => 'small all-white pouches placed under the upper lip and removed after use',
+            'best_for'    => 'adult users comparing flavour-led pouch options with clear strength checks',
+        ),
+        'fumi' => array(
+            'label'       => 'FUMi',
+            'guide_slug'  => 'what-are-fumi-nicotine-pouches-uk-guide',
+            'summary'     => 'FUMi nicotine pouches are tobacco-free, all-white pouches known for fruit, mint and distinctive flavour profiles. Kangoo should explain FUMi as a brand, cover how the pouches are used, and route shoppers toward live product pages for exact strength, price and stock.',
+            'flavours'    => 'strawberry, mango, apple, mint, blueberry and other distinctive profiles',
+            'strengths'   => 'varied strengths, with the live product page and packaging as the exact source of truth',
+            'formats'     => 'soft, slim-style all-white pouches for under-lip use',
+            'best_for'    => 'adult users comparing bolder fruit and mint flavour choices',
+        ),
+        'xqs' => array(
+            'label'       => 'XQS',
+            'guide_slug'  => 'what-are-xqs-nicotine-pouches-uk-guide',
+            'summary'     => 'XQS nicotine pouches are tobacco-free pouches often compared for Swedish-style pouch format, mint, berry, tropical and cooling flavour directions. Kangoo should use the XQS brand page to answer what the brand is, how the pouches work, and which live options are available.',
+            'flavours'    => 'berry, tropical, mint, arctic and mixed fruit-style profiles',
+            'strengths'   => 'balanced through stronger options, depending on the exact product stocked',
+            'formats'     => 'slim all-white pouches designed for discreet under-lip use',
+            'best_for'    => 'adult users comparing flavour-led pouches with clear live strength and stock checks',
+        ),
+    );
+}
+
+function kangoo_get_brand_authority_profile($slug) {
+    $slug = sanitize_title((string) $slug);
+    $profiles = kangoo_get_brand_authority_profiles();
+
+    return isset($profiles[$slug]) ? $profiles[$slug] : array();
+}
+
+function kangoo_get_brand_authority_url($slug) {
+    $slug = sanitize_title((string) $slug);
+    $term = taxonomy_exists('product_cat') ? get_term_by('slug', $slug, 'product_cat') : false;
+
+    if ($term instanceof WP_Term) {
+        $url = get_term_link($term);
+
+        if (!is_wp_error($url)) {
+            return $url;
+        }
+    }
+
+    return home_url('/product-category/' . $slug . '/');
+}
+
+function kangoo_get_brand_authority_guide_url($profile) {
+    if (empty($profile['guide_slug'])) {
+        return home_url('/blog/');
+    }
+
+    return home_url('/blog/' . sanitize_title($profile['guide_slug']) . '/');
+}
+
+function kangoo_get_brand_authority_links() {
+    $links = array();
+
+    foreach (kangoo_get_brand_authority_profiles() as $slug => $profile) {
+        $links[] = array(
+            'label' => sprintf(__('%s nicotine pouches', 'kangoo'), $profile['label']),
+            'url'   => kangoo_get_brand_authority_url($slug),
+        );
+    }
+
+    return $links;
+}
+
+function kangoo_get_brand_authority_intro($slug) {
+    $profile = kangoo_get_brand_authority_profile($slug);
+
+    if (empty($profile)) {
+        return '';
+    }
+
+    return sprintf(
+        __('Shop %1$s nicotine pouches at Kangoo. Compare live stock, flavours, strengths and pack pricing where available, with adult-only checkout and discreet UK delivery.', 'kangoo'),
+        $profile['label']
+    );
+}
+
+function kangoo_get_brand_authority_faq($slug) {
+    $profile = kangoo_get_brand_authority_profile($slug);
+
+    if (empty($profile)) {
+        return array();
+    }
+
+    return array(
+        array(
+            'question' => sprintf(__('What are %s nicotine pouches?', 'kangoo'), $profile['label']),
+            'answer'   => $profile['summary'],
+        ),
+        array(
+            'question' => sprintf(__('What %s flavours should I compare first?', 'kangoo'), $profile['label']),
+            'answer'   => sprintf(__('Start with the flavour family: %s. Then check the exact product page for current stock, strength and price.', 'kangoo'), $profile['flavours']),
+        ),
+        array(
+            'question' => sprintf(__('Is %s the same as snus?', 'kangoo'), $profile['label']),
+            'answer'   => __('Many UK shoppers use the word snus casually, but Kangoo uses nicotine pouches for tobacco-free pouch products. Traditional snus is an oral tobacco product and should not be treated as the same thing.', 'kangoo'),
+        ),
+        array(
+            'question' => sprintf(__('Who should compare %s pouches?', 'kangoo'), $profile['label']),
+            'answer'   => $profile['best_for'] . ' ' . __('Nicotine is addictive and Kangoo content is for adults who already use nicotine products.', 'kangoo'),
+        ),
+    );
+}
+
+function kangoo_get_brand_authority_content($slug) {
+    $profile = kangoo_get_brand_authority_profile($slug);
+
+    if (empty($profile)) {
+        return '';
+    }
+
+    $brand_url = kangoo_get_brand_authority_url($slug);
+    $guide_url = kangoo_get_brand_authority_guide_url($profile);
+    $finder_url = function_exists('kangoo_get_page_url_by_template') ? kangoo_get_page_url_by_template('page-templates/template-pouch-finder.php', '/pouch-finder/') : home_url('/pouch-finder/');
+    $compare_url = function_exists('kangoo_get_page_url_by_template') ? kangoo_get_page_url_by_template('page-templates/template-pouch-comparison.php', '/compare-pouches/') : home_url('/compare-pouches/');
+    $strength_url = function_exists('kangoo_get_page_url_by_template') ? kangoo_get_page_url_by_template('page-templates/template-strength-ladder.php', '/strength-ladder/') : home_url('/strength-ladder/');
+    $flavour_url = function_exists('kangoo_get_page_url_by_template') ? kangoo_get_page_url_by_template('page-templates/template-flavour-explorer.php', '/flavour-explorer/') : home_url('/flavour-explorer/');
+
+    return sprintf(
+        '<h3>What are %1$s nicotine pouches?</h3>
+        <p>%2$s</p>
+        <h3>How to compare %1$s at Kangoo</h3>
+        <p>Compare %1$s by flavour, exact strength, pouch format, price and live stock. Common flavour directions include %3$s. Strength can vary by product, so the product page and packaging should always be treated as the source of truth before ordering.</p>
+        <h3>%1$s strengths, formats and flavours</h3>
+        <p>%1$s products are typically compared across %4$s. Formats include %5$s. %6$s</p>
+        <h3>Useful Kangoo links</h3>
+        <ul>
+            <li><a href="%7$s">Shop %1$s nicotine pouches</a></li>
+            <li><a href="%8$s">Read the %1$s brand guide</a></li>
+            <li><a href="%9$s">Use the Kangoo Pouch Finder</a></li>
+            <li><a href="%10$s">Compare pouches by brand and strength</a></li>
+            <li><a href="%11$s">Use the strength ladder</a> or <a href="%12$s">flavour explorer</a></li>
+        </ul>
+        <p>Nicotine is addictive. Kangoo Pouches are for adults who already use nicotine products. This page is buying guidance, not medical advice, and Kangoo is not affiliated with the brand owner unless explicitly stated.</p>',
+        esc_html($profile['label']),
+        esc_html($profile['summary']),
+        esc_html($profile['flavours']),
+        esc_html($profile['strengths']),
+        esc_html($profile['formats']),
+        esc_html($profile['best_for']),
+        esc_url($brand_url),
+        esc_url($guide_url),
+        esc_url($finder_url),
+        esc_url($compare_url),
+        esc_url($strength_url),
+        esc_url($flavour_url)
+    );
+}
+
 function kangoo_get_archive_seo_context() {
     if ((!function_exists('is_product_category') || !is_product_category()) && (!function_exists('is_product_taxonomy') || !is_product_taxonomy())) {
         return array();
@@ -4611,7 +4839,7 @@ function kangoo_get_archive_seo_context() {
             return array('type' => 'trial', 'term' => $term);
         }
 
-        if (in_array($term->slug, array('zyn', 'velo', 'pablo', 'killa'), true)) {
+        if (function_exists('kangoo_is_product_brand_category_slug') && kangoo_is_product_brand_category_slug($term->slug)) {
             return array('type' => 'brand', 'term' => $term);
         }
     }
@@ -4657,7 +4885,8 @@ function kangoo_archive_seo_data() {
         $title = __('79p Nicotine Pouches UK', 'kangoo');
         $description = __('Try selected nicotine pouches from 79p at Kangoo. Trial pouches are limited to one per order while stock lasts and are for adult nicotine users only.', 'kangoo');
     } elseif ($context['type'] === 'brand') {
-        $brand = strtoupper($term->name);
+        $brand_profile = function_exists('kangoo_get_brand_authority_profile') ? kangoo_get_brand_authority_profile($term->slug) : array();
+        $brand = !empty($brand_profile['label']) ? $brand_profile['label'] : strtoupper($term->name);
         $title = sprintf(__('%s Nicotine Pouches UK', 'kangoo'), $brand);
         $description = sprintf(__('Shop %s nicotine pouches at Kangoo with stock-aware product choice, pack pricing where available, discreet UK delivery and adult-only ordering.', 'kangoo'), $brand);
     } elseif ($context['type'] === 'flavour') {
@@ -9584,6 +9813,7 @@ function kangoo_product_filter_fallback_options($filter) {
             'fumi'          => __('FUMi', 'kangoo'),
             'nordic-spirit' => __('Nordic Spirit', 'kangoo'),
             'xqs'           => __('XQS', 'kangoo'),
+            'ubbs'          => __('Übbs', 'kangoo'),
         );
     }
 

@@ -5,25 +5,71 @@ function kangoo_blog_guide_seeder_data_path() {
     return get_template_directory() . '/guides/blog-guides/kangoo-blog-seed-data.json';
 }
 
+function kangoo_blog_guide_seeder_brand_authority_data_path() {
+    return get_template_directory() . '/guides/blog-guides/kangoo-brand-authority-seed-data.json';
+}
+
 function kangoo_blog_guide_seeder_banner_map_path() {
     return get_template_directory() . '/generated-blog-banners/banner-map.csv';
 }
 
-function kangoo_blog_guide_seeder_load_guides() {
-    $path = kangoo_blog_guide_seeder_data_path();
-
+function kangoo_blog_guide_seeder_load_json_file($path, $error_code) {
     if (!file_exists($path) || !is_readable($path)) {
-        return new WP_Error('kangoo_blog_seed_missing', __('Seed data file is missing.', 'kangoo'));
+        return new WP_Error($error_code . '_missing', __('Seed data file is missing.', 'kangoo'));
     }
 
     $json = file_get_contents($path);
     $guides = json_decode($json, true);
 
     if (!is_array($guides)) {
-        return new WP_Error('kangoo_blog_seed_invalid', __('Seed data file is not valid JSON.', 'kangoo'));
+        return new WP_Error($error_code . '_invalid', __('Seed data file is not valid JSON.', 'kangoo'));
     }
 
     return $guides;
+}
+
+function kangoo_blog_guide_seeder_load_guides() {
+    $path = kangoo_blog_guide_seeder_data_path();
+
+    $guides = kangoo_blog_guide_seeder_load_json_file($path, 'kangoo_blog_seed');
+
+    if (is_wp_error($guides)) {
+        return $guides;
+    }
+
+    $brand_path = kangoo_blog_guide_seeder_brand_authority_data_path();
+
+    if (!file_exists($brand_path)) {
+        return $guides;
+    }
+
+    $brand_guides = kangoo_blog_guide_seeder_load_json_file($brand_path, 'kangoo_brand_authority_seed');
+
+    if (is_wp_error($brand_guides)) {
+        return $brand_guides;
+    }
+
+    $merged = array();
+    $slug_positions = array();
+
+    foreach ($guides as $guide) {
+        $slug = isset($guide['slug']) ? sanitize_title($guide['slug']) : '';
+        $slug_positions[$slug] = count($merged);
+        $merged[] = $guide;
+    }
+
+    foreach ($brand_guides as $guide) {
+        $slug = isset($guide['slug']) ? sanitize_title($guide['slug']) : '';
+
+        if ($slug && isset($slug_positions[$slug])) {
+            $merged[$slug_positions[$slug]] = array_merge($merged[$slug_positions[$slug]], $guide);
+            continue;
+        }
+
+        $merged[] = $guide;
+    }
+
+    return $merged;
 }
 
 function kangoo_blog_guide_seeder_load_banner_map() {
@@ -62,6 +108,53 @@ function kangoo_blog_guide_seeder_load_banner_map() {
     fclose($handle);
 
     return $rows;
+}
+
+function kangoo_blog_guide_seeder_update_term_field($term_id, $term_key, $field_name, $value) {
+    if (function_exists('update_field')) {
+        update_field($field_name, $value, $term_key);
+        return;
+    }
+
+    update_term_meta($term_id, $field_name, $value);
+}
+
+function kangoo_blog_guide_seeder_sync_brand_category_seo() {
+    if (
+        !taxonomy_exists('product_cat')
+        || !function_exists('kangoo_get_brand_authority_profiles')
+        || !function_exists('kangoo_get_brand_authority_intro')
+        || !function_exists('kangoo_get_brand_authority_content')
+        || !function_exists('kangoo_get_brand_authority_faq')
+    ) {
+        return new WP_Error('kangoo_brand_category_sync_unavailable', __('Brand authority category data is unavailable.', 'kangoo'));
+    }
+
+    $updated = 0;
+    $missing = array();
+
+    foreach (kangoo_get_brand_authority_profiles() as $slug => $profile) {
+        $term = get_term_by('slug', $slug, 'product_cat');
+
+        if (!$term instanceof WP_Term) {
+            $missing[] = $profile['label'];
+            continue;
+        }
+
+        $term_key = 'product_cat_' . $term->term_id;
+
+        kangoo_blog_guide_seeder_update_term_field($term->term_id, $term_key, 'category_seo_title', sprintf(__('%s Nicotine Pouches', 'kangoo'), $profile['label']));
+        kangoo_blog_guide_seeder_update_term_field($term->term_id, $term_key, 'category_intro', kangoo_get_brand_authority_intro($slug));
+        kangoo_blog_guide_seeder_update_term_field($term->term_id, $term_key, 'category_seo_content', kangoo_get_brand_authority_content($slug));
+        kangoo_blog_guide_seeder_update_term_field($term->term_id, $term_key, 'category_faq', kangoo_get_brand_authority_faq($slug));
+
+        $updated++;
+    }
+
+    return array(
+        'updated' => $updated,
+        'missing' => $missing,
+    );
 }
 
 function kangoo_blog_guide_seeder_get_blog_post_by_slug($slug) {
@@ -140,6 +233,14 @@ function kangoo_blog_guide_seeder_admin_page() {
                     );
                     ?>
                 </p>
+                <p class="description">
+                    <?php esc_html_e('Base seed:', 'kangoo'); ?>
+                    <code><?php echo esc_html(kangoo_blog_guide_seeder_data_path()); ?></code>
+                </p>
+                <p class="description">
+                    <?php esc_html_e('Brand authority supplement:', 'kangoo'); ?>
+                    <code><?php echo esc_html(kangoo_blog_guide_seeder_brand_authority_data_path()); ?></code>
+                </p>
 
                 <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
                     <?php wp_nonce_field('kangoo_blog_guide_seeder', 'kangoo_blog_guide_seeder_nonce'); ?>
@@ -188,6 +289,16 @@ function kangoo_blog_guide_seeder_admin_page() {
                     </table>
 
                     <?php submit_button(__('Run blog seeder', 'kangoo')); ?>
+                </form>
+            </div>
+
+            <div class="card" style="max-width: 760px;">
+                <h2><?php esc_html_e('Brand category SEO', 'kangoo'); ?></h2>
+                <p><?php esc_html_e('Overwrite the WooCommerce brand category ACF fields with the latest Kangoo brand authority content. This updates the visible category heading, hero intro, lower-page SEO copy and FAQ rows for ZYN, VELO, PABLO, KILLA, Nordic Spirit, Übbs, FUMi and XQS.', 'kangoo'); ?></p>
+                <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
+                    <?php wp_nonce_field('kangoo_sync_brand_category_seo', 'kangoo_sync_brand_category_seo_nonce'); ?>
+                    <input type="hidden" name="action" value="kangoo_sync_brand_category_seo">
+                    <?php submit_button(__('Sync brand category SEO', 'kangoo'), 'secondary'); ?>
                 </form>
             </div>
 
@@ -522,11 +633,44 @@ function kangoo_blog_guide_seeder_handle_import() {
         kangoo_blog_guide_seeder_update_meta($post_id, 'blog_seo_title', 'field_kangoo_blog_seo_title', $seo_title);
         kangoo_blog_guide_seeder_update_meta($post_id, 'blog_meta_description', 'field_kangoo_blog_meta_description', $meta_description);
 
+        if (isset($guide['primary_brand'])) {
+            update_post_meta($post_id, '_kangoo_primary_brand', sanitize_text_field($guide['primary_brand']));
+        }
+
+        if (isset($guide['category_url'])) {
+            update_post_meta($post_id, '_kangoo_category_url', esc_url_raw($guide['category_url']));
+        }
+
+        if (isset($guide['query_targets']) && is_array($guide['query_targets'])) {
+            update_post_meta($post_id, '_kangoo_query_targets', array_map('sanitize_text_field', $guide['query_targets']));
+        }
+
+        if (isset($guide['source_urls']) && is_array($guide['source_urls'])) {
+            update_post_meta($post_id, '_kangoo_source_urls', array_map('esc_url_raw', $guide['source_urls']));
+        }
+
         update_post_meta($post_id, '_yoast_wpseo_focuskw', $focus_keyphrase);
         update_post_meta($post_id, '_yoast_wpseo_title', $seo_title);
         update_post_meta($post_id, '_yoast_wpseo_metadesc', $meta_description);
 
         kangoo_blog_guide_seeder_assign_topic($post_id, isset($guide['topic']) ? $guide['topic'] : __('Guide', 'kangoo'));
+    }
+
+    $category_sync = kangoo_blog_guide_seeder_sync_brand_category_seo();
+    $category_sync_message = '';
+
+    if (!is_wp_error($category_sync)) {
+        $category_sync_message = ' ' . sprintf(
+            __('Brand categories updated: %d.', 'kangoo'),
+            isset($category_sync['updated']) ? (int) $category_sync['updated'] : 0
+        );
+
+        if (!empty($category_sync['missing'])) {
+            $category_sync_message .= ' ' . sprintf(
+                __('Missing category slugs: %s.', 'kangoo'),
+                implode(', ', array_map('sanitize_text_field', $category_sync['missing']))
+            );
+        }
     }
 
     set_transient(
@@ -536,7 +680,7 @@ function kangoo_blog_guide_seeder_handle_import() {
             $created,
             $updated,
             $skipped
-        ),
+        ) . $category_sync_message,
         60
     );
 
@@ -544,6 +688,38 @@ function kangoo_blog_guide_seeder_handle_import() {
     exit;
 }
 add_action('admin_post_kangoo_seed_blog_guides', 'kangoo_blog_guide_seeder_handle_import');
+
+function kangoo_blog_guide_seeder_handle_brand_category_sync() {
+    if (!current_user_can('manage_options')) {
+        wp_die(esc_html__('You do not have permission to sync brand category SEO.', 'kangoo'));
+    }
+
+    check_admin_referer('kangoo_sync_brand_category_seo', 'kangoo_sync_brand_category_seo_nonce');
+
+    $result = kangoo_blog_guide_seeder_sync_brand_category_seo();
+
+    if (is_wp_error($result)) {
+        wp_die(esc_html($result->get_error_message()));
+    }
+
+    $message = sprintf(
+        __('Brand category SEO sync finished. Updated: %d.', 'kangoo'),
+        isset($result['updated']) ? (int) $result['updated'] : 0
+    );
+
+    if (!empty($result['missing'])) {
+        $message .= ' ' . sprintf(
+            __('Missing category slugs: %s.', 'kangoo'),
+            implode(', ', array_map('sanitize_text_field', $result['missing']))
+        );
+    }
+
+    set_transient('kangoo_blog_guide_seeder_result', $message, 60);
+
+    wp_safe_redirect(admin_url('tools.php?page=kangoo-blog-guide-seeder'));
+    exit;
+}
+add_action('admin_post_kangoo_sync_brand_category_seo', 'kangoo_blog_guide_seeder_handle_brand_category_sync');
 
 function kangoo_blog_guide_seeder_handle_banner_import() {
     if (!current_user_can('manage_options')) {

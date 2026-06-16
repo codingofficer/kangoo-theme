@@ -716,6 +716,18 @@ body {
   background-image: url("../images/kangoo-mascot-sprite.webp") !important;
 }
 
+body.woocommerce-cart .kangoo-helper-mascot,
+body.woocommerce-cart .kangoo-mascot-helper,
+body.woocommerce-checkout .kangoo-helper-mascot,
+body.woocommerce-checkout .kangoo-mascot-helper,
+body.woocommerce-order-received .kangoo-helper-mascot,
+body.woocommerce-order-received .kangoo-mascot-helper {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
 .kangoo-mega-menu__view-all {
   display: inline-flex;
   margin-top: 1rem;
