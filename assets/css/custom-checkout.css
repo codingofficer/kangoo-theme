@@ -313,7 +313,7 @@
 .kangoo-custom-checkout__verification {
   display: grid;
   gap: 8px;
-  margin: 26px 0 390px;
+  margin: 26px 0 0;
   padding: 18px;
   background: #fffaf5;
   border: 1px solid #fed7aa;
@@ -556,6 +556,12 @@
   margin: 0 !important;
 }
 
+.kangoo-custom-checkout__woo-bridge .wc-block-components-main > *,
+.kangoo-custom-checkout__woo-bridge .wp-block-woocommerce-checkout-payment-block > * {
+  width: 100% !important;
+  max-width: none !important;
+}
+
 .kangoo-custom-checkout__woo-bridge .wc-block-components-checkout-step,
 .kangoo-custom-checkout__woo-bridge .wc-block-components-express-payment,
 .kangoo-custom-checkout__woo-bridge .wc-block-checkout__payment-method,
@@ -583,17 +589,14 @@
 }
 
 .kangoo-custom-checkout__woo-bridge .wc-block-components-express-payment {
-  display: block !important;
+  width: 100% !important;
+  max-width: none !important;
 }
 
 .kangoo-custom-checkout__woo-bridge .wc-block-components-express-payment__content,
 .kangoo-custom-checkout__woo-bridge .wc-block-components-express-payment__event-buttons {
-  display: grid !important;
   width: 100% !important;
   max-width: none !important;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px !important;
-  align-items: stretch !important;
 }
 
 .kangoo-custom-checkout__woo-bridge .wc-block-components-express-payment__event-buttons > *,
@@ -614,6 +617,26 @@
 .kangoo-custom-checkout__woo-bridge .wc-stripe-blocks-payment-method-content {
   display: grid !important;
   gap: 12px !important;
+}
+
+.kangoo-custom-checkout__woo-bridge .wc-block-components-checkout-step__container,
+.kangoo-custom-checkout__woo-bridge .wc-block-components-checkout-step__content,
+.kangoo-custom-checkout__woo-bridge .wc-block-components-radio-control-accordion-content > *,
+.kangoo-custom-checkout__woo-bridge .wc-stripe-blocks-payment-method-content > *,
+.kangoo-custom-checkout__woo-bridge .wc-block-components-text-input,
+.kangoo-custom-checkout__woo-bridge .wc-block-components-text-input input,
+.kangoo-custom-checkout__woo-bridge .wc-block-components-form .wc-block-components-text-input,
+.kangoo-custom-checkout__woo-bridge .wc-block-components-form .wc-block-components-text-input input,
+.kangoo-custom-checkout__woo-bridge .wc-block-components-card-number-input,
+.kangoo-custom-checkout__woo-bridge .wc-block-components-card-expiry-input,
+.kangoo-custom-checkout__woo-bridge .wc-block-components-card-cvc-input,
+.kangoo-custom-checkout__woo-bridge .wc-block-components-card-number-input iframe,
+.kangoo-custom-checkout__woo-bridge .wc-block-components-card-expiry-input iframe,
+.kangoo-custom-checkout__woo-bridge .wc-block-components-card-cvc-input iframe,
+.kangoo-custom-checkout__woo-bridge .wc-block-components-payment-methods__save-card-info {
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
 }
 
 .kangoo-custom-checkout__woo-bridge .wc-stripe-blocks-payment-method-content iframe {
