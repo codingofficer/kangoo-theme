@@ -4628,7 +4628,7 @@ function kangoo_get_brand_authority_profiles() {
         'velo' => array(
             'label'       => 'VELO',
             'guide_slug'  => 'what-are-velo-nicotine-pouches-uk-guide',
-            'summary'     => 'VELO nicotine pouches are tobacco-free pouches searched heavily for mint, peppermint, spearmint, berry and citrus-style options. At Kangoo, the VELO category should work as both a shopping page and a clear explainer for flavours, strengths, pouch format and adult-only nicotine use.',
+            'summary'     => 'VELO nicotine pouches are tobacco-free oral pouches commonly compared for peppermint, spearmint, berry, citrus, tropical and cooling flavours. Compare VELO by flavour family, exact strength, pouch feel, price and live stock.',
             'flavours'    => 'peppermint, spearmint, berry, citrus, tropical and cooling profiles',
             'strengths'   => 'balanced through stronger products, with the exact mg shown on each product page',
             'formats'     => 'all-white pouches designed for under-lip use with no smoke or vapour',
@@ -4637,7 +4637,7 @@ function kangoo_get_brand_authority_profiles() {
         'pablo' => array(
             'label'       => 'PABLO',
             'guide_slug'  => 'what-are-pablo-nicotine-pouches-uk-guide',
-            'summary'     => 'PABLO nicotine pouches are usually searched by experienced adult nicotine users comparing stronger pouch options, icy flavours and snus-style terminology. Kangoo content should keep the wording accurate: PABLO products are nicotine pouches, while traditional snus is a different tobacco product.',
+            'summary'     => 'PABLO nicotine pouches are usually compared by experienced adult nicotine users looking at stronger pouch options, icy flavours and snus-style search terms. PABLO products are nicotine pouches, while traditional snus is a different tobacco product.',
             'flavours'    => 'ice, mint, grape, berry and other bold flavour profiles',
             'strengths'   => 'strong and extra-strong options; check the exact product page before buying',
             'formats'     => 'slim all-white pouch styles across selected products',
@@ -4646,7 +4646,7 @@ function kangoo_get_brand_authority_profiles() {
         'killa' => array(
             'label'       => 'KILLA',
             'guide_slug'  => 'what-are-killa-nicotine-pouches-uk-guide',
-            'summary'     => 'KILLA nicotine pouches are tobacco-free pouch products often searched alongside strong flavours, extra intensity and the word snus. The clearest Kangoo route is to compare KILLA by flavour, exact strength, stock and whether a stronger pouch is appropriate for the adult user.',
+            'summary'     => 'KILLA nicotine pouches are tobacco-free pouch products often searched alongside strong flavours, extra intensity and the word snus. Compare KILLA by flavour, exact strength, stock and whether a stronger pouch is appropriate for the adult user.',
             'flavours'    => 'mint, ice, fruit, coffee-style and sweet flavour directions',
             'strengths'   => 'often stronger-positioned products, with exact strength varying by can',
             'formats'     => 'compact pouch formats designed for under-lip use',
@@ -4655,7 +4655,7 @@ function kangoo_get_brand_authority_profiles() {
         'nordic-spirit' => array(
             'label'       => 'Nordic Spirit',
             'guide_slug'  => 'what-are-nordic-spirit-nicotine-pouches-uk-guide',
-            'summary'     => 'Nordic Spirit nicotine pouches are tobacco-free and smoke-free pouch products usually compared for mint, menthol, fruit and strength choices. Kangoo should answer what Nordic Spirit is, then help adult users compare the brand against live pouch categories and alternatives without claiming one brand is universally better.',
+            'summary'     => 'Nordic Spirit nicotine pouches are tobacco-free and smoke-free pouch products usually compared for mint, menthol, fruit and strength choices. Adult users often compare Nordic Spirit against similar pouch brands by flavour family, exact strength, pouch format and live availability.',
             'flavours'    => 'mint, menthol, berry, watermelon, tropical and similar flavour families',
             'strengths'   => 'normal through stronger ranges, depending on current product availability',
             'formats'     => 'under-lip nicotine pouches with no combustion or vapour',
@@ -4664,7 +4664,7 @@ function kangoo_get_brand_authority_profiles() {
         'ubbs' => array(
             'label'       => 'Übbs',
             'guide_slug'  => 'what-are-ubbs-nicotine-pouches-uk-guide',
-            'summary'     => 'Übbs nicotine pouches are tobacco-free pouches commonly compared for fruit, mint, cola and moderate-to-strong strength options. The Kangoo page should answer how Übbs pouches are used, what flavours shoppers usually compare, and why the live product page is the source of truth for exact strength.',
+            'summary'     => 'Übbs nicotine pouches are tobacco-free pouches commonly compared for fruit, mint, cola and moderate-to-strong strength options. Compare Übbs by flavour family, exact strength, pouch format and current product availability.',
             'flavours'    => 'watermelon, cola, spearmint, berry and other fruit or soda-style profiles',
             'strengths'   => 'moderate and stronger options such as 6mg, 11mg or 14mg where stocked',
             'formats'     => 'small all-white pouches placed under the upper lip and removed after use',
@@ -4673,7 +4673,7 @@ function kangoo_get_brand_authority_profiles() {
         'fumi' => array(
             'label'       => 'FUMi',
             'guide_slug'  => 'what-are-fumi-nicotine-pouches-uk-guide',
-            'summary'     => 'FUMi nicotine pouches are tobacco-free, all-white pouches known for fruit, mint and distinctive flavour profiles. Kangoo should explain FUMi as a brand, cover how the pouches are used, and route shoppers toward live product pages for exact strength, price and stock.',
+            'summary'     => 'FUMi nicotine pouches are tobacco-free, all-white pouches known for fruit, mint and distinctive flavour profiles. Compare FUMi by flavour family, exact strength, pouch style, price and live stock.',
             'flavours'    => 'strawberry, mango, apple, mint, blueberry and other distinctive profiles',
             'strengths'   => 'varied strengths, with the live product page and packaging as the exact source of truth',
             'formats'     => 'soft, slim-style all-white pouches for under-lip use',
@@ -4682,7 +4682,7 @@ function kangoo_get_brand_authority_profiles() {
         'xqs' => array(
             'label'       => 'XQS',
             'guide_slug'  => 'what-are-xqs-nicotine-pouches-uk-guide',
-            'summary'     => 'XQS nicotine pouches are tobacco-free pouches often compared for Swedish-style pouch format, mint, berry, tropical and cooling flavour directions. Kangoo should use the XQS brand page to answer what the brand is, how the pouches work, and which live options are available.',
+            'summary'     => 'XQS nicotine pouches are tobacco-free pouches often compared for Swedish-style pouch format, mint, berry, tropical and cooling flavour directions. Compare XQS by flavour family, exact strength, pouch format and current availability.',
             'flavours'    => 'berry, tropical, mint, arctic and mixed fruit-style profiles',
             'strengths'   => 'balanced through stronger options, depending on the exact product stocked',
             'formats'     => 'slim all-white pouches designed for discreet under-lip use',
@@ -4742,7 +4742,7 @@ function kangoo_get_brand_authority_intro($slug) {
     }
 
     return sprintf(
-        __('Shop %1$s nicotine pouches at Kangoo. Compare live stock, flavours, strengths and pack pricing where available, with adult-only checkout and discreet UK delivery.', 'kangoo'),
+        __('Browse %1$s nicotine pouches at Kangoo Pouches. Compare live stock, flavours, strengths and pack pricing where available.', 'kangoo'),
         $profile['label']
     );
 }
@@ -4765,11 +4765,11 @@ function kangoo_get_brand_authority_faq($slug) {
         ),
         array(
             'question' => sprintf(__('Is %s the same as snus?', 'kangoo'), $profile['label']),
-            'answer'   => __('Many UK shoppers use the word snus casually, but Kangoo uses nicotine pouches for tobacco-free pouch products. Traditional snus is an oral tobacco product and should not be treated as the same thing.', 'kangoo'),
+            'answer'   => __('Many UK shoppers use the word snus casually, but Kangoo Pouches uses nicotine pouches for tobacco-free pouch products. Traditional snus is an oral tobacco product and should not be treated as the same thing.', 'kangoo'),
         ),
         array(
             'question' => sprintf(__('Who should compare %s pouches?', 'kangoo'), $profile['label']),
-            'answer'   => $profile['best_for'] . ' ' . __('Nicotine is addictive and Kangoo content is for adults who already use nicotine products.', 'kangoo'),
+            'answer'   => $profile['best_for'] . ' ' . __('Nicotine is addictive and this content is for adults who already use nicotine products.', 'kangoo'),
         ),
     );
 }
@@ -4791,19 +4791,19 @@ function kangoo_get_brand_authority_content($slug) {
     return sprintf(
         '<h3>What are %1$s nicotine pouches?</h3>
         <p>%2$s</p>
-        <h3>How to compare %1$s at Kangoo</h3>
+        <h3>How to compare %1$s at Kangoo Pouches</h3>
         <p>Compare %1$s by flavour, exact strength, pouch format, price and live stock. Common flavour directions include %3$s. Strength can vary by product, so the product page and packaging should always be treated as the source of truth before ordering.</p>
         <h3>%1$s strengths, formats and flavours</h3>
         <p>%1$s products are typically compared across %4$s. Formats include %5$s. %6$s</p>
-        <h3>Useful Kangoo links</h3>
+        <h3>Useful Kangoo Pouches links</h3>
         <ul>
             <li><a href="%7$s">Shop %1$s nicotine pouches</a></li>
             <li><a href="%8$s">Read the %1$s brand guide</a></li>
-            <li><a href="%9$s">Use the Kangoo Pouch Finder</a></li>
+            <li><a href="%9$s">Use the Kangoo Pouches finder</a></li>
             <li><a href="%10$s">Compare pouches by brand and strength</a></li>
             <li><a href="%11$s">Use the strength ladder</a> or <a href="%12$s">flavour explorer</a></li>
         </ul>
-        <p>Nicotine is addictive. Kangoo Pouches are for adults who already use nicotine products. This page is buying guidance, not medical advice, and Kangoo is not affiliated with the brand owner unless explicitly stated.</p>',
+        <p>Nicotine is addictive. Kangoo Pouches content is for adults who already use nicotine products. This page is buying guidance, not medical advice, and Kangoo Pouches is not affiliated with the brand owner unless explicitly stated.</p>',
         esc_html($profile['label']),
         esc_html($profile['summary']),
         esc_html($profile['flavours']),
@@ -4880,22 +4880,22 @@ function kangoo_archive_seo_data() {
 
     if ($context['type'] === 'nicotine') {
         $title = __('Nicotine Pouches UK From 79p', 'kangoo');
-        $description = __('Shop nicotine pouches in the UK from Kangoo, including ZYN, VELO, KILLA and PABLO, 79p trial pouches, pack pricing and discreet UK delivery.', 'kangoo');
+        $description = __('Shop nicotine pouches in the UK from Kangoo Pouches, including ZYN, VELO, KILLA and PABLO, 79p trial pouches and pack pricing.', 'kangoo');
     } elseif ($context['type'] === 'trial') {
         $title = __('79p Nicotine Pouches UK', 'kangoo');
-        $description = __('Try selected nicotine pouches from 79p at Kangoo. Trial pouches are limited to one per order while stock lasts and are for adult nicotine users only.', 'kangoo');
+        $description = __('Try selected nicotine pouches from 79p at Kangoo Pouches. Trial pouches are limited to one per order while stock lasts and are for adult nicotine users only.', 'kangoo');
     } elseif ($context['type'] === 'brand') {
         $brand_profile = function_exists('kangoo_get_brand_authority_profile') ? kangoo_get_brand_authority_profile($term->slug) : array();
         $brand = !empty($brand_profile['label']) ? $brand_profile['label'] : strtoupper($term->name);
         $title = sprintf(__('%s Nicotine Pouches UK', 'kangoo'), $brand);
-        $description = sprintf(__('Shop %s nicotine pouches at Kangoo with stock-aware product choice, pack pricing where available, discreet UK delivery and adult-only ordering.', 'kangoo'), $brand);
+        $description = sprintf(__('Browse %s nicotine pouches at Kangoo Pouches with stock-aware product choice, flavour notes, strengths and pack pricing where available.', 'kangoo'), $brand);
     } elseif ($context['type'] === 'flavour') {
         $title = sprintf(__('%s Nicotine Pouches UK', 'kangoo'), $term->name);
-        $description = sprintf(__('Browse %s nicotine pouches at Kangoo, compare strengths and brands, and find adult nicotine pouch options with fast UK delivery.', 'kangoo'), strtolower($term->name));
+        $description = sprintf(__('Browse %s nicotine pouches at Kangoo Pouches and compare strengths, brands and flavour options.', 'kangoo'), strtolower($term->name));
     } elseif ($context['type'] === 'strength') {
         $name = preg_replace('/\s*strength\s*/i', '', $term->name);
         $title = sprintf(__('%s Nicotine Pouches UK', 'kangoo'), $name);
-        $description = sprintf(__('Shop %s nicotine pouches at Kangoo. Compare products by brand, flavour and price before choosing a pouch for adult nicotine users.', 'kangoo'), strtolower($name));
+        $description = sprintf(__('Shop %s nicotine pouches at Kangoo Pouches. Compare products by brand, flavour and price before choosing a pouch for adult nicotine users.', 'kangoo'), strtolower($name));
     }
 
     $canonical = get_term_link($term);
