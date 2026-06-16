@@ -663,12 +663,17 @@
   min-width: 0 !important;
 }
 
-.kangoo-custom-checkout__woo-bridge .wc-block-components-radio-control__option,
-.kangoo-custom-checkout__woo-bridge .wc-block-components-radio-control-accordion-option {
+.kangoo-custom-checkout__woo-bridge .wc-block-components-radio-control__option {
   display: grid !important;
   grid-template-columns: 26px minmax(0, 1fr);
   gap: 12px !important;
   align-items: start !important;
+}
+
+.kangoo-custom-checkout__woo-bridge .wc-block-components-radio-control-accordion-option {
+  display: block !important;
+  width: 100% !important;
+  max-width: none !important;
 }
 
 .kangoo-custom-checkout__woo-bridge .wc-block-components-radio-control__input {
@@ -676,8 +681,7 @@
   margin-top: 3px !important;
 }
 
-.kangoo-custom-checkout__woo-bridge .wc-block-components-radio-control__option-layout,
-.kangoo-custom-checkout__woo-bridge .wc-block-components-radio-control-accordion-content {
+.kangoo-custom-checkout__woo-bridge .wc-block-components-radio-control__option-layout {
   grid-column: 2;
 }
 
@@ -696,6 +700,9 @@
 
 .kangoo-custom-checkout__woo-bridge .wc-block-components-radio-control-accordion-content {
   padding: 12px 0 0 !important;
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
 }
 
 .kangoo-custom-checkout__woo-bridge .wc-stripe-blocks-payment-method-content {
@@ -722,6 +729,36 @@
   display: block !important;
   width: 100% !important;
   max-width: none !important;
+}
+
+.kangoo-custom-checkout__woo-bridge .wcpay-payment-element-wrapper,
+.kangoo-custom-checkout__woo-bridge .wcpay-payment-element,
+.kangoo-custom-checkout__woo-bridge .wcpay-payment-element.StripeElement,
+.kangoo-custom-checkout__woo-bridge .wcpay-payment-element .__PrivateStripeElement,
+.kangoo-custom-checkout__woo-bridge .wcpay-payment-element iframe,
+.kangoo-custom-checkout__woo-bridge .StripeElement,
+.kangoo-custom-checkout__woo-bridge .StripeElement .__PrivateStripeElement,
+.kangoo-custom-checkout__woo-bridge .StripeElement iframe {
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+}
+
+.kangoo-custom-checkout__woo-bridge .wcpay-payment-element-wrapper {
+  min-height: 220px !important;
+}
+
+.kangoo-custom-checkout__woo-bridge .checkout-order-summary-block-fill-wrapper,
+.kangoo-custom-checkout__woo-bridge .wp-block-woocommerce-checkout-order-summary-block,
+.kangoo-custom-checkout__woo-bridge .wp-block-woocommerce-checkout-order-summary-cart-items-block,
+.kangoo-custom-checkout__woo-bridge .wp-block-woocommerce-checkout-order-summary-coupon-form-block,
+.kangoo-custom-checkout__woo-bridge .wp-block-woocommerce-checkout-order-summary-totals-block,
+.kangoo-custom-checkout__woo-bridge .wp-block-woocommerce-checkout-order-summary-subtotal-block,
+.kangoo-custom-checkout__woo-bridge .wp-block-woocommerce-checkout-order-summary-discount-block,
+.kangoo-custom-checkout__woo-bridge .wp-block-woocommerce-checkout-order-summary-fee-block,
+.kangoo-custom-checkout__woo-bridge .wp-block-woocommerce-checkout-order-summary-shipping-block,
+.kangoo-custom-checkout__woo-bridge .wc-block-components-totals-footer-item {
+  display: none !important;
 }
 
 .kangoo-cart-stepper {
