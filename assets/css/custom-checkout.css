@@ -761,6 +761,26 @@
   display: none !important;
 }
 
+@media (min-width: 1024px) {
+  body.woocommerce-checkout .kangoo-custom-checkout__woo-bridge .wc-block-components-sidebar-layout,
+  body.woocommerce-checkout .kangoo-custom-checkout__woo-bridge .wc-block-components-sidebar-layout.wc-block-checkout {
+    display: block !important;
+    grid-template-columns: none !important;
+    gap: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+    margin-inline: 0 !important;
+  }
+
+  body.woocommerce-checkout .kangoo-custom-checkout__woo-bridge .wc-block-components-main,
+  body.woocommerce-checkout .kangoo-custom-checkout__woo-bridge .wc-block-checkout__main {
+    display: block !important;
+    width: 100% !important;
+    max-width: none !important;
+    margin-inline: 0 !important;
+  }
+}
+
 .kangoo-cart-stepper {
   width: min(100%, 760px);
   margin: 0 auto 18px;
