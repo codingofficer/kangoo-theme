@@ -2,6 +2,8 @@
 
 Mandatory WooCommerce checkout verification using Stripe Identity government photo ID plus matching selfie.
 
+The plugin also contains a dormant VerifyMyAge Stores & Custom API integration for post-checkout order checks.
+
 ## Activation
 
 1. Create a separate Stripe Identity account or enable Identity in a direct Stripe account.
@@ -19,3 +21,24 @@ WordPress stores only an opaque checkout token hash, provider session ID, pass/f
 ## Rollback
 
 Deactivate this plugin. The legacy theme DOB gate remains unchanged and resumes automatically because the plugin removes its hooks only while enforcement is active.
+
+## VerifyMyAge preparation
+
+VerifyMyAge is configured separately under **WooCommerce > VerifyMyAge**.
+
+Required credentials:
+
+1. Sandbox API ID.
+2. Sandbox API secret.
+3. Production API ID.
+4. Production API secret.
+
+Webhook/callback URL:
+
+`/wp-json/kangoo-age-verification/v1/webhook/verifymyage`
+
+The integration remains off until **Submit paid/processing orders to VerifyMyAge** is enabled. In sandbox mode, automatic submission is admin-order-only by default. Orders can also be submitted or refreshed manually from the WooCommerce order actions dropdown.
+
+When enabled, the plugin sends paid/processing/completed WooCommerce orders to VerifyMyAge with the order ID, billing customer data, purchased products, callback URL, and notification preferences. VerifyMyAge responses are stored as order meta and order notes. An `Approved` status records the existing Kangoo age-verification meta as 18+ verified with provider `VerifyMyAge`.
+
+The optional **Move Pending/Failed/Expired verification orders to On hold** setting should stay disabled until fulfilment rules are agreed.
