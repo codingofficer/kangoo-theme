@@ -508,24 +508,21 @@
 }
 
 .kangoo-custom-checkout__woo-bridge {
-  width: min(100%, 760px);
-  margin: 0 auto 44px;
-  padding: 0 10px;
-}
-
-.kangoo-custom-checkout:not([data-step="payment"]) + .kangoo-custom-checkout__woo-bridge {
-  display: none;
+  width: 100%;
+  margin: 14px 0 0;
+  padding: 0;
 }
 
 .kangoo-custom-checkout__woo-bridge > .woocommerce,
 .kangoo-custom-checkout__woo-bridge .wp-block-woocommerce-checkout {
-  border: 1px solid #dde4ee;
-  border-radius: 14px;
+  width: 100%;
+  border: 0;
+  border-radius: 0;
   background: #ffffff;
 }
 
 .kangoo-custom-checkout__woo-bridge .wp-block-woocommerce-checkout {
-  padding: 18px;
+  padding: 0;
 }
 
 .kangoo-custom-checkout__woo-bridge .wc-block-components-sidebar,
@@ -562,6 +559,11 @@
 .kangoo-custom-checkout__woo-bridge .wc-block-checkout__terms,
 .kangoo-custom-checkout__woo-bridge .wc-block-checkout__actions {
   max-width: none !important;
+}
+
+.kangoo-custom-checkout__woo-bridge .wc-block-checkout__payment-method,
+.kangoo-custom-checkout__woo-bridge .wc-block-components-checkout-place-order-button {
+  width: 100% !important;
 }
 
 .kangoo-cart-stepper {

@@ -137,7 +137,7 @@ function kangoo_custom_ajax_checkout_step_key() {
     return in_array($step, array('delivery', 'verify', 'payment'), true) ? $step : 'delivery';
 }
 
-function kangoo_custom_ajax_checkout_shell() {
+function kangoo_custom_ajax_checkout_shell($checkout_content = '') {
     $step = kangoo_custom_ajax_checkout_step_key();
     ob_start();
     ?>
@@ -266,6 +266,9 @@ function kangoo_custom_ajax_checkout_shell() {
                     <div class="kangoo-custom-checkout__native-bridge">
                         <div class="kangoo-custom-checkout__divider"><?php esc_html_e('Secure payment form', 'kangoo'); ?></div>
                         <p><?php esc_html_e('Use the secure WooPayments form below to complete payment.', 'kangoo'); ?></p>
+                        <div class="kangoo-custom-checkout__woo-bridge" data-kangoo-woo-bridge>
+                            <?php echo $checkout_content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+                        </div>
                     </div>
                     <button type="button" class="kangoo-custom-checkout__back" data-kangoo-step-target="verify"><?php esc_html_e('Back to age verification', 'kangoo'); ?></button>
                 </section>
@@ -285,7 +288,7 @@ function kangoo_custom_ajax_checkout_filter_content($content) {
         return $content;
     }
 
-    return kangoo_custom_ajax_checkout_shell() . '<div class="kangoo-custom-checkout__woo-bridge" data-kangoo-woo-bridge>' . $content . '</div>';
+    return kangoo_custom_ajax_checkout_shell($content);
 }
 add_filter('the_content', 'kangoo_custom_ajax_checkout_filter_content', 9);
 
