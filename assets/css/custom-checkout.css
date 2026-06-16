@@ -451,7 +451,6 @@
   font-weight: 900;
 }
 
-.kangoo-custom-checkout__express,
 .kangoo-custom-checkout__native-bridge {
   padding: 16px;
   border: 1px solid #dde4ee;
@@ -459,16 +458,40 @@
   background: #ffffff;
 }
 
-.kangoo-custom-checkout__express strong {
-  color: #07111f;
-  font-size: 14px;
-  font-weight: 900;
-}
-
-.kangoo-custom-checkout__express p,
 .kangoo-custom-checkout__native-bridge p {
   margin: 6px 0 0;
   font-size: 12px;
+}
+
+.kangoo-checkout-guest-notice {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: -6px 0 16px;
+  padding: 12px 14px;
+  color: #0f172a;
+  background: #f6f1ff;
+  border: 1px solid #d8c6ff;
+  border-radius: 12px;
+}
+
+.kangoo-checkout-guest-notice > span {
+  display: grid;
+  width: 22px;
+  height: 22px;
+  flex: 0 0 22px;
+  place-items: center;
+  color: #5b21b6;
+  font-size: 14px;
+  font-weight: 900;
+  border: 1.5px solid currentColor;
+  border-radius: 999px;
+}
+
+.kangoo-checkout-guest-notice strong {
+  color: inherit;
+  font-size: 14px;
+  font-weight: 800;
 }
 
 .kangoo-custom-checkout__divider {
@@ -528,6 +551,14 @@
 
 .kangoo-custom-checkout__message.is-error {
   color: #b91c1c;
+}
+
+.kangoo-custom-checkout__panel[data-kangoo-panel="payment"] > .kangoo-rewards-cart--checkout {
+  margin: 0 0 16px;
+}
+
+.kangoo-custom-checkout__panel[data-kangoo-panel="payment"] > .kangoo-custom-checkout__checkbox {
+  margin-bottom: 16px;
 }
 
 .kangoo-custom-checkout__fallback {

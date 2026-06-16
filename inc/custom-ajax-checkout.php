@@ -273,10 +273,15 @@ function kangoo_custom_ajax_checkout_shell($checkout_content = '') {
                 <section class="kangoo-custom-checkout__panel" data-kangoo-panel="payment" hidden>
                     <h1><?php esc_html_e('Payment', 'kangoo'); ?></h1>
                     <p><?php esc_html_e('Choose your preferred payment method', 'kangoo'); ?></p>
-                    <div class="kangoo-custom-checkout__express">
-                        <strong><?php esc_html_e('Express checkout', 'kangoo'); ?></strong>
-                        <p><?php esc_html_e('Eligible wallet buttons appear in the secure payment area below.', 'kangoo'); ?></p>
+                    <?php if (!is_user_logged_in()) : ?>
+                    <div class="kangoo-checkout-guest-notice" data-kangoo-checkout-guest-notice>
+                        <span aria-hidden="true">i</span>
+                        <strong><?php esc_html_e('You are currently checking out as a guest.', 'kangoo'); ?></strong>
                     </div>
+                    <?php endif; ?>
+                    <?php if (function_exists('kangoo_rewards_get_cart_box_html')) : ?>
+                    <?php echo kangoo_rewards_get_cart_box_html(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+                    <?php endif; ?>
                     <div class="kangoo-custom-checkout__summary" data-kangoo-order-summary></div>
                     <label class="kangoo-custom-checkout__checkbox">
                         <input type="checkbox" data-kangoo-note-toggle>
