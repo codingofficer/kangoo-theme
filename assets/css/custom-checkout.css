@@ -11,12 +11,15 @@
 }
 
 .kangoo-custom-checkout__card {
-  min-height: 760px;
   overflow: hidden;
   background: #ffffff;
   border: 1px solid #dde4ee;
   border-radius: 14px;
   box-shadow: 0 18px 48px rgba(15, 23, 42, 0.08);
+}
+
+.kangoo-custom-checkout[data-step="payment"] .kangoo-custom-checkout__card {
+  min-height: 620px;
 }
 
 .kangoo-custom-checkout__steps,
@@ -558,12 +561,69 @@
 .kangoo-custom-checkout__woo-bridge .wc-block-checkout__payment-method,
 .kangoo-custom-checkout__woo-bridge .wc-block-checkout__terms,
 .kangoo-custom-checkout__woo-bridge .wc-block-checkout__actions {
+  width: 100% !important;
   max-width: none !important;
+  margin-right: 0 !important;
+  margin-left: 0 !important;
 }
 
 .kangoo-custom-checkout__woo-bridge .wc-block-checkout__payment-method,
+.kangoo-custom-checkout__woo-bridge .wp-block-woocommerce-checkout-payment-block,
+.kangoo-custom-checkout__woo-bridge #payment-method,
+.kangoo-custom-checkout__woo-bridge .wc-block-components-radio-control,
+.kangoo-custom-checkout__woo-bridge .wc-block-components-radio-control__option,
+.kangoo-custom-checkout__woo-bridge .wc-block-components-radio-control-accordion-option,
+.kangoo-custom-checkout__woo-bridge .wc-block-components-radio-control-accordion-content,
+.kangoo-custom-checkout__woo-bridge .wc-stripe-blocks-payment-method-content,
+.kangoo-custom-checkout__woo-bridge .wc-stripe-blocks-payment-method-content .StripeElement,
+.kangoo-custom-checkout__woo-bridge .wc-block-components-checkout-place-order-button__container,
 .kangoo-custom-checkout__woo-bridge .wc-block-components-checkout-place-order-button {
   width: 100% !important;
+  max-width: none !important;
+}
+
+.kangoo-custom-checkout__woo-bridge .wc-block-components-express-payment {
+  display: block !important;
+}
+
+.kangoo-custom-checkout__woo-bridge .wc-block-components-express-payment__content,
+.kangoo-custom-checkout__woo-bridge .wc-block-components-express-payment__event-buttons {
+  display: grid !important;
+  width: 100% !important;
+  max-width: none !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px !important;
+  align-items: stretch !important;
+}
+
+.kangoo-custom-checkout__woo-bridge .wc-block-components-express-payment__event-buttons > *,
+.kangoo-custom-checkout__woo-bridge .wc-block-components-express-payment__button,
+.kangoo-custom-checkout__woo-bridge .wc-block-components-express-payment__button iframe,
+.kangoo-custom-checkout__woo-bridge .wc-block-components-express-payment button {
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+}
+
+.kangoo-custom-checkout__woo-bridge .wc-block-components-radio-control__option,
+.kangoo-custom-checkout__woo-bridge .wc-block-components-radio-control-accordion-option {
+  padding-right: 0 !important;
+  padding-left: 0 !important;
+}
+
+.kangoo-custom-checkout__woo-bridge .wc-stripe-blocks-payment-method-content {
+  display: grid !important;
+  gap: 12px !important;
+}
+
+.kangoo-custom-checkout__woo-bridge .wc-stripe-blocks-payment-method-content iframe {
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+.kangoo-custom-checkout__woo-bridge .wc-block-checkout__actions {
+  display: grid !important;
+  justify-items: stretch !important;
 }
 
 .kangoo-cart-stepper {
@@ -580,7 +640,6 @@
   }
 
   .kangoo-custom-checkout__card {
-    min-height: 740px;
     border-radius: 10px;
   }
 
