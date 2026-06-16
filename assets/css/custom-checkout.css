@@ -210,10 +210,23 @@
   box-shadow: 0 0 0 3px rgba(11, 99, 246, 0.14);
 }
 
+.kangoo-custom-checkout input.kangoo-custom-checkout__field--invalid,
+.kangoo-custom-checkout select.kangoo-custom-checkout__field--invalid,
+.kangoo-custom-checkout textarea.kangoo-custom-checkout__field--invalid {
+  border-color: #dc2626 !important;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.12);
+}
+
 .kangoo-custom-checkout small {
   color: #697386;
   font-size: 12px;
   font-weight: 600;
+}
+
+.kangoo-custom-checkout__field-error {
+  color: #b91c1c !important;
+  font-size: 12px;
+  font-weight: 800;
 }
 
 .kangoo-custom-checkout__grid {
@@ -259,6 +272,10 @@
   border-color: #0b63f6;
   background: #f5f9ff;
   box-shadow: 0 0 0 1px rgba(11, 99, 246, 0.08);
+}
+
+.kangoo-custom-checkout__delivery-options.is-invalid .kangoo-custom-checkout__delivery-card {
+  border-color: #dc2626;
 }
 
 .kangoo-custom-checkout__delivery-card input {

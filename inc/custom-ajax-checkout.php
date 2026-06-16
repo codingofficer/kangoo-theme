@@ -241,8 +241,8 @@ function kangoo_custom_ajax_checkout_shell($checkout_content = '') {
                         <div class="kangoo-custom-checkout__delivery-options" data-kangoo-delivery-options></div>
                         <p class="kangoo-custom-checkout__message" data-kangoo-message="delivery"></p>
                         <button type="submit" class="kangoo-custom-checkout__primary">
-                            <span><?php esc_html_e('Continue to age verification', 'kangoo'); ?></span>
-                            <span aria-hidden="true">-&gt;</span>
+                            <span><?php esc_html_e('Continue', 'kangoo'); ?></span>
+                            <i class="fa fa-solid fa-arrow-right" aria-hidden="true"></i>
                         </button>
                         <a class="kangoo-custom-checkout__back" href="<?php echo esc_url(wc_get_cart_url()); ?>"><?php esc_html_e('Back to cart', 'kangoo'); ?></a>
                     </form>
@@ -499,8 +499,28 @@ function kangoo_custom_ajax_checkout_rest_delivery($request) {
     $country = sanitize_text_field((string) $request->get_param('country')) ?: 'GB';
     $shipping_rate = sanitize_text_field((string) $request->get_param('shipping_rate'));
 
-    if (!is_email($email) || !$full_name || !$address_1 || !$city || !$postcode || !$shipping_rate) {
-        return new WP_Error('kangoo_checkout_delivery_invalid', __('Complete your email, address and delivery option.', 'kangoo'), array('status' => 400));
+    if (!is_email($email)) {
+        return new WP_Error('kangoo_checkout_email_invalid', __('Enter a valid email address.', 'kangoo'), array('status' => 400, 'field' => 'email'));
+    }
+
+    if (!$full_name) {
+        return new WP_Error('kangoo_checkout_name_missing', __('Full name is missing.', 'kangoo'), array('status' => 400, 'field' => 'full_name'));
+    }
+
+    if (!$address_1) {
+        return new WP_Error('kangoo_checkout_address_missing', __('Address line 1 is missing.', 'kangoo'), array('status' => 400, 'field' => 'address_1'));
+    }
+
+    if (!$city) {
+        return new WP_Error('kangoo_checkout_city_missing', __('City is missing.', 'kangoo'), array('status' => 400, 'field' => 'city'));
+    }
+
+    if (!$postcode) {
+        return new WP_Error('kangoo_checkout_postcode_missing', __('Postcode is missing.', 'kangoo'), array('status' => 400, 'field' => 'postcode'));
+    }
+
+    if (!$shipping_rate) {
+        return new WP_Error('kangoo_checkout_shipping_missing', __('Choose a delivery option.', 'kangoo'), array('status' => 400, 'field' => 'shipping_rate'));
     }
 
     list($first_name, $last_name) = kangoo_custom_ajax_checkout_split_name($full_name);

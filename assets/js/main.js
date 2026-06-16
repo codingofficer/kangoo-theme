@@ -2193,7 +2193,10 @@ document.addEventListener('DOMContentLoaded', function () {
     if (window.kangooAgeVerification && window.kangooAgeVerification.replacesDobGate) {
       return;
     }
-    if (window.kangooCustomCheckout && (window.kangooCustomCheckout.enabled || window.kangooCustomCheckout.preview)) {
+    if (
+      document.body.classList.contains('kangoo-custom-checkout-enabled') ||
+      (window.kangooCustomCheckout && (window.kangooCustomCheckout.enabled || window.kangooCustomCheckout.preview))
+    ) {
       return;
     }
 

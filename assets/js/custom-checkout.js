@@ -17,7 +17,11 @@
     }).then(async function (response) {
       const payload = await response.json().catch(function () { return {}; });
       if (!response.ok) {
-        throw new Error(payload.message || 'Checkout could not be updated.');
+        const error = new Error(payload.message || 'Checkout could not be updated.');
+        if (payload.data && payload.data.field) {
+          error.field = payload.data.field;
+        }
+        throw error;
       }
       return payload;
     });
@@ -237,6 +241,173 @@
     return payload;
   }
 
+  function getDeliveryField(form, name) {
+    return form && form.elements ? form.elements[name] : null;
+  }
+
+  function clearFieldError(field) {
+    if (!field) {
+      return;
+    }
+
+    field.classList.remove('kangoo-custom-checkout__field--invalid');
+    field.removeAttribute('aria-invalid');
+
+    const label = field.closest('label');
+    const message = label ? label.querySelector('[data-kangoo-field-error]') : null;
+
+    if (message) {
+      message.remove();
+    }
+  }
+
+  function setFieldError(field, message) {
+    if (!field) {
+      return null;
+    }
+
+    clearFieldError(field);
+    field.classList.add('kangoo-custom-checkout__field--invalid');
+    field.setAttribute('aria-invalid', 'true');
+
+    const label = field.closest('label');
+    if (label) {
+      const error = document.createElement('small');
+      error.className = 'kangoo-custom-checkout__field-error';
+      error.setAttribute('data-kangoo-field-error', '');
+      error.textContent = message;
+      label.appendChild(error);
+    }
+
+    return field;
+  }
+
+  function setDeliveryOptionsError(form, message) {
+    const holder = root.querySelector('[data-kangoo-delivery-options]');
+    if (!holder) {
+      return null;
+    }
+
+    clearDeliveryOptionsError();
+    holder.classList.add('is-invalid');
+
+    const error = document.createElement('small');
+    error.className = 'kangoo-custom-checkout__field-error';
+    error.setAttribute('data-kangoo-delivery-error', '');
+    error.textContent = message;
+    holder.insertAdjacentElement('afterend', error);
+
+    return holder;
+  }
+
+  function clearDeliveryOptionsError() {
+    const holder = root.querySelector('[data-kangoo-delivery-options]');
+    const error = root.querySelector('[data-kangoo-delivery-error]');
+
+    if (holder) {
+      holder.classList.remove('is-invalid');
+    }
+
+    if (error) {
+      error.remove();
+    }
+  }
+
+  function scrollToIssue(target) {
+    if (!target) {
+      return;
+    }
+
+    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    if (typeof target.focus === 'function') {
+      window.setTimeout(function () {
+        target.focus({ preventScroll: true });
+      }, 260);
+    }
+  }
+
+  function validateDeliveryForm(form) {
+    const issues = [];
+    const rules = [
+      ['email', function (value) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value); }, 'Enter a valid email address.'],
+      ['full_name', function (value) { return value.length > 1; }, 'Full name is missing.'],
+      ['address_1', function (value) { return value.length > 0; }, 'Address line 1 is missing.'],
+      ['city', function (value) { return value.length > 0; }, 'City is missing.'],
+      ['postcode', function (value) { return value.length > 0; }, 'Postcode is missing.']
+    ];
+
+    rules.forEach(function (rule) {
+      const field = getDeliveryField(form, rule[0]);
+      const value = field ? String(field.value || '').trim() : '';
+      clearFieldError(field);
+
+      if (!rule[1](value)) {
+        issues.push({
+          field: field,
+          message: rule[2]
+        });
+      }
+    });
+
+    const billingSame = getDeliveryField(form, 'billing_same');
+    if (billingSame && !billingSame.checked) {
+      [
+        ['billing_address_1', 'Billing address line 1 is missing.'],
+        ['billing_city', 'Billing city is missing.'],
+        ['billing_postcode', 'Billing postcode is missing.']
+      ].forEach(function (rule) {
+        const field = getDeliveryField(form, rule[0]);
+        const value = field ? String(field.value || '').trim() : '';
+        clearFieldError(field);
+
+        if (!value) {
+          issues.push({
+            field: field,
+            message: rule[1]
+          });
+        }
+      });
+    }
+
+    clearDeliveryOptionsError();
+    if (!form.querySelector('input[name="shipping_rate"]:checked')) {
+      issues.push({
+        field: setDeliveryOptionsError(form, 'Choose a delivery option.'),
+        message: 'Choose a delivery option.'
+      });
+    }
+
+    issues.forEach(function (issue) {
+      if (issue.field && issue.field.matches && issue.field.matches('input, select, textarea')) {
+        setFieldError(issue.field, issue.message);
+      }
+    });
+
+    if (issues.length) {
+      setMessage('delivery', issues[0].message, true);
+      scrollToIssue(issues[0].field);
+      return false;
+    }
+
+    setMessage('delivery', '', false);
+    return true;
+  }
+
+  function showServerDeliveryError(form, error) {
+    const field = error && error.field ? getDeliveryField(form, error.field) : null;
+
+    if (field) {
+      setFieldError(field, error.message);
+      scrollToIssue(field);
+      return;
+    }
+
+    if (error && error.field === 'shipping_rate') {
+      scrollToIssue(setDeliveryOptionsError(form, error.message));
+    }
+  }
+
   function initCheckout() {
     if (!root || !config.active) {
       return;
@@ -264,7 +435,15 @@
 
     const deliveryForm = root.querySelector('[data-kangoo-delivery-form]');
     if (deliveryForm) {
+      deliveryForm.querySelectorAll('input, select, textarea').forEach(function (field) {
+        field.addEventListener('input', function () {
+          clearFieldError(field);
+        });
+      });
+
       deliveryForm.addEventListener('change', function (event) {
+        clearFieldError(event.target);
+
         if (event.target && event.target.name === 'billing_same') {
           const billing = root.querySelector('[data-kangoo-billing-fields]');
           if (billing) {
@@ -275,6 +454,8 @@
           root.querySelectorAll('.kangoo-custom-checkout__delivery-card').forEach(function (card) {
             card.classList.toggle('is-selected', Boolean(card.querySelector('input:checked')));
           });
+          clearDeliveryOptionsError();
+          setMessage('delivery', '', false);
         }
       });
 
@@ -282,6 +463,11 @@
         event.preventDefault();
         const button = deliveryForm.querySelector('button[type="submit"]');
         setMessage('delivery', '', false);
+
+        if (!validateDeliveryForm(deliveryForm)) {
+          return;
+        }
+
         setButtonLoading(button, true);
         api('/delivery', formPayload(deliveryForm)).then(function (state) {
           renderDeliveryOptions(state);
@@ -289,6 +475,7 @@
           setStep('verify', true);
         }).catch(function (error) {
           setMessage('delivery', error.message, true);
+          showServerDeliveryError(deliveryForm, error);
         }).finally(function () {
           setButtonLoading(button, false);
         });
