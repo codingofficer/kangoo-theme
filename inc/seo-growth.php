@@ -232,7 +232,7 @@ function kangoo_seo_render_llms_summary() {
     }
 
     $lines[] = '';
-    $lines[] = 'For the complete in-stock catalogue, use ' . home_url('/llms-full.txt') . '.';
+    $lines[] = 'For the complete product catalogue with availability labels, use ' . home_url('/llms-full.txt') . '.';
 
     return implode("\n", $lines) . "\n";
 }
@@ -245,8 +245,9 @@ function kangoo_seo_render_llms_full() {
         '- ZYN, VELO, PABLO, KILLA, Nordic Spirit, Ubbs, FUMi and XQS each have a live WooCommerce brand category and a dedicated educational brand guide.',
         '- Brand guides cover what the pouch brand is, what is typically inside the pouches, how pouches are used, common flavour directions, strength and format comparisons, and adult nicotine cautions.',
         '- Product and category pages remain the source of truth for current price, stock, pouch count, exact strength and pack pricing.',
+        '- Product availability changes frequently. Availability fields reflect the current status when this file was generated.',
         '',
-        '## In-stock product catalogue',
+        '## Product catalogue',
     );
 
     if (!function_exists('wc_get_products')) {
@@ -255,7 +256,6 @@ function kangoo_seo_render_llms_full() {
 
     $products = wc_get_products(array(
         'status' => 'publish',
-        'stock_status' => 'instock',
         'limit' => -1,
         'orderby' => 'title',
         'order' => 'ASC',
@@ -268,13 +268,18 @@ function kangoo_seo_render_llms_full() {
         }
 
         $summary = function_exists('kangoo_get_product_seo_summary') ? kangoo_get_product_seo_summary($product) : array();
+        $stock_status = $product->get_stock_status();
+        $availability = $stock_status === 'instock'
+            ? 'in stock'
+            : ($stock_status === 'onbackorder' ? 'on backorder' : 'out of stock');
+
         $facts = array_filter(array(
             !empty($summary['brand']) ? 'Brand: ' . $summary['brand'] : '',
             !empty($summary['flavour']) ? 'Flavour: ' . $summary['flavour'] : '',
             !empty($summary['strength']) ? 'Strength: ' . $summary['strength'] : '',
             !empty($summary['pouch_count']) ? 'Pouches: ' . (int) $summary['pouch_count'] : '',
             'Price: ' . kangoo_seo_plain_price($product),
-            'Availability: in stock',
+            'Availability: ' . $availability,
         ));
 
         $lines[] = '- [' . $product->get_name() . '](' . get_permalink($product->get_id()) . ') - ' . implode('; ', $facts);
