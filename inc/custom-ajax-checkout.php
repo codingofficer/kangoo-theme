@@ -10,8 +10,65 @@
 defined('ABSPATH') || exit;
 
 function kangoo_custom_ajax_checkout_enabled() {
-    return (bool) get_option('kangoo_custom_ajax_checkout_enabled', false);
+    $enabled = get_option('kangoo_custom_ajax_checkout_enabled', false);
+
+    if (function_exists('get_field') && get_option('options_kangoo_custom_ajax_checkout_enabled', null) !== null) {
+        $enabled = get_field('kangoo_custom_ajax_checkout_enabled', 'option');
+    }
+
+    return !empty($enabled);
 }
+
+function kangoo_custom_ajax_checkout_register_acf_fields() {
+    if (!function_exists('acf_add_local_field_group')) {
+        return;
+    }
+
+    acf_add_local_field_group(array(
+        'key' => 'group_kangoo_custom_ajax_checkout',
+        'title' => __('Checkout Experience', 'kangoo'),
+        'fields' => array(
+            array(
+                'key' => 'field_kangoo_custom_ajax_checkout_enabled',
+                'label' => __('Custom AJAX Checkout', 'kangoo'),
+                'name' => 'kangoo_custom_ajax_checkout_enabled',
+                'type' => 'true_false',
+                'instructions' => __('Enable the feature-flagged 4-step AJAX checkout for shoppers. Leave disabled while testing; admins can preview with /checkout/?kangoo_checkout=1&step=delivery. Fallback remains available at /checkout/?classic_checkout=1.', 'kangoo'),
+                'message' => __('Use custom multi-step checkout on cart and checkout pages', 'kangoo'),
+                'ui' => 1,
+                'default_value' => 0,
+            ),
+        ),
+        'location' => array(
+            array(
+                array(
+                    'param' => 'options_page',
+                    'operator' => '==',
+                    'value' => 'control-panel',
+                ),
+            ),
+        ),
+        'position' => 'acf_after_title',
+        'style' => 'default',
+        'label_placement' => 'top',
+        'instruction_placement' => 'label',
+        'active' => true,
+        'show_in_rest' => 0,
+    ));
+}
+add_action('acf/init', 'kangoo_custom_ajax_checkout_register_acf_fields');
+
+function kangoo_custom_ajax_checkout_sanitize_enabled($value) {
+    return !empty($value) ? 1 : 0;
+}
+
+function kangoo_custom_ajax_checkout_register_fallback_setting() {
+    register_setting('kangoo_custom_ajax_checkout_options', 'kangoo_custom_ajax_checkout_enabled', array(
+        'sanitize_callback' => 'kangoo_custom_ajax_checkout_sanitize_enabled',
+        'default'           => 0,
+    ));
+}
+add_action('admin_init', 'kangoo_custom_ajax_checkout_register_fallback_setting');
 
 function kangoo_custom_ajax_checkout_preview_enabled() {
     return isset($_GET['kangoo_checkout'])
