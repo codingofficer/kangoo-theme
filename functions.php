@@ -3,6 +3,8 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+require_once get_template_directory() . '/inc/custom-ajax-checkout.php';
+
 function kangoo_mark_dynamic_commerce_pages_uncacheable() {
     $request_uri = isset($_SERVER['REQUEST_URI']) ? (string) wp_unslash($_SERVER['REQUEST_URI']) : '';
     $path = trim((string) wp_parse_url($request_uri, PHP_URL_PATH), '/');
@@ -8079,7 +8081,13 @@ add_filter('woocommerce_checkout_get_value', 'kangoo_prefill_checkout_email', 10
 function kangoo_render_cart_email_capture() {
     static $rendered = false;
 
-    if ($rendered || !function_exists('is_cart') || !is_cart()) {
+    if (
+        $rendered
+        || !function_exists('is_cart')
+        || !is_cart()
+        || (function_exists('kangoo_custom_ajax_checkout_enabled') && kangoo_custom_ajax_checkout_enabled())
+        || (function_exists('kangoo_custom_ajax_checkout_preview_enabled') && kangoo_custom_ajax_checkout_preview_enabled())
+    ) {
         return;
     }
 
@@ -8179,6 +8187,7 @@ function kangoo_guard_checkout_identity() {
         || !function_exists('WC')
         || !WC()->cart
         || WC()->cart->is_empty()
+        || (function_exists('kangoo_custom_ajax_checkout_active') && kangoo_custom_ajax_checkout_active())
     ) {
         return;
     }

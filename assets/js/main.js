@@ -2193,6 +2193,9 @@ document.addEventListener('DOMContentLoaded', function () {
     if (window.kangooAgeVerification && window.kangooAgeVerification.replacesDobGate) {
       return;
     }
+    if (window.kangooCustomCheckout && (window.kangooCustomCheckout.enabled || window.kangooCustomCheckout.preview)) {
+      return;
+    }
 
     const cartPage = document.querySelector('.woocommerce-cart');
 
