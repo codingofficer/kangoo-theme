@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Kangoo GSC URL Inspection Helper
 // @namespace    https://kangoopouches.co.uk/
-// @version      1.0.0
+// @version      1.1.0
 // @description  Queue Kangoo Pouches URLs and speed up Google Search Console URL Inspection without auto-clicking request-indexing actions.
 // @author       Kangoo Pouches
 // @match        https://search.google.com/search-console/*
@@ -13,6 +13,16 @@
 
     const STORAGE_KEY = 'kangoo_gsc_inspection_queue_v1';
     const PROPERTY = 'sc-domain:kangoopouches.co.uk';
+    const BRAND_CATEGORY_URLS = [
+        'https://kangoopouches.co.uk/product-category/zyn/',
+        'https://kangoopouches.co.uk/product-category/velo/',
+        'https://kangoopouches.co.uk/product-category/pablo/',
+        'https://kangoopouches.co.uk/product-category/killa/',
+        'https://kangoopouches.co.uk/product-category/nordic-spirit/',
+        'https://kangoopouches.co.uk/product-category/ubbs/',
+        'https://kangoopouches.co.uk/product-category/fumi/',
+        'https://kangoopouches.co.uk/product-category/xqs/'
+    ];
     const DEFAULT_URLS = [
         'https://kangoopouches.co.uk/sitemap_index.xml',
         'https://kangoopouches.co.uk/kangoo_blog-sitemap.xml',
@@ -26,14 +36,7 @@
         'https://kangoopouches.co.uk/blog/what-are-fumi-nicotine-pouches-uk-guide/',
         'https://kangoopouches.co.uk/blog/what-are-xqs-nicotine-pouches-uk-guide/',
         'https://kangoopouches.co.uk/blog/nicotine-pouch-brands-uk-zyn-velo-pablo-killa-nordic-spirit-ubbs-fumi-and-xqs-compared/',
-        'https://kangoopouches.co.uk/product-category/zyn/',
-        'https://kangoopouches.co.uk/product-category/velo/',
-        'https://kangoopouches.co.uk/product-category/pablo/',
-        'https://kangoopouches.co.uk/product-category/killa/',
-        'https://kangoopouches.co.uk/product-category/nordic-spirit/',
-        'https://kangoopouches.co.uk/product-category/ubbs/',
-        'https://kangoopouches.co.uk/product-category/fumi/',
-        'https://kangoopouches.co.uk/product-category/xqs/'
+        ...BRAND_CATEGORY_URLS
     ];
 
     function normalizeUrl(value) {
@@ -204,6 +207,14 @@
         render();
     }
 
+    function loadBrandCategories() {
+        queue = BRAND_CATEGORY_URLS.map((url) => ({ url, status: 'pending', inspectedAt: '' }));
+        activeUrl = '';
+        statusText = 'Brand category queue loaded';
+        saveQueue(queue);
+        render();
+    }
+
     function importUrls() {
         const textarea = document.querySelector('[data-kangoo-gsc-import]');
         const imported = uniqueUrls((textarea ? textarea.value : '').split(/\s+/));
@@ -319,6 +330,7 @@
                 </div>
                 <div class="kangoo-gsc-row">
                     <button class="kangoo-gsc-button" data-kangoo-gsc-action="copy">Copy remaining</button>
+                    <button class="kangoo-gsc-button" data-kangoo-gsc-action="brand-categories">Brand categories</button>
                     <button class="kangoo-gsc-button kangoo-gsc-button--danger" data-kangoo-gsc-action="reset">Reset queue</button>
                 </div>
                 <textarea class="kangoo-gsc-import" data-kangoo-gsc-import placeholder="Paste extra Kangoo Pouches URLs, one per line"></textarea>
@@ -354,6 +366,7 @@
         if (action === 'done') markActiveDone();
         if (action === 'current-done') markCurrentVisibleDone();
         if (action === 'copy') exportRemaining();
+        if (action === 'brand-categories') loadBrandCategories();
         if (action === 'reset') resetQueue();
         if (action === 'import') importUrls();
     });
