@@ -168,10 +168,10 @@ function kangoo_custom_ajax_checkout_shell($checkout_content = '') {
                     <span>1</span><strong><?php esc_html_e('Cart', 'kangoo'); ?></strong>
                 </a>
                 <button type="button" class="kangoo-custom-checkout__step" data-kangoo-step-target="delivery">
-                    <span>2</span><strong><?php esc_html_e('Delivery details', 'kangoo'); ?></strong>
+                    <span>2</span><strong><?php esc_html_e('Delivery', 'kangoo'); ?></strong>
                 </button>
                 <button type="button" class="kangoo-custom-checkout__step" data-kangoo-step-target="verify">
-                    <span>3</span><strong><?php esc_html_e('Verify your age', 'kangoo'); ?></strong>
+                    <span>3</span><strong><?php esc_html_e('Verify', 'kangoo'); ?></strong>
                 </button>
                 <button type="button" class="kangoo-custom-checkout__step" data-kangoo-step-target="payment">
                     <span>4</span><strong><?php esc_html_e('Payment', 'kangoo'); ?></strong>

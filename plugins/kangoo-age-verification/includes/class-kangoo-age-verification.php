@@ -118,8 +118,8 @@ final class Kangoo_Age_Verification {
     public function register_settings_page() {
         add_submenu_page(
             'woocommerce',
-            __('Age Verification', 'kangoo-age-verification'),
-            __('Age Verification', 'kangoo-age-verification'),
+            __('Stripe Age Verify', 'kangoo-age-verification'),
+            __('Stripe Age Verify', 'kangoo-age-verification'),
             'manage_woocommerce',
             'kangoo-age-verification',
             array($this, 'render_settings_page')
@@ -134,7 +134,7 @@ final class Kangoo_Age_Verification {
         $settings = wp_parse_args((array) get_option(self::OPTION, array()), self::defaults());
         ?>
         <div class="wrap">
-            <h1><?php esc_html_e('Kangoo Age Verification', 'kangoo-age-verification'); ?></h1>
+            <h1><?php esc_html_e('Kangoo Stripe Age Verify', 'kangoo-age-verification'); ?></h1>
             <p><?php esc_html_e('Requires a separate Stripe Identity account. WooPayments Connect keys cannot be used.', 'kangoo-age-verification'); ?></p>
             <form method="post" action="options.php">
                 <?php settings_fields('kangoo_age_verification'); ?>

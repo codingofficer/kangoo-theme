@@ -350,20 +350,39 @@
       stepper.setAttribute('data-kangoo-cart-stepper', '');
       stepper.innerHTML = [
         '<span class="is-active"><b>1</b><small>Cart</small></span>',
-        '<span><b>2</b><small>Delivery details</small></span>',
-        '<span><b>3</b><small>Verify your age</small></span>',
+        '<span><b>2</b><small>Delivery</small></span>',
+        '<span><b>3</b><small>Verify</small></span>',
         '<span><b>4</b><small>Payment</small></span>'
       ].join('');
       const target = cartRoot.querySelector('.woocommerce, .wc-block-cart') || cartRoot;
       target.insertAdjacentElement('beforebegin', stepper);
     }
 
-    cartRoot.querySelectorAll('.wc-proceed-to-checkout a.checkout-button, .wc-block-cart__submit-button, .wp-block-woocommerce-proceed-to-checkout-block a').forEach(function (link) {
-      if (link.tagName.toLowerCase() !== 'a') {
+    const deliveryUrl = config.checkoutUrl + (config.checkoutUrl.indexOf('?') === -1 ? '?' : '&') + 'kangoo_checkout=1&step=delivery';
+    const checkoutSelector = '.wc-proceed-to-checkout a.checkout-button, .wc-block-cart__submit-button, .wp-block-woocommerce-proceed-to-checkout-block a, .wp-block-woocommerce-proceed-to-checkout-block button, .wc-block-cart__submit-container .wc-block-components-button';
+
+    cartRoot.querySelectorAll(checkoutSelector).forEach(function (control) {
+      control.classList.remove('kangoo-checkout-disabled', 'is-loading', 'loading', 'wc-block-components-button--loading');
+      control.removeAttribute('data-kangoo-checkout-disabled');
+      control.removeAttribute('aria-disabled');
+      control.removeAttribute('disabled');
+      control.removeAttribute('title');
+
+      if (control.tagName.toLowerCase() === 'a') {
+        control.href = deliveryUrl;
+        control.textContent = 'Continue to delivery';
         return;
       }
-      link.href = config.checkoutUrl + (config.checkoutUrl.indexOf('?') === -1 ? '?' : '&') + 'kangoo_checkout=1&step=delivery';
-      link.textContent = 'Continue to delivery details';
+
+      control.addEventListener('click', function (event) {
+        event.preventDefault();
+        window.location.href = deliveryUrl;
+      });
+
+      const label = control.querySelector('.wc-block-components-button__text') || control;
+      if (label) {
+        label.textContent = 'Continue to delivery';
+      }
     });
   }
 

@@ -796,9 +796,16 @@
   }
 }
 
-body.woocommerce-cart.kangoo-custom-checkout-enabled .kangoo-rewards-cart--cart,
 body.woocommerce-cart.kangoo-custom-checkout-enabled [data-kangoo-cart-email-capture] {
   display: none !important;
+}
+
+body.woocommerce-cart.kangoo-custom-checkout-enabled .kangoo-checkout-disabled,
+body.woocommerce-cart.kangoo-custom-checkout-enabled [data-kangoo-checkout-disabled] {
+  opacity: 1 !important;
+  filter: none !important;
+  pointer-events: auto !important;
+  cursor: pointer !important;
 }
 
 .kangoo-cart-stepper {
