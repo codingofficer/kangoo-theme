@@ -317,15 +317,13 @@ if ($term_taxonomy === 'product_cat') {
 						<option value="title" <?php selected($current_orderby, 'title'); ?>>A-Z</option>
 					</select>
 
-					<div class="category-filter__actions">
-						<button type="submit" class="btn btn--primary">
-							Apply
-						</button>
+					<button type="submit" class="btn btn--primary">
+						Apply
+					</button>
 
-						<a class="category-filter__clear" href="<?php echo esc_url($filter_reset_url); ?>">
-							<?php esc_html_e('Clear Filters', 'kangoo'); ?>
-						</a>
-					</div>
+					<a class="category-filter__clear" href="<?php echo esc_url($filter_reset_url); ?>">
+						<?php esc_html_e('Clear Filters', 'kangoo'); ?>
+					</a>
 				</div>
 			</form>
             <?php if (woocommerce_product_loop()) : ?>

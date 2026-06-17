@@ -293,17 +293,8 @@
     color: #fff;
 }
 
-.category-filter button {
+.category-filter__fields > .btn {
     min-height: 48px;
-}
-
-.category-filter__actions {
-    display: grid;
-    gap: 10px;
-}
-
-.category-filter__actions .btn {
-    width: 100%;
 }
 
 .category-filter__clear {
@@ -455,7 +446,7 @@
 
     .category-filter__top {
         display: grid;
-        grid-template-columns: minmax(0, 1fr) auto auto;
+        grid-template-columns: minmax(0, 1fr) auto;
         align-items: center;
     }
 
@@ -509,13 +500,7 @@
         grid-template-columns: 1fr;
     }
 
-    .category-filter__actions {
-        display: grid !important;
-        grid-template-columns: 1fr;
-        width: 100%;
-    }
-
-    .category-filter__actions .btn,
+    .category-filter__fields > .btn,
     .category-filter__clear {
         width: 100%;
         box-sizing: border-box;
