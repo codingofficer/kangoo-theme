@@ -1009,9 +1009,20 @@ body.kangoo-theme--light .kangoo-mega-drawer__dots span:not([style]) {
     color: #111827 !important;
   }
 
-  body.kangoo-theme--light .category-filter__top h2,
-  body.kangoo-theme--light .category-filter__reset {
+  body.kangoo-theme--light .category-filter__top h2 {
     color: #111827 !important;
+  }
+
+  body.kangoo-theme--light .category-filter__clear {
+    border-color: rgba(17, 24, 39, 0.14) !important;
+    background: #ffffff !important;
+    color: #111827 !important;
+  }
+
+  body.kangoo-theme--light .category-filter__clear:hover,
+  body.kangoo-theme--light .category-filter__clear:focus-visible {
+    border-color: #ff6b00 !important;
+    color: #ff6b00 !important;
   }
 
   body.kangoo-theme--light .category-filter__top span {

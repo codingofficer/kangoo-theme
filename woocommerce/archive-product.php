@@ -260,10 +260,6 @@ if ($term_taxonomy === 'product_cat') {
 						<span><?php echo esc_html($product_count); ?> products</span>
 					</div>
 
-					<a class="category-filter__reset" href="<?php echo esc_url($filter_reset_url); ?>">
-						Reset
-					</a>
-
                     <button type="button" class="category-filter__close" data-category-filter-close aria-label="<?php esc_attr_e('Close filters', 'kangoo'); ?>">
                         &times;
                     </button>
@@ -317,9 +313,15 @@ if ($term_taxonomy === 'product_cat') {
 						<option value="title" <?php selected($current_orderby, 'title'); ?>>A-Z</option>
 					</select>
 
-					<button type="submit" class="btn btn--primary">
-						Apply
-					</button>
+					<div class="category-filter__actions">
+						<button type="submit" class="btn btn--primary">
+							Apply
+						</button>
+
+						<a class="category-filter__clear" href="<?php echo esc_url($filter_reset_url); ?>">
+							<?php esc_html_e('Clear Filters', 'kangoo'); ?>
+						</a>
+					</div>
 				</div>
 			</form>
             <?php if (woocommerce_product_loop()) : ?>
