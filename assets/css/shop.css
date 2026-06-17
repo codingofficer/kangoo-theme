@@ -271,6 +271,12 @@
     font-size: 14px;
 }
 
+.category-filter__reset {
+    color: var(--color-accent);
+    text-decoration: none;
+    font-weight: 600;
+}
+
 .category-filter__fields {
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -301,7 +307,7 @@
 }
 
 .category-filter__clear {
-    display: inline-flex;
+    display: none;
     min-height: 48px;
     align-items: center;
     justify-content: center;
@@ -449,14 +455,20 @@
 
     .category-filter__top {
         display: grid;
-        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-columns: minmax(0, 1fr) auto auto;
         align-items: center;
+    }
+
+    .category-filter__reset {
+        display: none;
     }
 
     .category-filter__close {
         display: inline-flex !important;
         position: relative;
         flex: 0 0 42px;
+        min-width: 42px;
+        min-height: 42px;
         width: 42px;
         height: 42px;
         aspect-ratio: 1 / 1;
@@ -495,6 +507,22 @@
 
     .category-filter__fields {
         grid-template-columns: 1fr;
+    }
+
+    .category-filter__actions {
+        display: grid !important;
+        grid-template-columns: 1fr;
+        width: 100%;
+    }
+
+    .category-filter__actions .btn,
+    .category-filter__clear {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .category-filter__clear {
+        display: inline-flex;
     }
 }
 /* Compact product cards */
