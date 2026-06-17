@@ -93,6 +93,50 @@ function kangoo_contact_register_post_type() {
 }
 add_action('init', 'kangoo_contact_register_post_type');
 
+function kangoo_contact_register_acf_fields() {
+    if (!function_exists('acf_add_local_field_group')) {
+        return;
+    }
+
+    acf_add_local_field_group(array(
+        'key' => 'group_kangoo_contact_settings',
+        'title' => __('Contact settings', 'kangoo'),
+        'fields' => array(
+            array(
+                'key' => 'field_kangoo_contact_general_email',
+                'label' => __('General enquiries email', 'kangoo'),
+                'name' => 'kangoo_contact_general_email',
+                'type' => 'email',
+                'default_value' => 'hello@kangoopouches.co.uk',
+                'instructions' => __('Used for general, product, partnership and trade enquiries.', 'kangoo'),
+            ),
+            array(
+                'key' => 'field_kangoo_contact_support_email',
+                'label' => __('Support email', 'kangoo'),
+                'name' => 'kangoo_contact_support_email',
+                'type' => 'email',
+                'default_value' => 'hello@kangoopouches.co.uk',
+                'instructions' => __('Used for order, delivery, returns, account and rewards enquiries.', 'kangoo'),
+            ),
+        ),
+        'location' => array(
+            array(
+                array(
+                    'param' => 'options_page',
+                    'operator' => '==',
+                    'value' => 'contact-settings',
+                ),
+            ),
+        ),
+        'position' => 'acf_after_title',
+        'style' => 'default',
+        'label_placement' => 'top',
+        'active' => true,
+        'show_in_rest' => 0,
+    ));
+}
+add_action('acf/init', 'kangoo_contact_register_acf_fields');
+
 function kangoo_contact_flash_get() {
     $token = isset($_GET['kangoo_contact']) ? sanitize_key(wp_unslash($_GET['kangoo_contact'])) : '';
 
