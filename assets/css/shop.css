@@ -1620,6 +1620,15 @@
   overflow-wrap: anywhere;
 }
 
+@media (min-width: 641px) {
+  .seo-guide-grid .seo-link-chips a {
+    min-height: 36px;
+    padding: 0.45rem 0.82rem;
+    font-size: 0.8rem;
+    line-height: 1.15;
+  }
+}
+
 .seo-faq-list {
   display: grid;
   gap: 10px;
