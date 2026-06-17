@@ -92,7 +92,7 @@ function classify(keyword, intent, volume, kd) {
   if (!k || irrelevant.test(k)) return { ...result, status: 'Rejected', cluster: 'Out of scope', action: 'Do not target', rationale: 'Irrelevant, unsupported service, competitor code, free sample or cessation intent.', priority: 'None', wave: 'Rejected' };
   if (unavailable.test(k)) return { ...result, status: 'Rejected', cluster: 'Unavailable brand', action: 'Do not create landing page', rationale: 'Kangoo does not currently stock or support this brand/query.', priority: 'None', wave: 'Rejected' };
 
-  if (/\b99p\b|cheap nicotine pouch/.test(k)) return { ...result, status: 'Approved', cluster: '99p/value', target: routes.p99, type: 'Category', action: 'Protect and improve', rationale: 'Established ranking entity; 79p remains a temporary promotion.', priority: 'P1', wave: 'Days 1-14' };
+  if (/\b99p\b|cheap nicotine pouch/.test(k)) return { ...result, status: 'Approved', cluster: '99p/value', target: routes.p99, type: 'Category', action: 'Protect and improve', rationale: 'Established 99p value entity; keep discount messaging consistent with live pricing.', priority: 'P1', wave: 'Days 1-14' };
   if (k === 'nicotine pouches' || k === 'nicotine pouch') return { ...result, status: 'Approved', cluster: 'Core commercial', target: routes.core, type: 'Category', action: 'Build main commercial authority', rationale: 'The main product category owns the principal generic query.', priority: 'P1', wave: 'Days 8-25' };
   if (/what are nicotine pouches|what is a nicotine pouch|how do nicotine pouches work|nicotine pouch meaning/.test(k)) return { ...result, status: 'Approved', cluster: 'Basics', target: routes.what, type: 'Guide', action: 'Answer-first source-led guide', rationale: 'Informational intent distinct from shopping.', priority: 'P1', wave: 'Days 8-25' };
   if (/how to use nicotine pouches|how do you use nicotine pouches|where to put nicotine pouch/.test(k)) return { ...result, status: 'Approved', cluster: 'How-to', target: routes.how, type: 'Guide', action: 'Improve practical guidance', rationale: 'Placement and usage intent.', priority: 'P1', wave: 'Days 8-25' };
@@ -226,7 +226,7 @@ dashboard.getRange('D4:H8').values = [
   ['Ranking truth', 'Google Search Console', '', '', ''],
   ['Opportunity evidence', 'SEMrush exports and competitor structure', '', '', ''],
   ['Main commercial owner', '/product-category/nicotine-pouches/', '', '', ''],
-  ['99p policy', 'Keep the 99p entity; 79p is promotional', '', '', ''],
+  ['99p policy', 'Keep the 99p entity consistent with live pricing', '', '', ''],
 ];
 styleHeader(dashboard, 'D4:H4');
 dashboard.getRange('A11:C11').values = [['Approved cluster', 'Keywords', 'Search volume']];
@@ -252,7 +252,7 @@ const rejectedSheet = addTableSheet(workbook, 'Rejected Keywords', [headers, ...
 const roadmap = [
   ['Wave', 'URL/Page', 'Primary Cluster', 'Action', 'Success Signal'],
   ['Days 1-14', routes.core, 'Core commercial', 'Repair canonicals, modules, copy and indexing rules', 'Clean crawl and stable query ownership'],
-  ['Days 1-14', routes.p99, '99p/value', 'Protect 99p entity; keep 79p temporary', 'Retain/improve top-10 ranking'],
+  ['Days 1-14', routes.p99, '99p/value', 'Protect 99p entity and keep value messaging consistent', 'Retain/improve top-10 ranking'],
   ['Days 1-14', routes.zynGuide, 'ZYN', 'Merge duplicate ZYN guide', 'One canonical guide'],
   ['Days 1-14', routes.veloGuide, 'VELO', 'Merge thin VELO review', 'One stronger guide'],
   ['Days 8-25', routes.what, 'Basics', 'Answer-first source-led rewrite', 'Featured snippet/AI citation impressions'],
@@ -288,7 +288,7 @@ const pageMap = [
   ['Canonical Page', 'Primary Target', 'Intent', 'Role', 'Do Not Cannibalise With'],
   [routes.core, 'nicotine pouches UK', 'Commercial', 'Main catalogue authority', 'Homepage and beginner guide'],
   [routes.what, 'what are nicotine pouches', 'Informational', 'Answer-first definition guide', 'Commercial category'],
-  [routes.p99, '99p nicotine pouches', 'Commercial', 'Permanent value collection', '79p as a permanent entity'],
+  [routes.p99, '99p nicotine pouches', 'Commercial', 'Permanent value collection', 'Inconsistent value pricing as a permanent entity'],
   [routes.velo, 'VELO nicotine pouches', 'Commercial', 'Live VELO catalogue', 'VELO editorial guide'],
   [routes.zyn, 'ZYN pouches', 'Commercial', 'Live ZYN catalogue', 'What is ZYN guide'],
   [routes.nordic, 'Nordic Spirit nicotine pouches', 'Commercial', 'Live strategic brand page', 'Nordic Spirit review'],
