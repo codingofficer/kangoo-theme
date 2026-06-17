@@ -7,20 +7,19 @@ get_header();
 
 $faq_items = array(
     array(
+        'icon'     => 'truck',
         'question' => __('Where is my order?', 'kangoo'),
         'answer'   => __('Royal Mail tracking details are emailed once your order ships. Check your inbox and spam folder, then contact us with your order number if you need help.', 'kangoo'),
     ),
     array(
+        'icon'     => 'bolt',
         'question' => __('How long does delivery take?', 'kangoo'),
         'answer'   => __('Tracked 24 is usually 1-2 working days and Tracked 48 is usually 2-3 working days after dispatch. Busy periods can take longer.', 'kangoo'),
     ),
     array(
+        'icon'     => 'support',
         'question' => __('Can I return nicotine pouches?', 'kangoo'),
         'answer'   => __('For hygiene and age-restricted product reasons, opened nicotine pouch products cannot usually be returned. See our returns policy for the full rules.', 'kangoo'),
-    ),
-    array(
-        'question' => __('Do you offer wholesale?', 'kangoo'),
-        'answer'   => __('For trade, wholesale or partnership enquiries, choose General enquiry in the form or email hello@kangoopouches.co.uk.', 'kangoo'),
     ),
 );
 ?>
@@ -72,7 +71,7 @@ $faq_items = array(
                 <?php foreach ($faq_items as $item) : ?>
                     <details class="kangoo-contact-faq__item">
                         <summary>
-                            <span aria-hidden="true"><?php echo kangoo_contact_icon('box'); ?></span>
+                            <span aria-hidden="true"><?php echo kangoo_contact_icon($item['icon']); ?></span>
                             <strong><?php echo esc_html($item['question']); ?></strong>
                         </summary>
                         <p><?php echo esc_html($item['answer']); ?></p>
