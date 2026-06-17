@@ -9564,6 +9564,7 @@ require_once get_template_directory() . '/inc/shipping-operations.php';
 require_once get_template_directory() . '/inc/cart-recommendations.php';
 require_once get_template_directory() . '/inc/event-themes.php';
 require_once get_template_directory() . '/inc/reviews.php';
+require_once get_template_directory() . '/inc/contact-form.php';
 require_once get_template_directory() . '/inc/seo-growth.php';
 
 function kangoo_acf_add_types_panel_choice($field) {

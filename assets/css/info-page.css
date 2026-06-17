@@ -184,6 +184,184 @@
   border-radius: var(--radius-md);
 }
 
+.kangoo-contact {
+  margin-top: var(--space-7);
+}
+
+.kangoo-contact__notice {
+  display: grid;
+  gap: 0.25rem;
+  margin-bottom: 1rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.kangoo-contact__notice strong {
+  color: var(--color-text);
+}
+
+.kangoo-contact__notice span {
+  color: var(--color-text-soft);
+}
+
+.kangoo-contact__notice--success {
+  border-color: rgba(20, 164, 77, 0.35);
+  background: rgba(20, 164, 77, 0.08);
+}
+
+.kangoo-contact__notice--error {
+  border-color: rgba(220, 38, 38, 0.35);
+  background: rgba(220, 38, 38, 0.08);
+}
+
+.kangoo-contact__grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.kangoo-contact__routes,
+.kangoo-contact__form {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.kangoo-contact__routes {
+  display: grid;
+  gap: 0.8rem;
+  align-content: start;
+  padding: 1rem;
+}
+
+.kangoo-contact__route {
+  display: grid;
+  grid-template-columns: 2.4rem minmax(0, 1fr);
+  gap: 0.8rem;
+  align-items: center;
+  padding: 0.85rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-panel);
+}
+
+.kangoo-contact__route > span {
+  display: inline-grid;
+  place-items: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 999px;
+  color: #fff;
+  font-weight: 800;
+  background: var(--color-kangoo-orange, #ff7a00);
+}
+
+.kangoo-contact__route strong,
+.kangoo-contact__route a {
+  display: block;
+}
+
+.kangoo-contact__route a {
+  margin-top: 0.15rem;
+  color: var(--color-text);
+  overflow-wrap: anywhere;
+}
+
+.kangoo-contact__note {
+  padding: 0.9rem 1rem;
+  border-radius: var(--radius-md);
+  color: var(--color-text-soft);
+  background: rgba(255, 122, 0, 0.08);
+}
+
+.kangoo-contact__form {
+  display: grid;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.kangoo-contact__field {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.kangoo-contact__field label,
+.kangoo-contact__consent {
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.kangoo-contact__field input,
+.kangoo-contact__field select,
+.kangoo-contact__field textarea {
+  width: 100%;
+  min-height: 48px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 0.85rem 0.95rem;
+  color: var(--color-text);
+  background: var(--color-panel);
+  box-shadow: none;
+}
+
+.kangoo-contact__field textarea {
+  min-height: 150px;
+  resize: vertical;
+}
+
+.kangoo-contact__field input:focus,
+.kangoo-contact__field select:focus,
+.kangoo-contact__field textarea:focus {
+  outline: 2px solid rgba(0, 102, 255, 0.18);
+  border-color: #0b63f6;
+}
+
+.kangoo-contact__consent {
+  display: grid;
+  grid-template-columns: 1.15rem minmax(0, 1fr);
+  gap: 0.7rem;
+  align-items: start;
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.kangoo-contact__consent input {
+  width: 1.1rem;
+  height: 1.1rem;
+  margin-top: 0.25rem;
+}
+
+.kangoo-contact__error {
+  color: #dc2626;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.kangoo-contact__submit {
+  min-height: 52px;
+  border: 0;
+  border-radius: var(--radius-md);
+  padding: 0.95rem 1.2rem;
+  color: #fff;
+  font-weight: 800;
+  cursor: pointer;
+  background: #0b63f6;
+  box-shadow: 0 14px 30px rgba(11, 99, 246, 0.24);
+}
+
+.kangoo-contact__submit:hover {
+  background: #0056df;
+}
+
+.kangoo-contact__trap {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
 .info-page__hero .container {
   width: min(100% - 2rem, var(--container));
 }
@@ -200,6 +378,26 @@
 
   .info-page__content {
     padding: 2rem;
+  }
+
+  .kangoo-contact__grid {
+    grid-template-columns: minmax(220px, 0.78fr) minmax(0, 1.35fr);
+    align-items: start;
+  }
+
+  .kangoo-contact__form {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 1.2rem;
+  }
+
+  .kangoo-contact__field,
+  .kangoo-contact__consent,
+  .kangoo-contact__submit {
+    grid-column: 1 / -1;
+  }
+
+  .kangoo-contact__field--half {
+    grid-column: span 1;
   }
 }
 
