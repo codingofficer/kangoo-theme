@@ -169,6 +169,34 @@ function kangoo_blog_guide_seeder_get_blog_post_by_slug($slug) {
     return $posts ? (int) $posts[0] : 0;
 }
 
+function kangoo_blog_guide_seeder_default_author_id() {
+    $users = get_users(array(
+        'role__in' => array('administrator', 'editor', 'author'),
+        'fields'   => 'all',
+        'number'   => 200,
+    ));
+
+    foreach ($users as $user) {
+        if (
+            $user instanceof WP_User
+            && (
+                $user->display_name === 'Kangoo Pouches'
+                || get_user_meta($user->ID, 'nickname', true) === 'Kangoo Pouches'
+            )
+        ) {
+            return (int) $user->ID;
+        }
+    }
+
+    $user = get_user_by('login', 'superadmin');
+
+    if ($user instanceof WP_User) {
+        return (int) $user->ID;
+    }
+
+    return get_current_user_id();
+}
+
 function kangoo_blog_guide_seeder_admin_menu() {
     add_management_page(
         __('Kangoo Blog Seeder', 'kangoo'),
@@ -564,6 +592,7 @@ function kangoo_blog_guide_seeder_handle_import() {
     $created = 0;
     $updated = 0;
     $skipped = 0;
+    $default_author_id = kangoo_blog_guide_seeder_default_author_id();
 
     foreach ($guides as $offset => $guide) {
         $slug = isset($guide['slug']) ? sanitize_title($guide['slug']) : '';
@@ -601,7 +630,7 @@ function kangoo_blog_guide_seeder_handle_import() {
             'post_content' => isset($guide['content_html']) ? wp_kses_post($guide['content_html']) : '',
             'post_excerpt' => isset($guide['standfirst']) ? wp_strip_all_tags($guide['standfirst']) : '',
             'post_status'  => $post_status,
-            'post_author'  => get_current_user_id(),
+            'post_author'  => $default_author_id,
             'post_date'    => $dates['post_date'],
             'post_date_gmt'=> $dates['post_date_gmt'],
         );
