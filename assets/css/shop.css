@@ -293,10 +293,6 @@
     color: #fff;
 }
 
-.category-filter__fields > .btn {
-    min-height: 48px;
-}
-
 .category-filter__clear {
     display: none;
     min-height: 48px;
@@ -507,7 +503,14 @@
     }
 
     .category-filter__clear {
-        display: inline-flex;
+        display: inline-flex !important;
+        min-height: 48px;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--color-border) !important;
+        border-radius: 12px;
+        background: transparent;
+        text-align: center;
     }
 }
 /* Compact product cards */
