@@ -243,7 +243,7 @@ $trial_products = function_exists('kangoo_get_trial_products') ? kangoo_get_tria
                         <p><?php esc_html_e('Mint and berry pages group popular flavour families with direct links to products and the flavour explorer.', 'kangoo'); ?></p>
                         <?php $render_link_chips(array_merge($flavour_links, array(array('label' => __('Flavour explorer', 'kangoo'), 'url' => $flavour_url)))); ?>
                     </article>
-                    <article>
+                    <article class="seo-guide-grid__brand">
                         <h3><?php esc_html_e('Brand pages', 'kangoo'); ?></h3>
                         <p><?php esc_html_e('Shop ZYN, VELO, PABLO and KILLA pages when you already know the brand you want to compare.', 'kangoo'); ?></p>
                         <?php $render_link_chips($brand_links); ?>
