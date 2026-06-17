@@ -78,7 +78,7 @@ $internal_links = array();
 $focus_map = array();
 
 foreach ($urls as $index => $url) {
-    $response = wp_remote_get($url, array('timeout' => 20, 'redirection' => 3, 'user-agent' => 'Kangoo SEO Audit/1.0'));
+    $response = wp_remote_get($url, array('timeout' => 20, 'redirection' => 3, 'user-agent' => 'Kangoo Pouches SEO Audit/1.0'));
     $status = is_wp_error($response) ? 0 : wp_remote_retrieve_response_code($response);
     $html = is_wp_error($response) ? '' : wp_remote_retrieve_body($response);
     $title = kangoo_audit_tag($html, 'title');

@@ -2813,7 +2813,7 @@ function kangoo_archive_yoast_description($description) {
     }
 
     if (function_exists('is_shop') && is_shop()) {
-        return __('Browse Kangoo products and live stock. For the complete nicotine pouch range, compare brands, flavours and strengths in our main category.', 'kangoo');
+        return __('Browse Kangoo Pouches products and live stock. For the complete nicotine pouch range, compare brands, flavours and strengths in our main category.', 'kangoo');
     }
 
     return $description;
@@ -3721,7 +3721,7 @@ function kangoo_apply_pack_pricing_to_cart($cart) {
 add_action('woocommerce_before_calculate_totals', 'kangoo_apply_pack_pricing_to_cart', 20);
 
 function kangoo_99p_price() {
-    return 0.79;
+    return 0.99;
 }
 
 function kangoo_99p_term_slugs() {
@@ -4393,7 +4393,7 @@ function kangoo_get_product_pack_summary($product) {
     if (function_exists('kangoo_is_99p_product') && kangoo_is_99p_product($product->get_id())) {
         return array(
             'label' => __('Trial price', 'kangoo'),
-        'value' => __('79p trial pouch', 'kangoo'),
+        'value' => __('99p trial pouch', 'kangoo'),
         );
     }
 
@@ -4577,7 +4577,7 @@ function kangoo_get_retailer_value_comparison_rows() {
     return array(
         array(
             'label'       => __('Starting price', 'kangoo'),
-        'kangoo'      => __('79p trial pouches when available; main range from £3.99', 'kangoo'),
+        'kangoo'      => __('99p trial pouches when available; main range from £3.99', 'kangoo'),
             'supermarket' => __('Often limited to shelf range and current in-store pricing', 'kangoo'),
             'corner'      => __('Varies by store and local availability', 'kangoo'),
         ),
@@ -4607,7 +4607,7 @@ function kangoo_get_retailer_value_comparison_rows() {
         ),
         array(
             'label'       => __('Trial options', 'kangoo'),
-        'kangoo'      => __('79p trial pouches are limited to one per order while stock lasts', 'kangoo'),
+        'kangoo'      => __('99p trial pouches are limited to one per order while stock lasts', 'kangoo'),
             'supermarket' => __('Trial pricing is not always available', 'kangoo'),
             'corner'      => __('Trial pricing is not always available', 'kangoo'),
         ),
@@ -4742,7 +4742,7 @@ function kangoo_get_brand_authority_intro($slug) {
     }
 
     return sprintf(
-        __('Browse %1$s nicotine pouches at Kangoo Pouches. Compare live stock, flavours, strengths and pack pricing where available.', 'kangoo'),
+        __('Browse %1$s nicotine pouches at Kangoo Pouches, an independent retailer. Compare live stock, flavours, strengths and pack pricing where available.', 'kangoo'),
         $profile['label']
     );
 }
@@ -4803,7 +4803,7 @@ function kangoo_get_brand_authority_content($slug) {
             <li><a href="%10$s">Compare pouches by brand and strength</a></li>
             <li><a href="%11$s">Use the strength ladder</a> or <a href="%12$s">flavour explorer</a></li>
         </ul>
-        <p>Nicotine is addictive. Kangoo Pouches content is for adults who already use nicotine products. This page is buying guidance, not medical advice, and Kangoo Pouches is not affiliated with the brand owner unless explicitly stated.</p>',
+        <p>Nicotine is addictive. Kangoo Pouches content is for adults who already use nicotine products. This page is buying guidance, not medical advice. Kangoo Pouches is an independent retailer and is not affiliated with, endorsed by or sponsored by %1$s or its brand owner.</p>',
         esc_html($profile['label']),
         esc_html($profile['summary']),
         esc_html($profile['flavours']),
@@ -4879,11 +4879,11 @@ function kangoo_archive_seo_data() {
     $description = '';
 
     if ($context['type'] === 'nicotine') {
-        $title = __('Nicotine Pouches UK From 79p', 'kangoo');
-        $description = __('Shop nicotine pouches in the UK from Kangoo Pouches, including ZYN, VELO, KILLA and PABLO, 79p trial pouches and pack pricing.', 'kangoo');
+        $title = __('Nicotine Pouches UK From 99p', 'kangoo');
+        $description = __('Shop nicotine pouches in the UK from Kangoo Pouches, including ZYN, VELO, KILLA and PABLO, 99p trial pouches and pack pricing.', 'kangoo');
     } elseif ($context['type'] === 'trial') {
-        $title = __('79p Nicotine Pouches UK', 'kangoo');
-        $description = __('Try selected nicotine pouches from 79p at Kangoo Pouches. Trial pouches are limited to one per order while stock lasts and are for adult nicotine users only.', 'kangoo');
+        $title = __('99p Nicotine Pouches UK', 'kangoo');
+        $description = __('Try selected nicotine pouches from 99p at Kangoo Pouches. Trial pouches are limited to one per order while stock lasts and are for adult nicotine users only.', 'kangoo');
     } elseif ($context['type'] === 'brand') {
         $brand_profile = function_exists('kangoo_get_brand_authority_profile') ? kangoo_get_brand_authority_profile($term->slug) : array();
         $brand = !empty($brand_profile['label']) ? $brand_profile['label'] : strtoupper($term->name);
@@ -5064,7 +5064,7 @@ function kangoo_validate_99p_add_to_cart($passed, $product_id, $quantity, $varia
     }
 
     if ((int) $quantity > 1 || kangoo_get_cart_99p_quantity() >= 1) {
-        wc_add_notice(__('79p trial pouches are limited to 1 per order. You can still add any other products to your basket.', 'kangoo'), 'error');
+        wc_add_notice(__('99p trial pouches are limited to 1 per order. You can still add any other products to your basket.', 'kangoo'), 'error');
         return false;
     }
 
@@ -5080,7 +5080,7 @@ function kangoo_validate_99p_cart_update($passed, $cart_item_key, $values, $quan
     }
 
     if ((int) $quantity > 1 || ((int) $quantity > 0 && kangoo_get_cart_99p_quantity($cart_item_key) >= 1)) {
-        wc_add_notice(__('79p trial pouches are limited to 1 per order.', 'kangoo'), 'error');
+        wc_add_notice(__('99p trial pouches are limited to 1 per order.', 'kangoo'), 'error');
         return false;
     }
 
@@ -5542,7 +5542,7 @@ function kangoo_rewards_apply_requested_discount($requested, $requested_discount
     $max_discount = kangoo_rewards_points_to_money($max_points);
 
     if (kangoo_rewards_get_redemption_eligible_cart_subtotal() <= 0) {
-        return new WP_Error('kangoo_rewards_99p_only', __('Kangoo Rewards cannot be redeemed against 79p trial pouches. Add an eligible product to use points.', 'kangoo'));
+        return new WP_Error('kangoo_rewards_99p_only', __('Kangoo Rewards cannot be redeemed against 99p trial pouches. Add an eligible product to use points.', 'kangoo'));
     }
 
     if ($requested_discount > 0) {
@@ -6266,7 +6266,7 @@ function kangoo_rewards_account_endpoint_content_modern() {
                 <article>
                     <span aria-hidden="true"></span>
                     <strong><?php esc_html_e('Redeem', 'kangoo'); ?></strong>
-        <p><?php echo wp_kses_post(__('100 points equals &pound;1 off. Rewards can cover up to 20% of eligible cart value. 79p trial pouches are excluded from redemption.', 'kangoo')); ?></p>
+        <p><?php echo wp_kses_post(__('100 points equals &pound;1 off. Rewards can cover up to 20% of eligible cart value. 99p trial pouches are excluded from redemption.', 'kangoo')); ?></p>
                 </article>
                 <article>
                     <span aria-hidden="true"></span>
@@ -8577,7 +8577,7 @@ function kangoo_ajax_update_mini_cart_quantity() {
 
         if ($quantity > 0 && function_exists('kangoo_get_cart_99p_quantity') && kangoo_get_cart_99p_quantity($cart_item_key) >= 1) {
             wp_send_json_error(array(
-                'message' => __('79p trial pouches are limited to 1 per order.', 'kangoo'),
+                'message' => __('99p trial pouches are limited to 1 per order.', 'kangoo'),
             ), 400);
         }
     }
@@ -8730,7 +8730,7 @@ function kangoo_ajax_add_to_cart() {
 
         if ($quantity > 1 || $existing_quantity >= 1 || $other_99p_quantity >= 1) {
             wp_send_json_error(array(
-                'message' => __('79p trial pouches are limited to 1 per order. You can still add any other products to your basket.', 'kangoo'),
+                'message' => __('99p trial pouches are limited to 1 per order. You can still add any other products to your basket.', 'kangoo'),
             ), 409);
         }
 
@@ -9581,7 +9581,7 @@ function kangoo_acf_add_home_product_sources($field) {
     }
 
     $field['choices']['summer_collection'] = __('Summer collection', 'kangoo');
-    $field['choices']['pouches_99p'] = __('79p Pouches', 'kangoo');
+    $field['choices']['pouches_99p'] = __('99p Pouches', 'kangoo');
 
     return $field;
 }

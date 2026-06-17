@@ -19,7 +19,7 @@ function kangoo_seo_90_check($label, $passed, $detail = '') {
 }
 
 function kangoo_seo_90_request($path, $redirection = 3) {
-    return wp_remote_get(home_url($path), array('timeout' => 20, 'redirection' => $redirection, 'user-agent' => 'Kangoo SEO Validator/1.0'));
+    return wp_remote_get(home_url($path), array('timeout' => 20, 'redirection' => $redirection, 'user-agent' => 'Kangoo Pouches SEO Validator/1.0'));
 }
 
 $core = kangoo_seo_90_request('/product-category/nicotine-pouches/');
@@ -85,8 +85,8 @@ $main = get_term_by('slug', 'nicotine-pouches', 'product_cat');
 $trial = get_term_by('slug', '99p-pouches', 'product_cat');
 $main_title = $main && isset($yoast['product_cat'][$main->term_id]['wpseo_title']) ? $yoast['product_cat'][$main->term_id]['wpseo_title'] : '';
 $trial_title = $trial && isset($yoast['product_cat'][$trial->term_id]['wpseo_title']) ? $yoast['product_cat'][$trial->term_id]['wpseo_title'] : '';
-kangoo_seo_90_check('Core Yoast title', $main_title === 'Nicotine Pouches UK | Buy Online from 79p | Kangoo Pouches', $main_title);
-kangoo_seo_90_check('99p Yoast title', $trial_title === '99p Nicotine Pouches - Now from 79p | Kangoo Pouches', $trial_title);
+kangoo_seo_90_check('Core Yoast title', $main_title === 'Nicotine Pouches UK | Buy Online from 99p | Kangoo Pouches', $main_title);
+kangoo_seo_90_check('99p Yoast title', $trial_title === '99p Nicotine Pouches - Now from 99p | Kangoo Pouches', $trial_title);
 
 foreach (array(
     '/product-category/velo/' => array('What are VELO nicotine pouches?', 'VELO strengths and dots'),

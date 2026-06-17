@@ -143,7 +143,7 @@ function kangoo_blog_guide_seeder_sync_brand_category_seo() {
 
         $term_key = 'product_cat_' . $term->term_id;
 
-        kangoo_blog_guide_seeder_update_term_field($term->term_id, $term_key, 'category_seo_title', sprintf(__('%s Nicotine Pouches', 'kangoo'), $profile['label']));
+        kangoo_blog_guide_seeder_update_term_field($term->term_id, $term_key, 'category_seo_title', sprintf(__('%s Nicotine Pouches UK', 'kangoo'), $profile['label']));
         kangoo_blog_guide_seeder_update_term_field($term->term_id, $term_key, 'category_intro', kangoo_get_brand_authority_intro($slug));
         kangoo_blog_guide_seeder_update_term_field($term->term_id, $term_key, 'category_seo_content', kangoo_get_brand_authority_content($slug));
         kangoo_blog_guide_seeder_update_term_field($term->term_id, $term_key, 'category_faq', kangoo_get_brand_authority_faq($slug));

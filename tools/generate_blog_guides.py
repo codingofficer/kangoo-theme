@@ -63,11 +63,11 @@ PUBLIC_TEXT_REPLACEMENTS = {
     "Use this guide to move from broad searches like 'ZYN pouches' or 'ZYN UK' into practical choices by strength and flavour.": "Broad searches like 'ZYN pouches' or 'ZYN UK' become more useful when you compare specific strengths and flavours.",
     "Do not present high strength as automatically better. Explain who it suits and link to the strength ladder for comparison.": "High strength is not automatically better. It is more relevant for experienced adult nicotine users who already know they prefer a stronger pouch.",
     "The content should be careful not to encourage users to jump straight to the highest strength. Strength should match experience level.": "It is better to compare experience level before moving straight to the highest strength. Strength should match the user, not just the product headline.",
-    "This is why Kangoo content should use nicotine pouches as the main product wording and use snus only when explaining search language or legal differences.": "That is why this article uses nicotine pouches as the main product wording and uses snus only when explaining search language or legal differences.",
+    "This is why Kangoo Pouches content should use nicotine pouches as the main product wording and use snus only when explaining search language or legal differences.": "That is why this article uses nicotine pouches as the main product wording and uses snus only when explaining search language or legal differences.",
     "Do not describe nicotine pouches as medical products or licensed stop-smoking products. NHS guidance says nicotine pouches are not licensed stop-smoking products in the UK.": "Nicotine pouches are not medical products or licensed stop-smoking products. NHS guidance says nicotine pouches are not licensed stop-smoking products in the UK.",
-    "Kangoo content should compare format and shopping factors, then send users to product pages only for tobacco-free pouch browsing.": "This comparison focuses on format and shopping factors, then points adult pouch shoppers toward tobacco-free pouch browsing.",
+    "Kangoo Pouches content should compare format and shopping factors, then send users to product pages only for tobacco-free pouch browsing.": "This comparison focuses on format and shopping factors, then points adult pouch shoppers toward tobacco-free pouch browsing.",
     "Send shoppers to the ZYN category first, then use product links for reliable picks such as Cool Mint, Black Cherry and Citrus when live stock supports it.": "Start with the ZYN category first, then use product links for picks such as Cool Mint, Black Cherry and Citrus when live stock supports it.",
-    "Kangoo should route this search to the full category, ZYN, VELO and comparison tools rather than making unsupported competitor claims.": "The clearest next step is to compare the full category, ZYN, VELO and comparison tools rather than relying on unsupported competitor claims.",
+    "Kangoo Pouches should route this search to the full category, ZYN, VELO and comparison tools rather than making unsupported competitor claims.": "The clearest next step is to compare the full category, ZYN, VELO and comparison tools rather than relying on unsupported competitor claims.",
     "Route shoppers to the PABLO brand page first, then to strong and extra-strong category pages if strength is their main filter.": "Start with the PABLO brand page first, then use strong and extra-strong category pages if strength is the main filter.",
     "This guide should explain terminology and product differences without suggesting nicotine improves sport performance.": "The key is terminology and product differences, without suggesting nicotine improves sport performance.",
     "Use this guide to link to how-to content and lower-strength comparison routes rather than pushing strong products.": "How-to content and lower-strength comparison routes are more useful here than jumping straight to strong products.",
@@ -81,12 +81,12 @@ PUBLIC_TEXT_REPLACEMENTS = {
     "Use tool pages as the main internal links, then direct confident shoppers to the full product category.": "Use the finder, flavour explorer, strength ladder and compare page first, then move into the full product category when the choice is clearer.",
     "The page should connect discreet delivery copy with real buying decisions: strength, flavour, price and stock.": "Discreet delivery matters most when it is connected to real buying decisions: strength, flavour, price and stock.",
     "Use commercial category links early because this is close to purchase intent.": "Start with commercial category pages because this search is close to purchase intent.",
-    "Kangoo product and delivery copy should state current packaging terms clearly on site.": "Check the current delivery page or checkout copy for the latest packaging terms.",
+    "Kangoo Pouches product and delivery copy should state current packaging terms clearly on site.": "Check the current delivery page or checkout copy for the latest packaging terms.",
     "Use this guide to support tobacco-free category messaging and link to brand pages.": "Use the tobacco-free category and brand pages to compare current products.",
     "This is why a UK ecommerce page should be careful with wording. Use 'nicotine pouches' for tobacco-free products, and explain that shoppers may use the word snus informally.": "That is why UK shoppers should look for the wording 'nicotine pouches' when they want tobacco-free products, even if they use the word snus informally.",
-    "For Kangoo content, use KILLA nicotine pouches as the main wording, then explain that some shoppers may search for KILLA snus even though tobacco-free pouches are a different product type.": "KILLA nicotine pouches is the clearest product wording, even though some shoppers may search for KILLA snus when they mean tobacco-free pouches.",
+    "For Kangoo Pouches content, use KILLA nicotine pouches as the main wording, then explain that some shoppers may search for KILLA snus even though tobacco-free pouches are a different product type.": "KILLA nicotine pouches is the clearest product wording, even though some shoppers may search for KILLA snus when they mean tobacco-free pouches.",
     "The KILLA category page should be the main destination for this post. Add supporting links to strong, extra strong and compare pouches pages.": "The KILLA category page is the best starting point, with strong, extra strong and compare pouches pages useful for narrowing the choice.",
-    "If you are writing for UK shoppers, use 'snus' only to explain meaning, search language or legal differences. Use 'nicotine pouches' for Kangoo products and product category pages.": "For UK shoppers, 'snus' is best understood as search language or a legal comparison term. For Kangoo products and category pages, 'nicotine pouches' is the clearer wording.",
+    "If you are writing for UK shoppers, use 'snus' only to explain meaning, search language or legal differences. Use 'nicotine pouches' for Kangoo Pouches products and product category pages.": "For UK shoppers, 'snus' is best understood as search language or a legal comparison term. For Kangoo Pouches products and category pages, 'nicotine pouches' is the clearer wording.",
 }
 
 
@@ -142,7 +142,7 @@ GUIDES = [
     {
         "title": "Cheap Nicotine Pouches UK: 99p Trials, Prices and Multi-Buy Tips",
         "focus": "cheap nicotine pouches uk",
-        "meta_title": "Cheap Nicotine Pouches UK From 99p | Kangoo",
+        "meta_title": "Cheap Nicotine Pouches UK From 99p | Kangoo Pouches",
         "meta_description": "Compare cheap nicotine pouches in the UK, including 99p trial pouches, regular cans, multi-buy packs and smart ways to choose value without guessing.",
         "secondary": ["99p nicotine pouches", "nicotine pouches free sample", "best nicotine pouches", "nicotine pouches uk", "cheap snus uk"],
         "intent": "Commercial investigation",
@@ -153,36 +153,36 @@ GUIDES = [
             ("Kangoo Pouch Finder", LINKS["finder"]),
             ("multi-buy nicotine pouch range", LINKS["all"]),
         ],
-        "summary": "Lead with Kangoo's 99p trial angle, then explain how to compare price, stock, strength and pack value without making absolute lowest-price claims.",
+        "summary": "Lead with Kangoo Pouches' 99p trial angle, then explain how to compare price, stock, strength and pack value without making absolute lowest-price claims.",
         "sections": [
             ("Quick answer", [
-                "The cheapest way to try nicotine pouches at Kangoo is to start with the 99p pouch range when trial stock is available. These trial pouches are designed for sampling flavours and strengths before committing to a regular can or multi-buy pack.",
+                "The cheapest way to try nicotine pouches at Kangoo Pouches is to start with the 99p pouch range when trial stock is available. These trial pouches are designed for sampling flavours and strengths before committing to a regular can or multi-buy pack.",
                 "For repeat orders, the real value usually comes from comparing the full price, the pack size, and the unit price. A pouch that looks cheaper as a single can is not always the best repeat-buy option if another product has a stronger multi-buy tier.",
             ]),
             ("How to compare cheap nicotine pouches properly", [
                 "Price is only one part of the decision. Adult nicotine users should compare the can price, strength, flavour family, pouch count, stock status and delivery threshold before choosing.",
-                "On Kangoo, the practical route is simple: check the 99p pouch page for trial stock, use the nicotine pouch category for the full range, then compare pack pricing on product pages where multi-buy options are available.",
+                "On Kangoo Pouches, the practical route is simple: check the 99p pouch page for trial stock, use the nicotine pouch category for the full range, then compare pack pricing on product pages where multi-buy options are available.",
             ]),
             ("99p trials vs regular cans", [
                 "A 99p trial pouch is best treated as a low-cost way to test a flavour or strength. It is useful when you are unsure whether mint, berry, citrus or an extra-strong pouch is right for your regular rotation.",
                 "Regular cans are better for repeat buying because they are the products most likely to support pack pricing, broader stock levels and stronger brand choice across ZYN, VELO, KILLA and PABLO.",
             ]),
-            ("Where Kangoo can win on value", [
-                "Kangoo's strongest value story is not only the headline trial price. It is the combination of 99p trials, regular products from the main nicotine pouch range, free delivery over the threshold and pack pricing on selected products.",
-                "This is a cleaner claim than saying Kangoo is always the cheapest. Retailer pricing changes, and any public price comparison should be dated, representative and easy for shoppers to verify.",
+            ("Where Kangoo Pouches can help on value", [
+                "Kangoo Pouches' strongest value story is not only the headline trial price. It is the combination of 99p trials, regular products from the main nicotine pouch range, free delivery over the threshold and pack pricing on selected products.",
+                "This is a cleaner claim than saying Kangoo Pouches is always the cheapest. Retailer pricing changes, and any public price comparison should be dated, representative and easy for shoppers to verify.",
             ]),
         ],
         "faq": [
             ("Are 99p nicotine pouches available all the time?", "No. They depend on live stock and trial availability. Treat the 99p range as a rotating sample section."),
             ("What should I buy after a 99p trial?", "Use the same flavour or strength as a guide, then compare regular cans and pack-priced products in the full nicotine pouches category."),
-            ("Can I compare Kangoo with supermarkets?", "Yes, but keep comparisons generic unless you have dated, verifiable evidence for a named retailer claim."),
+            ("Can I compare Kangoo Pouches with supermarkets?", "Yes, but keep comparisons generic unless you have dated, verifiable evidence for a named retailer claim."),
         ],
     },
     {
-        "title": "99p Nicotine Pouches UK: How Kangoo Trial Pouches Work",
+        "title": "99p Nicotine Pouches UK: How Kangoo Pouches Trial Pouches Work",
         "focus": "99p nicotine pouches",
-        "meta_title": "99p Nicotine Pouches UK | Trial Pouches at Kangoo",
-        "meta_description": "Learn how Kangoo 99p nicotine pouch trials work, what to check before buying and how to move from a sample pouch to a regular order.",
+        "meta_title": "99p Nicotine Pouches UK | Trial Pouches at Kangoo Pouches",
+        "meta_description": "Learn how Kangoo Pouches 99p nicotine pouch trials work, what to check before buying and how to move from a sample pouch to a regular order.",
         "secondary": ["99p pouches", "nicotine pouches free sample", "cheap nicotine pouches", "snus free sample", "trial nicotine pouches"],
         "intent": "Transactional and commercial",
         "links": [
@@ -195,7 +195,7 @@ GUIDES = [
         "summary": "Explain the one-per-order trial model, how to choose a first trial, and where to go next.",
         "sections": [
             ("Quick answer", [
-                "Kangoo's 99p nicotine pouch range is a trial section for adult nicotine users who want to test selected pouch flavours and strengths at a low entry price.",
+                "Kangoo Pouches' 99p nicotine pouch range is a trial section for adult nicotine users who want to test selected pouch flavours and strengths at a low entry price.",
                 "Trial pouches are not a permanent guarantee. They change with stock, and availability can move quickly when a popular flavour or strength is added.",
             ]),
             ("How 99p pouch trials work", [
@@ -236,7 +236,7 @@ GUIDES = [
         "sections": [
             ("Quick answer", [
                 "The best nicotine pouch is the one that matches your preferred strength, flavour, price point and brand style. A single overall winner is less useful than a clear comparison by use case.",
-                "For Kangoo shoppers, ZYN and VELO are strong everyday comparison brands, PABLO is more relevant for experienced users looking at higher strengths, and KILLA is useful for bold flavour and strong pouch shoppers.",
+                "For Kangoo Pouches shoppers, ZYN and VELO are strong everyday comparison brands, PABLO is more relevant for experienced users looking at higher strengths, and KILLA is useful for bold flavour and strong pouch shoppers.",
             ]),
             ("Best for first-time comparison", [
                 "Start with a familiar flavour family such as mint or berry, then choose a lower or balanced strength before stepping into stronger products.",
@@ -261,7 +261,7 @@ GUIDES = [
         "title": "Nicotine Pouch Strength Guide: 3mg to Extra Strong Explained",
         "focus": "nicotine pouch strength guide",
         "meta_title": "Nicotine Pouch Strength Guide | 3mg to Extra Strong",
-        "meta_description": "Understand nicotine pouch strengths from light and balanced to strong and extra strong, with tips for comparing mg, pouch feel and Kangoo products.",
+        "meta_description": "Understand nicotine pouch strengths from light and balanced to strong and extra strong, with tips for comparing mg, pouch feel and Kangoo Pouches products.",
         "secondary": ["nicotine pouch strength", "3mg nicotine pouches", "strong nicotine pouches", "extra strong nicotine pouches", "zyn strengths"],
         "intent": "Informational and commercial",
         "links": [
@@ -275,7 +275,7 @@ GUIDES = [
         "sections": [
             ("Quick answer", [
                 "Nicotine pouch strength is usually shown in milligrams, but the number is only part of the experience. Pouch size, moisture, flavour cooling, format and personal tolerance can all affect how strong a pouch feels.",
-                "A useful shopping framework is light, balanced, strong and extra strong. Kangoo's strength ladder turns those bands into a simpler buying route.",
+                "A useful shopping framework is light, balanced, strong and extra strong. Kangoo Pouches' strength ladder turns those bands into a simpler buying route.",
             ]),
             ("Light and lower-strength pouches", [
                 "Lower-strength pouches, such as 1.5mg, 3mg or similar mini formats, are usually easier to compare if you want a gentler pouch feel.",
@@ -300,7 +300,7 @@ GUIDES = [
         "title": "Strongest Nicotine Pouches UK: Strong and Extra Strong Options Explained",
         "focus": "strongest nicotine pouches",
         "meta_title": "Strongest Nicotine Pouches UK | Strong and Extra Strong",
-        "meta_description": "Compare strong and extra strong nicotine pouches in the UK, including what strength means, who higher-strength pouches suit and where to shop them at Kangoo.",
+        "meta_description": "Compare strong and extra strong nicotine pouches in the UK, including what strength means, who higher-strength pouches suit and where to shop them at Kangoo Pouches.",
         "secondary": ["strong nicotine pouches", "extra strong nicotine pouches", "strongest snus", "pablo nicotine pouches", "killa nicotine pouches"],
         "intent": "Commercial investigation",
         "links": [
@@ -321,7 +321,7 @@ GUIDES = [
                 "Mint and ice flavours can sometimes feel sharper, while fruit and coffee flavours may feel softer even at similar strengths.",
             ]),
             ("Brands to compare", [
-                "PABLO and KILLA are useful brand pages for shoppers looking at higher-strength products on Kangoo. ZYN and VELO also include products that can sit in strong or extra-strong ranges depending on the specific can.",
+                "PABLO and KILLA are useful brand pages for shoppers looking at higher-strength products on Kangoo Pouches. ZYN and VELO also include products that can sit in strong or extra-strong ranges depending on the specific can.",
                 "Use brand pages to compare flavours, then use strength pages to narrow by intensity.",
             ]),
             ("How to shop strong pouches responsibly", [
@@ -404,7 +404,7 @@ GUIDES = [
                 "This is why a UK ecommerce page should be careful with wording. Use 'nicotine pouches' for tobacco-free products, and explain that shoppers may use the word snus informally.",
             ]),
             ("Tobacco-free alternatives", [
-                "Kangoo sells tobacco-free nicotine pouch products for adults who already use nicotine. Popular brand pages include ZYN, VELO, PABLO and KILLA.",
+                "Kangoo Pouches sells tobacco-free nicotine pouch products for adults who already use nicotine. Popular brand pages include ZYN, VELO, PABLO and KILLA.",
                 "A useful next step is to compare pouches by strength and flavour rather than by the word 'snus' alone.",
             ]),
         ],
@@ -440,16 +440,16 @@ GUIDES = [
             ]),
             ("Nicotine pouches in simple terms", [
                 "Nicotine pouches are tobacco-free pouches for adults who already use nicotine. They come in different strengths, formats and flavours, including mint, berry, citrus, coffee and ice-style profiles.",
-                "On Kangoo, the best way to shop them is by brand, strength or flavour rather than by the word snus.",
+                "On Kangoo Pouches, the best way to shop them is by brand, strength or flavour rather than by the word snus.",
             ]),
             ("How to choose between search terms", [
-                "If you are writing for UK shoppers, use 'snus' only to explain meaning, search language or legal differences. Use 'nicotine pouches' for Kangoo products and product category pages.",
+                "If you are writing for UK shoppers, use 'snus' only to explain meaning, search language or legal differences. Use 'nicotine pouches' for Kangoo Pouches products and product category pages.",
                 "This keeps the content accurate and reduces the risk of confusing tobacco snus with tobacco-free pouch products.",
             ]),
         ],
         "faq": [
             ("Is tobacco-free snus the same as nicotine pouches?", "Many shoppers use that phrase, but nicotine pouches is the clearer term for tobacco-free products."),
-            ("Why does Kangoo sell nicotine pouches, not tobacco snus?", "Kangoo focuses on tobacco-free nicotine pouches for adults."),
+            ("Why does Kangoo Pouches sell nicotine pouches, not tobacco snus?", "Kangoo Pouches focuses on tobacco-free nicotine pouches for adults."),
             ("Which page should I visit after reading this?", "Start with the nicotine pouch category or the comparison tool."),
         ],
     },
@@ -457,7 +457,7 @@ GUIDES = [
         "title": "ZYN Nicotine Pouches Guide: Strengths, Flavours and Best Picks",
         "focus": "zyn nicotine pouches",
         "meta_title": "ZYN Nicotine Pouches UK | Strengths and Flavours",
-        "meta_description": "Explore ZYN nicotine pouches at Kangoo, including popular strengths, mint and fruit flavours, mini formats and links to ZYN product picks.",
+        "meta_description": "Explore ZYN nicotine pouches at Kangoo Pouches, including popular strengths, mint and fruit flavours, mini formats and links to ZYN product picks.",
         "secondary": ["zyn pouches", "zyn uk", "zyn flavours", "zyn strengths", "zyn cool mint"],
         "intent": "Commercial investigation",
         "links": [
@@ -470,7 +470,7 @@ GUIDES = [
         "summary": "Brand guide for ZYN searches with product and category links.",
         "sections": [
             ("Quick answer", [
-                "ZYN nicotine pouches are a popular tobacco-free pouch brand searched for mint, fruit and mini-format options. At Kangoo, the ZYN category is the best place to compare live stock, strength and flavour.",
+                "ZYN nicotine pouches are a popular tobacco-free pouch brand searched for mint, fruit and mini-format options. At Kangoo Pouches, the ZYN category is the best place to compare live stock, strength and flavour.",
                 "Use this guide to move from broad searches like 'ZYN pouches' or 'ZYN UK' into practical choices by strength and flavour.",
             ]),
             ("Popular ZYN flavour directions", [
@@ -481,7 +481,7 @@ GUIDES = [
                 "ZYN products can include lower-strength mini styles as well as stronger options depending on the live range. Always compare the exact product page rather than assuming every ZYN pouch feels the same.",
                 "Mini pouches are often useful for shoppers who want a smaller format and a more discreet feel.",
             ]),
-            ("How to choose ZYN at Kangoo", [
+            ("How to choose ZYN at Kangoo Pouches", [
                 "If you are unsure, compare one mint and one fruit option first. If you already know you like ZYN, use the ZYN category page to check pack pricing and stock before adding products to basket.",
                 "Internal links should point to the ZYN category first, then to individual products only when those products are in stock.",
             ]),
@@ -496,7 +496,7 @@ GUIDES = [
         "title": "VELO Nicotine Pouches Guide: Flavours, Strengths and Best Picks",
         "focus": "velo nicotine pouches",
         "meta_title": "VELO Nicotine Pouches UK | Flavours and Strengths",
-        "meta_description": "Compare VELO nicotine pouches at Kangoo, including peppermint, spearmint, berry and stronger options with links to live VELO products.",
+        "meta_description": "Compare VELO nicotine pouches at Kangoo Pouches, including peppermint, spearmint, berry and stronger options with links to live VELO products.",
         "secondary": ["velo pouches", "velo snus", "velo flavours", "velo strengths", "velo freezing peppermint"],
         "intent": "Commercial investigation",
         "links": [
@@ -520,7 +520,7 @@ GUIDES = [
                 "VELO products can range from smoother everyday strengths to stronger products, depending on the exact can. Always compare the mg on the product page before buying.",
                 "The strength ladder can help shoppers choose between balanced, strong and extra-strong products without relying on brand name alone.",
             ]),
-            ("How to shop VELO at Kangoo", [
+            ("How to shop VELO at Kangoo Pouches", [
                 "Use the VELO category page as the main place to browse current options, then check individual product pages for live stock, strength and price.",
                 "Mint nicotine pouches, berry nicotine pouches and the comparison tool can help narrow the range if you are deciding between flavours.",
             ]),
@@ -528,14 +528,14 @@ GUIDES = [
         "faq": [
             ("What VELO flavour is most searched?", "Peppermint, spearmint and berry-led VELO searches are strong in the keyword exports."),
             ("Is VELO the same as snus?", "VELO nicotine pouches are tobacco-free pouches; snus traditionally refers to an oral tobacco product."),
-            ("How do I compare VELO strengths?", "Use the product page mg and Kangoo's strength ladder."),
+            ("How do I compare VELO strengths?", "Use the product page mg and Kangoo Pouches' strength ladder."),
         ],
     },
     {
         "title": "ZYN vs VELO: Which Nicotine Pouch Brand Should You Try?",
         "focus": "zyn vs velo",
         "meta_title": "ZYN vs VELO | Nicotine Pouch Brand Comparison",
-        "meta_description": "Compare ZYN and VELO nicotine pouches by flavour, strength, format and shopping style, with links to both Kangoo brand ranges.",
+        "meta_description": "Compare ZYN and VELO nicotine pouches by flavour, strength, format and shopping style, with links to both Kangoo Pouches brand ranges.",
         "secondary": ["zyn nicotine pouches", "velo nicotine pouches", "best nicotine pouches", "compare nicotine pouches", "zyn flavours"],
         "intent": "Commercial investigation",
         "links": [
@@ -574,7 +574,7 @@ GUIDES = [
         "title": "PABLO Nicotine Pouches Guide: Strong Pouches, Flavours and Who They Suit",
         "focus": "pablo nicotine pouches",
         "meta_title": "PABLO Nicotine Pouches UK | Strong Pouch Guide",
-        "meta_description": "Explore PABLO nicotine pouches at Kangoo, including stronger pouch options, popular flavours and guidance for experienced adult users.",
+        "meta_description": "Explore PABLO nicotine pouches at Kangoo Pouches, including stronger pouch options, popular flavours and guidance for experienced adult users.",
         "secondary": ["pablo snus", "pablo pouches", "pablo 50mg", "pablo flavours", "pablo nicotine pouches uk"],
         "intent": "Commercial investigation",
         "links": [
@@ -588,7 +588,7 @@ GUIDES = [
         "sections": [
             ("Quick answer", [
                 "PABLO nicotine pouches are best positioned for experienced adult nicotine users who are specifically comparing stronger pouch options.",
-                "Many people search for 'PABLO snus', but for Kangoo content the clearer wording is PABLO nicotine pouches because the products are tobacco-free pouches.",
+                "Many people search for 'PABLO snus', but for Kangoo Pouches content the clearer wording is PABLO nicotine pouches because the products are tobacco-free pouches.",
             ]),
             ("Why PABLO is searched with strong terms", [
                 "The keyword exports show strong interest around PABLO, strength and snus-style wording. That means the guide should answer those searches while keeping the product language accurate.",
@@ -598,7 +598,7 @@ GUIDES = [
                 "Ice Cold-style products suit shoppers looking for a cooling profile. Grape Ice-style products add a fruit-led option while still sitting in a stronger pouch context.",
                 "If a product is out of stock, link to the PABLO category page and extra strong category page rather than forcing a dead-end product link.",
             ]),
-            ("How to buy PABLO at Kangoo", [
+            ("How to buy PABLO at Kangoo Pouches", [
                 "Use the PABLO category as the main evergreen internal link. Use individual product links only when stock is reliable.",
                 "Add links to strong and extra strong nicotine pouch pages so shoppers can compare PABLO against other products in the same intensity band.",
             ]),
@@ -613,7 +613,7 @@ GUIDES = [
         "title": "KILLA Nicotine Pouches Guide: Flavours, Strengths and Buying Tips",
         "focus": "killa nicotine pouches",
         "meta_title": "KILLA Nicotine Pouches UK | Flavours and Strengths",
-        "meta_description": "Compare KILLA nicotine pouches at Kangoo, including flavour options, stronger pouch positioning and links to live KILLA products.",
+        "meta_description": "Compare KILLA nicotine pouches at Kangoo Pouches, including flavour options, stronger pouch positioning and links to live KILLA products.",
         "secondary": ["killa snus", "killa nicopods", "killa nicotine pouches uk", "killa snus flavours", "strong nicotine pouches"],
         "intent": "Commercial investigation",
         "links": [
@@ -627,7 +627,7 @@ GUIDES = [
         "sections": [
             ("Quick answer", [
                 "KILLA nicotine pouches are searched by shoppers looking for bold flavours, stronger pouch options and snus-style terminology.",
-                "For Kangoo content, use KILLA nicotine pouches as the main wording, then explain that some shoppers may search for KILLA snus even though tobacco-free pouches are a different product type.",
+                "For Kangoo Pouches content, use KILLA nicotine pouches as the main wording, then explain that some shoppers may search for KILLA snus even though tobacco-free pouches are a different product type.",
             ]),
             ("KILLA flavour positioning", [
                 "KILLA can work well in content about bold flavour choice: mint, ice, fruit, coffee-style and sweet pouch directions all fit the brand's search profile.",
@@ -637,7 +637,7 @@ GUIDES = [
                 "KILLA is often associated with stronger products. That makes it a good internal link from strong and extra-strong nicotine pouch pages.",
                 "The content should be careful not to encourage users to jump straight to the highest strength. Strength should match experience level.",
             ]),
-            ("How to shop KILLA at Kangoo", [
+            ("How to shop KILLA at Kangoo Pouches", [
                 "The KILLA category page should be the main destination for this post. Add supporting links to strong, extra strong and compare pouches pages.",
                 "When products rotate, the category page keeps the article useful even if individual products go out of stock.",
             ]),
@@ -652,7 +652,7 @@ GUIDES = [
         "title": "Mint Nicotine Pouches Guide: Spearmint, Peppermint and Ice Options",
         "focus": "mint nicotine pouches",
         "meta_title": "Mint Nicotine Pouches UK | Spearmint, Peppermint and Ice",
-        "meta_description": "Compare mint nicotine pouches at Kangoo, including spearmint, peppermint, cool mint, ice flavours and links to ZYN and VELO picks.",
+        "meta_description": "Compare mint nicotine pouches at Kangoo Pouches, including spearmint, peppermint, cool mint, ice flavours and links to ZYN and VELO picks.",
         "secondary": ["spearmint nicotine pouches", "peppermint nicotine pouches", "zyn cool mint", "velo freezing peppermint", "mint snus"],
         "intent": "Commercial investigation",
         "links": [
@@ -666,7 +666,7 @@ GUIDES = [
         "sections": [
             ("Quick answer", [
                 "Mint nicotine pouches are one of the easiest flavour families to compare because they cover spearmint, peppermint, cool mint, menthol and ice-style profiles.",
-                "For Kangoo shoppers, mint is a useful everyday starting point before trying fruit, berry or stronger ice-led products.",
+                "For Kangoo Pouches shoppers, mint is a useful everyday starting point before trying fruit, berry or stronger ice-led products.",
             ]),
             ("Spearmint vs peppermint", [
                 "Spearmint usually feels smoother and sweeter. Peppermint is often sharper and cooler.",
@@ -684,14 +684,14 @@ GUIDES = [
         "faq": [
             ("What is the difference between spearmint and peppermint pouches?", "Spearmint is usually smoother; peppermint is usually sharper and cooler."),
             ("Are mint pouches stronger?", "Not automatically. Mint can feel cooling, but strength depends on the product."),
-            ("Which brands sell mint nicotine pouches?", "ZYN and VELO are useful starting points on Kangoo."),
+            ("Which brands sell mint nicotine pouches?", "ZYN and VELO are useful starting points on Kangoo Pouches."),
         ],
     },
     {
         "title": "Berry Nicotine Pouches Guide: Cherry, Berry and Fruit Pouch Picks",
         "focus": "berry nicotine pouches",
         "meta_title": "Berry Nicotine Pouches UK | Cherry and Fruit Pouch Guide",
-        "meta_description": "Compare berry nicotine pouches at Kangoo, including cherry, black cherry, ruby berry and fruit-led pouch options from ZYN and VELO.",
+        "meta_description": "Compare berry nicotine pouches at Kangoo Pouches, including cherry, black cherry, ruby berry and fruit-led pouch options from ZYN and VELO.",
         "secondary": ["cherry nicotine pouches", "black cherry nicotine pouches", "velo ruby berry", "zyn black cherry", "fruit nicotine pouches"],
         "intent": "Commercial investigation",
         "links": [
@@ -715,7 +715,7 @@ GUIDES = [
                 "Berry flavours are usually softer and sweeter. Citrus flavours are sharper and brighter. Tropical flavours can feel warmer and juicier.",
                 "The flavour explorer can help shoppers move from broad flavour preference into specific products.",
             ]),
-            ("How to shop berry pouches at Kangoo", [
+            ("How to shop berry pouches at Kangoo Pouches", [
                 "Use the berry nicotine pouches page as the evergreen destination. Then link to ZYN and VELO product examples when stock supports it.",
                 "Add a comparison link so shoppers can check strength and price before choosing a regular can.",
             ]),
@@ -748,11 +748,11 @@ GUIDES = [
             ]),
             ("Nicotine pouches vs tobacco snus", [
                 "Nicotine pouches are tobacco-free products for adults who already use nicotine. Traditional snus contains tobacco and sits under a different legal and product definition.",
-                "This is why Kangoo content should use nicotine pouches as the main product wording and use snus only when explaining search language or legal differences.",
+                "This is why Kangoo Pouches content should use nicotine pouches as the main product wording and use snus only when explaining search language or legal differences.",
             ]),
             ("Buying online", [
                 "When buying online, shoppers should check the retailer, product strength, delivery terms, stock status and age-gating information.",
-                "Kangoo supports adult-only positioning, discreet packaging and category pages that help shoppers compare products by brand, strength and flavour.",
+                "Kangoo Pouches supports adult-only positioning, discreet packaging and category pages that help shoppers compare products by brand, strength and flavour.",
             ]),
             ("What not to claim", [
                 "Do not describe nicotine pouches as medical products or licensed stop-smoking products. NHS guidance says nicotine pouches are not licensed stop-smoking products in the UK.",
@@ -762,13 +762,13 @@ GUIDES = [
         "faq": [
             ("Is snus legal to sell in the UK?", "GOV.UK guidance states that the sale of oral snuff is prohibited in the UK."),
             ("Are nicotine pouches the same as oral snuff?", "No. Tobacco-free nicotine pouches are different from traditional tobacco oral snuff."),
-            ("Can Kangoo say nicotine pouches help stop smoking?", "No. The safer wording is that they are for adults who already use nicotine products."),
+            ("Can Kangoo Pouches say nicotine pouches help stop smoking?", "No. The safer wording is that they are for adults who already use nicotine products."),
         ],
     },
     {
         "title": "Tobacco-Free Nicotine Pouches Explained: What Is Inside a Pouch?",
         "focus": "tobacco free nicotine pouches",
-        "meta_title": "Tobacco-Free Nicotine Pouches Explained | Kangoo Guide",
+        "meta_title": "Tobacco-Free Nicotine Pouches Explained | Kangoo Pouches Guide",
         "meta_description": "Understand tobacco-free nicotine pouches, how they differ from snus, what shoppers compare and where to browse brands like ZYN, VELO, PABLO and KILLA.",
         "secondary": ["nicotine pouches", "tobacco free snus", "what are nicotine pouches", "oral nicotine products", "nicotine pouch"],
         "intent": "Informational",
@@ -793,7 +793,7 @@ GUIDES = [
                 "The most useful comparison points are brand, strength, flavour, pouch size, price and stock.",
                 "A shopper who wants freshness might start with mint. A shopper who wants fruit might compare berry or citrus. A shopper who wants higher intensity should use strength pages carefully.",
             ]),
-            ("Best Kangoo pages to use next", [
+            ("Best Kangoo Pouches pages to use next", [
                 "Use the main nicotine pouches category for the full range, then move into brand pages when you know the brand you want.",
                 "The comparison tool and pouch finder help turn broad education into a buying decision.",
             ]),
@@ -830,7 +830,7 @@ GUIDES = [
             ]),
             ("Flavour and strength", [
                 "Both categories use flavour language, but pouch flavour is experienced orally under the lip rather than through vapour.",
-                "Pouch strength is usually compared by mg and perceived pouch feel. For Kangoo shoppers, the strength ladder is the cleanest way to understand the range.",
+                "Pouch strength is usually compared by mg and perceived pouch feel. For Kangoo Pouches shoppers, the strength ladder is the cleanest way to understand the range.",
             ]),
             ("Where to go from here", [
                 "If a shopper wants to explore pouches, send them to the 99p trial range, the pouch finder and the main nicotine pouches category.",
@@ -881,7 +881,7 @@ def make_extra_guide(
                 comparison_note,
                 "Live category pages are the best place to check current options, while product pages show the exact strength, price, flavour and availability before you order.",
             ]),
-            ("Best Kangoo route", [
+            ("Best Kangoo Pouches route", [
                 kangoo_route,
                 "If you are unsure, the pouch finder, strength ladder and flavour explorer can help narrow the choice by experience level, strength and flavour.",
             ]),
@@ -898,7 +898,7 @@ EXTRA_GUIDES = [
     make_extra_guide(
         "What Are Nicotine Pouches? UK Beginner Guide",
         "what are nicotine pouches",
-        "What Are Nicotine Pouches? UK Beginner Guide | Kangoo",
+        "What Are Nicotine Pouches? UK Beginner Guide | Kangoo Pouches",
         "Learn what nicotine pouches are, how they differ from tobacco snus and how adult nicotine users can compare flavours, strengths and brands.",
         ["nicotine pouch", "nicotine pouches uk", "what is a nicotine pouch", "tobacco free nicotine pouches", "how to use nicotine pouches"],
         "Informational",
@@ -907,7 +907,7 @@ EXTRA_GUIDES = [
         "Beginners should compare pouch strength, flavour, brand, pouch size and price before deciding what to try first.",
         "Start with the full nicotine pouch range, then narrow with the pouch finder if strength or flavour choice feels unclear.",
         "Nicotine is addictive, and nicotine pouches are not licensed stop-smoking products in the UK.",
-        [("Are nicotine pouches tobacco-free?", "Most modern nicotine pouches sold by Kangoo are tobacco-free, but always check the individual product page."), ("Do you smoke nicotine pouches?", "No. They are placed under the lip and are not smoked, vaped, chewed or swallowed."), ("What strength should beginners compare first?", "Lower or balanced strengths are usually easier to compare before moving into strong products.")],
+        [("Are nicotine pouches tobacco-free?", "Most modern nicotine pouches sold by Kangoo Pouches are tobacco-free, but always check the individual product page."), ("Do you smoke nicotine pouches?", "No. They are placed under the lip and are not smoked, vaped, chewed or swallowed."), ("What strength should beginners compare first?", "Lower or balanced strengths are usually easier to compare before moving into strong products.")],
     ),
     make_extra_guide(
         "Nicotine Pouches Side Effects: What Adult Users Should Know",
@@ -933,7 +933,7 @@ EXTRA_GUIDES = [
         [("tobacco-free nicotine pouches", LINKS["all"]), ("snus vs nicotine pouches guide", LINKS["all"]), ("ZYN nicotine pouches", LINKS["zyn"]), ("VELO nicotine pouches", LINKS["velo"])],
         "In the UK, many shoppers use the word snus loosely when they are actually looking for tobacco-free nicotine pouches.",
         "Traditional snus contains tobacco, while modern nicotine pouches are usually tobacco-free and should be compared as a separate product category.",
-        "For Kangoo shoppers, the practical route is to browse tobacco-free nicotine pouches and use brand, flavour and strength pages instead of relying on the word snus.",
+        "For Kangoo Pouches shoppers, the practical route is to browse tobacco-free nicotine pouches and use brand, flavour and strength pages instead of relying on the word snus.",
         "Be careful with legal wording: traditional oral snuff or snus is treated differently from tobacco-free nicotine pouches in the UK.",
         [("Is snus the same as nicotine pouches?", "No. People often use the terms together, but traditional snus contains tobacco and nicotine pouches are usually tobacco-free."), ("Why do UK shoppers search for snus?", "Many use snus as a shortcut phrase for under-lip nicotine products."), ("What should I buy if I searched for snus?", "Compare tobacco-free nicotine pouches by strength, flavour and brand.")],
     ),
@@ -947,9 +947,9 @@ EXTRA_GUIDES = [
         [("shop nicotine pouches", LINKS["all"]), ("ZYN nicotine pouches", LINKS["zyn"]), ("VELO nicotine pouches", LINKS["velo"]), ("pouch finder", LINKS["finder"])],
         "UK searches for snus often point to tobacco-free nicotine pouches, because many shoppers use the word snus for pouch-style nicotine products.",
         "The key comparison is tobacco content, legal status, strength, flavour and format.",
-        "Use Kangoo's nicotine pouch category for legal tobacco-free options, then narrow by ZYN, VELO, PABLO or KILLA if you already prefer a brand.",
+        "Use Kangoo Pouches' nicotine pouch category for legal tobacco-free options, then narrow by ZYN, VELO, PABLO or KILLA if you already prefer a brand.",
         "Avoid implying traditional snus and tobacco-free nicotine pouches are identical. They are different product types.",
-        [("Can you buy traditional snus in the UK?", "Traditional oral tobacco snus is prohibited for sale in the UK."), ("Are nicotine pouches the same legal category?", "No. Tobacco-free nicotine pouches are a different product type."), ("Why does Kangoo sell pouches, not tobacco snus?", "Kangoo focuses on tobacco-free nicotine pouches for adult nicotine users.")],
+        [("Can you buy traditional snus in the UK?", "Traditional oral tobacco snus is prohibited for sale in the UK."), ("Are nicotine pouches the same legal category?", "No. Tobacco-free nicotine pouches are a different product type."), ("Why does Kangoo Pouches sell pouches, not tobacco snus?", "Kangoo Pouches focuses on tobacco-free nicotine pouches for adult nicotine users.")],
     ),
     make_extra_guide(
         "Nicotine Pouches vs Nicotine Gum, Lozenges and Patches",
@@ -961,7 +961,7 @@ EXTRA_GUIDES = [
         [("shop nicotine pouches", LINKS["all"]), ("pouch finder", LINKS["finder"]), ("strength ladder", LINKS["strength_ladder"]), ("how to use nicotine pouches", LINKS["all"])],
         "Nicotine pouches, gum, lozenges and patches are different formats, and they should not be treated as interchangeable products.",
         "Gum, lozenges and patches can be licensed stop-smoking products, while nicotine pouches are not licensed stop-smoking products in the UK.",
-        "Kangoo content should compare format and shopping factors, then send users to product pages only for tobacco-free pouch browsing.",
+        "Kangoo Pouches content should compare format and shopping factors, then send users to product pages only for tobacco-free pouch browsing.",
         "Do not position nicotine pouches as a medicine, treatment or guaranteed alternative to stop-smoking support.",
         [("Are nicotine pouches NRT?", "No. Nicotine pouches are not licensed stop-smoking products in the UK."), ("Are patches used the same way as pouches?", "No. Patches are worn on the skin, while pouches sit under the lip."), ("Should this guide replace medical advice?", "No. It is a format comparison, not medical advice.")],
     ),
@@ -969,7 +969,7 @@ EXTRA_GUIDES = [
         "ZYN Pouches Guide: Flavours, Strengths and Buying Tips",
         "zyn pouches",
         "ZYN Pouches UK | Flavours, Strengths and Buying Tips",
-        "Compare ZYN pouches by flavour, strength and format, including mint, citrus and berry-style options available through Kangoo.",
+        "Compare ZYN pouches by flavour, strength and format, including mint, citrus and berry-style options available through Kangoo Pouches.",
         ["zyn", "zyns", "zyn nicotine", "zyn nicotine pouches", "zyn flavours"],
         "Commercial investigation",
         [("ZYN nicotine pouches", LINKS["zyn"]), ("ZYN Cool Mint", LINKS["zyn_cool"]), ("ZYN Black Cherry", LINKS["zyn_cherry"]), ("ZYN Citrus", LINKS["zyn_citrus"]), ("compare pouches", LINKS["compare"])],
@@ -977,13 +977,13 @@ EXTRA_GUIDES = [
         "The key ZYN comparison points are strength, flavour family, pouch format and whether the specific can is in stock.",
         "Send shoppers to the ZYN category first, then use product links for reliable picks such as Cool Mint, Black Cherry and Citrus when live stock supports it.",
         "Avoid saying every ZYN product suits every user. Match recommendations to flavour and strength preference.",
-        [("What ZYN flavour should I try first?", "Mint is a common starting point, while Black Cherry and Citrus suit fruit-led preferences."), ("Are all ZYN pouches the same strength?", "No. Check the exact mg on each product page."), ("Where should I compare ZYN with other brands?", "Use Kangoo's compare pouches page or the full nicotine pouch category.")],
+        [("What ZYN flavour should I try first?", "Mint is a common starting point, while Black Cherry and Citrus suit fruit-led preferences."), ("Are all ZYN pouches the same strength?", "No. Check the exact mg on each product page."), ("Where should I compare ZYN with other brands?", "Use Kangoo Pouches' compare pouches page or the full nicotine pouch category.")],
     ),
     make_extra_guide(
         "What Is ZYN? UK Guide to ZYN Nicotine Pouches",
         "what is zyn",
         "What Is ZYN? UK Guide to ZYN Nicotine Pouches",
-        "Find out what ZYN is, how ZYN nicotine pouches work and how to compare ZYN flavours and strengths at Kangoo.",
+        "Find out what ZYN is, how ZYN nicotine pouches work and how to compare ZYN flavours and strengths at Kangoo Pouches.",
         ["zyn nicotine pouches", "zyns", "zyn pouches", "zyn nicotine", "what are zyns"],
         "Informational and commercial",
         [("ZYN nicotine pouches", LINKS["zyn"]), ("ZYN Cool Mint", LINKS["zyn_cool"]), ("ZYN Black Cherry", LINKS["zyn_cherry"]), ("shop nicotine pouches", LINKS["all"])],
@@ -997,7 +997,7 @@ EXTRA_GUIDES = [
         "VELO Pouches Guide: Mint, Berry and Citrus Options",
         "velo pouches",
         "VELO Pouches UK | Mint, Berry and Citrus Guide",
-        "Compare VELO pouches by flavour family, strength and pouch style, with links to popular VELO options at Kangoo.",
+        "Compare VELO pouches by flavour family, strength and pouch style, with links to popular VELO options at Kangoo Pouches.",
         ["velo", "velo nicotine", "velo nicotine pouches", "velo snus", "velo flavours"],
         "Commercial investigation",
         [("VELO nicotine pouches", LINKS["velo"]), ("VELO Bright Spearmint", LINKS["velo_bright"]), ("VELO Freezing Peppermint", LINKS["velo_freezing"]), ("VELO Ruby Berry", LINKS["velo_ruby"]), ("flavour explorer", LINKS["flavour_explorer"])],
@@ -1005,21 +1005,21 @@ EXTRA_GUIDES = [
         "The useful comparison is flavour first, then strength and format, because VELO shoppers often know the flavour family they want.",
         "Use the VELO category as the hub, then link to flavour-led products such as Bright Spearmint, Freezing Peppermint and Ruby Berry when stocked.",
         "Do not describe VELO as risk-free or suitable for everyone; keep the article for adult nicotine users.",
-        [("What VELO flavour is popular?", "Mint and peppermint profiles are common everyday comparisons, while berry suits fruit-led shoppers."), ("Is VELO the same as snus?", "VELO is usually searched alongside snus, but it is a tobacco-free nicotine pouch brand."), ("Where can I compare VELO strengths?", "Use the VELO category and Kangoo strength ladder.")],
+        [("What VELO flavour is popular?", "Mint and peppermint profiles are common everyday comparisons, while berry suits fruit-led shoppers."), ("Is VELO the same as snus?", "VELO is usually searched alongside snus, but it is a tobacco-free nicotine pouch brand."), ("Where can I compare VELO strengths?", "Use the VELO category and Kangoo Pouches strength ladder.")],
     ),
     make_extra_guide(
         "Nordic Spirit Alternatives: How to Compare Nicotine Pouch Brands",
         "nordic spirit alternatives",
         "Nordic Spirit Alternatives | Compare Pouch Brands",
-        "Looking for Nordic Spirit alternatives? Compare ZYN, VELO, PABLO and KILLA by flavour, strength and buying route at Kangoo.",
+        "Looking for Nordic Spirit alternatives? Compare ZYN, VELO, PABLO and KILLA by flavour, strength and buying route at Kangoo Pouches.",
         ["nordic spirit", "nordic spirit nicotine pouches", "nordic spirit uk", "nicotine pouch brands", "best nicotine pouches uk"],
         "Commercial investigation",
         [("shop nicotine pouches", LINKS["all"]), ("ZYN nicotine pouches", LINKS["zyn"]), ("VELO nicotine pouches", LINKS["velo"]), ("compare pouches", LINKS["compare"])],
         "If a shopper knows Nordic Spirit but wants to compare other brands, the best route is to match flavour family and strength first.",
         "Compare mint, berry, citrus and strong profiles across brands rather than assuming one brand maps neatly to another.",
-        "Kangoo should route this search to the full category, ZYN, VELO and comparison tools rather than making unsupported competitor claims.",
+        "Kangoo Pouches should route this search to the full category, ZYN, VELO and comparison tools rather than making unsupported competitor claims.",
         "Keep the page framed as alternatives and comparison, not as an absolute claim that one brand is better.",
-        [("Does Kangoo need to stock Nordic Spirit for this guide?", "No. The guide can help shoppers compare alternative pouch brands available at Kangoo."), ("What should Nordic Spirit shoppers compare first?", "Start with flavour family, then match strength and pouch format."), ("Can this guide name Nordic Spirit?", "Yes, if the copy stays factual and avoids unverifiable superiority claims.")],
+        [("Does Kangoo Pouches need to stock Nordic Spirit for this guide?", "No. The guide can help shoppers compare alternative pouch brands available at Kangoo Pouches."), ("What should Nordic Spirit shoppers compare first?", "Start with flavour family, then match strength and pouch format."), ("Can this guide name Nordic Spirit?", "Yes, if the copy stays factual and avoids unverifiable superiority claims.")],
     ),
     make_extra_guide(
         "PABLO Snus vs PABLO Nicotine Pouches: UK Buying Guide",
@@ -1033,12 +1033,12 @@ EXTRA_GUIDES = [
         "PABLO should be compared carefully because many products are positioned toward experienced users and higher strengths.",
         "Route shoppers to the PABLO brand page first, then to strong and extra-strong category pages if strength is their main filter.",
         "Avoid beginner-friendly wording around high-strength PABLO products.",
-        [("Is PABLO snus?", "People often use that term, but Kangoo sells PABLO nicotine pouches rather than traditional tobacco snus."), ("Is PABLO strong?", "Many PABLO products are high-strength, so check each product page."), ("Who should compare PABLO?", "Experienced adult nicotine users who already prefer stronger pouches.")],
+        [("Is PABLO snus?", "People often use that term, but Kangoo Pouches sells PABLO nicotine pouches rather than traditional tobacco snus."), ("Is PABLO strong?", "Many PABLO products are high-strength, so check each product page."), ("Who should compare PABLO?", "Experienced adult nicotine users who already prefer stronger pouches.")],
     ),
     make_extra_guide(
         "KILLA Snus vs KILLA Nicotine Pouches: Flavours and Strengths",
         "killa snus",
-        "KILLA Snus vs KILLA Nicotine Pouches | Kangoo",
+        "KILLA Snus vs KILLA Nicotine Pouches | Kangoo Pouches",
         "Compare KILLA nicotine pouches, why shoppers search for KILLA snus and which flavour and strength details matter before buying.",
         ["killa nicotine pouches", "killa pouches", "killa snus uk", "strong nicotine pouches", "nicotine pouch brands"],
         "Commercial investigation",
@@ -1061,7 +1061,7 @@ EXTRA_GUIDES = [
         "This guide should explain terminology and product differences without suggesting nicotine improves sport performance.",
         "Route adult shoppers into education pages first, then into pouch finder and category pages only if they are already adult nicotine users.",
         "Do not make performance, focus or fitness claims for nicotine pouches.",
-        [("Do nicotine pouches improve football performance?", "Do not rely on nicotine pouches for performance. This guide does not make performance claims."), ("Is this guide for under-18s?", "No. Kangoo content is for adult nicotine users only."), ("Why is snus mentioned in football?", "The term is often used in media discussions about pouch-style nicotine products.")],
+        [("Do nicotine pouches improve football performance?", "Do not rely on nicotine pouches for performance. This guide does not make performance claims."), ("Is this guide for under-18s?", "No. Kangoo Pouches content is for adult nicotine users only."), ("Why is snus mentioned in football?", "The term is often used in media discussions about pouch-style nicotine products.")],
     ),
     make_extra_guide(
         "Do Nicotine Pouches Stain Teeth? What to Know Before Buying",
@@ -1109,7 +1109,7 @@ EXTRA_GUIDES = [
         "Nicotine Pouch Flavours: Mint, Berry, Citrus, Coffee and Ice",
         "nicotine pouch flavours",
         "Nicotine Pouch Flavours | Mint, Berry, Citrus and Ice",
-        "Compare nicotine pouch flavours including mint, berry, citrus, coffee and ice, with Kangoo links for adult users choosing a pouch.",
+        "Compare nicotine pouch flavours including mint, berry, citrus, coffee and ice, with Kangoo Pouches links for adult users choosing a pouch.",
         ["nicotine pouches flavours", "mint nicotine pouches", "berry nicotine pouches", "citrus nicotine pouches", "coffee nicotine pouches"],
         "Commercial investigation",
         [("flavour explorer", LINKS["flavour_explorer"]), ("mint nicotine pouches", LINKS["mint"]), ("berry nicotine pouches", LINKS["berry"]), ("shop nicotine pouches", LINKS["all"])],
@@ -1117,7 +1117,7 @@ EXTRA_GUIDES = [
         "Mint and ice are common everyday choices, berry and citrus suit fruit-led shoppers, and coffee or tropical flavours add variety.",
         "Use the flavour explorer as the hub, then point to mint and berry landing pages plus the full category.",
         "Do not imply flavour changes the health profile of a pouch.",
-        [("What flavour should I try first?", "Mint is a common starting point, but berry or citrus may suit shoppers who prefer fruit flavours."), ("Does flavour affect strength?", "Flavour can affect perceived intensity, but the mg strength should still be checked."), ("Where can I browse by flavour?", "Use Kangoo's flavour explorer and flavour landing pages.")],
+        [("What flavour should I try first?", "Mint is a common starting point, but berry or citrus may suit shoppers who prefer fruit flavours."), ("Does flavour affect strength?", "Flavour can affect perceived intensity, but the mg strength should still be checked."), ("Where can I browse by flavour?", "Use Kangoo Pouches' flavour explorer and flavour landing pages.")],
     ),
     make_extra_guide(
         "Citrus Nicotine Pouches Guide: Lemon, Lime and Fresh Flavours",
@@ -1137,7 +1137,7 @@ EXTRA_GUIDES = [
         "Coffee Nicotine Pouches Guide: Who They Suit and What to Compare",
         "coffee nicotine pouches",
         "Coffee Nicotine Pouches | Flavour and Buying Guide",
-        "A guide to coffee nicotine pouches, who may prefer them and how to compare flavour, strength and brand options at Kangoo.",
+        "A guide to coffee nicotine pouches, who may prefer them and how to compare flavour, strength and brand options at Kangoo Pouches.",
         ["coffee pouches", "coffee snus", "nicotine pouch flavours", "best nicotine pouches uk", "tobacco free nicotine pouches"],
         "Commercial investigation",
         [("flavour explorer", LINKS["flavour_explorer"]), ("shop nicotine pouches", LINKS["all"]), ("pouch finder", LINKS["finder"]), ("compare pouches", LINKS["compare"])],
@@ -1179,7 +1179,7 @@ EXTRA_GUIDES = [
         "Slim Nicotine Pouches Guide: Format, Feel and Buying Tips",
         "slim nicotine pouches",
         "Slim Nicotine Pouches | Format and Buying Tips",
-        "Compare slim nicotine pouches by fit, flavour, strength and brand, with a simple Kangoo buying route.",
+        "Compare slim nicotine pouches by fit, flavour, strength and brand, with a simple Kangoo Pouches buying route.",
         ["slim snus", "slim pouches", "nicotine pouch formats", "strong nicotine pouches", "nicotine pouches uk"],
         "Commercial investigation",
         [("shop nicotine pouches", LINKS["all"]), ("pouch finder", LINKS["finder"]), ("strength ladder", LINKS["strength_ladder"]), ("compare pouches", LINKS["compare"])],
@@ -1243,7 +1243,7 @@ EXTRA_GUIDES = [
         "The practical comparison is not just 'highest mg' but whether the strength, flavour and pouch format suit the user.",
         "Use extra-strong and PABLO pages as the main route, with specific product links only where stock is live.",
         "Keep the caution prominent and avoid presenting 30mg products as a general recommendation.",
-        [("Are 30mg pouches for beginners?", "No. They are extra-strong products for experienced adult nicotine users."), ("Is 30mg always better value?", "No. A pouch that is too strong is not a better buy."), ("Where can I compare extra strong products?", "Use Kangoo's extra strong category and strength ladder.")],
+        [("Are 30mg pouches for beginners?", "No. They are extra-strong products for experienced adult nicotine users."), ("Is 30mg always better value?", "No. A pouch that is too strong is not a better buy."), ("Where can I compare extra strong products?", "Use Kangoo Pouches' extra strong category and strength ladder.")],
     ),
     make_extra_guide(
         "Cheapest Snus UK? What Shoppers Actually Mean",
@@ -1257,7 +1257,7 @@ EXTRA_GUIDES = [
         "The best comparison is trial price, regular can price, pack pricing, live stock and delivery threshold.",
         "Use 99p pouches for the price hook, then send repeat buyers to the full nicotine pouch range.",
         "Avoid absolute cheapest claims unless the evidence is current, dated and verifiable.",
-        [("Can Kangoo say cheapest snus?", "Only with current evidence. Safer wording is from 99p trial pouches or cheap nicotine pouch options."), ("Is cheap snus the same as cheap nicotine pouches?", "Often shoppers mean nicotine pouches, but traditional snus is different."), ("Where should price-focused users start?", "Start with 99p pouches, then compare regular cans and pack pricing.")],
+        [("Can Kangoo Pouches say cheapest snus?", "Only with current evidence. Safer wording is from 99p trial pouches or cheap nicotine pouch options."), ("Is cheap snus the same as cheap nicotine pouches?", "Often shoppers mean nicotine pouches, but traditional snus is different."), ("Where should price-focused users start?", "Start with 99p pouches, then compare regular cans and pack pricing.")],
     ),
     make_extra_guide(
         "Nicotine Pouches Online UK: Delivery, Price and Buying Checklist",
@@ -1271,7 +1271,7 @@ EXTRA_GUIDES = [
         "Online buyers should check product strength, pack pricing, delivery threshold and whether the product is a trial or regular can.",
         "Route users to the full category, 99p pouch range and finder depending on their intent.",
         "Keep delivery claims accurate and aligned with the WooCommerce settings.",
-        [("Can I buy nicotine pouches online in the UK?", "Adult shoppers can buy tobacco-free nicotine pouches online from retailers such as Kangoo."), ("What should I check before ordering?", "Check strength, flavour, stock, delivery terms and total basket value."), ("Are online prices fixed?", "No. Pricing and availability can change, so check the live product page.")],
+        [("Can I buy nicotine pouches online in the UK?", "Adult shoppers can buy tobacco-free nicotine pouches online from retailers such as Kangoo Pouches."), ("What should I check before ordering?", "Check strength, flavour, stock, delivery terms and total basket value."), ("Are online prices fixed?", "No. Pricing and availability can change, so check the live product page.")],
     ),
     make_extra_guide(
         "Nicotine Pouches Near Me vs Online: Which Buying Route Works Best?",
@@ -1291,7 +1291,7 @@ EXTRA_GUIDES = [
         "Tobacco-Free Snus UK: What the Phrase Means",
         "tobacco free snus uk",
         "Tobacco-Free Snus UK | Nicotine Pouch Guide",
-        "Learn what UK shoppers mean by tobacco-free snus and how it relates to tobacco-free nicotine pouches at Kangoo.",
+        "Learn what UK shoppers mean by tobacco-free snus and how it relates to tobacco-free nicotine pouches at Kangoo Pouches.",
         ["tobacco free snus", "tobacco free nicotine pouches", "snus uk", "nicotine pouches uk", "oral nicotine products"],
         "Informational and commercial",
         [("shop nicotine pouches", LINKS["all"]), ("ZYN nicotine pouches", LINKS["zyn"]), ("VELO nicotine pouches", LINKS["velo"]), ("pouch finder", LINKS["finder"])],
@@ -1299,7 +1299,7 @@ EXTRA_GUIDES = [
         "The important distinction is that traditional snus contains tobacco, while nicotine pouches generally do not contain tobacco leaf.",
         "Route this topic to tobacco-free nicotine pouch categories and explain the terminology clearly.",
         "Avoid mixing legal claims about traditional snus with claims about tobacco-free pouches.",
-        [("Is tobacco-free snus the same as nicotine pouches?", "In many searches, yes, but the clearer product term is tobacco-free nicotine pouches."), ("Does tobacco-free mean nicotine-free?", "No. Tobacco-free nicotine pouches still contain nicotine unless marked otherwise."), ("Where can I compare tobacco-free pouches?", "Use Kangoo's nicotine pouch category and finder tools.")],
+        [("Is tobacco-free snus the same as nicotine pouches?", "In many searches, yes, but the clearer product term is tobacco-free nicotine pouches."), ("Does tobacco-free mean nicotine-free?", "No. Tobacco-free nicotine pouches still contain nicotine unless marked otherwise."), ("Where can I compare tobacco-free pouches?", "Use Kangoo Pouches' nicotine pouch category and finder tools.")],
     ),
     make_extra_guide(
         "Oral Nicotine Products: Pouches, Gum, Lozenges and Vapes Compared",
@@ -1327,7 +1327,7 @@ EXTRA_GUIDES = [
         "Pouches should be compared separately from smokeless tobacco because the product composition and legal context can differ.",
         "Route users to tobacco-free nicotine pouch education, then category and finder pages.",
         "Avoid implying smokeless means harmless.",
-        [("Does smokeless mean risk-free?", "No. Nicotine is addictive and smokeless should not be presented as safe."), ("Are nicotine pouches tobacco-free?", "Most modern pouches sold by Kangoo are tobacco-free, but check product details."), ("How should I compare smokeless nicotine options?", "Compare format, strength, intended use and product information.")],
+        [("Does smokeless mean risk-free?", "No. Nicotine is addictive and smokeless should not be presented as safe."), ("Are nicotine pouches tobacco-free?", "Most modern pouches sold by Kangoo Pouches are tobacco-free, but check product details."), ("How should I compare smokeless nicotine options?", "Compare format, strength, intended use and product information.")],
     ),
     make_extra_guide(
         "Nicotine Pouch Brands UK: ZYN, VELO, PABLO and KILLA Compared",
@@ -1347,7 +1347,7 @@ EXTRA_GUIDES = [
         "Best ZYN Flavours UK: Mint, Citrus and Berry Picks",
         "best zyn flavours",
         "Best ZYN Flavours UK | Mint, Citrus and Berry Guide",
-        "Compare ZYN flavours including Cool Mint, Citrus and Black Cherry, with strength and buying tips for Kangoo shoppers.",
+        "Compare ZYN flavours including Cool Mint, Citrus and Black Cherry, with strength and buying tips for Kangoo Pouches shoppers.",
         ["zyn flavours", "zyn cool mint", "zyn black cherry", "zyn citrus", "zyn pouches"],
         "Commercial investigation",
         [("ZYN nicotine pouches", LINKS["zyn"]), ("ZYN Cool Mint", LINKS["zyn_cool"]), ("ZYN Black Cherry", LINKS["zyn_cherry"]), ("ZYN Citrus", LINKS["zyn_citrus"]), ("flavour explorer", LINKS["flavour_explorer"])],
@@ -1355,7 +1355,7 @@ EXTRA_GUIDES = [
         "Compare flavour and strength together, because the same brand can include multiple pouch styles.",
         "Use the ZYN category as the hub and product links for stocked flavour pages.",
         "Do not overstate a best flavour as universal; make it preference-led.",
-        [("What is the best ZYN flavour?", "It depends on taste. Cool Mint, Black Cherry and Citrus are useful comparison points."), ("Does flavour change strength?", "The mg strength is separate, but flavour can affect perceived intensity."), ("Where can I browse ZYN flavours?", "Use Kangoo's ZYN category and flavour explorer.")],
+        [("What is the best ZYN flavour?", "It depends on taste. Cool Mint, Black Cherry and Citrus are useful comparison points."), ("Does flavour change strength?", "The mg strength is separate, but flavour can affect perceived intensity."), ("Where can I browse ZYN flavours?", "Use Kangoo Pouches' ZYN category and flavour explorer.")],
     ),
     make_extra_guide(
         "Best VELO Flavours UK: Spearmint, Peppermint and Berry",
@@ -1372,7 +1372,7 @@ EXTRA_GUIDES = [
         [("Which VELO flavour should I try?", "Bright Spearmint and Freezing Peppermint suit mint shoppers, while Ruby Berry suits fruit-led preferences."), ("Are VELO flavours all the same strength?", "No. Check the exact product page."), ("Where can I compare VELO flavours?", "Use the VELO category and flavour explorer.")],
     ),
     make_extra_guide(
-        "Pouch Finder Guide: How to Choose Strength and Flavour at Kangoo",
+        "Pouch Finder Guide: How to Choose Strength and Flavour at Kangoo Pouches",
         "pouch finder",
         "Pouch Finder Guide | Choose Strength and Flavour",
         "Learn how to use the Kangoo Pouch Finder to choose nicotine pouch strength, flavour, brand and format without guessing.",
@@ -1389,7 +1389,7 @@ EXTRA_GUIDES = [
         "Discreet Nicotine Pouches: Online Buying and Delivery Guide",
         "discreet nicotine pouches",
         "Discreet Nicotine Pouches | Online Delivery Guide",
-        "Compare discreet nicotine pouch buying online, including delivery, packaging, strength checks and product choice at Kangoo.",
+        "Compare discreet nicotine pouch buying online, including delivery, packaging, strength checks and product choice at Kangoo Pouches.",
         ["discreet delivery nicotine pouches", "buy nicotine pouches online", "nicotine pouches online uk", "tobacco free pouches", "nicotine pouch"],
         "Transactional",
         [("shop nicotine pouches", LINKS["all"]), ("99p nicotine pouches", LINKS["trial"]), ("pouch finder", LINKS["finder"]), ("compare pouches", LINKS["compare"])],
@@ -1397,7 +1397,7 @@ EXTRA_GUIDES = [
         "The page should connect discreet delivery copy with real buying decisions: strength, flavour, price and stock.",
         "Use commercial category links early because this is close to purchase intent.",
         "Keep delivery wording aligned with actual fulfilment terms and the live free-delivery threshold.",
-        [("Does Kangoo offer discreet packaging?", "Kangoo product and delivery copy should state current packaging terms clearly on site."), ("What should I check before ordering?", "Check strength, flavour, stock and delivery threshold."), ("Can I try before buying more?", "Use the 99p pouch range when trial stock is available.")],
+        [("Does Kangoo Pouches offer discreet packaging?", "Kangoo Pouches product and delivery copy should state current packaging terms clearly on site."), ("What should I check before ordering?", "Check strength, flavour, stock and delivery threshold."), ("Can I try before buying more?", "Use the 99p pouch range when trial stock is available.")],
     ),
     make_extra_guide(
         "Nicotine Pouches for Beginners: First Order Checklist",
@@ -1417,7 +1417,7 @@ EXTRA_GUIDES = [
         "Are Nicotine Pouches Tobacco-Free? UK Product Guide",
         "are nicotine pouches tobacco free",
         "Are Nicotine Pouches Tobacco-Free? UK Guide",
-        "Learn whether nicotine pouches are tobacco-free, how they differ from traditional snus and what to check on Kangoo product pages.",
+        "Learn whether nicotine pouches are tobacco-free, how they differ from traditional snus and what to check on Kangoo Pouches product pages.",
         ["tobacco free nicotine pouches", "tobacco free snus", "what are nicotine pouches", "snus vs nicotine pouches", "nicotine pouches uk"],
         "Informational",
         [("tobacco-free nicotine pouches", LINKS["all"]), ("ZYN nicotine pouches", LINKS["zyn"]), ("VELO nicotine pouches", LINKS["velo"]), ("shop nicotine pouches", LINKS["all"])],
@@ -1425,7 +1425,7 @@ EXTRA_GUIDES = [
         "The clearest comparison is tobacco-free nicotine pouch versus traditional tobacco snus.",
         "Use this guide to support tobacco-free category messaging and link to brand pages.",
         "Do not imply tobacco-free means nicotine-free or risk-free.",
-        [("Do nicotine pouches contain tobacco?", "Most modern pouches sold by Kangoo are tobacco-free, but check individual product details."), ("Do tobacco-free pouches contain nicotine?", "Yes, unless the product says otherwise."), ("Are tobacco-free pouches the same as snus?", "No. Traditional snus contains tobacco.")],
+        [("Do nicotine pouches contain tobacco?", "Most modern pouches sold by Kangoo Pouches are tobacco-free, but check individual product details."), ("Do tobacco-free pouches contain nicotine?", "Yes, unless the product says otherwise."), ("Are tobacco-free pouches the same as snus?", "No. Traditional snus contains tobacco.")],
     ),
 ]
 
@@ -1554,7 +1554,7 @@ def write_guide(index: int, guide: dict) -> Path:
     intro = (
         f"If you are searching for {guide['focus']}, the useful answer is not just a product name. "
         f"You need a clear way to compare price, strength, flavour, stock and brand fit before you add a pouch to your basket. "
-        f"This guide explains the practical route for Kangoo shoppers and points you toward the most relevant category, tool and product pages."
+        f"This guide explains the practical route for Kangoo Pouches shoppers and points you toward the most relevant category, tool and product pages."
     )
     doc.add_paragraph(intro)
 
@@ -1578,7 +1578,7 @@ def write_guide(index: int, guide: dict) -> Path:
         "A good value order is not only about the lowest single pouch price. Trial pouches can help with sampling, while regular cans and selected pack pricing are better suited to repeat orders."
     )
     doc.add_paragraph(
-        "Before ordering, check that the product is in stock, the strength matches your preference, and delivery terms still match the current Kangoo checkout."
+        "Before ordering, check that the product is in stock, the strength matches your preference, and delivery terms still match the current Kangoo Pouches checkout."
     )
 
     doc.add_heading("Buying checklist", level=2)
@@ -1590,7 +1590,7 @@ def write_guide(index: int, guide: dict) -> Path:
         "Keep wording factual: price, stock, strength, flavour, pack size and delivery terms.",
     ])
 
-    doc.add_heading("Recommended Kangoo links to add in the body", level=2)
+    doc.add_heading("Recommended Kangoo Pouches links to add in the body", level=2)
     add_link_list(doc, guide["links"])
 
     doc.add_heading("FAQs", level=2)
@@ -1627,8 +1627,8 @@ def write_guide(index: int, guide: dict) -> Path:
 def write_plan(paths: list[Path]) -> Path:
     doc = Document()
     set_document_styles(doc)
-    add_header_footer(doc, "Kangoo blog publishing plan")
-    doc.add_paragraph("Kangoo Blog Publishing Plan", style="Title")
+    add_header_footer(doc, "Kangoo Pouches blog publishing plan")
+    doc.add_paragraph("Kangoo Pouches Blog Publishing Plan", style="Title")
     doc.add_paragraph("SEO briefs, release order and internal-link plan for the generated guide batch.", style="Subtitle")
 
     doc.add_heading("How to publish", level=1)
@@ -1705,7 +1705,7 @@ def content_html(guide: dict) -> str:
         + html.escape(
             f"If you are searching for {guide['focus']}, the useful answer is not just a product name. "
             "You need a clear way to compare price, strength, flavour, stock and brand fit before you add a pouch to your basket. "
-            "This guide explains the practical route for Kangoo shoppers and points you toward the most relevant category, tool and product pages."
+            "This guide explains the practical route for Kangoo Pouches shoppers and points you toward the most relevant category, tool and product pages."
         )
         + "</p>"
     )
@@ -1725,7 +1725,7 @@ def content_html(guide: dict) -> str:
     parts.append("<h2>Price, stock and delivery checks</h2>")
     for paragraph in [
         "A good value order is not only about the lowest single pouch price. Trial pouches can help with sampling, while regular cans and selected pack pricing are better suited to repeat orders.",
-        "Before ordering, check that the product is in stock, the strength matches your preference, and delivery terms still match the current Kangoo checkout.",
+        "Before ordering, check that the product is in stock, the strength matches your preference, and delivery terms still match the current Kangoo Pouches checkout.",
     ]:
         parts.append(f"<p>{html.escape(paragraph)}</p>")
 
@@ -1741,7 +1741,7 @@ def content_html(guide: dict) -> str:
         parts.append(f"<li>{html.escape(item)}</li>")
     parts.append("</ul>")
 
-    parts.append("<h2>Recommended Kangoo links</h2>")
+    parts.append("<h2>Recommended Kangoo Pouches links</h2>")
     parts.append("<ul>")
     for label, url in guide["links"]:
         parts.append(f'<li><a href="{html.escape(url, quote=True)}">{html.escape(label)}</a></li>')

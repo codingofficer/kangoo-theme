@@ -10,7 +10,7 @@ $free_shipping_price = function_exists('kangoo_plain_wc_price') && function_exis
 
 $proof_items = array(
     array(
-        'label' => __('79p trials', 'kangoo'),
+        'label' => __('99p trials', 'kangoo'),
         'value' => $trial_count ? sprintf(_n('Try %d selected pouch for 99p', 'Try %d selected pouches for 99p', $trial_count, 'kangoo'), $trial_count) : __('Try selected pouches for 99p', 'kangoo'),
         'url'   => $trial_url,
     ),

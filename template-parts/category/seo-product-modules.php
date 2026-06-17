@@ -134,9 +134,9 @@ $trial_products = function_exists('kangoo_get_trial_products') ? kangoo_get_tria
             $best_sellers = function_exists('kangoo_get_best_seller_products') ? kangoo_get_best_seller_products(5) : array();
             $comparison_rows = function_exists('kangoo_get_retailer_value_comparison_rows') ? kangoo_get_retailer_value_comparison_rows() : array();
             ?>
-            <section class="seo-proof-grid" aria-label="<?php esc_attr_e('Kangoo nicotine pouch buying proof', 'kangoo'); ?>">
+            <section class="seo-proof-grid" aria-label="<?php esc_attr_e('Kangoo Pouches nicotine pouch buying proof', 'kangoo'); ?>">
                 <article>
-                    <strong><?php esc_html_e('79p trials', 'kangoo'); ?></strong>
+                    <strong><?php esc_html_e('99p trials', 'kangoo'); ?></strong>
                     <span><?php esc_html_e('Selected trial pouches while stock lasts.', 'kangoo'); ?></span>
                 </article>
                 <article>
@@ -157,7 +157,7 @@ $trial_products = function_exists('kangoo_get_trial_products') ? kangoo_get_tria
                 <section class="seo-module seo-module--table">
                     <div class="seo-module__head">
                         <h2><?php esc_html_e('Popular in-stock nicotine pouches', 'kangoo'); ?></h2>
-                        <p><?php esc_html_e('A quick buying view of currently available pouches, with strength, flavour, price and pack value pulled from live Kangoo product data.', 'kangoo'); ?></p>
+                        <p><?php esc_html_e('A quick buying view of currently available pouches, with strength, flavour, price and pack value pulled from live Kangoo Pouches product data.', 'kangoo'); ?></p>
                     </div>
                     <div class="seo-scroll-table">
                         <table>
@@ -198,7 +198,7 @@ $trial_products = function_exists('kangoo_get_trial_products') ? kangoo_get_tria
             <?php if (!empty($comparison_rows)) : ?>
                 <section class="seo-module seo-module--comparison">
                     <div class="seo-module__head">
-                        <h2><?php esc_html_e('Kangoo vs supermarket and convenience buying', 'kangoo'); ?></h2>
+                        <h2><?php esc_html_e('Kangoo Pouches vs supermarket and convenience buying', 'kangoo'); ?></h2>
                         <p><?php esc_html_e('A generic retailer comparison for adult nicotine users choosing where to buy nicotine pouches online or in-store.', 'kangoo'); ?></p>
                     </div>
                     <div class="seo-scroll-table">
@@ -258,11 +258,11 @@ $trial_products = function_exists('kangoo_get_trial_products') ? kangoo_get_tria
                 </div>
                 <div class="seo-faq-list">
                     <details>
-                        <summary><?php esc_html_e('What is the cheapest way to try nicotine pouches at Kangoo?', 'kangoo'); ?></summary>
+                        <summary><?php esc_html_e('What is the cheapest way to try nicotine pouches at Kangoo Pouches?', 'kangoo'); ?></summary>
                         <p><?php esc_html_e('Start with the 99p pouch range when trial stock is available, then compare regular cans and multi-buy pack pricing for repeat orders.', 'kangoo'); ?></p>
                     </details>
                     <details>
-                        <summary><?php esc_html_e('How do Kangoo multi-buy packs work?', 'kangoo'); ?></summary>
+                        <summary><?php esc_html_e('How do Kangoo Pouches multi-buy packs work?', 'kangoo'); ?></summary>
                         <p><?php esc_html_e('Selected regular products offer pack pricing, including 3, 5 and 10-pack options. The product page shows the live pack choices and unit price where available.', 'kangoo'); ?></p>
                     </details>
                     <details>
@@ -270,15 +270,15 @@ $trial_products = function_exists('kangoo_get_trial_products') ? kangoo_get_tria
                         <p><?php esc_html_e('Strength is personal. Use the strength ladder or pouch finder to compare light, balanced, strong and extra strong products before ordering.', 'kangoo'); ?></p>
                     </details>
                     <details>
-                        <summary><?php esc_html_e('Does Kangoo offer discreet delivery?', 'kangoo'); ?></summary>
-                        <p><?php esc_html_e('Kangoo orders are shipped with discreet packaging, and free UK delivery is available over £14.95.', 'kangoo'); ?></p>
+                        <summary><?php esc_html_e('Does Kangoo Pouches offer discreet delivery?', 'kangoo'); ?></summary>
+                        <p><?php esc_html_e('Kangoo Pouches orders are shipped with discreet packaging, and free UK delivery is available over £14.95.', 'kangoo'); ?></p>
                     </details>
                 </div>
             </section>
         <?php elseif ($context_type === 'trial') : ?>
             <section class="seo-module seo-module--intro">
                 <div class="seo-module__head">
-                    <h2><?php esc_html_e('Try nicotine pouches from 79p', 'kangoo'); ?></h2>
+                    <h2><?php esc_html_e('Try nicotine pouches from 99p', 'kangoo'); ?></h2>
                     <p><?php esc_html_e('The 99p pouch range is built for adult nicotine users who want to sample selected flavours and strengths before choosing a regular can or multi-buy pack.', 'kangoo'); ?></p>
                 </div>
                 <div class="seo-guide-grid">
@@ -360,7 +360,7 @@ $trial_products = function_exists('kangoo_get_trial_products') ? kangoo_get_tria
                 </div>
                 <?php $render_link_chips(array_merge(array(array('label' => __('Flavour explorer', 'kangoo'), 'url' => $flavour_url), array('label' => __('Compare pouches', 'kangoo'), 'url' => $compare_url)), $flavour_links, $brand_links)); ?>
             </section>
-            <?php $render_product_rail($flavour_products, sprintf(__('Popular %s pouches', 'kangoo'), strtolower($term->name)), __('Live product picks from Kangoo, shown with stock-aware ordering and product data.', 'kangoo')); ?>
+            <?php $render_product_rail($flavour_products, sprintf(__('Popular %s pouches', 'kangoo'), strtolower($term->name)), __('Live product picks from Kangoo Pouches, shown with stock-aware ordering and product data.', 'kangoo')); ?>
         <?php elseif ($context_type === 'strength') : ?>
             <?php
             $strength_products = function_exists('kangoo_get_seo_products') ? kangoo_get_seo_products(array(
@@ -382,7 +382,7 @@ $trial_products = function_exists('kangoo_get_trial_products') ? kangoo_get_tria
                 </div>
                 <?php $render_link_chips(array_merge(array(array('label' => __('Strength ladder', 'kangoo'), 'url' => $strength_url), array('label' => __('Pouch finder', 'kangoo'), 'url' => $finder_url)), $strength_links, $brand_links)); ?>
             </section>
-            <?php $render_product_rail($strength_products, sprintf(__('Popular %s pouches', 'kangoo'), strtolower($clean_strength)), __('Live product picks from Kangoo, shown with in-stock products first where possible.', 'kangoo')); ?>
+            <?php $render_product_rail($strength_products, sprintf(__('Popular %s pouches', 'kangoo'), strtolower($clean_strength)), __('Live product picks from Kangoo Pouches, shown with in-stock products first where possible.', 'kangoo')); ?>
         <?php endif; ?>
 
         <p class="seo-nicotine-warning">

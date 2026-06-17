@@ -4845,7 +4845,7 @@ body.woocommerce-cart .cart-collaterals .kangoo-cart-secure-checkout img {
   }
 }
 
-@media (max-width: 979px) {
+@media (max-width: 999px) {
   body.woocommerce-cart .cart-collaterals {
     display: grid;
     gap: 0.85rem;

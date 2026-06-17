@@ -151,7 +151,7 @@ function kangoo_seo_redirect_legacy_urls() {
     );
 
     if (isset($redirects[$path])) {
-        wp_safe_redirect(home_url('/' . $redirects[$path] . '/'), 301, 'Kangoo content consolidation');
+        wp_safe_redirect(home_url('/' . $redirects[$path] . '/'), 301, 'Kangoo Pouches content consolidation');
         exit;
     }
 }
@@ -219,7 +219,7 @@ function kangoo_seo_plain_price($product) {
 function kangoo_seo_key_links() {
     return array(
         'Nicotine Pouches UK' => home_url('/product-category/nicotine-pouches/'),
-        '99p Nicotine Pouches - now from 79p' => home_url('/product-category/99p-pouches/'),
+        '99p Nicotine Pouches - now from 99p' => home_url('/product-category/99p-pouches/'),
         'ZYN Nicotine Pouches' => home_url('/product-category/zyn/'),
         'VELO Nicotine Pouches' => home_url('/product-category/velo/'),
         'PABLO Nicotine Pouches' => home_url('/product-category/pablo/'),

@@ -36,8 +36,8 @@ function kangoo_pack_pricing_presets() {
             ),
         ),
         'trial_99p' => array(
-        'label' => __('79p Trial', 'kangoo'),
-        'regular_price' => '0.79',
+        'label' => __('99p Trial', 'kangoo'),
+        'regular_price' => '0.99',
             'tiers' => array(),
         ),
     );
@@ -380,8 +380,8 @@ function kangoo_render_pack_pricing_admin_page() {
                                 <strong><a href="<?php echo esc_url(get_edit_post_link($row['id'])); ?>"><?php echo esc_html($row['name']); ?></a></strong>
                                 <br><code><?php echo esc_html($row['sku'] ?: ('#' . $row['id'])); ?></code>
                                 <?php if ($row['is_99p']) : ?>
-                                <span class="dashicons dashicons-tag" title="<?php esc_attr_e('79p trial product', 'kangoo'); ?>"></span>
-                                <strong><?php esc_html_e('79p', 'kangoo'); ?></strong>
+                                <span class="dashicons dashicons-tag" title="<?php esc_attr_e('99p trial product', 'kangoo'); ?>"></span>
+                                <strong><?php esc_html_e('99p', 'kangoo'); ?></strong>
                                 <?php endif; ?>
                             </td>
                             <td><?php echo esc_html($row['brand']); ?></td>
