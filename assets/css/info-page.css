@@ -185,7 +185,7 @@
 }
 
 .kangoo-contact {
-  margin-top: var(--space-7);
+  margin-top: var(--space-6);
 }
 
 .kangoo-contact__notice {
@@ -232,15 +232,14 @@
   display: grid;
   gap: 0.8rem;
   align-content: start;
-  padding: 1rem;
 }
 
 .kangoo-contact__route {
   display: grid;
-  grid-template-columns: 2.4rem minmax(0, 1fr);
+  grid-template-columns: 2.5rem minmax(0, 1fr);
   gap: 0.8rem;
-  align-items: center;
-  padding: 0.85rem;
+  align-items: start;
+  padding: 1rem;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   background: var(--color-panel);
@@ -249,12 +248,24 @@
 .kangoo-contact__route > span {
   display: inline-grid;
   place-items: center;
-  width: 2.4rem;
-  height: 2.4rem;
+  width: 2.5rem;
+  height: 2.5rem;
   border-radius: 999px;
-  color: #fff;
-  font-weight: 800;
-  background: var(--color-kangoo-orange, #ff7a00);
+  color: var(--color-kangoo-orange, #ff7a00);
+  background: rgba(255, 122, 0, 0.1);
+}
+
+.kangoo-contact__route svg,
+.kangoo-contact-hero__features svg,
+.kangoo-contact__form-heading svg,
+.kangoo-contact-faq__item svg {
+  width: 1.2rem;
+  height: 1.2rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .kangoo-contact__route strong,
@@ -264,21 +275,63 @@
 
 .kangoo-contact__route a {
   margin-top: 0.15rem;
-  color: var(--color-text);
+  color: var(--color-kangoo-orange, #ff7a00);
   overflow-wrap: anywhere;
 }
 
-.kangoo-contact__note {
-  padding: 0.9rem 1rem;
-  border-radius: var(--radius-md);
+.kangoo-contact__route small {
+  display: block;
+  margin-top: 0.45rem;
   color: var(--color-text-soft);
-  background: rgba(255, 122, 0, 0.08);
+  line-height: 1.5;
+}
+
+.kangoo-contact__route-button {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  margin-top: 0.7rem !important;
+  padding: 0.5rem 0.8rem;
+  border: 1px solid rgba(255, 122, 0, 0.35);
+  border-radius: 999px;
+  font-weight: 800;
+  text-decoration: none !important;
+  background: rgba(255, 122, 0, 0.06);
 }
 
 .kangoo-contact__form {
   display: grid;
   gap: 1rem;
   padding: 1rem;
+}
+
+.kangoo-contact__form-heading {
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 1fr);
+  gap: 0.8rem;
+  align-items: start;
+}
+
+.kangoo-contact__form-heading > span {
+  display: inline-grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 999px;
+  color: var(--color-kangoo-orange, #ff7a00);
+  background: rgba(255, 122, 0, 0.1);
+}
+
+.kangoo-contact__form-heading h2 {
+  margin: 0;
+  font-size: 1.08rem;
+}
+
+.kangoo-contact__form-heading p {
+  margin: 0.15rem 0 0;
+  color: var(--color-text-soft);
+  line-height: 1.45;
 }
 
 .kangoo-contact__field {
@@ -346,12 +399,12 @@
   color: #fff;
   font-weight: 800;
   cursor: pointer;
-  background: #0b63f6;
-  box-shadow: 0 14px 30px rgba(11, 99, 246, 0.24);
+  background: var(--color-kangoo-orange, #ff7a00);
+  box-shadow: 0 14px 30px rgba(255, 122, 0, 0.24);
 }
 
 .kangoo-contact__submit:hover {
-  background: #0056df;
+  background: #f06400;
 }
 
 .kangoo-contact__trap {
@@ -364,6 +417,168 @@
 
 .info-page__hero .container {
   width: min(100% - 2rem, var(--container));
+}
+
+.kangoo-contact-page {
+  padding-bottom: var(--space-8);
+  background:
+    radial-gradient(circle at 14% 8%, rgba(255, 122, 0, 0.08), transparent 28rem),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(0, 0, 0, 0));
+}
+
+.kangoo-contact-hero {
+  padding: clamp(2.5rem, 6vw, 4.5rem) 0 var(--space-5);
+}
+
+.kangoo-contact-hero__content {
+  max-width: 760px;
+}
+
+.kangoo-contact-hero h1 {
+  max-width: 11ch;
+  margin: 0.2rem 0 0;
+  font-size: clamp(2.35rem, 7vw, 4.8rem);
+  line-height: 0.95;
+  letter-spacing: 0;
+}
+
+.kangoo-contact-hero h1 span {
+  display: block;
+  color: var(--color-kangoo-orange, #ff7a00);
+}
+
+.kangoo-contact-hero p {
+  max-width: 62ch;
+  margin: 1rem 0 0;
+  color: var(--color-text-soft);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.kangoo-contact-hero__features {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem;
+  max-width: 760px;
+  margin-top: 1.6rem;
+}
+
+.kangoo-contact-hero__features div {
+  display: grid;
+  gap: 0.45rem;
+  justify-items: start;
+  min-height: 5.4rem;
+  padding: 0.95rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-panel);
+}
+
+.kangoo-contact-hero__features span {
+  display: inline-grid;
+  place-items: center;
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 999px;
+  color: var(--color-kangoo-orange, #ff7a00);
+  background: rgba(255, 122, 0, 0.1);
+}
+
+.kangoo-contact-hero__features strong {
+  font-size: 0.9rem;
+  line-height: 1.25;
+}
+
+.kangoo-contact-page__main {
+  padding-bottom: var(--space-7);
+}
+
+.kangoo-contact-page .kangoo-contact {
+  margin-top: 0;
+}
+
+.kangoo-contact-page .kangoo-contact__routes,
+.kangoo-contact-page .kangoo-contact__form {
+  background: var(--color-panel);
+  box-shadow: var(--shadow-soft);
+}
+
+.kangoo-contact-faq {
+  padding-bottom: var(--space-6);
+}
+
+.kangoo-contact-faq__heading {
+  text-align: center;
+  margin-bottom: 1.2rem;
+}
+
+.kangoo-contact-faq__heading span {
+  display: block;
+  color: var(--color-kangoo-orange, #ff7a00);
+  font-size: 0.75rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.kangoo-contact-faq__heading h2 {
+  margin: 0.15rem 0 0;
+  font-size: clamp(1.45rem, 3vw, 2rem);
+}
+
+.kangoo-contact-faq__list {
+  display: grid;
+  gap: 0.65rem;
+  max-width: 980px;
+  margin-inline: auto;
+}
+
+.kangoo-contact-faq__item {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-panel);
+  box-shadow: var(--shadow-soft);
+}
+
+.kangoo-contact-faq__item summary {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr) auto;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.9rem 1rem;
+  cursor: pointer;
+  list-style: none;
+}
+
+.kangoo-contact-faq__item summary::-webkit-details-marker {
+  display: none;
+}
+
+.kangoo-contact-faq__item summary::after {
+  content: "+";
+  color: var(--color-text-soft);
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+
+.kangoo-contact-faq__item[open] summary::after {
+  content: "-";
+}
+
+.kangoo-contact-faq__item summary span {
+  display: inline-grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  color: var(--color-kangoo-orange, #ff7a00);
+  background: rgba(255, 122, 0, 0.1);
+}
+
+.kangoo-contact-faq__item p {
+  margin: 0;
+  padding: 0 1rem 1rem 3.75rem;
+  color: var(--color-text-soft);
+  line-height: 1.6;
 }
 
 .info-page__title {
@@ -381,7 +596,7 @@
   }
 
   .kangoo-contact__grid {
-    grid-template-columns: minmax(220px, 0.78fr) minmax(0, 1.35fr);
+    grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.8fr);
     align-items: start;
   }
 
@@ -398,6 +613,10 @@
 
   .kangoo-contact__field--half {
     grid-column: span 1;
+  }
+
+  .kangoo-contact-hero__features {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 

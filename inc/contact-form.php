@@ -137,6 +137,69 @@ function kangoo_contact_register_acf_fields() {
 }
 add_action('acf/init', 'kangoo_contact_register_acf_fields');
 
+function kangoo_contact_register_settings() {
+    register_setting('kangoo_contact_settings', 'kangoo_contact_general_email', array(
+        'type'              => 'string',
+        'sanitize_callback' => 'sanitize_email',
+        'default'           => 'hello@kangoopouches.co.uk',
+    ));
+
+    register_setting('kangoo_contact_settings', 'kangoo_contact_support_email', array(
+        'type'              => 'string',
+        'sanitize_callback' => 'sanitize_email',
+        'default'           => 'hello@kangoopouches.co.uk',
+    ));
+}
+add_action('admin_init', 'kangoo_contact_register_settings');
+
+function kangoo_contact_register_settings_page() {
+    add_submenu_page(
+        'control-panel',
+        __('Contact settings', 'kangoo'),
+        __('Contact settings', 'kangoo'),
+        'manage_options',
+        'kangoo-contact-settings',
+        'kangoo_contact_render_settings_page'
+    );
+}
+add_action('admin_menu', 'kangoo_contact_register_settings_page', 40);
+
+function kangoo_contact_render_settings_page() {
+    ?>
+    <div class="wrap">
+        <h1><?php esc_html_e('Contact settings', 'kangoo'); ?></h1>
+        <p><?php esc_html_e('Choose where Kangoo Pouches contact form messages are sent. Enquiries are also stored in Control Panel > Enquiries.', 'kangoo'); ?></p>
+
+        <form method="post" action="options.php">
+            <?php settings_fields('kangoo_contact_settings'); ?>
+
+            <table class="form-table" role="presentation">
+                <tr>
+                    <th scope="row">
+                        <label for="kangoo_contact_general_email"><?php esc_html_e('General enquiries email', 'kangoo'); ?></label>
+                    </th>
+                    <td>
+                        <input class="regular-text" id="kangoo_contact_general_email" type="email" name="kangoo_contact_general_email" value="<?php echo esc_attr(kangoo_contact_general_email()); ?>">
+                        <p class="description"><?php esc_html_e('Used for general, product and trade enquiries.', 'kangoo'); ?></p>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        <label for="kangoo_contact_support_email"><?php esc_html_e('Support email', 'kangoo'); ?></label>
+                    </th>
+                    <td>
+                        <input class="regular-text" id="kangoo_contact_support_email" type="email" name="kangoo_contact_support_email" value="<?php echo esc_attr(kangoo_contact_support_email()); ?>">
+                        <p class="description"><?php esc_html_e('Used for order, delivery, returns, account and rewards enquiries.', 'kangoo'); ?></p>
+                    </td>
+                </tr>
+            </table>
+
+            <?php submit_button(__('Save contact settings', 'kangoo')); ?>
+        </form>
+    </div>
+    <?php
+}
+
 function kangoo_contact_flash_get() {
     $token = isset($_GET['kangoo_contact']) ? sanitize_key(wp_unslash($_GET['kangoo_contact'])) : '';
 
@@ -161,6 +224,20 @@ function kangoo_contact_flash_redirect($data) {
 
     wp_safe_redirect(add_query_arg('kangoo_contact', $token, $redirect));
     exit;
+}
+
+function kangoo_contact_icon($name) {
+    $icons = array(
+        'mail' => '<svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path d="M4.75 6.75h14.5v10.5H4.75z"/><path d="m5.25 7.25 6.75 5.5 6.75-5.5"/></svg>',
+        'support' => '<svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path d="M5.5 11.5a6.5 6.5 0 0 1 13 0v4.25a2 2 0 0 1-2 2H14"/><path d="M8.5 12.25h-2a1.5 1.5 0 0 0-1.5 1.5v1a1.5 1.5 0 0 0 1.5 1.5h2z"/><path d="M15.5 12.25h2a1.5 1.5 0 0 1 1.5 1.5v1a1.5 1.5 0 0 1-1.5 1.5h-2z"/><path d="M10.75 17.75h3.25"/></svg>',
+        'chat' => '<svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path d="M5.5 6.5h13v8.25h-7.25L7.5 18.25v-3.5h-2z"/><path d="M8.75 9.5h6.5M8.75 12h4.5"/></svg>',
+        'truck' => '<svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path d="M4.75 7.5h9.5v8h-9.5z"/><path d="M14.25 10h3.25l1.75 2.25v3.25h-5z"/><path d="M7.25 18a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3ZM16.75 18a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"/></svg>',
+        'bolt' => '<svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path d="m13.25 3.75-6 9h4l-1 7.5 6.5-10h-4z"/></svg>',
+        'box' => '<svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path d="m12 4.75 7 3.5v7.5l-7 3.5-7-3.5v-7.5z"/><path d="m5.5 8.5 6.5 3.25 6.5-3.25M12 11.75v7"/></svg>',
+        'star' => '<svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path d="m12 4.75 1.9 4.25 4.6.5-3.45 3.1.95 4.55L12 14.8l-4 2.35.95-4.55L5.5 9.5l4.6-.5z"/></svg>',
+    );
+
+    return $icons[$name] ?? $icons['mail'];
 }
 
 function kangoo_contact_form_shortcode() {
@@ -196,30 +273,18 @@ function kangoo_contact_form_shortcode() {
         <?php endif; ?>
 
         <div class="kangoo-contact__grid">
-            <aside class="kangoo-contact__routes" aria-label="<?php esc_attr_e('Contact routes', 'kangoo'); ?>">
-                <div class="kangoo-contact__route">
-                    <span aria-hidden="true">?</span>
-                    <div>
-                        <strong><?php esc_html_e('General enquiries', 'kangoo'); ?></strong>
-                        <a href="mailto:<?php echo esc_attr(kangoo_contact_general_email()); ?>"><?php echo esc_html(kangoo_contact_general_email()); ?></a>
-                    </div>
-                </div>
-                <div class="kangoo-contact__route">
-                    <span aria-hidden="true">#</span>
-                    <div>
-                        <strong><?php esc_html_e('Order support', 'kangoo'); ?></strong>
-                        <a href="mailto:<?php echo esc_attr(kangoo_contact_support_email()); ?>"><?php echo esc_html(kangoo_contact_support_email()); ?></a>
-                    </div>
-                </div>
-                <div class="kangoo-contact__note">
-                    <?php esc_html_e('Include your order number if your message is about a purchase. It helps us find the order faster.', 'kangoo'); ?>
-                </div>
-            </aside>
-
             <form class="kangoo-contact__form" method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
                 <?php wp_nonce_field('kangoo_contact_submit', 'kangoo_contact_nonce'); ?>
                 <input type="hidden" name="action" value="kangoo_contact_submit">
                 <input class="kangoo-contact__trap" type="text" name="kangoo_company" value="" tabindex="-1" autocomplete="off">
+
+                <div class="kangoo-contact__form-heading">
+                    <span aria-hidden="true"><?php echo kangoo_contact_icon('mail'); ?></span>
+                    <div>
+                        <h2><?php esc_html_e('Send us a message', 'kangoo'); ?></h2>
+                        <p><?php esc_html_e('Fill out the form below and we will get back to you as soon as possible.', 'kangoo'); ?></p>
+                    </div>
+                </div>
 
                 <div class="kangoo-contact__field kangoo-contact__field--half">
                     <label for="kangoo_contact_name"><?php esc_html_e('Name', 'kangoo'); ?></label>
@@ -268,6 +333,33 @@ function kangoo_contact_form_shortcode() {
 
                 <button class="kangoo-contact__submit" type="submit"><?php esc_html_e('Send message', 'kangoo'); ?></button>
             </form>
+
+            <aside class="kangoo-contact__routes" aria-label="<?php esc_attr_e('Contact routes', 'kangoo'); ?>">
+                <div class="kangoo-contact__route">
+                    <span aria-hidden="true"><?php echo kangoo_contact_icon('support'); ?></span>
+                    <div>
+                        <strong><?php esc_html_e('Customer support', 'kangoo'); ?></strong>
+                        <a href="mailto:<?php echo esc_attr(kangoo_contact_support_email()); ?>"><?php echo esc_html(kangoo_contact_support_email()); ?></a>
+                        <small><?php esc_html_e('For existing orders, delivery issues, returns and refunds.', 'kangoo'); ?></small>
+                    </div>
+                </div>
+                <div class="kangoo-contact__route">
+                    <span aria-hidden="true"><?php echo kangoo_contact_icon('chat'); ?></span>
+                    <div>
+                        <strong><?php esc_html_e('General enquiries', 'kangoo'); ?></strong>
+                        <a href="mailto:<?php echo esc_attr(kangoo_contact_general_email()); ?>"><?php echo esc_html(kangoo_contact_general_email()); ?></a>
+                        <small><?php esc_html_e('For partnerships, wholesale, press and general questions.', 'kangoo'); ?></small>
+                    </div>
+                </div>
+                <div class="kangoo-contact__route">
+                    <span aria-hidden="true"><?php echo kangoo_contact_icon('truck'); ?></span>
+                    <div>
+                        <strong><?php esc_html_e('Order tracking', 'kangoo'); ?></strong>
+                        <small><?php esc_html_e('Tracking is sent by email once your order has been dispatched.', 'kangoo'); ?></small>
+                        <a class="kangoo-contact__route-button" href="<?php echo esc_url(home_url('/my-account/orders/')); ?>"><?php esc_html_e('Track order', 'kangoo'); ?></a>
+                    </div>
+                </div>
+            </aside>
         </div>
     </div>
     <?php
