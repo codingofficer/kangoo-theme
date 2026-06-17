@@ -618,3 +618,14 @@ function kangoo_contact_column_content($column, $post_id) {
     }
 }
 add_action('manage_kangoo_enquiry_posts_custom_column', 'kangoo_contact_column_content', 10, 2);
+
+function kangoo_contact_template_include($template) {
+    if (!is_page('contact')) {
+        return $template;
+    }
+
+    $contact_template = get_theme_file_path('page-contact.php');
+
+    return file_exists($contact_template) ? $contact_template : $template;
+}
+add_filter('template_include', 'kangoo_contact_template_include', 30);
