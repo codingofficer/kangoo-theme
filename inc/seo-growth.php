@@ -178,17 +178,6 @@ function kangoo_seo_robots_txt($output, $public) {
         }
     }
 
-    $discovery_lines = array(
-        'LLMs: ' . home_url('/llms.txt'),
-        'LLMs-Full: ' . home_url('/llms-full.txt'),
-    );
-
-    foreach ($discovery_lines as $line) {
-        if (strpos($output, $line) === false) {
-            $output .= "\n" . $line;
-        }
-    }
-
     if (strpos($output, 'Sitemap:') === false) {
         $output .= "\nSitemap: " . home_url('/sitemap_index.xml');
     }
@@ -434,9 +423,6 @@ function kangoo_seo_write_robots_file() {
         'Disallow: /*?*add-to-cart=',
         'Disallow: /*?orderby=',
         'Disallow: /*?filter_',
-        '',
-        'LLMs: ' . home_url('/llms.txt'),
-        'LLMs-Full: ' . home_url('/llms-full.txt'),
         '',
         'Sitemap: ' . home_url('/sitemap_index.xml'),
         'Sitemap: ' . home_url('/llms-sitemap.xml'),

@@ -21,6 +21,7 @@ $robots = @file_get_contents(ABSPATH . 'robots.txt');
 kangoo_seo_growth_check('robots.txt exists', is_string($robots) && $robots !== '');
 kangoo_seo_growth_check('AI crawlers are not blocked', !preg_match('/User-agent:\s*(GPTBot|Google-Extended|ClaudeBot|PerplexityBot)[\s\S]{0,200}Disallow:\s*\//i', (string) $robots));
 kangoo_seo_growth_check('Private commerce routes are blocked', strpos((string) $robots, 'Disallow: /checkout/') !== false && strpos((string) $robots, 'Disallow: /my-account/') !== false);
+kangoo_seo_growth_check('robots.txt uses standard directives', !preg_match('/^LLMs(?:-Full)?:/mi', (string) $robots));
 
 $llms = @file_get_contents(ABSPATH . 'llms.txt');
 $llms_full = @file_get_contents(ABSPATH . 'llms-full.txt');
