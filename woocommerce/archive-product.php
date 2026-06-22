@@ -16,10 +16,22 @@ $category_intro = $term_acf_key ? get_field('category_intro', $term_acf_key) : '
 $category_page_heading = $term_acf_key ? get_field('category_seo_title', $term_acf_key) : '';
 $category_seo_content = $term_acf_key ? get_field('category_seo_content', $term_acf_key) : '';
 $category_faq_rows = $term_acf_key ? get_field('category_faq', $term_acf_key) : array();
+$category_people_also_ask_rows = $term_acf_key ? get_field('category_people_also_ask', $term_acf_key) : array();
 
 if (!is_array($category_faq_rows)) {
     $category_faq_rows = array();
 }
+
+if (!is_array($category_people_also_ask_rows)) {
+    $category_people_also_ask_rows = array();
+}
+
+$category_people_also_ask_rows = array_values(array_filter($category_people_also_ask_rows, static function ($row) {
+    $question = isset($row['question']) ? trim(wp_strip_all_tags((string) $row['question'])) : '';
+    $answer = isset($row['answer']) ? trim(wp_strip_all_tags((string) $row['answer'])) : '';
+
+    return $question !== '' && $answer !== '';
+}));
 
 if (
     $term instanceof WP_Term
@@ -45,23 +57,26 @@ if (
 }
 
 $category_faq_schema = array();
+$category_question_groups = array($category_faq_rows, $category_people_also_ask_rows);
 
-foreach ($category_faq_rows as $faq_row) {
-    $question = isset($faq_row['question']) ? trim(wp_strip_all_tags($faq_row['question'])) : '';
-    $answer = isset($faq_row['answer']) ? trim(wp_strip_all_tags($faq_row['answer'])) : '';
+foreach ($category_question_groups as $question_rows) {
+    foreach ($question_rows as $faq_row) {
+        $question = isset($faq_row['question']) ? trim(wp_strip_all_tags($faq_row['question'])) : '';
+        $answer = isset($faq_row['answer']) ? trim(wp_strip_all_tags($faq_row['answer'])) : '';
 
-    if ($question === '' || $answer === '') {
-        continue;
+        if ($question === '' || $answer === '') {
+            continue;
+        }
+
+        $category_faq_schema[] = array(
+            '@type' => 'Question',
+            'name' => $question,
+            'acceptedAnswer' => array(
+                '@type' => 'Answer',
+                'text' => $answer,
+            ),
+        );
     }
-
-    $category_faq_schema[] = array(
-        '@type' => 'Question',
-        'name' => $question,
-        'acceptedAnswer' => array(
-            '@type' => 'Answer',
-            'text' => $answer,
-        ),
-    );
 }
 
 $category_hero_copy = $category_intro;
@@ -450,6 +465,38 @@ if ($term_taxonomy === 'product_cat') {
                             <summary><?php echo esc_html($question); ?></summary>
                             <div class="wysiwyg">
                                 <p><?php echo wp_kses_post($answer); ?></p>
+                            </div>
+                        </details>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        </section>
+    <?php endif; ?>
+
+    <?php if (!empty($category_people_also_ask_rows)) : ?>
+        <section class="section category-page__people-ask">
+            <div class="container container--narrow">
+                <header class="section-header section-header--left">
+                    <h2><?php esc_html_e('People also ask', 'kangoo'); ?></h2>
+                </header>
+
+                <div class="people-also-ask">
+                    <?php foreach ($category_people_also_ask_rows as $people_ask_row) : ?>
+                        <?php
+                        $question = isset($people_ask_row['question']) ? trim($people_ask_row['question']) : '';
+                        $answer = isset($people_ask_row['answer']) ? trim($people_ask_row['answer']) : '';
+
+                        if ($question === '' || $answer === '') {
+                            continue;
+                        }
+                        ?>
+                        <details class="people-also-ask__item">
+                            <summary>
+                                <span><?php echo esc_html($question); ?></span>
+                                <span class="people-also-ask__icon" aria-hidden="true"></span>
+                            </summary>
+                            <div class="wysiwyg people-also-ask__answer">
+                                <?php echo wp_kses_post(wpautop($answer)); ?>
                             </div>
                         </details>
                     <?php endforeach; ?>

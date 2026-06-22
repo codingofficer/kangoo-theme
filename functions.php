@@ -5007,6 +5007,65 @@ function kangoo_category_seo_content_field_guidance($field) {
 }
 add_filter('acf/load_field/name=category_seo_content', 'kangoo_category_seo_content_field_guidance');
 
+function kangoo_register_category_people_also_ask_acf_fields() {
+    if (!function_exists('acf_add_local_field_group')) {
+        return;
+    }
+
+    acf_add_local_field_group(array(
+        'key' => 'group_kangoo_category_people_also_ask',
+        'title' => __('Category People Also Ask', 'kangoo'),
+        'fields' => array(
+            array(
+                'key' => 'field_kangoo_category_people_also_ask',
+                'label' => __('People Also Ask', 'kangoo'),
+                'name' => 'category_people_also_ask',
+                'type' => 'repeater',
+                'instructions' => __('Optional Google-style People also ask questions shown below the category FAQ. Rows without both a question and answer are hidden.', 'kangoo'),
+                'layout' => 'row',
+                'button_label' => __('Add question', 'kangoo'),
+                'sub_fields' => array(
+                    array(
+                        'key' => 'field_kangoo_category_people_also_ask_question',
+                        'label' => __('Question', 'kangoo'),
+                        'name' => 'question',
+                        'type' => 'text',
+                        'required' => 0,
+                        'maxlength' => 180,
+                    ),
+                    array(
+                        'key' => 'field_kangoo_category_people_also_ask_answer',
+                        'label' => __('Answer', 'kangoo'),
+                        'name' => 'answer',
+                        'type' => 'wysiwyg',
+                        'required' => 0,
+                        'tabs' => 'visual',
+                        'toolbar' => 'basic',
+                        'media_upload' => 0,
+                        'delay' => 1,
+                    ),
+                ),
+            ),
+        ),
+        'location' => array(
+            array(
+                array(
+                    'param' => 'taxonomy',
+                    'operator' => '==',
+                    'value' => 'product_cat',
+                ),
+            ),
+        ),
+        'position' => 'normal',
+        'style' => 'default',
+        'label_placement' => 'top',
+        'instruction_placement' => 'label',
+        'active' => true,
+        'show_in_rest' => 0,
+    ));
+}
+add_action('acf/init', 'kangoo_register_category_people_also_ask_acf_fields');
+
 function kangoo_product_category_description_admin_guidance() {
     $screen = function_exists('get_current_screen') ? get_current_screen() : null;
 
