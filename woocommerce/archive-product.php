@@ -477,7 +477,7 @@ if ($term_taxonomy === 'product_cat') {
         <section class="section category-page__people-ask">
             <div class="container container--narrow">
                 <header class="section-header section-header--left">
-                    <h2><?php esc_html_e('People also ask', 'kangoo'); ?></h2>
+                    <h2 class="people-also-ask__heading"><?php esc_html_e('People also ask', 'kangoo'); ?></h2>
                 </header>
 
                 <div class="people-also-ask">

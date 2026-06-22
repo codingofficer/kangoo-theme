@@ -431,8 +431,12 @@
 
 .category-page__seo h2,
 .category-page__faq h2,
-.category-page__people-ask h2,
 .category-page__seo-content h2 {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  line-height: 1.15;
+}
+
+.category-page__people-ask .people-also-ask__heading {
   font-size: clamp(1.5rem, 3vw, 2rem);
   line-height: 1.15;
 }
