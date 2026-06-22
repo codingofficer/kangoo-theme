@@ -496,7 +496,7 @@ if ($term_taxonomy === 'product_cat') {
                                 <span class="people-also-ask__icon" aria-hidden="true"></span>
                             </summary>
                             <div class="wysiwyg people-also-ask__answer">
-                                <?php echo wp_kses_post(wpautop($answer)); ?>
+                                <?php echo wp_kses_post($answer); ?>
                             </div>
                         </details>
                     <?php endforeach; ?>
