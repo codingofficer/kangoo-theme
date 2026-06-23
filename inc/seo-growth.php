@@ -7,7 +7,7 @@ function kangoo_seo_brand_slugs() {
 }
 
 function kangoo_seo_ai_discovery_version() {
-    return '2026-06-23-ai-catalogue-3';
+    return '2026-06-23-ai-catalogue-4';
 }
 
 function kangoo_seo_ai_files_last_modified_timestamp() {
@@ -210,7 +210,7 @@ function kangoo_seo_plain_price($product) {
 function kangoo_seo_key_links() {
     return array(
         'Nicotine Pouches UK' => home_url('/product-category/nicotine-pouches/'),
-        '99p Nicotine Pouches - now from 99p' => home_url('/product-category/99p-pouches/'),
+        '99p Nicotine Pouches - now from 79p' => home_url('/product-category/99p-pouches/'),
         'ZYN Nicotine Pouches' => home_url('/product-category/zyn/'),
         'VELO Nicotine Pouches' => home_url('/product-category/velo/'),
         'PABLO Nicotine Pouches' => home_url('/product-category/pablo/'),

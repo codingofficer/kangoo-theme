@@ -4879,11 +4879,11 @@ function kangoo_archive_seo_data() {
     $description = '';
 
     if ($context['type'] === 'nicotine') {
-        $title = __('Nicotine Pouches UK From 99p', 'kangoo');
-        $description = __('Shop nicotine pouches in the UK from Kangoo Pouches, including ZYN, VELO, KILLA and PABLO, 99p trial pouches and pack pricing.', 'kangoo');
+        $title = __('Nicotine Pouches UK From 79p', 'kangoo');
+        $description = __('Shop nicotine pouches in the UK from Kangoo Pouches, including ZYN, VELO, KILLA and PABLO, 99p trial pouches now from 79p and pack pricing.', 'kangoo');
     } elseif ($context['type'] === 'trial') {
         $title = __('99p Nicotine Pouches UK', 'kangoo');
-        $description = __('Try selected nicotine pouches from 99p at Kangoo Pouches. Trial pouches are limited to one per order while stock lasts and are for adult nicotine users only.', 'kangoo');
+        $description = __('Try selected 99p nicotine pouches from 79p at Kangoo Pouches. Trial pouches are limited to one per order while stock lasts and are for adult nicotine users only.', 'kangoo');
     } elseif ($context['type'] === 'brand') {
         $brand_profile = function_exists('kangoo_get_brand_authority_profile') ? kangoo_get_brand_authority_profile($term->slug) : array();
         $brand = !empty($brand_profile['label']) ? $brand_profile['label'] : strtoupper($term->name);
