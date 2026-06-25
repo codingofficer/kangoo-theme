@@ -3,8 +3,8 @@
  * Rewrite product Yoast SEO titles and descriptions with commercial hooks.
  *
  * Usage:
- *   wp eval-file tools/rewrite-product-yoast-commercial.php -- --output=/tmp/product-seo.csv
- *   wp eval-file tools/rewrite-product-yoast-commercial.php -- --apply --output=/tmp/product-seo.csv
+ *   wp eval-file tools/rewrite-product-yoast-commercial.php output=/tmp/product-seo.csv
+ *   wp eval-file tools/rewrite-product-yoast-commercial.php apply output=/tmp/product-seo.csv
  */
 
 if (!defined('ABSPATH')) {
@@ -13,12 +13,17 @@ if (!defined('ABSPATH')) {
 }
 
 $cli_args = isset($GLOBALS['argv']) && is_array($GLOBALS['argv']) ? $GLOBALS['argv'] : array();
-$apply = in_array('--apply', $cli_args, true);
+$apply = in_array('--apply', $cli_args, true) || in_array('apply', $cli_args, true);
 $output = '';
 
 foreach ($cli_args as $arg) {
     if (strpos($arg, '--output=') === 0) {
         $output = substr($arg, 9);
+        break;
+    }
+
+    if (strpos($arg, 'output=') === 0) {
+        $output = substr($arg, 7);
         break;
     }
 }
