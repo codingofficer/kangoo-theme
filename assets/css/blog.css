@@ -2,11 +2,6 @@
 ****************************BLOG********************************
 ****************************************************************/
 
-.blog-archive,
-.blog-single {
-  padding-top: 32px;
-}
-
 .blog-hero,
 .blog-article__hero {
   margin-top: 0;
@@ -473,10 +468,6 @@
 }
 
 @media (max-width: 640px) {
-  .blog-single {
-    padding-top: 16px;
-  }
-
   .blog-single .blog-article__hero {
     padding-top: calc(var(--space-6) + 1rem);
   }
