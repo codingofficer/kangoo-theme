@@ -124,7 +124,7 @@
 }
 
 .blog-article__hero {
-  padding: 100px 0 var(--space-5);
+  padding: 24px 0 var(--space-5);
 }
 
 .blog-article__breadcrumbs {
