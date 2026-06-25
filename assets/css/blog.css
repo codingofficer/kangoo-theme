@@ -469,6 +469,11 @@
   .blog-article__standfirst {
     font-size: 1.3rem;
   }
+
+  .blog-article__image {
+    margin-right: auto;
+    margin-left: 0;
+  }
 }
 
 @media (max-width: 640px) {
