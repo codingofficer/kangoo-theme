@@ -24,10 +24,6 @@
   padding-top: calc(var(--space-10) + 2rem);
 }
 
-.blog-single .blog-article__hero {
-  padding-top: calc(var(--space-10) + 2rem);
-}
-
 .blog-hero__content {
   max-width: 860px;
 }
@@ -137,7 +133,7 @@
 }
 
 .blog-article__hero {
-  padding: calc(var(--space-8) + 1rem) 0 var(--space-5);
+  padding: var(--space-5) 0 var(--space-5);
 }
 
 .blog-article__breadcrumbs {
