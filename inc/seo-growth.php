@@ -7,7 +7,7 @@ function kangoo_seo_brand_slugs() {
 }
 
 function kangoo_seo_ai_discovery_version() {
-    return '2026-06-23-ai-catalogue-4';
+    return '2026-06-25-trends-guides-1';
 }
 
 function kangoo_seo_ai_files_last_modified_timestamp() {
@@ -231,6 +231,11 @@ function kangoo_seo_key_links() {
         'What are nicotine pouches?' => home_url('/blog/what-are-nicotine-pouches/'),
         'How to use nicotine pouches' => home_url('/blog/how-to-use-nicotine-pouches-placement-timing-and-tips/'),
         'VELO strength dots explained' => home_url('/blog/velo-strength-dots-explained/'),
+        'Best VELO flavours UK' => home_url('/blog/best-velo-flavours-uk/'),
+        'ZYN flavour guide' => home_url('/blog/zyn-flavour-guide-black-cherry-spearmint-coffee-apple-mint/'),
+        'ZYN price UK guide' => home_url('/blog/zyn-price-uk-what-affects-zyn-pouch-prices-online/'),
+        'How to open a ZYN can' => home_url('/blog/how-to-open-a-zyn-can-container/'),
+        'Nicotine pouches near me vs online' => home_url('/blog/nicotine-pouches-near-me-vs-online-which-buying-route-works-best/'),
         'Snus UK guide' => home_url('/blog/snus-uk/'),
         'What is snus?' => home_url('/blog/what-is-snus/'),
         'Sitemap' => home_url('/sitemap_index.xml'),
