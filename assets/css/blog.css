@@ -15,10 +15,6 @@
   border-bottom: 1px solid var(--color-border);
 }
 
-.blog-archive .blog-hero {
-  padding-top: calc(var(--space-10) + 2rem);
-}
-
 .blog-hero__content {
   max-width: 860px;
 }
@@ -464,6 +460,16 @@
   .blog-article__image {
     margin-right: auto;
     margin-left: 0;
+  }
+}
+
+@media (min-width: 1024px) {
+  body.blog {
+    padding-top: 0;
+  }
+
+  body.blog .blog-hero {
+    padding-top: calc(76px + var(--space-10) + 1rem);
   }
 }
 
