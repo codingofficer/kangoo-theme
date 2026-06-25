@@ -77,17 +77,24 @@ function kangoo_cli_get_product_strength($product) {
         $label = isset($details['label']) ? kangoo_cli_clean_text($details['label']) : '';
 
         if ($label !== '') {
-            return $label;
+            return kangoo_cli_normalize_strength($label);
         }
     }
 
     $name = $product->get_name();
 
     if (preg_match('/\b\d+(?:\.\d+)?\s*mg\b/i', $name, $match)) {
-        return strtoupper(str_replace(' ', '', $match[0]));
+        return kangoo_cli_normalize_strength($match[0]);
     }
 
     return '';
+}
+
+function kangoo_cli_normalize_strength($value) {
+    $value = kangoo_cli_clean_text($value);
+    $value = preg_replace('/\s+/', '', $value);
+    $value = preg_replace('/mg$/i', 'mg', $value);
+    return (string) $value;
 }
 
 function kangoo_cli_get_product_descriptor($product, $brand, $strength) {
