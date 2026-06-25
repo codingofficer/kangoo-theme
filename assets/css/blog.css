@@ -8,7 +8,7 @@
 }
 
 .blog-hero {
-  padding: 0 0 var(--space-8);
+  padding: 100px 0 var(--space-8);
   background:
     linear-gradient(135deg, rgba(77, 163, 255, 0.14), transparent 34%),
     linear-gradient(180deg, rgba(255,255,255,0.04), transparent);
@@ -124,7 +124,7 @@
 }
 
 .blog-article__hero {
-  padding: 0 0 var(--space-5);
+  padding: 100px 0 var(--space-5);
 }
 
 .blog-article__breadcrumbs {
