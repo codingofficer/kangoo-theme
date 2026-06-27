@@ -543,7 +543,81 @@
         api('/note', { note: noteField.value }).catch(function () {});
       });
     }
+    initPaymentPauseNotice();
     refreshState();
+  }
+
+  function initPaymentPauseNotice() {
+    const bridge = root ? root.querySelector('[data-kangoo-woo-bridge]') : null;
+    const notice = root ? root.querySelector('[data-kangoo-payment-pause]') : null;
+    const form = root ? root.querySelector('[data-kangoo-payment-pause-form]') : null;
+
+    if (!bridge || !notice) {
+      return;
+    }
+
+    const syncNotice = function () {
+      const text = bridge.textContent || '';
+      const noMethods = /no payment methods available/i.test(text);
+      notice.hidden = !noMethods;
+      root.classList.toggle('has-payment-pause', noMethods);
+      if (noMethods && form && form.elements.email && !form.elements.email.value) {
+        const deliveryEmail = root.querySelector('[data-kangoo-delivery-form] input[name="email"]');
+        if (deliveryEmail && deliveryEmail.value) {
+          form.elements.email.value = deliveryEmail.value;
+        }
+      }
+    };
+
+    syncNotice();
+    new MutationObserver(syncNotice).observe(bridge, {
+      childList: true,
+      subtree: true,
+      characterData: true
+    });
+
+    if (!form) {
+      return;
+    }
+
+    const email = form.elements.email;
+    const message = form.querySelector('[data-kangoo-payment-pause-message]');
+
+    if (email) {
+      const deliveryEmail = root.querySelector('[data-kangoo-delivery-form] input[name="email"]');
+      if (deliveryEmail && deliveryEmail.value && !email.value) {
+        email.value = deliveryEmail.value;
+      }
+    }
+
+    form.addEventListener('submit', function (event) {
+      event.preventDefault();
+
+      if (message) {
+        message.textContent = '';
+        message.classList.remove('is-error', 'is-success');
+      }
+
+      const button = form.querySelector('button[type="submit"]');
+      setButtonLoading(button, true);
+
+      api('/payment-waitlist', {
+        email: email ? email.value : ''
+      }).then(function (response) {
+        if (message) {
+          message.textContent = response.message || 'Thanks. We will email you when payments are back.';
+          message.classList.add('is-success');
+        }
+        form.classList.add('is-saved');
+      }).catch(function (error) {
+        if (message) {
+          message.textContent = error.message || 'Please check your email address.';
+          message.classList.add('is-error');
+        }
+      }).finally(function () {
+        setButtonLoading(button, false);
+      });
+    });
   }
 
   function initCartStepPolish() {
