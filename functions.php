@@ -5,6 +5,7 @@ if (!defined('ABSPATH')) {
 
 require_once get_template_directory() . '/inc/control-panel.php';
 require_once get_template_directory() . '/inc/custom-ajax-checkout.php';
+require_once get_template_directory() . '/inc/worldpay-hotfix.php';
 
 function kangoo_mark_dynamic_commerce_pages_uncacheable() {
     $request_uri = isset($_SERVER['REQUEST_URI']) ? (string) wp_unslash($_SERVER['REQUEST_URI']) : '';
