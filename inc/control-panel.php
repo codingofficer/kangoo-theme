@@ -109,20 +109,19 @@ function kangoo_sync_worldpay_gateway_enabled($enabled) {
     $enabled = !empty($enabled);
     update_option('kangoo_worldpay_gateway_enabled', $enabled ? 1 : 0);
 
-    $gateway_options = array(
-        'woocommerce_access_worldpay_checkout_settings',
-        'woocommerce_access_worldpay_hpp_settings',
-    );
-
-    foreach ($gateway_options as $option_name) {
-        $settings = get_option($option_name, array());
-        if (!is_array($settings)) {
-            $settings = array();
-        }
-
-        $settings['enabled'] = $enabled ? 'yes' : 'no';
-        update_option($option_name, $settings);
+    $hosted_settings = get_option('woocommerce_access_worldpay_hpp_settings', array());
+    if (!is_array($hosted_settings)) {
+        $hosted_settings = array();
     }
+    $hosted_settings['enabled'] = $enabled ? 'yes' : 'no';
+    update_option('woocommerce_access_worldpay_hpp_settings', $hosted_settings);
+
+    $embedded_settings = get_option('woocommerce_access_worldpay_checkout_settings', array());
+    if (!is_array($embedded_settings)) {
+        $embedded_settings = array();
+    }
+    $embedded_settings['enabled'] = 'no';
+    update_option('woocommerce_access_worldpay_checkout_settings', $embedded_settings);
 
     return $enabled ? 1 : 0;
 }
@@ -141,8 +140,8 @@ function kangoo_register_payment_control_acf_fields() {
                 'label' => __('Worldpay Checkout', 'kangoo'),
                 'name' => 'kangoo_worldpay_gateway_enabled',
                 'type' => 'true_false',
-                'instructions' => __('Controls the Worldpay embedded card and hosted checkout gateways. Use Try mode in WooCommerce payment settings until a successful test order is complete.', 'kangoo'),
-                'message' => __('Enable Worldpay gateways at checkout', 'kangoo'),
+                'instructions' => __('Controls the hosted Worldpay checkout gateway. The embedded card gateway stays disabled while the Worldpay Blocks 3DS flow is being reviewed.', 'kangoo'),
+                'message' => __('Enable hosted Worldpay at checkout', 'kangoo'),
                 'ui' => 1,
                 'default_value' => 0,
             ),
