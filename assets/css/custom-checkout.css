@@ -862,6 +862,7 @@
 
 .kangoo-custom-checkout__woo-bridge .wc-block-gateway-container.wc-card-expiry-element {
   flex-basis: 7em;
+  margin-left: 0 !important;
   margin-right: 12px;
   min-width: min(7em, 24% - 12px);
 }
