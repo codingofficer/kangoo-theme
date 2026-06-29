@@ -3896,7 +3896,6 @@ body.woocommerce-checkout .wc-block-components-combobox.is-active label,
 body.woocommerce-checkout .wc-block-components-text-input.has-value label,
 body.woocommerce-checkout .wc-block-components-combobox.has-value label {
   color: #6b7280 !important;
-  left: clamp(3rem, 8vw, 3.55rem) !important;
 }
 
 body.woocommerce-checkout .wc-block-components-text-input::before,
