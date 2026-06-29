@@ -823,47 +823,6 @@
   gap: 10px !important;
 }
 
-.kangoo-custom-checkout__woo-bridge .wc-block-components-payment-method-label {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  gap: 10px !important;
-}
-
-.kangoo-custom-checkout__wallet-logos {
-  display: inline-flex;
-  flex: 0 0 auto;
-  align-items: center;
-  gap: 6px;
-  margin-left: auto;
-}
-
-.kangoo-custom-checkout__wallet-logo {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 24px;
-  padding: 4px 8px;
-  border: 1px solid #d8e0ec;
-  border-radius: 7px;
-  background: #ffffff;
-  color: #071225;
-  font-size: 0.78rem;
-  font-weight: 800;
-  line-height: 1;
-  white-space: nowrap;
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
-}
-
-.kangoo-custom-checkout__wallet-logo--apple {
-  color: #050505;
-}
-
-.kangoo-custom-checkout__wallet-logo--google b {
-  color: #4285f4;
-  font-weight: 900;
-}
-
 .kangoo-custom-checkout__woo-bridge .wc-block-components-radio-control__secondary-label {
   flex: 0 0 auto !important;
   margin-left: 0 !important;
@@ -1014,15 +973,6 @@ body.woocommerce-cart.kangoo-custom-checkout-enabled .wc-block-components-sideba
 }
 
 @media (max-width: 520px) {
-  .kangoo-custom-checkout__woo-bridge .wc-block-components-payment-method-label {
-    flex-wrap: wrap;
-    justify-content: flex-start !important;
-  }
-
-  .kangoo-custom-checkout__wallet-logos {
-    margin-left: 0;
-  }
-
   .kangoo-custom-checkout {
     padding: 0 4px;
   }

@@ -141,39 +141,9 @@
     field.dispatchEvent(new Event('change', { bubbles: true }));
   }
 
-  function enhanceWorldpayWalletLabels() {
-    if (!root) {
-      return;
-    }
-
-    root.querySelectorAll('input[value="access_worldpay_hpp"]').forEach(function (input) {
-      const option = input.closest('.wc-block-components-radio-control-accordion-option, .wc-block-components-radio-control__option');
-      const label = option ? option.querySelector('.wc-block-components-payment-method-label') : null;
-
-      if (!label || label.querySelector('[data-kangoo-wallet-logos]')) {
-        return;
-      }
-
-      const logos = document.createElement('span');
-      logos.className = 'kangoo-custom-checkout__wallet-logos';
-      logos.setAttribute('data-kangoo-wallet-logos', '');
-      logos.setAttribute('aria-hidden', 'true');
-      logos.innerHTML = [
-        '<span class="kangoo-custom-checkout__wallet-logo kangoo-custom-checkout__wallet-logo--apple">Apple&nbsp;Pay</span>',
-        '<span class="kangoo-custom-checkout__wallet-logo kangoo-custom-checkout__wallet-logo--google"><b>G</b>&nbsp;Pay</span>'
-      ].join('');
-      label.appendChild(logos);
-    });
-  }
-
-  function syncWorldpayPaymentEnhancements() {
-    syncWorldpayCardholderName();
-    enhanceWorldpayWalletLabels();
-  }
-
   function scheduleWorldpayCardholderSync() {
     window.clearTimeout(worldpayCardholderSyncTimer);
-    worldpayCardholderSyncTimer = window.setTimeout(syncWorldpayPaymentEnhancements, 120);
+    worldpayCardholderSyncTimer = window.setTimeout(syncWorldpayCardholderName, 120);
   }
 
   function deliveryConfig(label) {
