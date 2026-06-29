@@ -1022,14 +1022,22 @@ body.woocommerce-cart.kangoo-custom-checkout-enabled .wc-block-components-sideba
 
 @media (max-width: 520px) {
   .kangoo-custom-checkout__wallet-logos img {
+    width: 100px;
     height: 35px;
     max-width: 112px;
     padding: 5px 10px;
   }
 
-  body.woocommerce-checkout .wc-block-checkout__payment-method .wc-block-components-radio-control-accordion-option .wc-block-components-radio-control__label > img,
-  body.woocommerce-checkout .wc-block-checkout__payment-method .wc-block-components-radio-control__label > img.wc-block-components-payment-method-icon {
-    width: 50px;
+  body.woocommerce-checkout .kangoo-custom-checkout__woo-bridge .wc-block-components-payment-method-label img,
+  body.woocommerce-checkout .kangoo-custom-checkout__woo-bridge .wc-block-components-payment-method-icons img,
+  body.woocommerce-checkout .kangoo-custom-checkout__woo-bridge img.wc-block-components-payment-method-icon {
+    width: 50px !important;
+    max-width: 50px !important;
+  }
+
+  body.woocommerce-checkout .kangoo-custom-checkout__woo-bridge .kangoo-custom-checkout__wallet-logos img {
+    width: 100px !important;
+    max-width: 112px !important;
   }
 
   .kangoo-custom-checkout {
