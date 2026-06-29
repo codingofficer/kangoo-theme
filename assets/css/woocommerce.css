@@ -5249,26 +5249,26 @@ body.woocommerce-checkout .wc-block-components-radio-control--highlight-checked 
 
 @media (max-width: 782px) {
   body.woocommerce-cart {
-    padding-bottom: calc(33vw + env(safe-area-inset-bottom));
+    padding-bottom: 0;
   }
 
   body.woocommerce-cart .kangoo-cart-secure-checkout,
   body.woocommerce-cart .cart-collaterals .kangoo-cart-secure-checkout {
-    position: fixed !important;
-    left: 0;
-    right: 0;
-    bottom: env(safe-area-inset-bottom);
-    z-index: 9985;
+    position: static !important;
+    inset: auto !important;
+    z-index: auto;
     display: block !important;
-    width: 100vw !important;
+    width: 100% !important;
     max-width: none !important;
-    padding: 0 !important;
+    margin-top: 10px !important;
+    padding: 12px 14px 10px !important;
     border: 0 !important;
+    border-top: 1px solid rgba(17, 24, 39, 0.12) !important;
     border-radius: 0 !important;
-    background: transparent !important;
+    background: #ffffff !important;
     box-shadow: none !important;
     line-height: 0;
-    pointer-events: none;
+    pointer-events: auto;
   }
 
   body.woocommerce-cart .kangoo-cart-secure-checkout img,
@@ -5282,7 +5282,7 @@ body.woocommerce-checkout .wc-block-components-radio-control--highlight-checked 
     object-fit: contain;
     border: 0 !important;
     border-radius: 0 !important;
-    background: transparent !important;
+    background: #ffffff !important;
     box-shadow: none !important;
   }
 }
