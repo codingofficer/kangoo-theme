@@ -12,7 +12,7 @@ function kangoo_register_control_panel_options_page() {
         'page_title'  => __('Kangoo Control Panel', 'kangoo'),
         'menu_title'  => __('Control Panel', 'kangoo'),
         'menu_slug'   => 'control-panel',
-        'capability'  => 'manage_options',
+        'capability'  => 'edit_posts',
         'redirect'    => false,
         'position'    => 58,
         'icon_url'    => 'dashicons-admin-generic',
@@ -37,12 +37,20 @@ function kangoo_sync_worldpay_gateway_enabled($enabled) {
     $enabled = !empty($enabled);
     update_option('kangoo_worldpay_gateway_enabled', $enabled ? 1 : 0);
 
-    $settings = get_option('woocommerce_access_worldpay_checkout_settings', array());
-    if (!is_array($settings)) {
-        $settings = array();
+    $gateway_options = array(
+        'woocommerce_access_worldpay_checkout_settings',
+        'woocommerce_access_worldpay_hpp_settings',
+    );
+
+    foreach ($gateway_options as $option_name) {
+        $settings = get_option($option_name, array());
+        if (!is_array($settings)) {
+            $settings = array();
+        }
+
+        $settings['enabled'] = $enabled ? 'yes' : 'no';
+        update_option($option_name, $settings);
     }
-    $settings['enabled'] = $enabled ? 'yes' : 'no';
-    update_option('woocommerce_access_worldpay_checkout_settings', $settings);
 
     return $enabled ? 1 : 0;
 }
@@ -61,8 +69,8 @@ function kangoo_register_payment_control_acf_fields() {
                 'label' => __('Worldpay Checkout', 'kangoo'),
                 'name' => 'kangoo_worldpay_gateway_enabled',
                 'type' => 'true_false',
-                'instructions' => __('Controls the embedded Worldpay card gateway visibility at checkout. Use Try mode in WooCommerce payment settings until a successful test order is complete.', 'kangoo'),
-                'message' => __('Enable Worldpay at checkout', 'kangoo'),
+                'instructions' => __('Controls the Worldpay embedded card and hosted checkout gateways. Use Try mode in WooCommerce payment settings until a successful test order is complete.', 'kangoo'),
+                'message' => __('Enable Worldpay gateways at checkout', 'kangoo'),
                 'ui' => 1,
                 'default_value' => 0,
             ),
@@ -90,4 +98,3 @@ function kangoo_sync_worldpay_gateway_enabled_from_acf($value) {
     return kangoo_sync_worldpay_gateway_enabled($value);
 }
 add_filter('acf/update_value/name=kangoo_worldpay_gateway_enabled', 'kangoo_sync_worldpay_gateway_enabled_from_acf', 10, 1);
-
