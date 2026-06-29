@@ -711,10 +711,47 @@
   gap: 12px !important;
 }
 
+.kangoo-custom-checkout__woo-bridge .wc-block-card-elements {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px !important;
+  width: 100% !important;
+  max-width: none !important;
+}
+
+.kangoo-custom-checkout__woo-bridge .wc-block-card-elements > *,
+.kangoo-custom-checkout__woo-bridge .wc-block-gateway-container,
+.kangoo-custom-checkout__woo-bridge .wc-card-holder-name-element {
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+}
+
+.kangoo-custom-checkout__woo-bridge .wc-card-number-element,
+.kangoo-custom-checkout__woo-bridge .wc-card-holder-name-element {
+  grid-column: 1 / -1;
+}
+
+.kangoo-custom-checkout__woo-bridge .wc-block-gateway-input,
+.kangoo-custom-checkout__woo-bridge #access_worldpay_checkout-card-holder-name {
+  width: 100% !important;
+  min-height: 48px;
+  border: 1px solid #cfd8e6;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.kangoo-custom-checkout__woo-bridge #access_worldpay_checkout-card-holder-name {
+  padding: 0 16px;
+  color: #071225;
+  font: inherit;
+}
+
 .kangoo-custom-checkout__woo-bridge .wc-block-components-checkout-step__container,
 .kangoo-custom-checkout__woo-bridge .wc-block-components-checkout-step__content,
 .kangoo-custom-checkout__woo-bridge .wc-block-components-radio-control-accordion-content > *,
 .kangoo-custom-checkout__woo-bridge .wc-stripe-blocks-payment-method-content > *,
+.kangoo-custom-checkout__woo-bridge .wc-block-card-elements > *,
 .kangoo-custom-checkout__woo-bridge .wc-block-components-text-input,
 .kangoo-custom-checkout__woo-bridge .wc-block-components-text-input input,
 .kangoo-custom-checkout__woo-bridge .wc-block-components-form .wc-block-components-text-input,

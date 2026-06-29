@@ -4,6 +4,8 @@
   const config = window.kangooCustomCheckout || {};
   const root = document.querySelector('[data-kangoo-custom-checkout]');
   const cartRoot = document.querySelector('.woocommerce-cart');
+  let checkoutState = null;
+  let worldpayCardholderSyncTimer = null;
 
   function api(path, body) {
     return fetch(config.restUrl + path, {
@@ -95,6 +97,53 @@
     if (card) {
       card.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
+
+    if (activeStep === 'payment') {
+      scheduleWorldpayCardholderSync();
+    }
+  }
+
+  function checkoutFullName() {
+    const deliveryForm = root ? root.querySelector('[data-kangoo-delivery-form]') : null;
+    const deliveryName = deliveryForm && deliveryForm.elements.full_name
+      ? String(deliveryForm.elements.full_name.value || '').trim()
+      : '';
+
+    if (deliveryName) {
+      return deliveryName;
+    }
+
+    const customer = checkoutState && checkoutState.customer ? checkoutState.customer : {};
+    const shipping = customer.shipping || {};
+    const billing = customer.billing || {};
+    const shippingName = [shipping.first_name, shipping.last_name].filter(Boolean).join(' ').trim();
+    const billingName = [billing.first_name, billing.last_name].filter(Boolean).join(' ').trim();
+
+    return shippingName || billingName;
+  }
+
+  function syncWorldpayCardholderName() {
+    const field = document.getElementById('access_worldpay_checkout-card-holder-name');
+    const name = checkoutFullName();
+
+    if (!field || !name || String(field.value || '').trim()) {
+      return;
+    }
+
+    const descriptor = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value');
+    if (descriptor && descriptor.set) {
+      descriptor.set.call(field, name);
+    } else {
+      field.value = name;
+    }
+
+    field.dispatchEvent(new Event('input', { bubbles: true }));
+    field.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+
+  function scheduleWorldpayCardholderSync() {
+    window.clearTimeout(worldpayCardholderSyncTimer);
+    worldpayCardholderSyncTimer = window.setTimeout(syncWorldpayCardholderName, 120);
   }
 
   function deliveryConfig(label) {
@@ -181,6 +230,7 @@
   }
 
   function hydrateForms(state) {
+    checkoutState = state || checkoutState;
     const deliveryForm = root.querySelector('[data-kangoo-delivery-form]');
     if (deliveryForm && state && state.customer) {
       const shipping = state.customer.shipping || {};
@@ -209,6 +259,7 @@
     }
 
     syncDobState(state);
+    scheduleWorldpayCardholderSync();
   }
 
   function syncDobState(state) {
@@ -459,6 +510,9 @@
       deliveryForm.querySelectorAll('input, select, textarea').forEach(function (field) {
         field.addEventListener('input', function () {
           clearFieldError(field);
+          if (field.name === 'full_name') {
+            scheduleWorldpayCardholderSync();
+          }
         });
       });
 
@@ -493,6 +547,7 @@
         api('/delivery', formPayload(deliveryForm)).then(function (state) {
           renderDeliveryOptions(state);
           renderSummary(state);
+          hydrateForms(state);
           setStep('verify', true);
         }).catch(function (error) {
           setMessage('delivery', error.message, true);
@@ -522,7 +577,9 @@
         api('/dob', { dob: dobForm.elements.dob.value }).then(function (state) {
           renderSummary(state);
           syncDobState(state);
+          hydrateForms(state);
           setStep('payment', true);
+          scheduleWorldpayCardholderSync();
         }).catch(function (error) {
           root.dataset.dobValid = 'false';
           setMessage('verify', error.message, true);
@@ -543,6 +600,18 @@
         api('/note', { note: noteField.value }).catch(function () {});
       });
     }
+
+    root.addEventListener('click', function (event) {
+      if (event.target.closest('.wc-block-components-checkout-place-order-button, .wc-block-checkout__actions button')) {
+        syncWorldpayCardholderName();
+      }
+    }, true);
+
+    if ('MutationObserver' in window) {
+      const observer = new MutationObserver(scheduleWorldpayCardholderSync);
+      observer.observe(root, { childList: true, subtree: true });
+    }
+
     refreshState();
   }
 
