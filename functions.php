@@ -3,6 +3,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+require_once get_template_directory() . '/inc/control-panel.php';
 require_once get_template_directory() . '/inc/custom-ajax-checkout.php';
 
 function kangoo_mark_dynamic_commerce_pages_uncacheable() {

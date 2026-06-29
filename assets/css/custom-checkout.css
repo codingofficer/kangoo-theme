@@ -463,82 +463,6 @@
   font-size: 12px;
 }
 
-.kangoo-custom-checkout__payment-pause {
-  display: grid;
-  gap: 12px;
-  margin: 16px 0 0;
-  padding: 16px;
-  color: #0f172a;
-  background: #fff7ed;
-  border: 1px solid #fed7aa;
-  border-radius: 12px;
-}
-
-.kangoo-custom-checkout__payment-pause[hidden] {
-  display: none !important;
-}
-
-.kangoo-custom-checkout__payment-pause strong {
-  color: #111827;
-  font-size: 16px;
-  font-weight: 900;
-}
-
-.kangoo-custom-checkout__payment-pause p {
-  margin: 0;
-  color: #334155;
-  font-size: 13px;
-  line-height: 1.5;
-}
-
-.kangoo-custom-checkout__payment-pause form {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 10px;
-  align-items: end;
-}
-
-.kangoo-custom-checkout__payment-pause label {
-  gap: 6px;
-}
-
-.kangoo-custom-checkout__payment-pause button {
-  min-height: 46px;
-  padding: 0 16px;
-  color: #ffffff;
-  font-size: 13px;
-  font-weight: 900;
-  background: #ff6a00;
-  border: 0;
-  border-radius: 12px;
-  cursor: pointer;
-  white-space: nowrap;
-}
-
-.kangoo-custom-checkout__payment-pause button.is-loading {
-  opacity: 0.72;
-  cursor: progress;
-}
-
-.kangoo-custom-checkout__payment-pause small {
-  grid-column: 1 / -1;
-  color: #166534;
-  font-size: 12px;
-  font-weight: 800;
-}
-
-.kangoo-custom-checkout__payment-pause small:empty {
-  display: none;
-}
-
-.kangoo-custom-checkout__payment-pause small.is-error {
-  color: #b91c1c;
-}
-
-.kangoo-custom-checkout__payment-pause small.is-success {
-  color: #166534;
-}
-
 .kangoo-checkout-guest-notice {
   display: flex;
   align-items: center;
@@ -682,11 +606,6 @@
   width: 100%;
   margin: 14px 0 0;
   padding: 0;
-}
-
-.kangoo-custom-checkout.has-payment-pause .kangoo-custom-checkout__woo-bridge .wc-block-components-notice-banner.is-error,
-.kangoo-custom-checkout.has-payment-pause .kangoo-custom-checkout__woo-bridge .woocommerce-error {
-  display: none !important;
 }
 
 .kangoo-custom-checkout__woo-bridge > .woocommerce,
@@ -1068,11 +987,4 @@ body.woocommerce-cart.kangoo-custom-checkout-enabled .wc-block-components-sideba
     padding: 10px;
   }
 
-  .kangoo-custom-checkout__payment-pause form {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .kangoo-custom-checkout__payment-pause button {
-    width: 100%;
-  }
 }

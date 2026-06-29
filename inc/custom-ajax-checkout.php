@@ -291,18 +291,6 @@ function kangoo_custom_ajax_checkout_shell($checkout_content = '') {
                     <div class="kangoo-custom-checkout__native-bridge">
                         <div class="kangoo-custom-checkout__divider"><?php esc_html_e('Secure payment form', 'kangoo'); ?></div>
                         <p><?php esc_html_e('Enter your payment details below to complete your order securely.', 'kangoo'); ?></p>
-                        <div class="kangoo-custom-checkout__payment-pause" data-kangoo-payment-pause hidden>
-                            <strong><?php esc_html_e('Our payment system is being updated', 'kangoo'); ?></strong>
-                            <p><?php esc_html_e('We are switching payment providers so checkout may be temporarily unavailable. Email hello@kangoopouches.co.uk for help, or leave your email below and we will send you a 20% discount when payments are back.', 'kangoo'); ?></p>
-                            <form data-kangoo-payment-pause-form novalidate>
-                                <label>
-                                    <span><?php esc_html_e('Email address', 'kangoo'); ?></span>
-                                    <input type="email" name="email" autocomplete="email" placeholder="email@domain.com" required>
-                                </label>
-                                <button type="submit"><?php esc_html_e('Notify me and send 20% off', 'kangoo'); ?></button>
-                                <small data-kangoo-payment-pause-message></small>
-                            </form>
-                        </div>
                         <div class="kangoo-custom-checkout__woo-bridge" data-kangoo-woo-bridge>
                             <?php echo $checkout_content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
                         </div>
@@ -471,11 +459,6 @@ function kangoo_custom_ajax_checkout_register_routes() {
     register_rest_route('kangoo-checkout/v1', '/place-order', array(
         'methods' => WP_REST_Server::CREATABLE,
         'callback' => 'kangoo_custom_ajax_checkout_rest_place_order',
-        'permission_callback' => 'kangoo_custom_ajax_checkout_rest_permission',
-    ));
-    register_rest_route('kangoo-checkout/v1', '/payment-waitlist', array(
-        'methods' => WP_REST_Server::CREATABLE,
-        'callback' => 'kangoo_custom_ajax_checkout_rest_payment_waitlist',
         'permission_callback' => 'kangoo_custom_ajax_checkout_rest_permission',
     ));
 }
@@ -672,63 +655,7 @@ function kangoo_custom_ajax_checkout_rest_place_order($request) {
 
     return rest_ensure_response(array(
         'validated' => true,
-        'message' => __('Checkout details validated. Complete payment in the secure WooPayments form.', 'kangoo'),
+        'message' => __('Checkout details validated. Complete payment in the secure payment form.', 'kangoo'),
         'classicCheckoutUrl' => add_query_arg('classic_checkout', '1', wc_get_checkout_url()),
-    ));
-}
-
-function kangoo_custom_ajax_checkout_rest_payment_waitlist($request) {
-    $email = sanitize_email((string) $request->get_param('email'));
-
-    if (!is_email($email)) {
-        return new WP_Error('kangoo_checkout_waitlist_email', __('Enter a valid email address.', 'kangoo'), array('status' => 400));
-    }
-
-    $ip = isset($_SERVER['REMOTE_ADDR']) && preg_match('/^[0-9a-fA-F:.]+$/', (string) $_SERVER['REMOTE_ADDR'])
-        ? (string) $_SERVER['REMOTE_ADDR']
-        : '';
-    $rate_key = 'kangoo_payment_waitlist_' . md5(strtolower($email) . '|' . $ip);
-
-    if (get_transient($rate_key)) {
-        return rest_ensure_response(array(
-            'saved' => true,
-            'message' => __('You are already on the list. We will email you when payments are back.', 'kangoo'),
-        ));
-    }
-
-    set_transient($rate_key, 1, HOUR_IN_SECONDS);
-
-    $post_id = wp_insert_post(array(
-        'post_type'    => 'kangoo_enquiry',
-        'post_status'  => 'publish',
-        'post_title'   => sprintf('[Payment update signup] %s', $email),
-        'post_content' => __('Customer asked to be notified when payments are back and receive the 20% discount.', 'kangoo'),
-    ), true);
-
-    if (is_wp_error($post_id)) {
-        return new WP_Error('kangoo_checkout_waitlist_save', __('We could not save your email. Please email hello@kangoopouches.co.uk.', 'kangoo'), array('status' => 500));
-    }
-
-    update_post_meta($post_id, '_kangoo_contact_name', '');
-    update_post_meta($post_id, '_kangoo_contact_email', $email);
-    update_post_meta($post_id, '_kangoo_contact_topic', 'payment_update');
-    update_post_meta($post_id, '_kangoo_contact_topic_label', __('Payment update signup', 'kangoo'));
-    update_post_meta($post_id, '_kangoo_contact_status', 'new');
-    update_post_meta($post_id, '_kangoo_contact_ip', $ip);
-    update_post_meta($post_id, '_kangoo_contact_user_agent', substr(sanitize_text_field(wp_unslash($_SERVER['HTTP_USER_AGENT'] ?? '')), 0, 255));
-
-    $recipient = function_exists('kangoo_contact_general_email') ? kangoo_contact_general_email() : get_option('admin_email');
-    if (is_email($recipient)) {
-        wp_mail(
-            $recipient,
-            sprintf('[Kangoo Pouches] Payment update signup - %s', $email),
-            sprintf("A customer joined the payment update list.\n\nEmail: %s\nAdmin record: %s", $email, get_edit_post_link($post_id, 'raw')),
-            array('Content-Type: text/plain; charset=UTF-8')
-        );
-    }
-
-    return rest_ensure_response(array(
-        'saved' => true,
-        'message' => __('Thanks. We will email you when payments are back with your 20% discount.', 'kangoo'),
     ));
 }
