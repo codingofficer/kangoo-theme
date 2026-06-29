@@ -788,8 +788,20 @@ body.woocommerce-order-received .kangoo-mascot-helper {
 .site-footer__text,
 .site-footer__menu li a,
 .site-footer__bottom p,
-.site-footer__note {
+.site-footer__note,
+.site-footer__address {
   color: var(--color-text-soft);
+}
+
+.site-footer__address {
+  margin-top: var(--space-4);
+  font-style: normal;
+  line-height: 1.65;
+}
+
+.site-footer__address strong {
+  color: var(--color-text);
+  font-weight: 700;
 }
 
 .site-footer__note {

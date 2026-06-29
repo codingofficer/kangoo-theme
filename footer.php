@@ -7,8 +7,17 @@
             <div class="site-footer__brand">
                 <h3 class="site-footer__title"><?php bloginfo('name'); ?></h3>
                 <p class="site-footer__text">
-                    Kango Pouches is a UK online store for nicotine pouches, caffeine pouches and sample packs, built for speed, clarity and modern product discovery.
+                    Kangoo Pouches is a UK online store for nicotine pouches, caffeine pouches and sample packs, built for speed, clarity and modern product discovery.
                 </p>
+                <address class="site-footer__address">
+                    <strong>Business Address:</strong><br>
+                    Kangoo Pouches<br>
+                    Suite 8, Cragside House<br>
+                    52 Heaton Road<br>
+                    Newcastle upon Tyne<br>
+                    NE6 1SE<br>
+                    United Kingdom
+                </address>
                 <p class="site-footer__note">
                     Fast UK delivery, tracked shipping information, and easy product discovery for first-time customers.
                 </p>
