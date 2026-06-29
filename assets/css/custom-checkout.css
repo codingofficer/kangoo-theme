@@ -835,10 +835,10 @@
   display: inline-flex;
   flex: 0 0 auto;
   align-items: center;
-  align-self: stretch;
-  justify-content: center;
+  align-self: flex-start;
+  justify-content: flex-start;
   gap: 8px;
-  width: 100%;
+  width: auto;
   margin: 4px 0 0;
   pointer-events: none;
   cursor: default;
@@ -847,10 +847,11 @@
 .kangoo-custom-checkout__wallet-logos img {
   display: block;
   box-sizing: border-box;
-  width: auto;
+  width: 100px;
   height: 40px;
   max-width: 126px;
   object-fit: contain;
+  object-position: center;
   padding: 6px 12px;
   border: 1px solid #d8e0ec;
   border-radius: 8px;
@@ -1024,6 +1025,11 @@ body.woocommerce-cart.kangoo-custom-checkout-enabled .wc-block-components-sideba
     height: 35px;
     max-width: 112px;
     padding: 5px 10px;
+  }
+
+  body.woocommerce-checkout .wc-block-checkout__payment-method .wc-block-components-radio-control-accordion-option .wc-block-components-radio-control__label > img,
+  body.woocommerce-checkout .wc-block-checkout__payment-method .wc-block-components-radio-control__label > img.wc-block-components-payment-method-icon {
+    width: 50px;
   }
 
   .kangoo-custom-checkout {
