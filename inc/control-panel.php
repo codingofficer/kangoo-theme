@@ -23,6 +23,50 @@ function kangoo_register_control_panel_options_page() {
 }
 add_action('acf/init', 'kangoo_register_control_panel_options_page', 1);
 
+function kangoo_register_control_panel_subpage($page_title, $menu_title, $menu_slug) {
+    if (!function_exists('acf_add_options_sub_page')) {
+        return;
+    }
+
+    if (function_exists('acf_get_options_page') && acf_get_options_page($menu_slug)) {
+        return;
+    }
+
+    acf_add_options_sub_page(array(
+        'page_title'  => $page_title,
+        'menu_title'  => $menu_title,
+        'menu_slug'   => $menu_slug,
+        'parent_slug' => 'control-panel',
+        'capability'  => 'edit_posts',
+        'redirect'    => false,
+        'post_id'     => 'options',
+        'autoload'    => true,
+        'update_button' => __('Save Settings', 'kangoo'),
+        'updated_message' => __('Kangoo settings updated.', 'kangoo'),
+    ));
+}
+
+function kangoo_register_control_panel_subpages() {
+    kangoo_register_control_panel_subpage(
+        __('Contact Settings', 'kangoo'),
+        __('Contact Settings', 'kangoo'),
+        'contact-settings'
+    );
+
+    kangoo_register_control_panel_subpage(
+        __('Footer', 'kangoo'),
+        __('Footer', 'kangoo'),
+        'footer'
+    );
+
+    kangoo_register_control_panel_subpage(
+        __('Mega Menu Settings', 'kangoo'),
+        __('Mega Menu', 'kangoo'),
+        'mega-menu-settings'
+    );
+}
+add_action('acf/init', 'kangoo_register_control_panel_subpages', 2);
+
 function kangoo_worldpay_gateway_enabled() {
     $enabled = get_option('kangoo_worldpay_gateway_enabled', 0);
 
