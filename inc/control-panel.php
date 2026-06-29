@@ -67,6 +67,34 @@ function kangoo_register_control_panel_subpages() {
 }
 add_action('acf/init', 'kangoo_register_control_panel_subpages', 2);
 
+function kangoo_prioritize_control_panel_submenu() {
+    global $submenu;
+
+    if (empty($submenu['control-panel']) || !is_array($submenu['control-panel'])) {
+        return;
+    }
+
+    $control_panel_item = array(
+        __('Control Panel', 'kangoo'),
+        'edit_posts',
+        'control-panel',
+        __('Kangoo Control Panel', 'kangoo'),
+    );
+
+    $filtered_items = array();
+    foreach ($submenu['control-panel'] as $item) {
+        if (($item[2] ?? '') === 'control-panel') {
+            continue;
+        }
+
+        $filtered_items[] = $item;
+    }
+
+    array_unshift($filtered_items, $control_panel_item);
+    $submenu['control-panel'] = $filtered_items;
+}
+add_action('admin_menu', 'kangoo_prioritize_control_panel_submenu', 9999);
+
 function kangoo_worldpay_gateway_enabled() {
     $enabled = get_option('kangoo_worldpay_gateway_enabled', 0);
 
