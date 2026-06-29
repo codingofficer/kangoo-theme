@@ -8453,14 +8453,10 @@ function kangoo_render_cart_secure_checkout_banner() {
 
     $rendered = true;
 
-    $image_url = get_theme_file_uri('/assets/images/secure-checkout-stripe.png');
-    $avif_url = get_theme_file_uri('/assets/images/secure-checkout-stripe.avif');
+    $image_url = get_theme_file_uri('/assets/images/secure-checkout-worldpay.png');
     ?>
-    <aside class="kangoo-cart-secure-checkout" aria-label="<?php esc_attr_e('Secure checkout powered by Stripe', 'kangoo'); ?>">
-        <picture>
-            <source srcset="<?php echo esc_url($avif_url); ?>" type="image/avif">
-            <img src="<?php echo esc_url($image_url); ?>" width="808" height="264" alt="<?php esc_attr_e('Guaranteed safe and secure checkout powered by Stripe', 'kangoo'); ?>">
-        </picture>
+    <aside class="kangoo-cart-secure-checkout" aria-label="<?php esc_attr_e('Secure checkout powered by Worldpay', 'kangoo'); ?>">
+        <img src="<?php echo esc_url($image_url); ?>" width="300" height="107" alt="<?php esc_attr_e('Secure checkout powered by Worldpay', 'kangoo'); ?>">
     </aside>
     <?php
 }

@@ -2267,10 +2267,10 @@ body.woocommerce-cart {
   display: none !important;
 }
 
-.kangoo-cart-secure-checkout picture,
 .kangoo-cart-secure-checkout img {
   display: block;
-  width: 100%;
+  width: min(300px, 100%);
+  margin-inline: auto;
 }
 
 .kangoo-cart-secure-checkout img {
@@ -5271,20 +5271,15 @@ body.woocommerce-checkout .wc-block-components-radio-control--highlight-checked 
     pointer-events: none;
   }
 
-  body.woocommerce-cart .kangoo-cart-secure-checkout picture,
-  body.woocommerce-cart .cart-collaterals .kangoo-cart-secure-checkout picture {
-    display: block;
-    width: 100vw;
-  }
-
   body.woocommerce-cart .kangoo-cart-secure-checkout img,
   body.woocommerce-cart .cart-collaterals .kangoo-cart-secure-checkout img {
     display: block;
-    width: 100vw !important;
-    max-width: none !important;
+    width: min(300px, 86vw) !important;
+    max-width: 300px !important;
     height: auto !important;
     max-height: none !important;
-    object-fit: fill;
+    margin-inline: auto !important;
+    object-fit: contain;
     border: 0 !important;
     border-radius: 0 !important;
     background: transparent !important;
