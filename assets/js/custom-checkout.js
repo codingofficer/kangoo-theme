@@ -141,9 +141,46 @@
     field.dispatchEvent(new Event('change', { bubbles: true }));
   }
 
+  function themeAssetUrl(path) {
+    const base = window.kangooRewards && window.kangooRewards.theme_url
+      ? window.kangooRewards.theme_url
+      : '/wp-content/themes/kangoo-theme';
+
+    return base.replace(/\/$/, '') + path;
+  }
+
+  function enhanceWorldpayWalletLabels() {
+    if (!root) {
+      return;
+    }
+
+    root.querySelectorAll('input[value="access_worldpay_hpp"]').forEach(function (input) {
+      const option = input.closest('.wc-block-components-radio-control-accordion-option, .wc-block-components-radio-control__option');
+      const label = option ? option.querySelector('.wc-block-components-payment-method-label') : null;
+
+      if (!label || label.querySelector('[data-kangoo-wallet-logos]')) {
+        return;
+      }
+
+      const logos = document.createElement('span');
+      logos.className = 'kangoo-custom-checkout__wallet-logos';
+      logos.setAttribute('data-kangoo-wallet-logos', '');
+      logos.innerHTML = [
+        '<img src="', escapeHtml(themeAssetUrl('/assets/images/google-pay.png')), '" alt="Google Pay">',
+        '<img src="', escapeHtml(themeAssetUrl('/assets/images/apple-pay.png')), '" alt="Apple Pay">'
+      ].join('');
+      label.appendChild(logos);
+    });
+  }
+
+  function syncWorldpayPaymentEnhancements() {
+    syncWorldpayCardholderName();
+    enhanceWorldpayWalletLabels();
+  }
+
   function scheduleWorldpayCardholderSync() {
     window.clearTimeout(worldpayCardholderSyncTimer);
-    worldpayCardholderSyncTimer = window.setTimeout(syncWorldpayCardholderName, 120);
+    worldpayCardholderSyncTimer = window.setTimeout(syncWorldpayPaymentEnhancements, 120);
   }
 
   function deliveryConfig(label) {

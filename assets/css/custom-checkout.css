@@ -860,6 +860,22 @@
   line-height: 1.2 !important;
 }
 
+.kangoo-custom-checkout__wallet-logos {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 6px;
+  margin-left: 2px;
+}
+
+.kangoo-custom-checkout__wallet-logos img {
+  display: block;
+  width: auto;
+  height: 20px;
+  max-width: 74px;
+  object-fit: contain;
+}
+
 .kangoo-custom-checkout__woo-bridge .access_worldpay_checkout-payment-method-images {
   display: inline-flex !important;
   float: none !important;
@@ -1024,6 +1040,19 @@ body.woocommerce-cart.kangoo-custom-checkout-enabled .wc-block-components-sideba
 }
 
 @media (max-width: 520px) {
+  .kangoo-custom-checkout__woo-bridge .wc-block-components-payment-method-label {
+    flex-wrap: wrap;
+  }
+
+  .kangoo-custom-checkout__wallet-logos {
+    margin-left: 0;
+  }
+
+  .kangoo-custom-checkout__wallet-logos img {
+    height: 18px;
+    max-width: 68px;
+  }
+
   .kangoo-custom-checkout {
     padding: 0 4px;
   }
