@@ -3694,10 +3694,18 @@ body.woocommerce-checkout .wc-block-components-payment-methods__save-card-info .
 body.woocommerce-checkout .wc-block-checkout__payment-method .wc-block-components-payment-method-label,
 body.woocommerce-checkout .wc-block-checkout__payment-method .wc-block-components-payment-method-label--with-icon {
   display: inline-flex !important;
-  align-items: center !important;
   gap: 0.6rem !important;
   width: 100% !important;
   min-width: 0 !important;
+}
+
+.wc-block-checkout__payment-method .wc-block-components-radio-control-accordion-option .wc-block-components-radio-control__label img {
+  height: 40px;
+  max-height: 40px;
+  max-width: 100%;
+  object-fit: contain;
+  object-position: left;
+  width: 100px;
 }
 
 body.woocommerce-checkout .wc-block-checkout__payment-method .wc-block-components-payment-method-label--with-icon .wcpay-payment-method-icon,
