@@ -7,12 +7,35 @@ function kangoo_seo_brand_slugs() {
 }
 
 function kangoo_seo_ai_discovery_version() {
-    return '2026-06-25-trends-guides-1';
+    return '2026-06-30-ai-discovery-map-2';
 }
 
 function kangoo_seo_ai_files_last_modified_timestamp() {
     $timestamp = (int) get_option('kangoo_ai_discovery_files_last_modified', 0);
-    return $timestamp > 0 ? $timestamp : time();
+    static $latest_content_timestamp = null;
+
+    if ($latest_content_timestamp === null) {
+        $latest_content_timestamp = 0;
+        $latest = get_posts(array(
+            'post_type' => array('product', 'page', 'kangoo_blog'),
+            'post_status' => 'publish',
+            'posts_per_page' => 1,
+            'orderby' => 'modified',
+            'order' => 'DESC',
+            'fields' => 'ids',
+            'no_found_rows' => true,
+            'update_post_meta_cache' => false,
+            'update_post_term_cache' => false,
+        ));
+
+        if (!empty($latest[0])) {
+            $latest_content_timestamp = (int) get_post_modified_time('U', true, (int) $latest[0]);
+        }
+    }
+
+    $latest = max($timestamp, $latest_content_timestamp);
+
+    return $latest > 0 ? $latest : time();
 }
 
 function kangoo_seo_ai_files_last_modified_http() {
@@ -242,6 +265,380 @@ function kangoo_seo_key_links() {
     );
 }
 
+function kangoo_seo_clean_text($value, $word_limit = 0) {
+    if (is_array($value)) {
+        $value = implode(' ', array_filter(array_map('strval', $value)));
+    }
+
+    $text = html_entity_decode(wp_strip_all_tags(strip_shortcodes((string) $value)), ENT_QUOTES, 'UTF-8');
+
+    $bad_pound = chr(195) . chr(131) . chr(226) . chr(128) . chr(154) . chr(195) . chr(130) . chr(194) . chr(163);
+    $mojibake_pound = chr(195) . chr(130) . chr(194) . chr(163);
+    $mojibake_prefix = chr(195) . chr(130);
+    $mojibake_ubbs_upper = chr(195) . chr(131) . chr(197) . chr(147) . 'bbs';
+    $mojibake_ubbs_lower = chr(195) . chr(131) . chr(194) . chr(188) . 'bbs';
+    $utf8_ubbs_upper = chr(195) . chr(156) . 'bbs';
+    $utf8_ubbs_lower = chr(195) . chr(188) . 'bbs';
+    $utf8_pound = chr(194) . chr(163);
+    $en_dash = chr(226) . chr(128) . chr(147);
+    $em_dash = chr(226) . chr(128) . chr(148);
+    $left_single_quote = chr(226) . chr(128) . chr(152);
+    $right_single_quote = chr(226) . chr(128) . chr(153);
+    $left_double_quote = chr(226) . chr(128) . chr(156);
+    $right_double_quote = chr(226) . chr(128) . chr(157);
+    $ellipsis = chr(226) . chr(128) . chr(166);
+    $bullet = chr(226) . chr(128) . chr(162);
+
+    $text = strtr($text, array(
+        $bad_pound => 'GBP ',
+        $mojibake_pound => 'GBP ',
+        $mojibake_prefix => '',
+        $mojibake_ubbs_upper => 'Ubbs',
+        strtoupper($mojibake_ubbs_upper) => 'UBBS',
+        $mojibake_ubbs_lower => 'Ubbs',
+        $utf8_ubbs_upper => 'Ubbs',
+        $utf8_ubbs_lower => 'Ubbs',
+        '&pound;' => 'GBP ',
+        '&#163;' => 'GBP ',
+        $utf8_pound => 'GBP ',
+    ));
+
+    $text = str_replace(
+        array($en_dash, $em_dash, $left_single_quote, $right_single_quote, $left_double_quote, $right_double_quote, $ellipsis, $bullet),
+        array('-', '-', "'", "'", '"', '"', '...', '-'),
+        $text
+    );
+    $text = preg_replace('/\s+/u', ' ', trim($text));
+
+    if ($word_limit > 0 && str_word_count($text) > $word_limit) {
+        $text = wp_trim_words($text, $word_limit, '...');
+    }
+
+    return $text;
+}
+
+function kangoo_seo_markdown_link($label, $url, $summary = '') {
+    $line = '- [' . kangoo_seo_clean_text($label) . '](' . esc_url_raw($url) . ')';
+    $summary = kangoo_seo_clean_text($summary, 34);
+
+    return $summary !== '' ? $line . ': ' . $summary : $line;
+}
+
+function kangoo_seo_post_meta_description($post_id) {
+    $post_id = absint($post_id);
+    $description = trim((string) get_post_meta($post_id, '_yoast_wpseo_metadesc', true));
+
+    if ($description === '' && get_post_type($post_id) === 'kangoo_blog' && function_exists('kangoo_blog_meta_description')) {
+        $description = kangoo_blog_meta_description($post_id);
+    }
+
+    if ($description === '' && has_excerpt($post_id)) {
+        $description = get_the_excerpt($post_id);
+    }
+
+    if ($description === '') {
+        $description = get_post_field('post_content', $post_id);
+    }
+
+    return kangoo_seo_clean_text($description, 36);
+}
+
+function kangoo_seo_post_discovery_item($post_id, $section = '') {
+    $post_id = absint($post_id);
+    $content_limit = get_post_type($post_id) === 'kangoo_blog' ? 420 : 240;
+
+    return array(
+        'title' => get_the_title($post_id),
+        'url' => get_permalink($post_id),
+        'summary' => kangoo_seo_post_meta_description($post_id),
+        'content' => kangoo_seo_clean_text(get_post_field('post_content', $post_id), $content_limit),
+        'section' => $section,
+        'lastmod' => get_post_modified_time('c', true, $post_id),
+    );
+}
+
+function kangoo_seo_page_item_by_path($path, $fallback_title = '', $fallback_summary = '') {
+    $page = get_page_by_path(trim((string) $path, '/'));
+
+    if (!$page instanceof WP_Post || $page->post_status !== 'publish') {
+        return null;
+    }
+
+    $item = kangoo_seo_post_discovery_item($page->ID, 'Support and legal');
+
+    if ($fallback_title !== '') {
+        $item['title'] = $fallback_title;
+    }
+
+    if ($item['summary'] === '' && $fallback_summary !== '') {
+        $item['summary'] = $fallback_summary;
+    }
+
+    return $item;
+}
+
+function kangoo_seo_term_acf_value($term, $field) {
+    if (!$term instanceof WP_Term) {
+        return '';
+    }
+
+    $acf_key = $term->taxonomy . '_' . $term->term_id;
+
+    if (function_exists('get_field')) {
+        $value = get_field($field, $acf_key);
+
+        if ($value !== null && $value !== '') {
+            return $value;
+        }
+    }
+
+    return get_term_meta($term->term_id, $field, true);
+}
+
+function kangoo_seo_term_questions($term) {
+    if (!$term instanceof WP_Term) {
+        return array();
+    }
+
+    if (
+        $term->taxonomy === 'product_cat'
+        && function_exists('kangoo_get_brand_authority_profile')
+        && !empty(kangoo_get_brand_authority_profile($term->slug))
+        && function_exists('kangoo_get_brand_authority_faq')
+    ) {
+        $rows = kangoo_get_brand_authority_faq($term->slug);
+    } else {
+        $rows = kangoo_seo_term_acf_value($term, 'category_faq');
+    }
+
+    $people_also_ask = kangoo_seo_term_acf_value($term, 'category_people_also_ask');
+    $rows = array_merge(is_array($rows) ? $rows : array(), is_array($people_also_ask) ? $people_also_ask : array());
+    $questions = array();
+
+    foreach ($rows as $row) {
+        $question = isset($row['question']) ? kangoo_seo_clean_text($row['question']) : '';
+        $answer = isset($row['answer']) ? kangoo_seo_clean_text($row['answer'], 70) : '';
+
+        if ($question !== '' && $answer !== '') {
+            $questions[] = array(
+                'question' => $question,
+                'answer' => $answer,
+            );
+        }
+    }
+
+    return $questions;
+}
+
+function kangoo_seo_term_discovery_item($term, $section = '') {
+    if (!$term instanceof WP_Term) {
+        return null;
+    }
+
+    $url = get_term_link($term);
+
+    if (is_wp_error($url) || !$url) {
+        return null;
+    }
+
+    $intro = kangoo_seo_term_acf_value($term, 'category_intro');
+    $seo_title = kangoo_seo_term_acf_value($term, 'category_seo_title');
+    $seo_content = kangoo_seo_term_acf_value($term, 'category_seo_content');
+
+    if (
+        $term->taxonomy === 'product_cat'
+        && function_exists('kangoo_get_brand_authority_profile')
+        && !empty(kangoo_get_brand_authority_profile($term->slug))
+    ) {
+        $profile = kangoo_get_brand_authority_profile($term->slug);
+        $seo_title = !empty($profile['label']) ? $profile['label'] . ' Nicotine Pouches' : $seo_title;
+
+        if (function_exists('kangoo_get_brand_authority_intro')) {
+            $intro = kangoo_get_brand_authority_intro($term->slug);
+        }
+
+        if (function_exists('kangoo_get_brand_authority_content')) {
+            $seo_content = kangoo_get_brand_authority_content($term->slug);
+        }
+    }
+
+    $title = kangoo_seo_clean_text($seo_title !== '' ? $seo_title : $term->name);
+    $summary = kangoo_seo_clean_text($intro !== '' ? $intro : $term->description, 38);
+    $content_parts = array_filter(array(
+        $summary,
+        kangoo_seo_clean_text($seo_content, 260),
+    ));
+
+    foreach (kangoo_seo_term_questions($term) as $question) {
+        $content_parts[] = 'Q: ' . $question['question'] . ' A: ' . $question['answer'];
+    }
+
+    return array(
+        'title' => $title,
+        'url' => $url,
+        'summary' => $summary,
+        'content' => kangoo_seo_clean_text(implode(' ', $content_parts), 420),
+        'section' => $section,
+        'count' => (int) $term->count,
+        'lastmod' => '',
+    );
+}
+
+function kangoo_seo_get_terms_for_discovery($taxonomy, $slugs = array(), $minimum_count = 1) {
+    $args = array(
+        'taxonomy' => $taxonomy,
+        'hide_empty' => false,
+        'number' => 0,
+        'orderby' => 'name',
+        'order' => 'ASC',
+    );
+
+    if (!empty($slugs)) {
+        $args['slug'] = array_values(array_map('sanitize_title', (array) $slugs));
+    }
+
+    $terms = get_terms($args);
+
+    if (is_wp_error($terms) || !is_array($terms)) {
+        return array();
+    }
+
+    $blocked = array('caffeine-pouches', 'uncategorized');
+
+    return array_values(array_filter($terms, static function ($term) use ($minimum_count, $blocked) {
+        return $term instanceof WP_Term
+            && !in_array($term->slug, $blocked, true)
+            && ((int) $term->count >= $minimum_count || in_array($term->slug, kangoo_seo_brand_slugs(), true));
+    }));
+}
+
+function kangoo_seo_discovery_group_items($context = 'summary') {
+    $brand_slugs = kangoo_seo_brand_slugs();
+    $groups = array();
+
+    $groups[] = array(
+        'title' => 'Core discovery resources',
+        'intro' => 'Important Kangoo Pouches discovery, sitemap and buying-start pages.',
+        'items' => array(
+            array(
+                'title' => 'Home',
+                'url' => home_url('/'),
+                'summary' => 'Kangoo Pouches UK homepage for tobacco-free nicotine pouches, brand browsing and current shopping routes.',
+                'content' => 'Kangoo Pouches is a UK online retailer for tobacco-free nicotine pouches. Use live product and category pages for current price, stock, delivery and checkout details.',
+            ),
+            array(
+                'title' => 'Blog and guides',
+                'url' => get_post_type_archive_link('kangoo_blog') ?: home_url('/blog/'),
+                'summary' => 'Kangoo Pouches guides, comparisons and buying advice for nicotine pouch shoppers.',
+                'content' => 'Kangoo Pouches publishes guides about brands, strengths, flavours, snus wording and practical buying decisions for adults aged 18 and over.',
+            ),
+            array(
+                'title' => 'Human sitemap',
+                'url' => home_url('/sitemap/'),
+                'summary' => 'Human-readable grouped sitemap for Kangoo Pouches shop, brand, guide, flavour, strength, help and legal pages.',
+                'content' => 'Use this sitemap to find the main Kangoo Pouches ecommerce and education pages.',
+            ),
+            array(
+                'title' => 'Yoast XML sitemap',
+                'url' => home_url('/sitemap_index.xml'),
+                'summary' => 'Canonical XML sitemap index generated by Yoast SEO.',
+                'content' => 'Search engines should use the Yoast XML sitemap index for canonical crawl discovery.',
+            ),
+            array(
+                'title' => 'Full LLM context',
+                'url' => home_url('/llms-full.txt'),
+                'summary' => 'Expanded clean text context for Kangoo Pouches categories, guides, support pages and product catalogue.',
+                'content' => 'AI assistants can use the full LLM context, then confirm live stock and pricing on canonical product pages.',
+            ),
+        ),
+    );
+
+    $shop_terms = array_filter(kangoo_seo_get_terms_for_discovery('product_cat', array(), 1), static function ($term) use ($brand_slugs) {
+        return $term instanceof WP_Term && !in_array($term->slug, $brand_slugs, true);
+    });
+    $groups[] = array(
+        'title' => 'Shop and category pages',
+        'intro' => 'Commercial category pages where shoppers compare live Kangoo Pouches products.',
+        'items' => array_values(array_filter(array_map(static function ($term) {
+            return kangoo_seo_term_discovery_item($term, 'Shop and category pages');
+        }, $shop_terms))),
+    );
+
+    $brand_terms = kangoo_seo_get_terms_for_discovery('product_cat', $brand_slugs, 0);
+    $groups[] = array(
+        'title' => 'Brand category pages',
+        'intro' => 'Live brand category pages with current products and brand authority copy.',
+        'items' => array_values(array_filter(array_map(static function ($term) {
+            return kangoo_seo_term_discovery_item($term, 'Brand category pages');
+        }, $brand_terms))),
+    );
+
+    $groups[] = array(
+        'title' => 'Flavour pages',
+        'intro' => 'Flavour archive pages for comparing pouch profiles.',
+        'items' => array_values(array_filter(array_map(static function ($term) {
+            return kangoo_seo_term_discovery_item($term, 'Flavour pages');
+        }, kangoo_seo_get_terms_for_discovery('pa_flavour', array(), 3)))),
+    );
+
+    $groups[] = array(
+        'title' => 'Strength pages',
+        'intro' => 'Strength archive pages for comparing pouch nicotine levels.',
+        'items' => array_values(array_filter(array_map(static function ($term) {
+            return kangoo_seo_term_discovery_item($term, 'Strength pages');
+        }, kangoo_seo_get_terms_for_discovery('pa_strength', array(), 3)))),
+    );
+
+    $guide_limit = $context === 'summary' ? 60 : -1;
+    $guide_ids = get_posts(array(
+        'post_type' => 'kangoo_blog',
+        'post_status' => 'publish',
+        'posts_per_page' => $guide_limit,
+        'orderby' => 'modified',
+        'order' => 'DESC',
+        'fields' => 'ids',
+        'no_found_rows' => true,
+    ));
+    $groups[] = array(
+        'title' => 'Guides and buying advice',
+        'intro' => 'Educational and commercial guides that support brand, flavour, strength and buying queries.',
+        'items' => array_map(static function ($post_id) {
+            return kangoo_seo_post_discovery_item($post_id, 'Guides and buying advice');
+        }, $guide_ids),
+    );
+
+    $support_items = array_filter(array(
+        kangoo_seo_page_item_by_path('contact', 'Contact Kangoo Pouches', 'Contact Kangoo Pouches for order help, delivery questions, product recommendations and general enquiries.'),
+        kangoo_seo_page_item_by_path('delivery-shipping', 'Delivery and shipping', 'Delivery information for Kangoo Pouches UK orders.'),
+        kangoo_seo_page_item_by_path('returns-refunds', 'Returns and refunds', 'Returns and refunds information for Kangoo Pouches customers.'),
+        kangoo_seo_page_item_by_path('kangoo-rewards', 'Kangoo Rewards', 'Kangoo rewards information for points and customer discounts.'),
+        kangoo_seo_page_item_by_path('referral-program', 'Referral Program', 'Kangoo Pouches referral programme information.'),
+        kangoo_seo_page_item_by_path('privacy-policy', 'Privacy Policy', 'Privacy policy for Kangoo Pouches.'),
+        kangoo_seo_page_item_by_path('terms-conditions', 'Terms and conditions', 'Terms and conditions for Kangoo Pouches.'),
+        kangoo_seo_page_item_by_path('terms-and-conditions', 'Terms and conditions', 'Terms and conditions for Kangoo Pouches.'),
+        kangoo_seo_page_item_by_path('cookie-policy', 'Cookie Policy', 'Cookie policy for Kangoo Pouches.'),
+        kangoo_seo_page_item_by_path('18-policy', '18+ Policy', 'Age-restricted product policy for Kangoo Pouches.'),
+    ));
+    $seen_support_urls = array();
+    $support_items = array_values(array_filter($support_items, static function ($item) use (&$seen_support_urls) {
+        if (empty($item['url']) || isset($seen_support_urls[$item['url']])) {
+            return false;
+        }
+
+        $seen_support_urls[$item['url']] = true;
+        return true;
+    }));
+    $groups[] = array(
+        'title' => 'Help, trust and legal pages',
+        'intro' => 'Support, delivery, policy and trust pages that clarify the buying experience.',
+        'items' => $support_items,
+    );
+
+    return array_values(array_filter($groups, static function ($group) {
+        return !empty($group['items']);
+    }));
+}
+
 function kangoo_seo_render_llms_summary() {
     $threshold = kangoo_seo_free_shipping_threshold();
     $lines = array(
@@ -264,15 +661,27 @@ function kangoo_seo_render_llms_summary() {
         '- Catalogue: live prices and stock are authoritative on canonical product pages',
         '- Brand authority pages explain what each pouch brand is, how pouches are used, typical flavours, strength comparisons, tobacco-free positioning and snus wording',
         '',
-        '## Key pages',
+        '## Sitemaps and AI resources',
+        '- [Yoast XML sitemap](' . home_url('/sitemap_index.xml') . '): canonical XML sitemap index generated by Yoast SEO.',
+        '- [Human sitemap](' . home_url('/sitemap/') . '): grouped Kangoo Pouches sitemap for shoppers, crawlers and AI assistants.',
+        '- [LLM full context](' . home_url('/llms-full.txt') . '): expanded clean text version of indexable ecommerce, guide and catalogue content.',
     );
 
-    foreach (kangoo_seo_key_links() as $label => $url) {
-        $lines[] = '- [' . $label . '](' . $url . ')';
+    foreach (kangoo_seo_discovery_group_items('summary') as $group) {
+        $lines[] = '';
+        $lines[] = '## ' . $group['title'];
+
+        if (!empty($group['intro'])) {
+            $lines[] = kangoo_seo_clean_text($group['intro']);
+        }
+
+        foreach ($group['items'] as $item) {
+            $lines[] = kangoo_seo_markdown_link($item['title'], $item['url'], $item['summary']);
+        }
     }
 
     $lines[] = '';
-    $lines[] = 'For the complete product catalogue with availability labels, use ' . home_url('/llms-full.txt') . '.';
+    $lines[] = 'For expanded clean page context and the complete product catalogue with availability labels, use ' . home_url('/llms-full.txt') . '.';
 
     return implode("\n", $lines) . "\n";
 }
@@ -280,6 +689,7 @@ function kangoo_seo_render_llms_summary() {
 function kangoo_seo_render_llms_sitemap() {
     $lastmod = gmdate('Y-m-d', kangoo_seo_ai_files_last_modified_timestamp());
     $urls = array(
+        home_url('/sitemap/'),
         home_url('/llms.txt'),
         home_url('/llms-full.txt'),
     );
@@ -328,16 +738,54 @@ function kangoo_seo_discovery_brand_name($brand) {
 
 function kangoo_seo_render_llms_full() {
     $lines = array(
-        rtrim(kangoo_seo_render_llms_summary()),
+        '# Kangoo Pouches Full LLM Context',
+        '',
+        'Generated: ' . gmdate('Y-m-d H:i', kangoo_seo_ai_files_last_modified_timestamp()) . ' UTC',
+        'Version: ' . kangoo_seo_ai_discovery_version(),
+        '',
+        'Kangoo Pouches is a UK online retailer of tobacco-free nicotine pouches for adults aged 18 and over. Product availability, prices and catalogue contents change frequently; canonical product pages remain the source of truth for live stock, price and checkout details.',
+        '',
+        'Canonical XML sitemap: ' . home_url('/sitemap_index.xml'),
+        'Human sitemap: ' . home_url('/sitemap/'),
+        'Summary LLM file: ' . home_url('/llms.txt'),
         '',
         '## Brand authority coverage',
         '- ZYN, VELO, PABLO, KILLA, Nordic Spirit, Ubbs, FUMi and XQS each have a live WooCommerce brand category and a dedicated educational brand guide.',
         '- Brand guides cover what the pouch brand is, what is typically inside the pouches, how pouches are used, common flavour directions, strength and format comparisons, and adult nicotine cautions.',
         '- Product and category pages remain the source of truth for current price, stock, pouch count, exact strength and pack pricing.',
         '- Product availability changes frequently. Availability fields reflect the current status when this file was generated.',
-        '',
-        '## Product catalogue',
     );
+
+    foreach (kangoo_seo_discovery_group_items('full') as $group) {
+        $lines[] = '';
+        $lines[] = '## ' . $group['title'];
+
+        if (!empty($group['intro'])) {
+            $lines[] = kangoo_seo_clean_text($group['intro']);
+        }
+
+        foreach ($group['items'] as $item) {
+            $lines[] = '';
+            $lines[] = '### ' . kangoo_seo_clean_text($item['title']);
+            $lines[] = 'URL: ' . esc_url_raw($item['url']);
+
+            if (!empty($item['summary'])) {
+                $lines[] = 'SEO description: ' . kangoo_seo_clean_text($item['summary'], 42);
+            }
+
+            if (!empty($item['lastmod'])) {
+                $lines[] = 'Last modified: ' . kangoo_seo_clean_text($item['lastmod']);
+            }
+
+            if (!empty($item['content'])) {
+                $lines[] = 'Content:';
+                $lines[] = kangoo_seo_clean_text($item['content'], 520);
+            }
+        }
+    }
+
+    $lines[] = '';
+    $lines[] = '## Product catalogue';
 
     if (!function_exists('wc_get_products')) {
         return implode("\n", $lines) . "\n";
@@ -375,6 +823,134 @@ function kangoo_seo_render_llms_full() {
     }
 
     return implode("\n", $lines) . "\n";
+}
+
+function kangoo_seo_is_human_sitemap_request() {
+    if (is_admin() || wp_doing_ajax() || wp_doing_cron()) {
+        return false;
+    }
+
+    $path = trim((string) wp_parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH), '/');
+
+    return $path === 'sitemap';
+}
+
+function kangoo_seo_human_sitemap_template($template) {
+    if (!kangoo_seo_is_human_sitemap_request()) {
+        return $template;
+    }
+
+    global $wp_query;
+
+    if ($wp_query instanceof WP_Query) {
+        $wp_query->is_404 = false;
+        $wp_query->is_page = true;
+        $wp_query->is_singular = true;
+    }
+
+    status_header(200);
+
+    $sitemap_template = get_theme_file_path('/page-sitemap.php');
+
+    return file_exists($sitemap_template) ? $sitemap_template : $template;
+}
+add_filter('template_include', 'kangoo_seo_human_sitemap_template', 1);
+
+function kangoo_seo_human_sitemap_title_parts($parts) {
+    if (kangoo_seo_is_human_sitemap_request()) {
+        $parts['title'] = __('Sitemap', 'kangoo');
+    }
+
+    return $parts;
+}
+add_filter('document_title_parts', 'kangoo_seo_human_sitemap_title_parts', 40);
+
+function kangoo_seo_human_sitemap_yoast_title($title) {
+    return kangoo_seo_is_human_sitemap_request()
+        ? __('Sitemap | Kangoo Pouches Shop, Brands & Guides', 'kangoo')
+        : $title;
+}
+add_filter('wpseo_title', 'kangoo_seo_human_sitemap_yoast_title', 40);
+
+function kangoo_seo_human_sitemap_yoast_description($description) {
+    return kangoo_seo_is_human_sitemap_request()
+        ? __('Find Kangoo Pouches shop categories, brand pages, flavour and strength pages, buying guides, support pages and XML sitemap links.', 'kangoo')
+        : $description;
+}
+add_filter('wpseo_metadesc', 'kangoo_seo_human_sitemap_yoast_description', 40);
+
+function kangoo_seo_human_sitemap_yoast_canonical($canonical) {
+    return kangoo_seo_is_human_sitemap_request() ? home_url('/sitemap/') : $canonical;
+}
+add_filter('wpseo_canonical', 'kangoo_seo_human_sitemap_yoast_canonical', 40);
+
+function kangoo_seo_render_human_sitemap_content() {
+    $groups = kangoo_seo_discovery_group_items('summary');
+    ob_start();
+    ?>
+    <main class="kangoo-sitemap">
+        <section class="section kangoo-sitemap__hero">
+            <div class="container">
+                <div class="kangoo-sitemap__hero-inner">
+                    <div>
+                        <span class="eyebrow"><?php esc_html_e('Kangoo sitemap', 'kangoo'); ?></span>
+                        <h1><?php esc_html_e('Shop, brand and guide pages', 'kangoo'); ?></h1>
+                        <p><?php esc_html_e('Use this grouped sitemap to find Kangoo Pouches shopping categories, brand pages, flavour and strength pages, buying guides, support information and crawl resources.', 'kangoo'); ?></p>
+                    </div>
+                    <aside class="kangoo-sitemap__note" aria-label="<?php esc_attr_e('Sitemap note', 'kangoo'); ?>">
+                        <strong><?php esc_html_e('Live ecommerce index', 'kangoo'); ?></strong>
+                        <p><?php esc_html_e('Prices, stock and delivery details can change. Canonical product pages remain the source of truth for live shopping information.', 'kangoo'); ?></p>
+                        <span><?php printf(esc_html__('Last updated: %s', 'kangoo'), esc_html(kangoo_seo_ai_files_last_modified_text())); ?></span>
+                    </aside>
+                </div>
+            </div>
+        </section>
+
+        <section class="section kangoo-sitemap__content" aria-labelledby="kangoo-sitemap-content-title">
+            <div class="container">
+                <header class="section-header section-header--left">
+                    <span class="eyebrow"><?php esc_html_e('Browse', 'kangoo'); ?></span>
+                    <h2 id="kangoo-sitemap-content-title"><?php esc_html_e('Kangoo Pouches page index', 'kangoo'); ?></h2>
+                </header>
+
+                <div class="kangoo-sitemap__grid">
+                    <?php foreach ($groups as $group) : ?>
+                        <article class="kangoo-sitemap__card">
+                            <header>
+                                <span class="kangoo-sitemap__count">
+                                    <?php
+                                    printf(
+                                        esc_html(_n('%d page', '%d pages', count($group['items']), 'kangoo')),
+                                        absint(count($group['items']))
+                                    );
+                                    ?>
+                                </span>
+                                <h3><?php echo esc_html($group['title']); ?></h3>
+                                <?php if (!empty($group['intro'])) : ?>
+                                    <p><?php echo esc_html(kangoo_seo_clean_text($group['intro'], 28)); ?></p>
+                                <?php endif; ?>
+                            </header>
+
+                            <ul class="kangoo-sitemap__list">
+                                <?php foreach ($group['items'] as $item) : ?>
+                                    <li>
+                                        <a href="<?php echo esc_url($item['url']); ?>">
+                                            <span><?php echo esc_html($item['title']); ?></span>
+                                        </a>
+                                        <?php if (!empty($item['summary'])) : ?>
+                                            <p><?php echo esc_html(kangoo_seo_clean_text($item['summary'], 24)); ?></p>
+                                        <?php endif; ?>
+                                    </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </article>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        </section>
+    </main>
+    <?php
+    return ob_get_clean();
 }
 
 function kangoo_seo_serve_ai_files() {
