@@ -886,6 +886,22 @@ add_filter('wpseo_canonical', 'kangoo_seo_human_sitemap_yoast_canonical', 40);
 
 function kangoo_seo_render_human_sitemap_content() {
     $groups = kangoo_seo_discovery_group_items('summary');
+    $left_column_titles = array(
+        'Core discovery resources',
+        'Brand category pages',
+        'Strength pages',
+        'Help, trust and legal pages',
+    );
+    $columns = array(
+        'primary' => array(),
+        'secondary' => array(),
+    );
+
+    foreach ($groups as $group) {
+        $column = in_array($group['title'], $left_column_titles, true) ? 'primary' : 'secondary';
+        $columns[$column][] = $group;
+    }
+
     ob_start();
     ?>
     <main class="kangoo-sitemap">
@@ -914,36 +930,40 @@ function kangoo_seo_render_human_sitemap_content() {
                 </header>
 
                 <div class="kangoo-sitemap__grid">
-                    <?php foreach ($groups as $group) : ?>
-                        <article class="kangoo-sitemap__card">
-                            <header>
-                                <span class="kangoo-sitemap__count">
-                                    <?php
-                                    printf(
-                                        esc_html(_n('%d page', '%d pages', count($group['items']), 'kangoo')),
-                                        absint(count($group['items']))
-                                    );
-                                    ?>
-                                </span>
-                                <h3><?php echo esc_html($group['title']); ?></h3>
-                                <?php if (!empty($group['intro'])) : ?>
-                                    <p><?php echo esc_html(kangoo_seo_clean_text($group['intro'], 28)); ?></p>
-                                <?php endif; ?>
-                            </header>
-
-                            <ul class="kangoo-sitemap__list">
-                                <?php foreach ($group['items'] as $item) : ?>
-                                    <li>
-                                        <a href="<?php echo esc_url($item['url']); ?>">
-                                            <span><?php echo esc_html($item['title']); ?></span>
-                                        </a>
-                                        <?php if (!empty($item['summary'])) : ?>
-                                            <p><?php echo esc_html(kangoo_seo_clean_text($item['summary'], 24)); ?></p>
+                    <?php foreach ($columns as $column_groups) : ?>
+                        <div class="kangoo-sitemap__column">
+                            <?php foreach ($column_groups as $group) : ?>
+                                <article class="kangoo-sitemap__card">
+                                    <header>
+                                        <span class="kangoo-sitemap__count">
+                                            <?php
+                                            printf(
+                                                esc_html(_n('%d page', '%d pages', count($group['items']), 'kangoo')),
+                                                absint(count($group['items']))
+                                            );
+                                            ?>
+                                        </span>
+                                        <h3><?php echo esc_html($group['title']); ?></h3>
+                                        <?php if (!empty($group['intro'])) : ?>
+                                            <p><?php echo esc_html(kangoo_seo_clean_text($group['intro'], 28)); ?></p>
                                         <?php endif; ?>
-                                    </li>
-                                <?php endforeach; ?>
-                            </ul>
-                        </article>
+                                    </header>
+
+                                    <ul class="kangoo-sitemap__list">
+                                        <?php foreach ($group['items'] as $item) : ?>
+                                            <li>
+                                                <a href="<?php echo esc_url($item['url']); ?>">
+                                                    <span><?php echo esc_html($item['title']); ?></span>
+                                                </a>
+                                                <?php if (!empty($item['summary'])) : ?>
+                                                    <p><?php echo esc_html(kangoo_seo_clean_text($item['summary'], 24)); ?></p>
+                                                <?php endif; ?>
+                                            </li>
+                                        <?php endforeach; ?>
+                                    </ul>
+                                </article>
+                            <?php endforeach; ?>
+                        </div>
                     <?php endforeach; ?>
                 </div>
             </div>
