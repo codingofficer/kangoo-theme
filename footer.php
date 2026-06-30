@@ -40,6 +40,7 @@
                         <li><a href="<?php echo esc_url(home_url('/kangoo-app/')); ?>">Kangoo App</a></li>
                         <li><a href="<?php echo esc_url(home_url('/product-category/nicotine-pouches/')); ?>">Nicotine pouches</a></li>
                         <li><a href="<?php echo esc_url(home_url('/blog/')); ?>">Blog</a></li>
+                        <li><a href="<?php echo esc_url(home_url('/sitemap/')); ?>">Sitemap</a></li>
                     </ul>
                 <?php endif; ?>
             </div>
@@ -52,6 +53,7 @@
                     <li><a href="<?php echo esc_url(home_url('/kangoo-rewards/')); ?>">Kangoo Rewards</a></li>
                     <li><a href="<?php echo esc_url(home_url('/referral-program/')); ?>">Referral Program</a></li>
                     <li><a href="<?php echo esc_url(home_url('/faq/')); ?>">FAQ</a></li>
+                    <li><a href="<?php echo esc_url(home_url('/sitemap/')); ?>">Sitemap</a></li>
                     <li><a href="<?php echo esc_url(home_url('/contact/')); ?>">Contact us</a></li>
                 </ul>
             </div>
