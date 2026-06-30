@@ -17,8 +17,8 @@ $strength_url = function_exists('kangoo_get_page_url_by_template') ? kangoo_get_
 $flavour_url = function_exists('kangoo_get_page_url_by_template') ? kangoo_get_page_url_by_template('page-templates/template-flavour-explorer.php', '/flavour-explorer/') : home_url('/flavour-explorer/');
 
 $target_links = array(
-    array('label' => __('99p pouches', 'kangoo'), 'url' => $trial_url),
-    array('label' => __('Compare pouches', 'kangoo'), 'url' => $compare_url),
+    array('label' => __('99p nicotine pouches now from 79p', 'kangoo'), 'url' => $trial_url),
+    array('label' => __('Compare nicotine pouches', 'kangoo'), 'url' => $compare_url),
     array('label' => __('Pouch finder', 'kangoo'), 'url' => $finder_url),
     array('label' => __('Strength ladder', 'kangoo'), 'url' => $strength_url),
     array('label' => __('Flavour explorer', 'kangoo'), 'url' => $flavour_url),
@@ -124,6 +124,61 @@ $render_product_rail = static function ($products, $title, $copy = '') {
     <?php
 };
 
+$priority_links = array(
+    array('label' => __('Nicotine pouches UK', 'kangoo'), 'url' => $nicotine_url),
+    array('label' => __('Price checked nicotine pouches', 'kangoo'), 'url' => $nicotine_url),
+    array('label' => __('99p nicotine pouches now from 79p', 'kangoo'), 'url' => $trial_url),
+);
+
+if ($context_type === 'nicotine') {
+    $priority_links = array_merge(
+        $priority_links,
+        array_slice($brand_links, 0, 4),
+        array(
+            array('label' => __('Mint nicotine pouches', 'kangoo'), 'url' => home_url('/mint-nicotine-pouches/')),
+            array('label' => __('Strong nicotine pouches', 'kangoo'), 'url' => home_url('/strong-strength-nicotine-pouches/')),
+        )
+    );
+} elseif ($context_type === 'trial') {
+    $priority_links = array_merge(
+        $priority_links,
+        array(
+            array('label' => __('Cheap nicotine pouches UK', 'kangoo'), 'url' => $trial_url),
+            array('label' => __('Strong nicotine pouches', 'kangoo'), 'url' => home_url('/strong-strength-nicotine-pouches/')),
+            array('label' => __('Mint nicotine pouches', 'kangoo'), 'url' => home_url('/mint-nicotine-pouches/')),
+        )
+    );
+} elseif ($context_type === 'brand') {
+    $priority_links = array_merge(
+        $priority_links,
+        array(
+            array('label' => __('Compare this brand', 'kangoo'), 'url' => $compare_url),
+            array('label' => __('Mint nicotine pouches', 'kangoo'), 'url' => home_url('/mint-nicotine-pouches/')),
+            array('label' => __('Strong nicotine pouches', 'kangoo'), 'url' => home_url('/strong-strength-nicotine-pouches/')),
+        )
+    );
+} elseif ($context_type === 'flavour') {
+    $priority_links = array_merge(
+        $priority_links,
+        array(
+            array('label' => __('Flavour explorer', 'kangoo'), 'url' => $flavour_url),
+            array('label' => __('ZYN nicotine pouches', 'kangoo'), 'url' => function_exists('kangoo_get_term_url_by_slug') ? kangoo_get_term_url_by_slug('product_cat', 'zyn', '/product-category/zyn/') : home_url('/product-category/zyn/')),
+            array('label' => __('VELO nicotine pouches', 'kangoo'), 'url' => function_exists('kangoo_get_term_url_by_slug') ? kangoo_get_term_url_by_slug('product_cat', 'velo', '/product-category/velo/') : home_url('/product-category/velo/')),
+        )
+    );
+} elseif ($context_type === 'strength') {
+    $priority_links = array_merge(
+        $priority_links,
+        array(
+            array('label' => __('Strength ladder', 'kangoo'), 'url' => $strength_url),
+            array('label' => __('Extra strong nicotine pouches', 'kangoo'), 'url' => home_url('/extra-strong-strength-nicotine-pouches/')),
+            array('label' => __('Pouch finder', 'kangoo'), 'url' => $finder_url),
+        )
+    );
+}
+
+$priority_links = array_values(array_unique($priority_links, SORT_REGULAR));
+
 $trial_products = function_exists('kangoo_get_trial_products') ? kangoo_get_trial_products(6) : array();
 ?>
 
@@ -193,7 +248,7 @@ $trial_products = function_exists('kangoo_get_trial_products') ? kangoo_get_tria
                 </section>
             <?php endif; ?>
 
-            <?php $render_product_rail($trial_products, __('Cheap 99p nicotine pouch trials', 'kangoo'), __('Try selected pouches at 99p before building a bigger order. Trial products are limited to one per order while stock lasts.', 'kangoo')); ?>
+            <?php $render_product_rail($trial_products, __('Cheap 99p nicotine pouch trials now from 79p', 'kangoo'), __('Try selected pouches from 79p before building a bigger order. Trial products are limited to one per order while stock lasts.', 'kangoo')); ?>
 
             <?php if (!empty($comparison_rows)) : ?>
                 <section class="seo-module seo-module--comparison">
@@ -383,6 +438,16 @@ $trial_products = function_exists('kangoo_get_trial_products') ? kangoo_get_tria
                 <?php $render_link_chips(array_merge(array(array('label' => __('Strength ladder', 'kangoo'), 'url' => $strength_url), array('label' => __('Pouch finder', 'kangoo'), 'url' => $finder_url)), $strength_links, $brand_links)); ?>
             </section>
             <?php $render_product_rail($strength_products, sprintf(__('Popular %s pouches', 'kangoo'), strtolower($clean_strength)), __('Live product picks from Kangoo Pouches, shown with in-stock products first where possible.', 'kangoo')); ?>
+        <?php endif; ?>
+
+        <?php if (!empty($priority_links)) : ?>
+            <section class="seo-module seo-module--authority-links" aria-label="<?php esc_attr_e('Related Kangoo Pouches pages', 'kangoo'); ?>">
+                <div class="seo-module__head">
+                    <h2><?php esc_html_e('Explore more nicotine pouch pages', 'kangoo'); ?></h2>
+                    <p><?php esc_html_e('Jump between the main nicotine pouch range, price checked trial offers, brand pages, flavour pages and strength guides.', 'kangoo'); ?></p>
+                </div>
+                <?php $render_link_chips($priority_links); ?>
+            </section>
         <?php endif; ?>
 
         <p class="seo-nicotine-warning">
