@@ -40,6 +40,7 @@ $flavour_links = array(
     array('label' => __('Mint nicotine pouches', 'kangoo'), 'url' => home_url('/mint-nicotine-pouches/')),
     array('label' => __('Berry nicotine pouches', 'kangoo'), 'url' => home_url('/berry-nicotine-pouches/')),
 );
+$delivery_city_links = function_exists('kangoo_delivery_city_featured_links') ? kangoo_delivery_city_featured_links(5) : array();
 
 $render_link_chips = static function ($links) {
     if (empty($links)) {
@@ -303,6 +304,13 @@ $trial_products = function_exists('kangoo_get_trial_products') ? kangoo_get_tria
                         <p><?php esc_html_e('Shop ZYN, VELO, PABLO and KILLA pages when you already know the brand you want to compare.', 'kangoo'); ?></p>
                         <?php $render_link_chips($brand_links); ?>
                     </article>
+                    <?php if (!empty($delivery_city_links)) : ?>
+                        <article>
+                            <h3><?php esc_html_e('Delivery city pages', 'kangoo'); ?></h3>
+                            <p><?php esc_html_e('Find honest online delivery pages for major UK cities without physical-location claims.', 'kangoo'); ?></p>
+                            <?php $render_link_chips($delivery_city_links); ?>
+                        </article>
+                    <?php endif; ?>
                 </div>
             </section>
 

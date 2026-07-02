@@ -989,6 +989,7 @@ function kangoo_enqueue_assets() {
     $is_product_page = function_exists('is_product') && is_product();
     $is_product_archive = kangoo_is_product_archive_view();
     $is_commerce_view = kangoo_is_commerce_view();
+    $is_delivery_city_view = function_exists('kangoo_delivery_city_is_request') && kangoo_delivery_city_is_request();
     $critical_style_handle = 'kangoo-header-footer';
 
     wp_enqueue_style('kangoo-base', $css_uri . 'base.css', array(), $theme_version);
@@ -1000,7 +1001,7 @@ function kangoo_enqueue_assets() {
         $critical_style_handle = 'kangoo-home';
     }
 
-    if ($is_product_archive || $is_product_page || $is_commerce_view) {
+    if ($is_product_archive || $is_product_page || $is_commerce_view || $is_delivery_city_view) {
         wp_enqueue_style('kangoo-shop', $css_uri . 'shop.css', array($critical_style_handle), $theme_version);
         $critical_style_handle = 'kangoo-shop';
     }
@@ -9622,6 +9623,7 @@ require_once get_template_directory() . '/inc/cart-recommendations.php';
 require_once get_template_directory() . '/inc/event-themes.php';
 require_once get_template_directory() . '/inc/reviews.php';
 require_once get_template_directory() . '/inc/contact-form.php';
+require_once get_template_directory() . '/inc/delivery-city-pages.php';
 require_once get_template_directory() . '/inc/seo-growth.php';
 
 function kangoo_acf_add_types_panel_choice($field) {

@@ -7,7 +7,7 @@ function kangoo_seo_brand_slugs() {
 }
 
 function kangoo_seo_ai_discovery_version() {
-    return '2026-06-30-ai-discovery-map-2';
+    return '2026-07-02-city-delivery-1';
 }
 
 function kangoo_seo_ai_files_last_modified_timestamp() {
@@ -212,6 +212,13 @@ function kangoo_seo_robots_txt($output, $public) {
         $output .= "\n" . $ai_sitemap;
     }
 
+    if (function_exists('kangoo_delivery_city_sitemap_url')) {
+        $city_sitemap = 'Sitemap: ' . kangoo_delivery_city_sitemap_url();
+        if (strpos($output, $city_sitemap) === false) {
+            $output .= "\n" . $city_sitemap;
+        }
+    }
+
     return trim($output) . "\n";
 }
 add_filter('robots_txt', 'kangoo_seo_robots_txt', 20, 2);
@@ -259,6 +266,8 @@ function kangoo_seo_key_links() {
         'ZYN price UK guide' => home_url('/blog/zyn-price-uk-what-affects-zyn-pouch-prices-online/'),
         'How to open a ZYN can' => home_url('/blog/how-to-open-a-zyn-can-container/'),
         'Nicotine pouches near me vs online' => home_url('/blog/nicotine-pouches-near-me-vs-online-which-buying-route-works-best/'),
+        'Nicotine pouches delivered to Manchester' => home_url('/nicotine-pouches-delivery/manchester/'),
+        'Nicotine pouches delivered to London' => home_url('/nicotine-pouches-delivery/london/'),
         'Snus UK guide' => home_url('/blog/snus-uk/'),
         'What is snus?' => home_url('/blog/what-is-snus/'),
         'Sitemap' => home_url('/sitemap_index.xml'),
@@ -564,6 +573,14 @@ function kangoo_seo_discovery_group_items($context = 'summary') {
         }, $shop_terms))),
     );
 
+    if (function_exists('kangoo_delivery_city_discovery_items')) {
+        $groups[] = array(
+            'title' => 'Delivery city pages',
+            'intro' => 'Online delivery pages for major UK cities, written honestly for ecommerce delivery rather than physical store locations.',
+            'items' => kangoo_delivery_city_discovery_items(),
+        );
+    }
+
     $brand_terms = kangoo_seo_get_terms_for_discovery('product_cat', $brand_slugs, 0);
     $groups[] = array(
         'title' => 'Brand category pages',
@@ -667,6 +684,10 @@ function kangoo_seo_render_llms_summary() {
         '- [LLM full context](' . home_url('/llms-full.txt') . '): expanded clean text version of indexable ecommerce, guide and catalogue content.',
     );
 
+    if (function_exists('kangoo_delivery_city_sitemap_url')) {
+        $lines[] = '- [Delivery city XML sitemap](' . kangoo_delivery_city_sitemap_url() . '): XML sitemap for online nicotine pouch delivery city pages.';
+    }
+
     foreach (kangoo_seo_discovery_group_items('summary') as $group) {
         $lines[] = '';
         $lines[] = '## ' . $group['title'];
@@ -693,6 +714,18 @@ function kangoo_seo_render_llms_sitemap() {
         home_url('/llms.txt'),
         home_url('/llms-full.txt'),
     );
+
+    if (function_exists('kangoo_delivery_city_sitemap_url')) {
+        $urls[] = kangoo_delivery_city_sitemap_url();
+    }
+
+    if (function_exists('kangoo_delivery_city_discovery_items')) {
+        foreach (kangoo_delivery_city_discovery_items() as $item) {
+            if (!empty($item['url'])) {
+                $urls[] = esc_url_raw($item['url']);
+            }
+        }
+    }
 
     $lines = array(
         '<?xml version="1.0" encoding="UTF-8"?>',
@@ -741,6 +774,7 @@ function kangoo_seo_render_llms_full() {
         '# Kangoo Pouches Full LLM Context',
         '',
         'Generated: ' . gmdate('Y-m-d H:i', kangoo_seo_ai_files_last_modified_timestamp()) . ' UTC',
+        'Last updated: ' . kangoo_seo_ai_files_last_modified_text(),
         'Version: ' . kangoo_seo_ai_discovery_version(),
         '',
         'Kangoo Pouches is a UK online retailer of tobacco-free nicotine pouches for adults aged 18 and over. Product availability, prices and catalogue contents change frequently; canonical product pages remain the source of truth for live stock, price and checkout details.',
@@ -889,6 +923,7 @@ function kangoo_seo_render_human_sitemap_content() {
     $left_column_titles = array(
         'Core discovery resources',
         'Brand category pages',
+        'Delivery city pages',
         'Strength pages',
         'Help, trust and legal pages',
     );
@@ -1042,6 +1077,7 @@ function kangoo_seo_write_robots_file() {
         '',
         'Sitemap: ' . home_url('/sitemap_index.xml'),
         'Sitemap: ' . home_url('/llms-sitemap.xml'),
+        function_exists('kangoo_delivery_city_sitemap_url') ? 'Sitemap: ' . kangoo_delivery_city_sitemap_url() : '',
         '',
     ));
 

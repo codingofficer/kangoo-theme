@@ -1259,7 +1259,8 @@
 .pouch-finder,
 .pouch-compare,
 .strength-ladder,
-.flavour-explorer {
+.flavour-explorer,
+.kangoo-delivery-city {
   max-width: 100%;
   overflow-x: hidden;
 }
@@ -1654,6 +1655,102 @@
   font-size: 0.92rem;
 }
 
+.kangoo-delivery-city__hero {
+  padding: clamp(3rem, 6vw, 5.5rem) 0 var(--space-5);
+}
+
+.kangoo-delivery-city__hero-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 380px);
+  gap: var(--space-5);
+  align-items: stretch;
+}
+
+.kangoo-delivery-city__copy {
+  display: grid;
+  align-content: center;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.kangoo-delivery-city__copy h1 {
+  max-width: 860px;
+  margin: 0;
+  font-size: clamp(2.25rem, 5vw, 4.6rem);
+  line-height: 0.98;
+  letter-spacing: 0;
+  overflow-wrap: anywhere;
+}
+
+.kangoo-delivery-city__copy p {
+  max-width: 760px;
+  margin: 0;
+  color: var(--color-text-soft);
+  font-size: clamp(1rem, 1.8vw, 1.18rem);
+  line-height: 1.55;
+}
+
+.kangoo-delivery-city__actions,
+.kangoo-delivery-city__proof {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  min-width: 0;
+}
+
+.kangoo-delivery-city__note,
+.kangoo-delivery-city__proof span {
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: var(--color-panel);
+}
+
+.kangoo-delivery-city__note {
+  display: grid;
+  gap: 10px;
+  align-content: start;
+  min-width: 0;
+  padding: var(--space-4);
+}
+
+.kangoo-delivery-city__note strong {
+  color: var(--color-text);
+  font-size: 1rem;
+}
+
+.kangoo-delivery-city__note p,
+.kangoo-delivery-city__note span {
+  margin: 0;
+  color: var(--color-text-soft);
+  font-size: 0.94rem;
+  line-height: 1.5;
+}
+
+.kangoo-delivery-city__routes,
+.kangoo-delivery-city__delivery-note,
+.kangoo-delivery-city__faq,
+.kangoo-delivery-city__areas {
+  padding-top: 0;
+}
+
+.kangoo-delivery-city__link-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.kangoo-delivery-city__proof {
+  margin-top: var(--space-3);
+}
+
+.kangoo-delivery-city__proof span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 14px;
+  color: var(--color-text);
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
 .kangoo-seo-strip {
   padding-top: 0;
   max-width: 100%;
@@ -1689,6 +1786,23 @@
 }
 
 @media (max-width: 640px) {
+  .kangoo-delivery-city__hero {
+    padding-top: var(--space-5);
+  }
+
+  .kangoo-delivery-city__hero-inner,
+  .kangoo-delivery-city__link-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .kangoo-delivery-city__copy h1 {
+    font-size: clamp(2rem, 10vw, 3rem);
+  }
+
+  .kangoo-delivery-city__actions .btn {
+    width: 100%;
+  }
+
   .home-seo-proof {
     padding-top: 4px;
   }
